@@ -1,3 +1,18 @@
+globals [
+  heading-range
+  forward-movement-range
+  vision
+  angle
+]
+
+patches-own [
+  is-classroom
+  is-bathroom
+  is-staffroom
+  is-hallway
+  is-wall
+]
+
 breed [ students student ]
 breed [ professors professor ]
 breed [ staffs staff ]
@@ -6,47 +21,180 @@ to setup
   clear-all
   reset-ticks
 
+  set-globals
+  set-patches
+  set-agents
+end
+
+to set-globals
+  set heading-range 45
+  set forward-movement-range 2
+  set vision 2
+  set angle 180
+end
+
+to set-patches
+  ; For hallways and walls
+  ask patches [
+    ifelse member? pxcor (list 11 12 13 14 15 16 17 18 19 20) [
+      set pcolor white
+      set is-classroom 0 set is-bathroom 0 set is-staffroom 0 set is-hallway 1 set is-wall 0
+    ] [
+      set pcolor gray
+      set is-classroom 0 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 1
+    ]
+  ]
+
+  ; For bottom right classroom
+  ask (patch-set patch 21 7 patch 22 7 patch 23 7 patch 24 7 patch 25 7 patch 26 7 patch-set patch 21 8 patch 22 8 patch 23 8 patch 24 8 patch 25 8 patch 26 8 patch-set patch 21 9 patch 22 9 patch 23 9 patch 24 9 patch 25 9 patch 26 9
+       patch-set patch 21 10 patch 22 10 patch 23 10 patch 24 10 patch 25 10 patch 26 10 patch-set patch 21 11 patch 22 11 patch 23 11 patch 24 11 patch 25 11 patch 26 11 patch-set patch 21 12 patch 22 12 patch 23 12 patch 24 12 patch 25 12 patch 26 12) [
+    set pcolor yellow
+    set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+  ]
+
+  ; For middle right classroom
+  ask (patch-set patch 21 14 patch 22 14 patch 23 14 patch 24 14 patch 25 14 patch 26 14 patch-set patch 21 15 patch 22 15 patch 23 15 patch 24 15 patch 25 15 patch 26 15 patch-set patch 21 16 patch 22 16 patch 23 16 patch 24 16 patch 25 16 patch 26 16
+       patch-set patch 21 17 patch 22 17 patch 23 17 patch 24 17 patch 25 17 patch 26 17 patch-set patch 21 18 patch 22 18 patch 23 18 patch 24 18 patch 25 18 patch 26 18 patch-set patch 21 19 patch 22 19 patch 23 19 patch 24 19 patch 25 19 patch 26 19) [
+    set pcolor yellow
+    set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+  ]
+
+  ; For top right classroom
+  ask (patch-set patch 21 21 patch 22 21 patch 23 21 patch 24 21 patch 25 21 patch 26 21 patch-set patch 21 22 patch 22 22 patch 23 22 patch 24 22 patch 25 22 patch 26 22 patch-set patch 21 23 patch 22 23 patch 23 23 patch 24 23 patch 25 23 patch 26 23
+       patch-set patch 21 24 patch 22 24 patch 23 24 patch 24 24 patch 25 24 patch 26 24 patch-set patch 21 25 patch 22 25 patch 23 25 patch 24 25 patch 25 25 patch 26 25 patch-set patch 21 26 patch 22 26 patch 23 26 patch 24 26 patch 25 26 patch 26 26) [
+    set pcolor yellow
+    set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+  ]
+
+  ; For bottom left classroom
+  ask (patch-set patch 5 7 patch 6 7 patch 7 7 patch 8 7 patch 9 7 patch 10 7 patch-set patch 5 8 patch 6 8 patch 7 8 patch 8 8 patch 9 8 patch 10 8 patch-set patch 5 9 patch 6 9 patch 7 9 patch 8 9 patch 9 9 patch 10 9
+       patch-set patch 5 10 patch 6 10 patch 7 10 patch 8 10 patch 9 10 patch 10 10 patch-set patch 5 11 patch 6 11 patch 7 11 patch 8 11 patch 9 11 patch 10 11 patch-set patch 5 12 patch 6 12 patch 7 12 patch 8 12 patch 9 12 patch 10 12) [
+    set pcolor yellow
+    set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+  ]
+
+  ; For middle left classroom
+  ask (patch-set patch 5 14 patch 6 14 patch 7 14 patch 8 14 patch 9 14 patch 10 14 patch-set patch 5 15 patch 6 15 patch 7 15 patch 8 15 patch 9 15 patch 10 15 patch-set patch 5 16 patch 6 16 patch 7 16 patch 8 16 patch 9 16 patch 10 16
+       patch-set patch 5 17 patch 6 17 patch 7 17 patch 8 17 patch 9 17 patch 10 17 patch-set patch 5 18 patch 6 18 patch 7 18 patch 8 18 patch 9 18 patch 10 18 patch-set patch 5 19 patch 6 19 patch 7 19 patch 8 19 patch 9 19 patch 10 19) [
+    set pcolor yellow
+    set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+  ]
+
+  ; For top left classroom
+  ask (patch-set patch 5 21 patch 6 21 patch 7 21 patch 8 21 patch 9 21 patch 10 21 patch-set patch 5 22 patch 6 22 patch 7 22 patch 8 22 patch 9 22 patch 10 22 patch-set patch 5 23 patch 6 23 patch 7 23 patch 8 23 patch 9 23 patch 10 23
+       patch-set patch 5 24 patch 6 24 patch 7 24 patch 8 24 patch 9 24 patch 10 24 patch-set patch 5 25 patch 6 25 patch 7 25 patch 8 25 patch 9 25 patch 10 25 patch-set patch 5 26 patch 6 26 patch 7 26 patch 8 26 patch 9 26 patch 10 26) [
+    set pcolor yellow
+    set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+  ]
+
+  ; For bathroom
+  ask (patch-set patch 5 2 patch 6 2 patch 7 2 patch 8 2 patch 9 2 patch 10 2 patch-set patch 5 3 patch 6 3 patch 7 3 patch 8 3 patch 9 3 patch 10 3
+       patch-set patch 5 4 patch 6 4 patch 7 4 patch 8 4 patch 9 4 patch 10 4 patch-set patch 5 5 patch 6 5 patch 7 5 patch 8 5 patch 9 5 patch 10 5) [
+    set pcolor blue
+    set is-classroom 0 set is-bathroom 1 set is-staffroom 0 set is-hallway 0 set is-wall 0
+  ]
+
+  ; For staff room
+  ask (patch-set patch 21 2 patch 22 2 patch 23 2 patch 24 2 patch 25 2 patch 26 2 patch-set patch 21 3 patch 22 3 patch 23 3 patch 24 3 patch 25 3 patch 26 3
+       patch-set patch 21 4 patch 22 4 patch 23 4 patch 24 4 patch 25 4 patch 26 4 patch-set patch 21 5 patch 22 5 patch 23 5 patch 24 5 patch 25 5 patch 26 5) [
+    set pcolor brown
+    set is-classroom 0 set is-bathroom 0 set is-staffroom 1 set is-hallway 0 set is-wall 0
+  ]
+end
+
+to set-agents
   create-students num-students [
     set shape "student"
-    setxy random-xcor random-ycor
+    let tempx random-xcor
+    let tempy random-ycor
+
+    ifelse ([is-hallway] of patch-at tempx tempy) = 1 [
+      setxy tempx tempy
+    ] [
+      while [ ([is-hallway] of patch-at tempx tempy) = 0 ] [
+        set tempx random-xcor
+        set tempy random-ycor
+      ]
+    ]
+
+    setxy tempx tempy
   ]
 
   create-professors num-professors [
     set shape "professor"
-    setxy random-xcor random-ycor
+    let tempx random-xcor
+    let tempy random-ycor
+
+    ifelse ([is-hallway] of patch-at tempx tempy) = 1 [
+      setxy tempx tempy
+    ] [
+      while [ ([is-hallway] of patch-at tempx tempy) = 0 ] [
+        set tempx random-xcor
+        set tempy random-ycor
+      ]
+    ]
+
+    setxy tempx tempy
   ]
 
   create-staffs num-staff [
     set shape "staff"
-    setxy random-xcor random-ycor
+    let tempx random-xcor
+    let tempy random-ycor
+
+    ifelse ([is-hallway] of patch-at tempx tempy) = 1 [
+      setxy tempx tempy
+    ] [
+      while [ ([is-hallway] of patch-at tempx tempy) = 0 ] [
+        set tempx random-xcor
+        set tempy random-ycor
+      ]
+    ]
+
+    setxy tempx tempy
+  ]
+end
+
+to go
+  ask turtles [
+    move
   ]
 
-  ask patches [
-    set pcolor white
-  ]
+  tick
+end
+
+to move
+  ; Try moving some heading and distance away
+  let candidate-heading (random-float (2 * heading-range + 1) - heading-range)
+  let candidate-movement ((random-float forward-movement-range) / 5)
+
+  right candidate-heading
+  let candidate-patch patch-ahead candidate-movement
+
+  forward candidate-movement
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-393
-34
-1029
-671
+245
+24
+878
+658
 -1
 -1
-19.03030303030303
+19.55
 1
 10
 1
 1
 1
 0
+0
 1
 1
-1
--16
-16
--16
-16
+0
+31
+0
+31
 0
 0
 1
@@ -54,70 +202,70 @@ ticks
 30.0
 
 SLIDER
-210
-87
-384
-120
+62
+80
+236
+113
 num-students
 num-students
 0
-100
-50.0
+200
+100.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-210
-130
-384
-163
+62
+123
+236
+156
 num-professors
 num-professors
 0
 100
-50.0
+12.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-210
-173
-384
-206
+62
+166
+236
+199
 num-staff
 num-staff
 0
-100
-50.0
+50
+5.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-210
-215
-384
-248
+62
+208
+236
+241
 num-open
 num-open
 0
-100
-50.0
+6
+3.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-209
-258
-384
-291
+61
+251
+236
+284
 interaction-multiplier
 interaction-multiplier
 0
@@ -129,10 +277,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-210
-44
-384
-77
+62
+37
+236
+70
 spawn-tick-interval
 spawn-tick-interval
 0
@@ -144,10 +292,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-321
-398
-384
-431
+173
+391
+236
+424
 NIL
 go
 T
@@ -161,12 +309,12 @@ NIL
 1
 
 BUTTON
-299
-440
-384
-473
-NIL
+151
+433
+236
+466
 go-once
+go
 NIL
 1
 T
@@ -178,10 +326,10 @@ NIL
 1
 
 BUTTON
-318
-356
-384
-389
+170
+349
+236
+382
 NIL
 setup
 NIL
@@ -195,10 +343,10 @@ NIL
 1
 
 CHOOSER
-209
-301
-384
-346
+61
+294
+236
+339
 entrance-mode
 entrance-mode
 "one-way" "two-way"
@@ -437,16 +585,16 @@ professor
 false
 0
 Rectangle -1 true false 120 90 180 180
-Polygon -13345367 true false 135 90 150 105 135 180 150 195 165 180 150 105 165 90
-Polygon -6459832 true false 120 90 105 90 60 195 90 210 116 154 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 183 153 210 210 240 195 195 90 180 90 150 165
-Circle -7500403 true true 110 5 80
-Rectangle -7500403 true true 127 76 172 91
+Polygon -16777216 true false 135 90 150 105 135 180 150 195 165 180 150 105 165 90
+Polygon -14835848 true false 120 90 105 90 60 195 90 210 116 154 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 183 153 210 210 240 195 195 90 180 90 150 165
+Circle -6459832 true false 110 5 80
+Rectangle -6459832 true false 127 76 172 91
 Line -16777216 false 172 90 161 94
 Line -16777216 false 128 90 139 94
 Polygon -16777216 true false 195 225 195 300 270 270 270 195
 Rectangle -7500403 true true 180 225 195 300
-Polygon -13345367 true false 180 226 195 226 270 196 255 196
-Polygon -13345367 true false 209 202 209 216 244 202 243 188
+Polygon -7500403 true true 180 226 195 226 270 196 255 196
+Polygon -16777216 true false 209 202 209 216 244 202 243 188
 Line -16777216 false 180 90 150 165
 Line -16777216 false 120 90 150 165
 
@@ -480,20 +628,23 @@ Rectangle -16777216 true false 60 60 240 240
 staff
 false
 0
+Rectangle -6459832 true false 123 76 176 95
+Polygon -1 true false 105 90 60 195 90 210 115 162 184 163 210 210 240 195 195 90
 Polygon -13345367 true false 180 195 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285
-Polygon -13345367 true false 120 90 105 90 60 195 90 210 120 150 120 195 180 195 180 150 210 210 240 195 195 90 180 90 165 105 150 165 135 105 120 90
-Polygon -13345367 true false 123 90 149 141 177 90
-Rectangle -7500403 true true 123 76 176 92
-Circle -7500403 true true 110 5 80
-Line -13345367 false 121 90 194 90
+Circle -6459832 true false 110 5 80
 Line -16777216 false 148 143 150 196
 Rectangle -16777216 true false 116 186 182 198
 Circle -1 true false 152 143 9
 Circle -1 true false 152 166 9
 Rectangle -16777216 true false 179 164 183 186
-Polygon -13345367 true false 180 90 195 90 183 160 180 195 150 195 150 135 180 90
-Polygon -13345367 true false 120 90 105 90 114 161 120 195 150 195 150 135 120 90
-Rectangle -16777216 true false 118 129 141 140
+Polygon -955883 true false 180 90 195 90 195 165 195 195 150 195 150 120 180 90
+Polygon -955883 true false 120 90 105 90 105 165 105 195 150 195 150 120 120 90
+Rectangle -16777216 true false 135 114 150 120
+Rectangle -16777216 true false 135 144 150 150
+Rectangle -16777216 true false 135 174 150 180
+Polygon -955883 true false 105 42 111 16 128 2 149 0 178 6 190 18 192 28 220 29 216 34 201 39 167 35
+Polygon -7500403 true true 54 253 54 238 219 73 227 78
+Polygon -7500403 true true 15 285 15 255 30 225 45 225 75 255 75 270 45 285
 
 star
 false
@@ -504,16 +655,16 @@ student
 false
 0
 Polygon -13791810 true false 135 90 150 105 135 165 150 180 165 165 150 105 165 90
-Polygon -10899396 true false 195 90 240 195 210 210 165 105
-Circle -7500403 true true 110 5 80
-Rectangle -7500403 true true 127 79 172 94
-Polygon -10899396 true false 105 90 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 195 90
+Polygon -6459832 true false 195 90 240 195 210 210 165 105
+Circle -6459832 true false 110 5 80
+Rectangle -6459832 true false 127 79 172 94
+Polygon -13345367 true false 105 90 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 195 90
 Polygon -1 true false 100 210 130 225 145 165 85 135 63 189
 Polygon -13791810 true false 90 210 120 225 135 165 67 130 53 189
 Polygon -1 true false 120 224 131 225 124 210
 Line -16777216 false 139 168 126 225
 Line -16777216 false 140 167 76 136
-Polygon -10899396 true false 105 90 60 195 90 210 135 105
+Polygon -6459832 true false 105 90 60 195 90 210 135 105
 
 target
 false
