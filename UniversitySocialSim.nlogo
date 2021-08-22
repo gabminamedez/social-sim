@@ -164,6 +164,10 @@ to go
 end
 
 to move
+   if [pcolor] of patch-ahead 1 = gray[
+     set heading heading + 180
+  ]
+
   ; Try moving some heading and distance away
   let candidate-heading (random-float (2 * heading-range + 1) - heading-range)
   let candidate-movement ((random-float forward-movement-range) / 5)
@@ -172,6 +176,7 @@ to move
   let candidate-patch patch-ahead candidate-movement
 
   forward candidate-movement
+
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
