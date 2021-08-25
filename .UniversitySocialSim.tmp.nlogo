@@ -17,6 +17,7 @@ globals [
   num-nonverbal
   num-cooperative
   num-exchange
+  num-entrance
   student-ctr
   prof-ctr
   staff-ctr
@@ -204,7 +205,7 @@ to set-agents
 end
 
 to go
-  let entrances randomize-num-entrance
+  let numentrance randomize-num-entrance
 
 
   ask turtles [
@@ -259,7 +260,7 @@ to go
       ]
     ]
   ]
-  repeat entrances [
+  repeat num-entrance [
     let agent-type random-type student-ctr prof-ctr staff-ctr
     print agent-type
     if agent-type = 0
@@ -684,7 +685,7 @@ num-entrance
 num-entrance
 1
 5
-2.0
+1.0
 1
 1
 NIL
