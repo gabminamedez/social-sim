@@ -1,8 +1,12 @@
 globals [
   heading-range
   forward-movement-range
-  vision
-  angle
+  vision-nonverbal
+  angle-nonverbal
+  vision-exchange
+  angle-exchange
+  vision-cooperative
+  angle-cooperative
 
   num-student-student
   num-student-prof
@@ -26,6 +30,7 @@ patches-own [
 turtles-own [
   gender
   age
+  interaction-time
 ]
 
 breed [ students student ]
@@ -44,8 +49,12 @@ end
 to set-globals
   set heading-range 45
   set forward-movement-range 2
-  set vision 2
-  set angle 180
+  set vision-nonverbal 3
+  set angle-nonverbal 45
+  set vision-cooperative 1
+  set angle-cooperative 30
+  set vision-exchange 2
+  set angle-exchange 30
 
   set num-student-student 0
   set num-student-prof 0
@@ -186,6 +195,7 @@ to set-agents
   ]
 
   ask turtles [
+    set interaction-time 60
     set label insert-item 0 label "    "
     set label insert-item 0 label gender
     set label insert-item 1 label age
@@ -195,18 +205,54 @@ end
 
 to go
   ask turtles [
-    if [ pcolor ] of patch-ahead 1 = gray [
-     set heading heading + 180
+
+    ; Movement Part
+
+    ;if [ pcolor ] of patch-ahead 1 = gray [
+    ; set heading heading + 180
+    ;]
+
+    ;let candidate-heading (random-float (2 * heading-range + 1) - heading-range)
+    ;let candidate-movement ((random-float forward-movement-range) / 5)
+
+    ;right candidate-heading
+    ;let candidate-patch patch-ahead candidate-movement
+
+    ;forward candidate-movement
+
+    ; Interaction Part
+
+    ifelse any? (other turtles in-cone vision-nonverbal angle-nonverbal) [
+      set num-nonverbal num-nonverbal + 1
+
+      set interaction-time interaction-time - 1
+      if interaction-time = 0 [
+        set interaction-time 60
+        move
+      ]
+    ] [
+      ifelse any? (other turtles in-cone vision-cooperative angle-cooperative) [
+        set num-cooperative num-cooperative + 1
+
+        set interaction-time interaction-time - 1
+        if interaction-time = 0 [
+          set interaction-time 60
+          move
+        ]
+      ] [
+        ifelse any? (other turtles in-cone vision-exchange angle-exchange) [
+          set num-exchange num-exchange + 1
+
+          set interaction-time interaction-time - 1
+          if interaction-time = 0 [
+            set interaction-time 60
+            move
+          ]
+        ] [
+          move
+        ]
+      ]
     ]
-
-    ; Try moving some heading and distance away
-    let candidate-heading (random-float (2 * heading-range + 1) - heading-range)
-    let candidate-movement ((random-float forward-movement-range) / 5)
-
-    right candidate-heading
-    let candidate-patch patch-ahead candidate-movement
-
-    forward candidate-movement
   ]
 
   tick
@@ -214,10 +260,9 @@ end
 
 to move
   if [ pcolor ] of patch-ahead 1 = gray [
-     set heading heading + 180
+   set heading heading + 180
   ]
 
-  ; Try moving some heading and distance away
   let candidate-heading (random-float (2 * heading-range + 1) - heading-range)
   let candidate-movement ((random-float forward-movement-range) / 5)
 
@@ -225,7 +270,6 @@ to move
   let candidate-patch patch-ahead candidate-movement
 
   forward candidate-movement
-
 end
 
 to-report randomize
@@ -268,7 +312,7 @@ num-students
 num-students
 0
 200
-40.0
+3.0
 1
 1
 NIL
@@ -283,7 +327,7 @@ num-professors
 num-professors
 0
 100
-6.0
+0.0
 1
 1
 NIL
@@ -298,7 +342,7 @@ num-staff
 num-staff
 0
 50
-2.0
+0.0
 1
 1
 NIL
@@ -314,21 +358,6 @@ num-open
 0
 6
 3.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-61
-335
-236
-368
-interaction-multiplier
-interaction-multiplier
-0
-100
-50.0
 1
 1
 NIL
@@ -351,9 +380,9 @@ HORIZONTAL
 
 BUTTON
 173
-475
+432
 236
-508
+465
 NIL
 go
 T
@@ -368,9 +397,9 @@ NIL
 
 BUTTON
 151
-517
+474
 236
-550
+507
 go-once
 go
 NIL
@@ -385,9 +414,9 @@ NIL
 
 BUTTON
 170
-433
+390
 236
-466
+423
 NIL
 setup
 NIL
@@ -402,9 +431,9 @@ NIL
 
 CHOOSER
 61
-378
+335
 236
-423
+380
 entrance-mode
 entrance-mode
 "one-way" "two-way"
@@ -428,7 +457,7 @@ MONITOR
 134
 NIL
 num-student-prof
-17
+0
 1
 11
 
@@ -439,7 +468,7 @@ MONITOR
 189
 NIL
 num-student-staff
-17
+0
 1
 11
 
@@ -450,7 +479,7 @@ MONITOR
 244
 NIL
 num-prof-prof
-17
+0
 1
 11
 
@@ -461,7 +490,7 @@ MONITOR
 299
 NIL
 num-prof-staff
-17
+0
 1
 11
 
@@ -472,7 +501,7 @@ MONITOR
 354
 NIL
 num-staff-staff
-17
+0
 1
 11
 
@@ -505,6 +534,39 @@ chance-young
 1
 %
 HORIZONTAL
+
+MONITOR
+887
+364
+1036
+409
+NIL
+num-nonverbal
+0
+1
+11
+
+MONITOR
+887
+418
+1036
+463
+NIL
+num-cooperative
+0
+1
+11
+
+MONITOR
+887
+473
+1037
+518
+NIL
+num-exchange
+0
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
