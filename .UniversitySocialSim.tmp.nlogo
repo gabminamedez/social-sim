@@ -143,6 +143,7 @@ to set-agents
     ]
 
     setxy tempx tempy
+
     ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
     ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
   ]
@@ -162,8 +163,6 @@ to set-agents
     ]
 
     setxy tempx tempy
-    ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-    ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
   ]
 
   create-staffs num-staff [
@@ -181,8 +180,6 @@ to set-agents
     ]
 
     setxy tempx tempy
-    ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-    ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
   ]
 
   ask turtles [
@@ -268,7 +265,7 @@ num-students
 num-students
 0
 200
-40.0
+10.0
 1
 1
 NIL
@@ -283,7 +280,7 @@ num-professors
 num-professors
 0
 100
-6.0
+0.0
 1
 1
 NIL
@@ -298,7 +295,7 @@ num-staff
 num-staff
 0
 50
-2.0
+0.0
 1
 1
 NIL
