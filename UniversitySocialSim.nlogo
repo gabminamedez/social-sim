@@ -8,6 +8,8 @@ globals [
   vision-cooperative
   angle-cooperative
 
+  chance-interact
+
   num-student-student
   num-student-prof
   num-student-staff
@@ -144,6 +146,7 @@ to set-agents
   set student-ctr num-students
   set prof-ctr num-professors
   set staff-ctr num-staff
+  set chance-interact random 100
 ;  create-students num-students [
 ;    set shape "student"
 ;    ifelse one-way?[
@@ -199,6 +202,7 @@ to set-agents
     set label insert-item 0 label "    "
     set label insert-item 0 label gender
     set label insert-item 1 label age
+
     set label-color black
   ]
 end
@@ -227,33 +231,37 @@ to go
 
     ; Interaction Part
 
-    ifelse any? (other turtles in-cone vision-nonverbal angle-nonverbal) [
+    ifelse any? (other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact > 80 [
       set num-nonverbal num-nonverbal + 1
 
       set interaction-time interaction-time - 1
       if interaction-time = 0 [
         set interaction-time 60
+        set chance-interact random 100
         move
       ]
     ] [
-      ifelse any? (other turtles in-cone vision-cooperative angle-cooperative) [
+      ifelse any? (other turtles in-cone vision-cooperative angle-cooperative) and chance-interact > 70[
         set num-cooperative num-cooperative + 1
 
         set interaction-time interaction-time - 1
         if interaction-time = 0 [
           set interaction-time 60
+          set chance-interact random 100
           move
         ]
       ] [
-        ifelse any? (other turtles in-cone vision-exchange angle-exchange) [
+        ifelse any? (other turtles in-cone vision-exchange angle-exchange) and chance-interact > 60[
           set num-exchange num-exchange + 1
 
           set interaction-time interaction-time - 1
           if interaction-time = 0 [
             set interaction-time 60
+            set chance-interact random 100
             move
           ]
         ] [
+          set chance-interact random 100
           move
         ]
       ]
@@ -419,7 +427,7 @@ num-students
 num-students
 0
 200
-3.0
+11.0
 1
 1
 NIL
@@ -679,7 +687,7 @@ SLIDER
 64
 330
 237
-364
+363
 num-entrance
 num-entrance
 1
