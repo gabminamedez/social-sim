@@ -31,12 +31,16 @@ patches-own [
   is-staffroom
   is-hallway
   is-wall
+  location
 ]
 
 turtles-own [
   gender
   age
   interaction-time
+  class1
+  class2
+  class3
 ]
 
 breed [ students student ]
@@ -50,6 +54,7 @@ to setup
   set-globals
   set-patches
   set-agents
+  set-destinations
 end
 
 to set-globals
@@ -80,9 +85,11 @@ to set-patches
     ifelse member? pxcor (list 11 12 13 14 15 16 17 18 19 20) [
       set pcolor white
       set is-classroom 0 set is-bathroom 0 set is-staffroom 0 set is-hallway 1 set is-wall 0
+      set location "hallway"
     ] [
       set pcolor gray
       set is-classroom 0 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 1
+      set location "wall"
     ]
   ]
   ; For bottom right classroom
@@ -90,6 +97,7 @@ to set-patches
        patch-set patch 21 10 patch 22 10 patch 23 10 patch 24 10 patch 25 10 patch 26 10 patch 27 10 patch-set patch 22 11 patch 23 11 patch 24 11 patch 25 11 patch 26 11 patch 27 11 patch-set patch 22 12 patch 23 12 patch 24 12 patch 25 12 patch 26 12 patch 27 12) [
     set pcolor yellow
     set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+    set location "br"
   ]
 
   ; For middle right classroom
@@ -97,6 +105,7 @@ to set-patches
        patch-set patch 21 17 patch 22 17 patch 23 17 patch 24 17 patch 25 17 patch 26 17 patch 27 17 patch-set patch 22 18 patch 23 18 patch 24 18 patch 25 18 patch 26 18 patch 27 18 patch-set patch 22 19 patch 23 19 patch 24 19 patch 25 19 patch 26 19 patch 27 19 ) [
     set pcolor yellow
     set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+    set location "mr"
   ]
 
   ; For top right classroom
@@ -104,6 +113,7 @@ to set-patches
        patch-set patch 21 24 patch 22 24 patch 23 24 patch 24 24 patch 25 24 patch 26 24 patch 27 24 patch-set patch 22 25 patch 23 25 patch 24 25 patch 25 25 patch 26 25 patch 27 25 patch-set patch 22 26 patch 23 26 patch 24 26 patch 25 26 patch 26 26 patch 27 26) [
     set pcolor yellow
     set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+    set location "tr"
   ]
 
   ; For bottom left classroom
@@ -111,6 +121,7 @@ to set-patches
        patch-set patch 4 10 patch 5 10 patch 6 10 patch 7 10 patch 8 10 patch 9 10 patch 10 10 patch-set patch 4 11 patch 5 11 patch 6 11 patch 7 11 patch 8 11 patch 9 11 patch-set patch 4 12 patch 5 12 patch 6 12 patch 7 12 patch 8 12 patch 9 12) [
     set pcolor yellow
     set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+    set location "bl"
   ]
 
   ; For middle left classroom
@@ -118,6 +129,7 @@ to set-patches
        patch-set patch 4 17 patch 5 17 patch 6 17 patch 7 17 patch 8 17 patch 9 17 patch 10 17 patch-set patch 4 18 patch 5 18 patch 6 18 patch 7 18 patch 8 18 patch 9 18 patch-set patch 4 19 patch 5 19 patch 6 19 patch 7 19 patch 8 19 patch 9 19) [
     set pcolor yellow
     set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+    set location "ml"
   ]
 
   ; For top left classroom
@@ -125,6 +137,7 @@ to set-patches
     patch-set  patch 4 24 patch 5 24 patch 6 24 patch 7 24 patch 8 24 patch 9 24 patch 10 24 patch-set  patch 4 25 patch 5 25 patch 6 25 patch 7 25 patch 8 25 patch 9 25 patch-set  patch 4 26 patch 5 26 patch 6 26 patch 7 26 patch 8 26 patch 9 26) [
     set pcolor yellow
     set is-classroom 1 set is-bathroom 0 set is-staffroom 0 set is-hallway 0 set is-wall 0
+    set location "tl"
   ]
 
   ; For bathroom
@@ -132,6 +145,7 @@ to set-patches
        patch-set patch 5 4 patch 6 4 patch 7 4 patch 8 4 patch 9 4 patch 10 4 patch-set patch 5 5 patch 6 5 patch 7 5 patch 8 5 patch 9 5 patch 10 5) [
     set pcolor blue
     set is-classroom 0 set is-bathroom 1 set is-staffroom 0 set is-hallway 0 set is-wall 0
+    set location "bathroom"
   ]
 
   ; For staff room
@@ -139,6 +153,7 @@ to set-patches
        patch-set patch 21 4 patch 22 4 patch 23 4 patch 24 4 patch 25 4 patch 26 4 patch-set patch 21 5 patch 22 5 patch 23 5 patch 24 5 patch 25 5 patch 26 5) [
     set pcolor red
     set is-classroom 0 set is-bathroom 0 set is-staffroom 1 set is-hallway 0 set is-wall 0
+    set location "staffroom"
   ]
 end
 
@@ -207,16 +222,99 @@ to set-agents
   ]
 end
 
+to set-destinations
+  ; similar code for each shape
+  ask turtles with [shape = "student"]
+  [
+    let myrandom1 random-float 1
+    let myrandom2 random-float 1
+    let myrandom3 random-float 1
+
+    ; For bottom right classroom
+    ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
+    ; For middle right classroom
+    ifelse myrandom1 <= 0.333 [ set class1 "mr" ] [
+    ; For top right classroom
+    ifelse myrandom1 <= 0.500 [ set class1 "tr" ] [
+    ; For bottom left classroom
+    ifelse myrandom1 <= 0.667 [ set class1 "bl" ] [
+    ; For middle left classroom
+    ifelse myrandom1 <= 0.833 [ set class1 "ml" ] [
+    ; For top left classroom
+    set class1 "tl" ]]]]]
+
+    ; For bottom right classroom
+    ifelse myrandom2 <= 0.167 [ set class2 "br" ] [
+    ; For middle right classroom
+    ifelse myrandom2 <= 0.333 [ set class2 "mr" ] [
+    ; For top right classroom
+    ifelse myrandom2 <= 0.500 [ set class2 "tr" ] [
+    ; For bottom left classroom
+    ifelse myrandom2 <= 0.667 [ set class2 "bl" ] [
+    ; For middle left classroom
+    ifelse myrandom2 <= 0.833 [ set class2 "ml" ] [
+    ; For top left classroom
+    set class2 "tl" ]]]]]
+
+    ; For bottom right classroom
+    ifelse myrandom3 <= 0.167 [ set class3 "br" ] [
+    ; For middle right classroom
+    ifelse myrandom3 <= 0.333 [ set class3 "mr" ] [
+    ; For top right classroom
+    ifelse myrandom3 <= 0.500 [ set class3 "tr" ] [
+    ; For bottom left classroom
+    ifelse myrandom3 <= 0.667 [ set class3 "bl" ] [
+    ; For middle left classroom
+    ifelse myrandom3 <= 0.833 [ set class3 "ml" ] [
+    ; For top left classroom
+    set class3 "tl" ]]]]]
+  ]
+end
+
 to go
   let entrances randomize-num-entrance
+  ;let _patches (patches with [is-classroom = 1])
 
+  ;if shape = "student" [
+    ;if (ticks >= 50) and (ticks <= 250) [
+      ;if patch-here != destination [
+        ;face one-of patches with [is-classroom = 1]
+        ;forward ((random-float forward-movement-range) / 5)
+        ;move-to one-of (_patches with [not any? turtles-here])
+      ;]
+    ;]
+  ;]
+
+  ; Go to classroom if haven't reached
+  if (ticks >= 200) and (ticks <= 600) [
+    ask turtles with [class1 != location] [
+      if (class1 != 0) and (class1 != location) [
+        face min-one-of patches with [location = [class1] of one-of turtles with [class1 != location]][distance myself]
+        move
+      ]
+    ]
+  ]
+
+  if (ticks >= 800) and (ticks <= 1200) [
+    ask turtles with [class2 != location] [
+      if (class2 != 0) and (class2 != location) [
+        face min-one-of patches with [location = [class2] of one-of turtles with [class2 != location]][distance myself]
+        move
+      ]
+    ]
+  ]
+
+  if (ticks >= 1400) and (ticks <= 1800) [
+    ask turtles with [class3 != location] [
+      if (class3 != 0) and (class3 != location) [
+        face min-one-of patches with [location = [class3] of one-of turtles with [class3 != location]][distance myself]
+        move
+      ]
+    ]
+  ]
 
   ask turtles [
-
-
-
     ; Movement Part
-
     ;if [ pcolor ] of patch-ahead 1 = gray [
     ; set heading heading + 180
     ;]
@@ -279,7 +377,7 @@ to go
         move
       ]
     ] [
-      ifelse any? (other turtles in-cone vision-cooperative angle-cooperative) and chance-interact > 95[
+      ifelse any? (other turtles in-cone vision-cooperative angle-cooperative) and chance-interact > 95 [
         set num-cooperative num-cooperative + 1
         if shape = "student" [
           ask other turtles in-cone vision-cooperative angle-cooperative[
@@ -327,7 +425,7 @@ to go
           move
         ]
       ] [
-        ifelse any? (other turtles in-cone vision-exchange angle-exchange) and chance-interact > 90[
+        ifelse any? (other turtles in-cone vision-exchange angle-exchange) and chance-interact > 90 [
           set num-exchange num-exchange + 1
           if shape = "student" [
             ask other turtles in-cone vision-exchange angle-exchange[
@@ -404,6 +502,52 @@ to go
           set label insert-item 0 label gender
           set label insert-item 1 label age
           set label-color black
+
+          ask turtles with [shape = "student"]
+          [
+            let myrandom1 random-float 1
+            let myrandom2 random-float 1
+            let myrandom3 random-float 1
+
+            ; For bottom right classroom
+            ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
+            ; For middle right classroom
+            ifelse myrandom1 <= 0.333 [ set class1 "mr" ] [
+            ; For top right classroom
+            ifelse myrandom1 <= 0.500 [ set class1 "tr" ] [
+            ; For bottom left classroom
+            ifelse myrandom1 <= 0.667 [ set class1 "bl" ] [
+            ; For middle left classroom
+            ifelse myrandom1 <= 0.833 [ set class1 "ml" ] [
+            ; For top left classroom
+            set class1 "tl" ]]]]]
+
+            ; For bottom right classroom
+            ifelse myrandom2 <= 0.167 [ set class2 "br" ] [
+            ; For middle right classroom
+            ifelse myrandom2 <= 0.333 [ set class2 "mr" ] [
+            ; For top right classroom
+            ifelse myrandom2 <= 0.500 [ set class2 "tr" ] [
+            ; For bottom left classroom
+            ifelse myrandom2 <= 0.667 [ set class2 "bl" ] [
+            ; For middle left classroom
+            ifelse myrandom2 <= 0.833 [ set class2 "ml" ] [
+            ; For top left classroom
+            set class2 "tl" ]]]]]
+
+            ; For bottom right classroom
+            ifelse myrandom3 <= 0.167 [ set class3 "br" ] [
+            ; For middle right classroom
+            ifelse myrandom3 <= 0.333 [ set class3 "mr" ] [
+            ; For top right classroom
+            ifelse myrandom3 <= 0.500 [ set class3 "tr" ] [
+            ; For bottom left classroom
+            ifelse myrandom3 <= 0.667 [ set class3 "bl" ] [
+            ; For middle left classroom
+            ifelse myrandom3 <= 0.833 [ set class3 "ml" ] [
+            ; For top left classroom
+            set class3 "tl" ]]]]]
+          ]
         ]
       ]
     ]
@@ -506,9 +650,9 @@ to-report random-patch-entry
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-245
+246
 24
-878
+879
 658
 -1
 -1
@@ -541,7 +685,7 @@ num-students
 num-students
 0
 200
-11.0
+30.0
 1
 1
 NIL
@@ -666,7 +810,7 @@ CHOOSER
 entrance-mode
 entrance-mode
 "one-way" "two-way"
-1
+0
 
 MONITOR
 887
@@ -743,7 +887,7 @@ chance-female
 chance-female
 0
 100
-49.0
+50.0
 1
 1
 %
