@@ -41,6 +41,7 @@ turtles-own [
   class1
   class2
   class3
+  bathroom-chance
 ]
 
 breed [ students student ]
@@ -141,19 +142,30 @@ to set-patches
   ]
 
   ; For bathroom
-  ask (patch-set patch 5 2 patch 6 2 patch 7 2 patch 8 2 patch 9 2 patch 10 2 patch-set patch 5 3 patch 6 3 patch 7 3 patch 8 3 patch 9 3 patch 10 3
-       patch-set patch 5 4 patch 6 4 patch 7 4 patch 8 4 patch 9 4 patch 10 4 patch-set patch 5 5 patch 6 5 patch 7 5 patch 8 5 patch 9 5 patch 10 5) [
+  ask (patch-set patch 5 2 patch 6 2 patch 7 2 patch 8 2 patch 9 2 patch-set patch 5 3 patch 6 3 patch 7 3 patch 8 3 patch 9 3 patch 10 3
+       patch-set patch 5 4 patch 6 4 patch 7 4 patch 8 4 patch 9 4 patch 10 4 patch-set patch 5 5 patch 6 5 patch 7 5 patch 8 5 patch 9 5) [
     set pcolor blue
     set is-classroom 0 set is-bathroom 1 set is-staffroom 0 set is-hallway 0 set is-wall 0
-    set location "bathroom"
+    set location "bathroom1"
   ]
 
   ; For staff room
-  ask (patch-set patch 21 2 patch 22 2 patch 23 2 patch 24 2 patch 25 2 patch 26 2 patch-set patch 21 3 patch 22 3 patch 23 3 patch 24 3 patch 25 3 patch 26 3
-       patch-set patch 21 4 patch 22 4 patch 23 4 patch 24 4 patch 25 4 patch 26 4 patch-set patch 21 5 patch 22 5 patch 23 5 patch 24 5 patch 25 5 patch 26 5) [
+  ask (patch-set patch 22 2 patch 23 2 patch 24 2 patch 25 2 patch 26 2 patch-set patch 21 3 patch 22 3 patch 23 3 patch 24 3 patch 25 3 patch 26 3
+       patch-set patch 21 4 patch 22 4 patch 23 4 patch 24 4 patch 25 4 patch 26 4 patch-set patch 22 5 patch 23 5 patch 24 5 patch 25 5 patch 26 5) [
     set pcolor red
     set is-classroom 0 set is-bathroom 0 set is-staffroom 1 set is-hallway 0 set is-wall 0
-    set location "staffroom"
+    set location "bathroom2"
+  ]
+  ; use this if wrapped
+;  ask (patch-set patch 11 -1  patch 12 -1  patch 13 -1  patch 14 -1 patch 15 -1  patch 16 -1  patch 17 -1 patch 18 -1 patch 19 -1 patch 20 -1) [
+;    set pcolor green
+;  ]
+  ; use if not wrapped
+  ask (patch-set patch 11 31  patch 12 31  patch 13 31  patch 14 31 patch 15 31  patch 16 31  patch 17 31 patch 18 31 patch 19 31 patch 20 31) [
+    set pcolor green
+  ]
+  ask (patch-set patch 11 0  patch 12 0  patch 13 0  patch 14 0 patch 15 0  patch 16 0  patch 17 0 patch 18 0 patch 19 0 patch 20 0) [
+    set pcolor magenta
   ]
 end
 
@@ -226,9 +238,9 @@ to set-destinations
   ; similar code for each shape
   ask turtles with [shape = "student"]
   [
-    let myrandom1 random-float 1
-    let myrandom2 random-float 1
-    let myrandom3 random-float 1
+    let myrandom1 random-percent
+    let myrandom2 random-percent
+    let myrandom3 random-percent
 
     ; For bottom right classroom
     ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
@@ -269,10 +281,250 @@ to set-destinations
     ; For top left classroom
     set class3 "tl" ]]]]]
   ]
+
+  ask turtles with [shape = "professor"]
+  [
+    let myrandom1 random-percent
+    let myrandom2 random-percent
+    let myrandom3 random-percent
+
+    ; For bottom right classroom
+    ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
+    ; For middle right classroom
+    ifelse myrandom1 <= 0.333 [ set class1 "mr" ] [
+    ; For top right classroom
+    ifelse myrandom1 <= 0.500 [ set class1 "tr" ] [
+    ; For bottom left classroom
+    ifelse myrandom1 <= 0.667 [ set class1 "bl" ] [
+    ; For middle left classroom
+    ifelse myrandom1 <= 0.833 [ set class1 "ml" ] [
+    ; For top left classroom
+    set class1 "tl" ]]]]]
+
+    ; For bottom right classroom
+    ifelse myrandom2 <= 0.167 [ set class2 "br" ] [
+    ; For middle right classroom
+    ifelse myrandom2 <= 0.333 [ set class2 "mr" ] [
+    ; For top right classroom
+    ifelse myrandom2 <= 0.500 [ set class2 "tr" ] [
+    ; For bottom left classroom
+    ifelse myrandom2 <= 0.667 [ set class2 "bl" ] [
+    ; For middle left classroom
+    ifelse myrandom2 <= 0.833 [ set class2 "ml" ] [
+    ; For top left classroom
+    set class2 "tl" ]]]]]
+
+    ; For bottom right classroom
+    ifelse myrandom3 <= 0.167 [ set class3 "br" ] [
+    ; For middle right classroom
+    ifelse myrandom3 <= 0.333 [ set class3 "mr" ] [
+    ; For top right classroom
+    ifelse myrandom3 <= 0.500 [ set class3 "tr" ] [
+    ; For bottom left classroom
+    ifelse myrandom3 <= 0.667 [ set class3 "bl" ] [
+    ; For middle left classroom
+    ifelse myrandom3 <= 0.833 [ set class3 "ml" ] [
+    ; For top left classroom
+    set class3 "tl" ]]]]]
+  ]
+
+  ask turtles with [shape = "staff"]
+  [
+
+    let myrandom1 random-percent
+    let myrandom2 random-percent
+    let myrandom3 random-percent
+
+    ifelse myrandom1 <= 0.5 [ set class1 "bathroom1" ] [
+    set class1 "bathroom2"
+    ]
+    ifelse myrandom2 <= 0.5 [ set class2 "bathroom1" ] [
+    set class1 "bathroom2"
+    ]
+    ifelse myrandom3 <= 0.5 [ set class3 "bathroom1" ] [
+    set class3 "bathroom2"
+    ]
+  ]
 end
 
 to go
   let entrances randomize-num-entrance
+
+  repeat entrances [
+    let agent-type random-type student-ctr prof-ctr staff-ctr
+    if agent-type = 0
+    [
+      if student-ctr > 0 [
+        set student-ctr student-ctr - 1
+        create-students 1 [
+          set shape "student"
+          ifelse one-way?[
+            setxy random-patch-entry 0
+          ][
+            ifelse coin-flip?
+            [setxy random-patch-entry 0][setxy random-patch-entry 31]
+          ]
+          ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
+          ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
+
+          set interaction-time 60
+          set label insert-item 0 label "    "
+          set label insert-item 0 label gender
+          set label insert-item 1 label age
+          set label-color black
+
+          ask turtles with [shape = "student"]
+          [
+            let myrandom1 random-percent
+            let myrandom2 random-percent
+            let myrandom3 random-percent
+
+            ; For bottom right classroom
+            ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
+            ; For middle right classroom
+            ifelse myrandom1 <= 0.333 [ set class1 "mr" ] [
+            ; For top right classroom
+            ifelse myrandom1 <= 0.500 [ set class1 "tr" ] [
+            ; For bottom left classroom
+            ifelse myrandom1 <= 0.667 [ set class1 "bl" ] [
+            ; For middle left classroom
+            ifelse myrandom1 <= 0.833 [ set class1 "ml" ] [
+            ; For top left classroom
+            set class1 "tl" ]]]]]
+
+            ; For bottom right classroom
+            ifelse myrandom2 <= 0.167 [ set class2 "br" ] [
+            ; For middle right classroom
+            ifelse myrandom2 <= 0.333 [ set class2 "mr" ] [
+            ; For top right classroom
+            ifelse myrandom2 <= 0.500 [ set class2 "tr" ] [
+            ; For bottom left classroom
+            ifelse myrandom2 <= 0.667 [ set class2 "bl" ] [
+            ; For middle left classroom
+            ifelse myrandom2 <= 0.833 [ set class2 "ml" ] [
+            ; For top left classroom
+            set class2 "tl" ]]]]]
+
+            ; For bottom right classroom
+            ifelse myrandom3 <= 0.167 [ set class3 "br" ] [
+            ; For middle right classroom
+            ifelse myrandom3 <= 0.333 [ set class3 "mr" ] [
+            ; For top right classroom
+            ifelse myrandom3 <= 0.500 [ set class3 "tr" ] [
+            ; For bottom left classroom
+            ifelse myrandom3 <= 0.667 [ set class3 "bl" ] [
+            ; For middle left classroom
+            ifelse myrandom3 <= 0.833 [ set class3 "ml" ] [
+            ; For top left classroom
+            set class3 "tl" ]]]]]
+          ]
+        ]
+      ]
+    ]
+    if agent-type = 1
+    [
+
+      if prof-ctr > 0 [
+        set prof-ctr prof-ctr - 1
+
+        create-professors 1 [
+          set shape "professor"
+          ifelse one-way?[
+            setxy random-patch-entry 0
+          ][
+            ifelse coin-flip?
+            [setxy random-patch-entry 0][setxy random-patch-entry 31]
+          ]
+          ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
+          ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
+
+          set interaction-time 60
+          set label insert-item 0 label "    "
+          set label insert-item 0 label gender
+          set label insert-item 1 label age
+          set label-color black
+
+          ask turtles with [shape = "professor"]
+          [
+            let myrandom1 random-percent
+            let myrandom2 random-percent
+            let myrandom3 random-percent
+
+            ; For bottom right classroom
+            ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
+              ; For middle right classroom
+              ifelse myrandom1 <= 0.333 [ set class1 "mr" ] [
+                ; For top right classroom
+                ifelse myrandom1 <= 0.500 [ set class1 "tr" ] [
+                  ; For bottom left classroom
+                  ifelse myrandom1 <= 0.667 [ set class1 "bl" ] [
+                    ; For middle left classroom
+                    ifelse myrandom1 <= 0.833 [ set class1 "ml" ] [
+                      ; For top left classroom
+                      set class1 "tl" ]]]]]
+
+            ; For bottom right classroom
+            ifelse myrandom2 <= 0.167 [ set class2 "br" ] [
+              ; For middle right classroom
+              ifelse myrandom2 <= 0.333 [ set class2 "mr" ] [
+                ; For top right classroom
+                ifelse myrandom2 <= 0.500 [ set class2 "tr" ] [
+                  ; For bottom left classroom
+                  ifelse myrandom2 <= 0.667 [ set class2 "bl" ] [
+                    ; For middle left classroom
+                    ifelse myrandom2 <= 0.833 [ set class2 "ml" ] [
+                      ; For top left classroom
+                      set class2 "tl" ]]]]]
+
+            ; For bottom right classroom
+            ifelse myrandom3 <= 0.167 [ set class3 "br" ] [
+              ; For middle right classroom
+              ifelse myrandom3 <= 0.333 [ set class3 "mr" ] [
+                ; For top right classroom
+                ifelse myrandom3 <= 0.500 [ set class3 "tr" ] [
+                  ; For bottom left classroom
+                  ifelse myrandom3 <= 0.667 [ set class3 "bl" ] [
+                    ; For middle left classroom
+                    ifelse myrandom3 <= 0.833 [ set class3 "ml" ] [
+                      ; For top left classroom
+                      set class3 "tl" ]]]]]
+          ]
+        ]
+      ]
+    ]
+    if agent-type = 2
+    [
+
+      if staff-ctr > 0 [
+        set staff-ctr staff-ctr - 1
+
+        create-staffs 1 [
+          set shape "staff"
+          ifelse one-way?[
+            setxy random-patch-entry 0
+          ][
+            ifelse coin-flip?
+            [setxy random-patch-entry 0][setxy random-patch-entry 31]
+          ]
+          ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
+          ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
+
+          set interaction-time 60
+          set label insert-item 0 label "    "
+          set label insert-item 0 label gender
+          set label insert-item 1 label age
+          set label-color black
+
+          ask turtles with [shape = "staff"]
+          [
+            set class1 "staffroom"
+            set class2 "staffroom"
+            set class3 "staffroom"
+          ]
+        ]
+      ]
+    ]
+  ]
   ;let _patches (patches with [is-classroom = 1])
 
   ;if shape = "student" [
@@ -286,7 +538,7 @@ to go
   ;]
 
   ; Go to classroom if haven't reached
-  if (ticks >= 200) and (ticks <= 600) [
+  if (ticks >= 200) and (ticks <= 500) [
     ask turtles with [class1 != location] [
       if (class1 != 0) and (class1 != location) [
         face min-one-of patches with [location = [class1] of one-of turtles with [class1 != location]][distance myself]
@@ -295,7 +547,20 @@ to go
     ]
   ]
 
-  if (ticks >= 800) and (ticks <= 1200) [
+  if (ticks >= 500) and (ticks <= 700) [
+    ask turtles [
+      ifelse location = "hallway"[
+        move
+      ][
+        if (random-percent < 0.8) [
+          face min-one-of patches with [location = ["hallway"] of one-of turtles][distance myself]
+          move
+      ]
+      ]
+    ]
+  ]
+
+  if (ticks >= 700) and (ticks <= 1000) [
     ask turtles with [class2 != location] [
       if (class2 != 0) and (class2 != location) [
         face min-one-of patches with [location = [class2] of one-of turtles with [class2 != location]][distance myself]
@@ -304,7 +569,20 @@ to go
     ]
   ]
 
-  if (ticks >= 1400) and (ticks <= 1800) [
+  if (ticks >= 1000) and (ticks <= 1200) [
+    ask turtles [
+      ifelse location = "hallway"[
+        move
+      ][
+        if (random-percent < 0.8) [
+          face min-one-of patches with [location = ["hallway"] of one-of turtles][distance myself]
+          move
+      ]
+      ]
+    ]
+  ]
+
+  if (ticks >= 1200) and (ticks <= 1500) [
     ask turtles with [class3 != location] [
       if (class3 != 0) and (class3 != location) [
         face min-one-of patches with [location = [class3] of one-of turtles with [class3 != location]][distance myself]
@@ -313,20 +591,28 @@ to go
     ]
   ]
 
+  if (ticks >= 1500) [
+    ask turtles [
+      ifelse location = "hallway" and random-percent < 0.9 [
+        exit-move
+      ][
+        if (random-percent < 0.8) [
+          face min-one-of patches with [location = ["hallway"] of one-of turtles][distance myself]
+          move
+      ]
+      ]
+    ]
+  ]
+
   ask turtles [
-    ; Movement Part
-    ;if [ pcolor ] of patch-ahead 1 = gray [
-    ; set heading heading + 180
-    ;]
-
-    ;let candidate-heading (random-float (2 * heading-range + 1) - heading-range)
-    ;let candidate-movement ((random-float forward-movement-range) / 5)
-
-    ;right candidate-heading
-    ;let candidate-patch patch-ahead candidate-movement
-
-    ;forward candidate-movement
-
+    ; End of Simulation
+    if ticks >= 1500 [
+      ifelse one-way?[
+        if pcolor = magenta [die]
+      ][
+        if pcolor = magenta or pcolor = green [die]
+      ]
+    ]
     ; Interaction Part
 
     ifelse any? (other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact > 97 [
@@ -479,136 +765,14 @@ to go
       ]
     ]
   ]
-  repeat entrances [
-    let agent-type random-type student-ctr prof-ctr staff-ctr
-    print agent-type
-    if agent-type = 0
-    [
-      if student-ctr > 0 [
-        set student-ctr student-ctr - 1
-        create-students 1 [
-          set shape "student"
-          ifelse one-way?[
-            setxy random-patch-entry 0
-          ][
-            ifelse coin-flip?
-            [setxy random-patch-entry 0][setxy random-patch-entry -1]
-          ]
-          ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-          ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
 
-          set interaction-time 60
-          set label insert-item 0 label "    "
-          set label insert-item 0 label gender
-          set label insert-item 1 label age
-          set label-color black
-
-          ask turtles with [shape = "student"]
-          [
-            let myrandom1 random-float 1
-            let myrandom2 random-float 1
-            let myrandom3 random-float 1
-
-            ; For bottom right classroom
-            ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
-            ; For middle right classroom
-            ifelse myrandom1 <= 0.333 [ set class1 "mr" ] [
-            ; For top right classroom
-            ifelse myrandom1 <= 0.500 [ set class1 "tr" ] [
-            ; For bottom left classroom
-            ifelse myrandom1 <= 0.667 [ set class1 "bl" ] [
-            ; For middle left classroom
-            ifelse myrandom1 <= 0.833 [ set class1 "ml" ] [
-            ; For top left classroom
-            set class1 "tl" ]]]]]
-
-            ; For bottom right classroom
-            ifelse myrandom2 <= 0.167 [ set class2 "br" ] [
-            ; For middle right classroom
-            ifelse myrandom2 <= 0.333 [ set class2 "mr" ] [
-            ; For top right classroom
-            ifelse myrandom2 <= 0.500 [ set class2 "tr" ] [
-            ; For bottom left classroom
-            ifelse myrandom2 <= 0.667 [ set class2 "bl" ] [
-            ; For middle left classroom
-            ifelse myrandom2 <= 0.833 [ set class2 "ml" ] [
-            ; For top left classroom
-            set class2 "tl" ]]]]]
-
-            ; For bottom right classroom
-            ifelse myrandom3 <= 0.167 [ set class3 "br" ] [
-            ; For middle right classroom
-            ifelse myrandom3 <= 0.333 [ set class3 "mr" ] [
-            ; For top right classroom
-            ifelse myrandom3 <= 0.500 [ set class3 "tr" ] [
-            ; For bottom left classroom
-            ifelse myrandom3 <= 0.667 [ set class3 "bl" ] [
-            ; For middle left classroom
-            ifelse myrandom3 <= 0.833 [ set class3 "ml" ] [
-            ; For top left classroom
-            set class3 "tl" ]]]]]
-          ]
-        ]
-      ]
-    ]
-    if agent-type = 1
-    [
-
-      if prof-ctr > 0 [
-        set prof-ctr prof-ctr - 1
-
-        create-professors 1 [
-          set shape "professor"
-          ifelse one-way?[
-            setxy random-patch-entry 0
-          ][
-            ifelse coin-flip?
-            [setxy random-patch-entry 0][setxy random-patch-entry -1]
-          ]
-          ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-          ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
-
-          set interaction-time 60
-          set label insert-item 0 label "    "
-          set label insert-item 0 label gender
-          set label insert-item 1 label age
-          set label-color black
-        ]
-      ]
-    ]
-    if agent-type = 2
-    [
-
-      if staff-ctr > 0 [
-        set staff-ctr staff-ctr - 1
-
-        create-staffs 1 [
-          set shape "staff"
-          ifelse one-way?[
-            setxy random-patch-entry 0
-          ][
-            ifelse coin-flip?
-            [setxy random-patch-entry 0][setxy random-patch-entry -1]
-          ]
-          ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-          ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
-
-          set interaction-time 60
-          set label insert-item 0 label "    "
-          set label insert-item 0 label gender
-          set label insert-item 1 label age
-          set label-color black
-        ]
-      ]
-    ]
-
-  ]
 
   tick
 end
 
 to move
-  if [ pcolor ] of patch-ahead 1 = gray [
+
+  if patch-ahead 1 != nobody and [ pcolor ] of patch-ahead 1 = gray [
    set heading heading + 180
   ]
 
@@ -621,8 +785,22 @@ to move
   forward candidate-movement
 end
 
+to exit-move
+  set heading heading + 180
+
+  let candidate-movement ((random-float forward-movement-range) / 5)
+
+  let candidate-patch patch-ahead candidate-movement
+
+  forward candidate-movement
+end
+
 to-report randomize
   report random 100
+end
+
+to-report random-percent
+  report random-float 1
 end
 
 to-report coin-flip?
@@ -635,10 +813,6 @@ end
 
 to-report random-type [a b c]
   let value random a + b + c
-  print a
-  print b
-  print c
-  print "----"
   if value < a [report 0]
   if value < (a + b) [report 1]
   if value < (a + b + c) [report 2]
@@ -664,7 +838,7 @@ GRAPHICS-WINDOW
 1
 0
 0
-1
+0
 1
 0
 31
@@ -685,7 +859,7 @@ num-students
 num-students
 0
 200
-30.0
+41.0
 1
 1
 NIL
@@ -700,7 +874,7 @@ num-professors
 num-professors
 0
 100
-0.0
+5.0
 1
 1
 NIL
@@ -810,7 +984,7 @@ CHOOSER
 entrance-mode
 entrance-mode
 "one-way" "two-way"
-0
+1
 
 MONITOR
 887
@@ -887,7 +1061,7 @@ chance-female
 chance-female
 0
 100
-50.0
+51.0
 1
 1
 %
