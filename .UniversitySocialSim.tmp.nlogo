@@ -965,7 +965,8 @@ to go
             ifelse location = "bathroom1"[
               face one-of patches with [location = "bathroom1"]
               move
-              if random-percent < 0.1 [set need-bathroom? false]
+              if random-percent < 0.1 [set need-bathroom? false
+              print random-percent]
             ][
               if location = "bathroom2"[
                 face one-of patches with [location = "bathroom2"]
