@@ -8,7 +8,7 @@ globals [
   vision-cooperative
   angle-cooperative
 
-  chance-interact
+
 
   num-student-student
   num-student-prof
@@ -36,6 +36,8 @@ patches-own [
 
 turtles-own [
   gender
+  chance-interact
+  persona
   age
   interaction-time
   class1
@@ -57,6 +59,7 @@ to setup
   set-patches
   set-agents
   set-destinations
+  set-personas
 end
 
 to set-globals
@@ -174,7 +177,7 @@ to set-agents
   set student-ctr num-students
   set prof-ctr num-professors
   set staff-ctr num-staff
-  set chance-interact random 100
+
 ;  create-students num-students [
 ;    set shape "student"
 ;    ifelse one-way?[
@@ -235,8 +238,31 @@ to set-agents
   ]
 end
 
+to set-personas
+  ask turtles
+  [
+    set persona 1 + random 4
+    if persona = 1 [
+      set chance-interact random 100
+    ]
+    if persona = 2[
+      set chance-interact 30 + random 70
+    ]
+    if persona = 3[
+      set chance-interact 50 + random 50
+    ]
+    if persona = 4[
+      set chance-interact 60 + random 40
+    ]
+    if persona = 5[
+      set chance-interact 80 + random 20
+    ]
+  ]
+end
+
 to set-destinations
   ; similar code for each shape
+
   ask turtles with [shape = "student"]
   [
     let myrandom1 random-percent
@@ -995,7 +1021,7 @@ to go
       if shape = "professor" [
         ask other turtles in-cone vision-nonverbal angle-nonverbal[
           if shape = "professor" [
-            set num-prof-prof num-student-prof + 1
+            set num-prof-prof num-prof-prof + 1
           ]
           if shape = "student"[
             set num-student-prof num-student-prof + 1
@@ -1043,7 +1069,7 @@ to go
         if shape = "professor" [
           ask other turtles in-cone vision-cooperative angle-cooperative[
             if shape = "professor" [
-              set num-prof-prof num-student-prof + 1
+              set num-prof-prof num-prof-prof + 1
             ]
             if shape = "student"[
               set num-student-prof num-student-prof + 1
@@ -1091,7 +1117,7 @@ to go
           if shape = "professor" [
             ask other turtles in-cone vision-exchange angle-exchange[
               if shape = "professor" [
-                set num-prof-prof num-student-prof + 1
+                set num-prof-prof num-prof-prof + 1
               ]
               if shape = "student"[
                 set num-student-prof num-student-prof + 1
