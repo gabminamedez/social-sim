@@ -233,7 +233,6 @@ to set-agents
 
     set label-color black
   ]
-
 end
 
 to set-destinations
@@ -554,19 +553,67 @@ to go
       ]
     ]
   ]
-  ;let _patches (patches with [is-classroom = 1])
-
-  ;if shape = "student" [
-    ;if (ticks >= 50) and (ticks <= 250) [
-      ;if patch-here != destination [
-        ;face one-of patches with [is-classroom = 1]
-        ;forward ((random-float forward-movement-range) / 5)
-        ;move-to one-of (_patches with [not any? turtles-here])
-      ;]
-    ;]
-  ;]
 
   ; Go to classroom if haven't reached
+  if (ticks >= 0) and (ticks <= 200) [
+    ask turtles [
+
+      if random-percent <= bathroom-chance [
+        set need-bathroom? true
+      ]
+
+      ifelse need-bathroom? [
+        ifelse (location = class1) [
+          face one-of entrance-classroom (class1)
+          move
+        ]
+        [
+          ifelse (member? patch-here entrance-bathroom (gender))[
+              face one-of bathroom (gender)
+              move
+          ][
+            ifelse (member? patch-here bathroom (gender))[
+              face one-of bathroom (gender)
+              move
+              if random-percent < 0.1 [set need-bathroom? false]
+            ][
+              face one-of entrance-bathroom (gender)
+              move
+            ]
+          ]
+        ]
+      ][
+        ifelse (location = "bathroom1" or location = "bathroom2") and (class1 != location)[
+          face one-of entrance-bathroom (gender)
+          move
+        ][
+          ifelse location = "hallway" [
+            ifelse random-percent < 0.8
+            [
+              move
+            ][
+              ifelse (member? patch-here entrance-classroom (class1)) [
+                face one-of classroom (class1)
+                move
+              ]
+              [
+                face one-of entrance-classroom (class1)
+                move
+              ]
+            ]
+          ][
+            if (random-percent < 0.8) [
+              face one-of classroom (class1)
+              move
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+
+
+
   if (ticks >= 200) and (ticks <= 500) [
     ask turtles [
       if random-percent <= bathroom-chance [
@@ -575,51 +622,37 @@ to go
 
       ifelse need-bathroom? [
         ifelse (location = class1) [
-          ifelse (member? patch-here entrance-classroom (class1)) [
-            face one-of patches with [location = "hallway"]
-            move
-          ][
-            face one-of entrance-classroom (class1)
-            move
-          ]
+          face one-of entrance-classroom (class1)
+          move
         ]
         [
-          ifelse (location = "hallway")[
-            face one-of entrance-bathroom (gender)
-            move
+          ifelse (member? patch-here entrance-bathroom (gender))[
+              face one-of bathroom (gender)
+              move
           ][
-            ifelse location = "bathroom1"[
-              face one-of patches with [location = "bathroom1"]
+            ifelse (member? patch-here bathroom (gender))[
+              face one-of bathroom (gender)
               move
               if random-percent < 0.1 [set need-bathroom? false]
             ][
-              if location = "bathroom2"[
-                face one-of patches with [location = "bathroom2"]
-                move
-                if random-percent < 0.1 [set need-bathroom? false]
-
-              ]
+              face one-of entrance-bathroom (gender)
+              move
             ]
           ]
         ]
       ]
       [
         ifelse (location = "bathroom1" or location = "bathroom2") and (class1 != location)[
-          ifelse (member? patch-here entrance-bathroom (gender)) [
-            face one-of patches with [location = "hallway"]
-            move
-          ][
-            face one-of entrance-bathroom (gender)
-            move
-          ]
+          face one-of entrance-bathroom (gender)
+          move
         ][
-          let class class1
-          ifelse (location != class1) [
-            face one-of entrance-classroom (class1)
-            move
-          ] [
-            if (member? patch-here entrance-classroom (class1)) [
-              face one-of patches with [location = class]
+          if location = "hallway" [
+            ifelse (member? patch-here entrance-classroom (class1)) [
+              face one-of classroom (class1)
+              move
+            ]
+            [
+              face one-of entrance-classroom (class1)
               move
             ]
           ]
@@ -630,91 +663,62 @@ to go
 
   if (ticks >= 500) and (ticks <= 700) [
     ask turtles [
-
       if random-percent <= bathroom-chance [
         set need-bathroom? true
       ]
 
       ifelse need-bathroom? [
         ifelse (location = class1) [
-          ifelse (member? patch-here entrance-classroom (class1)) [
-            face one-of patches with [location = "hallway"]
-            move
-          ][
-            face one-of entrance-classroom (class1)
-            move
-          ]
+          face one-of entrance-classroom (class1)
+          move
         ]
         [
           ifelse (location = class2)[
-            ifelse (member? patch-here entrance-classroom (class2)) [
-              face one-of patches with [location = "hallway"]
-              move
-            ][
-              face one-of entrance-classroom (class2)
-              move
-            ]
+            face one-of entrance-classroom (class2)
+            move
           ][
-            ifelse (location = "hallway")[
-              face one-of entrance-bathroom (gender)
+            ifelse (member? patch-here entrance-bathroom (gender))[
+              face one-of bathroom (gender)
               move
             ][
-              ifelse location = "bathroom1"[
-                face one-of patches with [location = "bathroom1"]
+              ifelse (member? patch-here bathroom (gender))[
+                face one-of bathroom (gender)
                 move
                 if random-percent < 0.1 [set need-bathroom? false]
               ][
-                if location = "bathroom2"[
-                  face one-of patches with [location = "bathroom2"]
-                  move
-                  if random-percent < 0.1 [set need-bathroom? false]
-
-                ]
+                face one-of entrance-bathroom (gender)
+                move
               ]
             ]
           ]
-
         ]
       ][
         ifelse (location = "bathroom1" or location = "bathroom2") and (class2 != location)[
-          ifelse (member? patch-here entrance-bathroom (gender)) [
-            face one-of patches with [location = "hallway"]
-            move
-          ][
-            face one-of entrance-bathroom (gender)
-            move
-          ]
+          face one-of entrance-bathroom (gender)
+          move
         ][
-          ifelse location = "hallway"[
+          ifelse location = "hallway" [
             ifelse random-percent < 0.8
             [
               move
             ][
-              let class class2
-              ifelse (location != class2) [
+              ifelse (member? patch-here entrance-classroom (class2)) [
+                face one-of classroom (class2)
+                move
+              ]
+              [
                 face one-of entrance-classroom (class2)
                 move
-              ] [
-                if (member? patch-here entrance-classroom (class2)) [
-                  face one-of patches with [location = class]
-                  move
-                ]
               ]
             ]
           ][
             if (random-percent < 0.8) [
               if (location = class1)[
-                ifelse (not member? patch-here entrance-classroom (class1)) [
-                  face one-of entrance-classroom (class1)
-                  move
-                ] [
-                  face one-of patches with [location = "hallway"]
-                  move
-                ]
+                face one-of entrance-classroom (class1)
+                move
               ]
               if (location = class2) [
-                let class class2
-                face one-of patches with [location = class]
+                face one-of classroom (class2)
                 move
               ]
             ]
@@ -732,51 +736,46 @@ to go
 
       ifelse need-bathroom? [
         ifelse (location = class2) [
-          ifelse (member? patch-here entrance-classroom (class2)) [
-            face one-of patches with [location = "hallway"]
-            move
-          ][
-            face one-of entrance-classroom (class2)
-            move
-          ]
+          face one-of entrance-classroom (class2)
+          move
         ]
         [
-          ifelse (location = "hallway")[
-            face one-of entrance-bathroom (gender)
-            move
+          ifelse (member? patch-here entrance-bathroom (gender))[
+              face one-of bathroom (gender)
+              move
           ][
-            ifelse location = "bathroom1"[
-              face one-of patches with [location = "bathroom1"]
+            ifelse (member? patch-here bathroom (gender))[
+              face one-of bathroom (gender)
               move
               if random-percent < 0.1 [set need-bathroom? false]
             ][
-              if location = "bathroom2"[
-                face one-of patches with [location = "bathroom2"]
-                move
-                if random-percent < 0.1 [set need-bathroom? false]
-
-              ]
+              face one-of entrance-bathroom (gender)
+              move
             ]
           ]
         ]
       ]
       [
         ifelse (location = "bathroom1" or location = "bathroom2") and (class2 != location)[
-          ifelse (member? patch-here entrance-bathroom (gender)) [
-            face one-of patches with [location = "hallway"]
-            move
-          ][
-            face one-of entrance-bathroom (gender)
-            move
-          ]
+          face one-of entrance-bathroom (gender)
+          move
         ][
-          let class class2
-          ifelse (location != class2) [
-            face one-of entrance-classroom (class2)
-            move
-          ] [
-            if (member? patch-here entrance-classroom (class2)) [
-              face one-of patches with [location = class]
+          ifelse location = "hallway" [
+            ifelse (member? patch-here entrance-classroom (class2)) [
+              face one-of classroom (class2)
+              move
+            ]
+            [
+              face one-of entrance-classroom (class2)
+              move
+            ]
+          ][
+            if (location = class1)[
+              face one-of entrance-classroom (class1)
+              move
+            ]
+            if (location = class2) [
+              face one-of classroom (class2)
               move
             ]
           ]
@@ -793,84 +792,56 @@ to go
 
       ifelse need-bathroom? [
         ifelse (location = class2) [
-          ifelse (member? patch-here entrance-classroom (class2)) [
-            face one-of patches with [location = "hallway"]
-            move
-          ][
-            face one-of entrance-classroom (class2)
-            move
-          ]
+          face one-of entrance-classroom (class2)
+          move
         ]
         [
           ifelse (location = class3)[
-            ifelse (member? patch-here entrance-classroom (class3)) [
-              face one-of patches with [location = "hallway"]
-              move
-            ][
-              face one-of entrance-classroom (class3)
-              move
-            ]
+            face one-of entrance-classroom (class3)
+            move
           ][
-            ifelse (location = "hallway")[
-              face one-of entrance-bathroom (gender)
+            ifelse (member? patch-here entrance-bathroom (gender))[
+              face one-of bathroom (gender)
               move
             ][
-              ifelse location = "bathroom1"[
-                face one-of patches with [location = "bathroom1"]
+              ifelse (member? patch-here bathroom (gender))[
+                face one-of bathroom (gender)
                 move
                 if random-percent < 0.1 [set need-bathroom? false]
               ][
-                if location = "bathroom2"[
-                  face one-of patches with [location = "bathroom2"]
-                  move
-                  if random-percent < 0.1 [set need-bathroom? false]
-
-                ]
+                face one-of entrance-bathroom (gender)
+                move
               ]
             ]
           ]
-
         ]
       ][
         ifelse (location = "bathroom1" or location = "bathroom2") and (class3 != location)[
-          ifelse (member? patch-here entrance-bathroom (gender)) [
-            face one-of patches with [location = "hallway"]
-            move
-          ][
-            face one-of entrance-bathroom (gender)
-            move
-          ]
+          face one-of entrance-bathroom (gender)
+          move
         ][
-          ifelse location = "hallway"[
+          ifelse location = "hallway" [
             ifelse random-percent < 0.8
             [
               move
             ][
-              let class class3
-              ifelse (location != class3) [
+              ifelse (member? patch-here entrance-classroom (class3)) [
+                face one-of classroom (class3)
+                move
+              ]
+              [
                 face one-of entrance-classroom (class3)
                 move
-              ] [
-                if (member? patch-here entrance-classroom (class3)) [
-                  face one-of patches with [location = class]
-                  move
-                ]
               ]
             ]
           ][
             if (random-percent < 0.8) [
               if (location = class2)[
-                ifelse (not member? patch-here entrance-classroom (class2)) [
-                  face one-of entrance-classroom (class2)
-                  move
-                ] [
-                  face one-of patches with [location = "hallway"]
-                  move
-                ]
+                face one-of entrance-classroom (class2)
+                move
               ]
               if (location = class3) [
-                let class class3
-                face one-of patches with [location = class]
+                face one-of classroom (class3)
                 move
               ]
             ]
@@ -888,51 +859,46 @@ to go
 
       ifelse need-bathroom? [
         ifelse (location = class3) [
-          ifelse (member? patch-here entrance-classroom (class3)) [
-            face one-of patches with [location = "hallway"]
-            move
-          ][
-            face one-of entrance-classroom (class3)
-            move
-          ]
+          face one-of entrance-classroom (class3)
+          move
         ]
         [
-          ifelse (location = "hallway")[
-            face one-of entrance-bathroom (gender)
-            move
+          ifelse (member? patch-here entrance-bathroom (gender))[
+              face one-of bathroom (gender)
+              move
           ][
-            ifelse location = "bathroom1"[
-              face one-of patches with [location = "bathroom1"]
+            ifelse (member? patch-here bathroom (gender))[
+              face one-of bathroom (gender)
               move
               if random-percent < 0.1 [set need-bathroom? false]
             ][
-              if location = "bathroom2"[
-                face one-of patches with [location = "bathroom2"]
-                move
-                if random-percent < 0.1 [set need-bathroom? false]
-
-              ]
+              face one-of entrance-bathroom (gender)
+              move
             ]
           ]
         ]
       ]
       [
         ifelse (location = "bathroom1" or location = "bathroom2") and (class3 != location)[
-          ifelse (member? patch-here entrance-bathroom (gender)) [
-            face one-of patches with [location = "hallway"]
-            move
-          ][
-            face one-of entrance-bathroom (gender)
-            move
-          ]
+          face one-of entrance-bathroom (gender)
+          move
         ][
-          let class class3
-          ifelse (location != class3) [
-            face one-of entrance-classroom (class3)
-            move
-          ] [
-            if (member? patch-here entrance-classroom (class3)) [
-              face one-of patches with [location = class]
+          ifelse location = "hallway" [
+            ifelse (member? patch-here entrance-classroom (class3)) [
+              face one-of classroom (class3)
+              move
+            ]
+            [
+              face one-of entrance-classroom (class3)
+              move
+            ]
+          ][
+            if (location = class2)[
+              face one-of entrance-classroom (class2)
+              move
+            ]
+            if (location = class3) [
+              face one-of classroom (class3)
               move
             ]
           ]
@@ -946,44 +912,54 @@ to go
       if random-percent < bathroom-chance [
         set need-bathroom? true
       ]
-
       ifelse need-bathroom? [
-        ifelse (location = class3) and ((gender = "M" and class3 = "bathroom2") or (gender = "F" and class3 = "bathroom1"))[
-          ifelse (member? patch-here entrance-classroom (class3)) [
-            face one-of patches with [location = "hallway"]
+        ifelse (location = class3) and (shape = "staff" and ((gender = "M" and class3 = "bathroom2") or (gender = "F" and class3 = "bathroom1")) or shape = "student")[
+
+          face one-of entrance-classroom (class3)
+          move
+        ][
+          ifelse (member? patch-here entrance-bathroom (gender))[
+            face one-of bathroom (gender)
             move
           ][
-            face one-of entrance-classroom (class3)
-            move
-          ]
-        ]
-        [
-          ifelse (location = "hallway")[
-            face one-of entrance-bathroom (gender)
-            move
-          ][
-            ifelse location = "bathroom1"[
-              face one-of patches with [location = "bathroom1"]
+            ifelse (member? patch-here bathroom (gender))[
+              face one-of bathroom (gender)
               move
               if random-percent < 0.1 [set need-bathroom? false]
             ][
-              if location = "bathroom2"[
-                face one-of patches with [location = "bathroom2"]
+              ifelse location = "hallway"[
+                face one-of entrance-bathroom (gender)
                 move
-                if random-percent < 0.1 [set need-bathroom? false]
-
+              ][
+                face one-of (patch-set patch 15 16 patch 15 17 patch 16 16 patch 16 17)
+                move
               ]
             ]
           ]
         ]
       ][
-        ifelse location = "hallway" and random-percent < 0.9 [
-          face one-of patches-exit (exit)
+        ifelse (location = "bathroom1" or location = "bathroom2")[
+          face one-of entrance-bathroom (gender)
           move
         ][
-          if (random-percent < 0.8) [
-            face one-of patches with [location = "hallway"]
-            move
+          ifelse location = "hallway" [
+            ifelse random-percent < 0.9
+            [
+              face one-of patches-exit (exit)
+              move
+            ][
+              move
+            ]
+          ][
+            if (random-percent < 0.9) [
+              ifelse (location = class3)[
+                face one-of entrance-classroom (class3)
+                move
+              ][
+                face one-of (patch-set patch 15 16 patch 15 17 patch 16 16 patch 16 17)
+                move
+              ]
+            ]
           ]
         ]
       ]
@@ -1213,31 +1189,34 @@ to-report random-patch-entry
   report one-of [11 12 13 14 15 16 17 18 19 20]
 end
 
-to-report in-classroom?
-
+to-report classroom [class]
+  if class = "tl" [report patches with [location = "tl"]]
+  if class = "tr" [report patches with [location = "tr"]]
+  if class = "ml" [report patches with [location = "ml"]]
+  if class = "mr" [report patches with [location = "mr"]]
+  if class = "bl" [report patches with [location = "bl"]]
+  if class = "br" [report patches with [location = "br"]]
+  if class = "bathroom1" [report patches with [location = "bathroom1"]]
+  if class = "bathroom2" [report patches with [location = "bathroom2"]]
+end
+to-report bathroom [gend]
+  if gend = "M" [report patches with [location = "bathroom1"]]
+  if gend = "F" [report patches with [location = "bathroom2"]]
 end
 
 to-report entrance-classroom [class]
-  if class = "tl" [report (patch-set patch 10 23 patch 10 24)]
-  if class = "tr" [report (patch-set patch 21 23 patch 21 24)]
-  if class = "ml" [report (patch-set patch 10 16 patch 10 17)]
-  if class = "mr" [report (patch-set patch 21 16 patch 21 17)]
-  if class = "bl" [report (patch-set patch 10 9 patch 10 10)]
-  if class = "br" [report (patch-set patch 21 9 patch 21 10)]
-  if class = "bathroom1" [report (patch-set patch 10 3 patch 10 4)]
-  if class = "bathroom2" [report (patch-set patch 21 3 patch 21 4)]
+  if class = "tl" [report (patch-set patch 11 23 patch 11 24)]
+  if class = "tr" [report (patch-set patch 20 23 patch 20 24)]
+  if class = "ml" [report (patch-set patch 11 16 patch 11 17)]
+  if class = "mr" [report (patch-set patch 20 16 patch 20 17)]
+  if class = "bl" [report (patch-set patch 11 9 patch 11 10)]
+  if class = "br" [report (patch-set patch 20 9 patch 20 10)]
+  if class = "bathroom1" [report (patch-set patch 11 3 patch 11 4)]
+  if class = "bathroom2" [report (patch-set patch 20 3 patch 20 4)]
 end
 to-report entrance-bathroom [gend]
-  if gend = "M" [report (patch-set patch 10 3 patch 10 4)]
-  if gend = "F" [report (patch-set patch 21 3 patch 21 4)]
-end
-
-to-report entrance-bath1
-  report (patch-set patch 10 3 patch 10 4)
-end
-
-to-report entrance-bath2
-  report (patch-set patch 21 3 patch 21 4)
+  if gend = "M" [report (patch-set patch 11 3 patch 11 4)]
+  if gend = "F" [report (patch-set patch 20 3 patch 20 4)]
 end
 
 to-report patches-exit [exiting]
