@@ -443,13 +443,18 @@ to go
           face one-of entrance-bathroom (gender)
           move
         ][
-          if location = "hallway" [
+          ifelse location = "hallway" [
             ifelse (member? patch-here entrance-classroom (class1)) [
               face one-of classroom (class1)
               move
             ]
             [
               face one-of entrance-classroom (class1)
+              move
+            ]
+          ][
+            if random-percent < 0.2 [
+              face one-of classroom (class1)
               move
             ]
           ]
@@ -510,7 +515,7 @@ to go
             ]
           ][
             if (random-percent < 0.8) [
-              if (location = class1)[
+              if (location = class1) and (class1 != class2)[
                 face one-of entrance-classroom (class1)
                 move
               ]
@@ -567,11 +572,11 @@ to go
               move
             ]
           ][
-            if (location = class1)[
+            if (location = class1) and (class1 != class2)[
               face one-of entrance-classroom (class1)
               move
             ]
-            if (location = class2) [
+            if random-percent < 0.2 and (location = class2) [
               face one-of classroom (class2)
               move
             ]
@@ -633,7 +638,7 @@ to go
             ]
           ][
             if (random-percent < 0.8) [
-              if (location = class2)[
+              if (location = class2) and (class2 != class3)[
                 face one-of entrance-classroom (class2)
                 move
               ]
@@ -690,11 +695,11 @@ to go
               move
             ]
           ][
-            if (location = class2)[
+            if (location = class2) and (class2 != class3)[
               face one-of entrance-classroom (class2)
               move
             ]
-            if (location = class3) [
+            if random-percent < 0.2 and (location = class3) [
               face one-of classroom (class3)
               move
             ]
@@ -819,7 +824,7 @@ to go
       if interaction-time = 0 [
         set interaction-time 60
         set chance-interact random 100
-        move
+          if random-percent < 0.3 [move]
       ]
     ] [
       ifelse any? (other turtles in-cone vision-cooperative angle-cooperative) and chance-interact > 95 [
@@ -867,7 +872,7 @@ to go
         if interaction-time = 0 [
           set interaction-time 60
           set chance-interact random 100
-          move
+          if random-percent < 0.3 [move]
         ]
       ] [
         ifelse any? (other turtles in-cone vision-exchange angle-exchange) and chance-interact > 90 [
@@ -915,11 +920,12 @@ to go
           if interaction-time = 0 [
             set interaction-time 60
             set chance-interact random 100
-            move
+          if random-percent < 0.3 [move]
           ]
         ] [
           set chance-interact random 100
-          move
+          if random-percent < 0.3 [move]
+
         ]
       ]
     ]
@@ -935,7 +941,7 @@ end
 
 to move
 
-  if patch-ahead 1 != nobody and [ pcolor ] of patch-ahead 1 = gray [
+  if patch-ahead 1 = nobody or (patch-ahead 1 != nobody and [ pcolor ] of patch-ahead 1 = gray) [
    set heading heading + 180
   ]
 
@@ -943,20 +949,15 @@ to move
   let candidate-movement ((random-float forward-movement-range) / 5)
 
   right candidate-heading
+
+  if patch-ahead 1 = nobody or (patch-ahead 1 != nobody and [ pcolor ] of patch-ahead 1 = gray) [
+   set heading heading + 180
+  ]
   let candidate-patch patch-ahead candidate-movement
 
   forward candidate-movement
 end
 
-to exit-move
-  set heading heading + 180
-
-  let candidate-movement ((random-float forward-movement-range) / 5)
-
-  let candidate-patch patch-ahead candidate-movement
-
-  forward candidate-movement
-end
 
 to-report randomize
   report random 100
@@ -1163,7 +1164,7 @@ CHOOSER
 entrance-mode
 entrance-mode
 "one-way" "two-way"
-1
+0
 
 MONITOR
 887
