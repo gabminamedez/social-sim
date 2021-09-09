@@ -177,7 +177,6 @@ to set-agents
   set student-ctr num-students
   set prof-ctr num-professors
   set staff-ctr num-staff
-  set chance-interact random 100
   ask turtles [
     set interaction-time 60
     set label insert-item 0 label "    "
@@ -1030,7 +1029,7 @@ to-report all-classrooms
   report ["tl" "tr" "ml" "mr" "bl" "br"]
 end
 to-report all-bathrooms
-  report ["tl" "tr" "ml" "mr" "bl" "br"]
+  report ["bathroom1" "bathroom2"]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -1069,7 +1068,7 @@ num-students
 num-students
 0
 200
-100.0
+86.0
 1
 1
 NIL
@@ -1084,7 +1083,7 @@ num-professors
 num-professors
 0
 100
-10.0
+13.0
 1
 1
 NIL
@@ -1099,7 +1098,7 @@ num-staff
 num-staff
 0
 50
-6.0
+5.0
 1
 1
 NIL
@@ -1164,7 +1163,7 @@ CHOOSER
 entrance-mode
 entrance-mode
 "one-way" "two-way"
-0
+1
 
 MONITOR
 887
