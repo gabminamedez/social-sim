@@ -177,63 +177,12 @@ to set-agents
   set student-ctr num-students
   set prof-ctr num-professors
   set staff-ctr num-staff
-
-;  create-students num-students [
-;    set shape "student"
-;    ifelse one-way?[
-;      setxy random-patch-entry 0
-;    ][
-;    ifelse coin-flip?
-;      [setxy random-patch-entry 0][setxy random-patch-entry -1]
-;    ]
-;    ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-;    ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
-;  ]
-;
-;  create-professors num-professors [
-;    set shape "professor"
-;    let tempx random-xcor
-;    let tempy random-ycor
-;
-;    ifelse ([is-hallway] of patch-at tempx tempy) = 1 [
-;      setxy tempx tempy
-;    ] [
-;      while [ ([is-hallway] of patch-at tempx tempy) = 0 ] [
-;        set tempx random-xcor
-;        set tempy random-ycor
-;      ]
-;    ]
-;
-;    setxy tempx tempy
-;    ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-;    ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
-;  ]
-;
-;  create-staffs num-staff [
-;    set shape "staff"
-;    let tempx random-xcor
-;    let tempy random-ycor
-;
-;    ifelse ([is-hallway] of patch-at tempx tempy) = 1 [
-;      setxy tempx tempy
-;    ] [
-;      while [ ([is-hallway] of patch-at tempx tempy) = 0 ] [
-;        set tempx random-xcor
-;        set tempy random-ycor
-;      ]
-;    ]
-;
-;    setxy tempx tempy
-;    ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-;    ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
-;  ]
-;
+  set chance-interact random 100
   ask turtles [
     set interaction-time 60
     set label insert-item 0 label "    "
     set label insert-item 0 label gender
     set label insert-item 1 label age
-
     set label-color black
   ]
 end
@@ -265,112 +214,23 @@ to set-destinations
 
   ask turtles with [shape = "student"]
   [
-    let myrandom1 random-percent
-    let myrandom2 random-percent
-    let myrandom3 random-percent
-
-    ; For bottom right classroom
-    ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
-    ; For middle right classroom
-    ifelse myrandom1 <= 0.333 [ set class1 "mr" ] [
-    ; For top right classroom
-    ifelse myrandom1 <= 0.500 [ set class1 "tr" ] [
-    ; For bottom left classroom
-    ifelse myrandom1 <= 0.667 [ set class1 "bl" ] [
-    ; For middle left classroom
-    ifelse myrandom1 <= 0.833 [ set class1 "ml" ] [
-    ; For top left classroom
-    set class1 "tl" ]]]]]
-
-    ; For bottom right classroom
-    ifelse myrandom2 <= 0.167 [ set class2 "br" ] [
-    ; For middle right classroom
-    ifelse myrandom2 <= 0.333 [ set class2 "mr" ] [
-    ; For top right classroom
-    ifelse myrandom2 <= 0.500 [ set class2 "tr" ] [
-    ; For bottom left classroom
-    ifelse myrandom2 <= 0.667 [ set class2 "bl" ] [
-    ; For middle left classroom
-    ifelse myrandom2 <= 0.833 [ set class2 "ml" ] [
-    ; For top left classroom
-    set class2 "tl" ]]]]]
-
-    ; For bottom right classroom
-    ifelse myrandom3 <= 0.167 [ set class3 "br" ] [
-    ; For middle right classroom
-    ifelse myrandom3 <= 0.333 [ set class3 "mr" ] [
-    ; For top right classroom
-    ifelse myrandom3 <= 0.500 [ set class3 "tr" ] [
-    ; For bottom left classroom
-    ifelse myrandom3 <= 0.667 [ set class3 "bl" ] [
-    ; For middle left classroom
-    ifelse myrandom3 <= 0.833 [ set class3 "ml" ] [
-    ; For top left classroom
-    set class3 "tl" ]]]]]
+    set class1 one-of all-classrooms
+    set class2 one-of all-classrooms
+    set class3 one-of all-classrooms
   ]
 
   ask turtles with [shape = "professor"]
   [
-    let myrandom1 random-percent
-    let myrandom2 random-percent
-    let myrandom3 random-percent
-
-    ; For bottom right classroom
-    ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
-    ; For middle right classroom
-    ifelse myrandom1 <= 0.333 [ set class1 "mr" ] [
-    ; For top right classroom
-    ifelse myrandom1 <= 0.500 [ set class1 "tr" ] [
-    ; For bottom left classroom
-    ifelse myrandom1 <= 0.667 [ set class1 "bl" ] [
-    ; For middle left classroom
-    ifelse myrandom1 <= 0.833 [ set class1 "ml" ] [
-    ; For top left classroom
-    set class1 "tl" ]]]]]
-
-    ; For bottom right classroom
-    ifelse myrandom2 <= 0.167 [ set class2 "br" ] [
-    ; For middle right classroom
-    ifelse myrandom2 <= 0.333 [ set class2 "mr" ] [
-    ; For top right classroom
-    ifelse myrandom2 <= 0.500 [ set class2 "tr" ] [
-    ; For bottom left classroom
-    ifelse myrandom2 <= 0.667 [ set class2 "bl" ] [
-    ; For middle left classroom
-    ifelse myrandom2 <= 0.833 [ set class2 "ml" ] [
-    ; For top left classroom
-    set class2 "tl" ]]]]]
-
-    ; For bottom right classroom
-    ifelse myrandom3 <= 0.167 [ set class3 "br" ] [
-    ; For middle right classroom
-    ifelse myrandom3 <= 0.333 [ set class3 "mr" ] [
-    ; For top right classroom
-    ifelse myrandom3 <= 0.500 [ set class3 "tr" ] [
-    ; For bottom left classroom
-    ifelse myrandom3 <= 0.667 [ set class3 "bl" ] [
-    ; For middle left classroom
-    ifelse myrandom3 <= 0.833 [ set class3 "ml" ] [
-    ; For top left classroom
-    set class3 "tl" ]]]]]
+    set class1 one-of all-classrooms
+    set class2 one-of all-classrooms
+    set class3 one-of all-classrooms
   ]
 
   ask turtles with [shape = "staff"]
   [
-
-    let myrandom1 random-percent
-    let myrandom2 random-percent
-    let myrandom3 random-percent
-
-    ifelse myrandom1 <= 0.5 [ set class1 "bathroom1" ] [
-    set class1 "bathroom2"
-    ]
-    ifelse myrandom2 <= 0.5 [ set class2 "bathroom1" ] [
-    set class1 "bathroom2"
-    ]
-    ifelse myrandom3 <= 0.5 [ set class3 "bathroom1" ] [
-    set class3 "bathroom2"
-    ]
+    set class1 one-of all-bathrooms
+    set class2 one-of all-bathrooms
+    set class3 one-of all-bathrooms
   ]
 end
 
@@ -409,48 +269,9 @@ to go
 
           ask turtles with [shape = "student"]
           [
-            let myrandom1 random-percent
-            let myrandom2 random-percent
-            let myrandom3 random-percent
-
-            ; For bottom right classroom
-            ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
-            ; For middle right classroom
-            ifelse myrandom1 <= 0.333 [ set class1 "mr" ] [
-            ; For top right classroom
-            ifelse myrandom1 <= 0.500 [ set class1 "tr" ] [
-            ; For bottom left classroom
-            ifelse myrandom1 <= 0.667 [ set class1 "bl" ] [
-            ; For middle left classroom
-            ifelse myrandom1 <= 0.833 [ set class1 "ml" ] [
-            ; For top left classroom
-            set class1 "tl" ]]]]]
-
-            ; For bottom right classroom
-            ifelse myrandom2 <= 0.167 [ set class2 "br" ] [
-            ; For middle right classroom
-            ifelse myrandom2 <= 0.333 [ set class2 "mr" ] [
-            ; For top right classroom
-            ifelse myrandom2 <= 0.500 [ set class2 "tr" ] [
-            ; For bottom left classroom
-            ifelse myrandom2 <= 0.667 [ set class2 "bl" ] [
-            ; For middle left classroom
-            ifelse myrandom2 <= 0.833 [ set class2 "ml" ] [
-            ; For top left classroom
-            set class2 "tl" ]]]]]
-
-            ; For bottom right classroom
-            ifelse myrandom3 <= 0.167 [ set class3 "br" ] [
-            ; For middle right classroom
-            ifelse myrandom3 <= 0.333 [ set class3 "mr" ] [
-            ; For top right classroom
-            ifelse myrandom3 <= 0.500 [ set class3 "tr" ] [
-            ; For bottom left classroom
-            ifelse myrandom3 <= 0.667 [ set class3 "bl" ] [
-            ; For middle left classroom
-            ifelse myrandom3 <= 0.833 [ set class3 "ml" ] [
-            ; For top left classroom
-            set class3 "tl" ]]]]]
+            set class1 one-of all-classrooms
+            set class2 one-of all-classrooms
+            set class3 one-of all-classrooms
           ]
         ]
       ]
@@ -485,48 +306,9 @@ to go
 
           ask turtles with [shape = "professor"]
           [
-            let myrandom1 random-percent
-            let myrandom2 random-percent
-            let myrandom3 random-percent
-
-            ; For bottom right classroom
-            ifelse myrandom1 <= 0.167 [ set class1 "br" ] [
-              ; For middle right classroom
-              ifelse myrandom1 <= 0.333 [ set class1 "mr" ] [
-                ; For top right classroom
-                ifelse myrandom1 <= 0.500 [ set class1 "tr" ] [
-                  ; For bottom left classroom
-                  ifelse myrandom1 <= 0.667 [ set class1 "bl" ] [
-                    ; For middle left classroom
-                    ifelse myrandom1 <= 0.833 [ set class1 "ml" ] [
-                      ; For top left classroom
-                      set class1 "tl" ]]]]]
-
-            ; For bottom right classroom
-            ifelse myrandom2 <= 0.167 [ set class2 "br" ] [
-              ; For middle right classroom
-              ifelse myrandom2 <= 0.333 [ set class2 "mr" ] [
-                ; For top right classroom
-                ifelse myrandom2 <= 0.500 [ set class2 "tr" ] [
-                  ; For bottom left classroom
-                  ifelse myrandom2 <= 0.667 [ set class2 "bl" ] [
-                    ; For middle left classroom
-                    ifelse myrandom2 <= 0.833 [ set class2 "ml" ] [
-                      ; For top left classroom
-                      set class2 "tl" ]]]]]
-
-            ; For bottom right classroom
-            ifelse myrandom3 <= 0.167 [ set class3 "br" ] [
-              ; For middle right classroom
-              ifelse myrandom3 <= 0.333 [ set class3 "mr" ] [
-                ; For top right classroom
-                ifelse myrandom3 <= 0.500 [ set class3 "tr" ] [
-                  ; For bottom left classroom
-                  ifelse myrandom3 <= 0.667 [ set class3 "bl" ] [
-                    ; For middle left classroom
-                    ifelse myrandom3 <= 0.833 [ set class3 "ml" ] [
-                      ; For top left classroom
-                      set class3 "tl" ]]]]]
+            set class1 one-of all-classrooms
+            set class2 one-of all-classrooms
+            set class3 one-of all-classrooms
           ]
         ]
       ]
@@ -561,19 +343,9 @@ to go
 
           ask turtles with [shape = "staff"]
           [
-            let myrandom1 random-percent
-            let myrandom2 random-percent
-            let myrandom3 random-percent
-
-            ifelse myrandom1 <= 0.5 [ set class1 "bathroom1" ] [
-              set class1 "bathroom2"
-            ]
-            ifelse myrandom2 <= 0.5 [ set class2 "bathroom1" ] [
-              set class2 "bathroom2"
-            ]
-            ifelse myrandom3 <= 0.5 [ set class3 "bathroom1" ] [
-              set class3 "bathroom2"
-            ]
+            set class1 one-of all-bathrooms
+            set class2 one-of all-bathrooms
+            set class3 one-of all-bathrooms
           ]
         ]
       ]
@@ -1253,6 +1025,13 @@ to-report patches-exit [exiting]
     report (patch-set patch 11 31 patch 12 31 patch 13 31 patch 14 31 patch 15 31 patch 16 31 patch 17 31 patch 18 31 patch 19 31 patch 20 31)
   ]
 end
+
+to-report all-classrooms
+  report ["tl" "tr" "ml" "mr" "bl" "br"]
+end
+to-report all-bathrooms
+  report ["tl" "tr" "ml" "mr" "bl" "br"]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 246
@@ -1290,7 +1069,7 @@ num-students
 num-students
 0
 200
-41.0
+100.0
 1
 1
 NIL
@@ -1305,7 +1084,7 @@ num-professors
 num-professors
 0
 100
-5.0
+10.0
 1
 1
 NIL
@@ -1320,47 +1099,17 @@ num-staff
 num-staff
 0
 50
-3.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-62
-292
-236
-325
-num-open
-num-open
-0
-6
-3.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-62
-37
-236
-70
-spawn-tick-interval
-spawn-tick-interval
-0
-100
-50.0
+6.0
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-174
-467
-237
-500
+175
+429
+238
+462
 NIL
 go
 T
@@ -1374,10 +1123,10 @@ NIL
 1
 
 BUTTON
-152
-509
-237
-542
+153
+472
+238
+505
 go-once
 go
 NIL
@@ -1392,9 +1141,9 @@ NIL
 
 BUTTON
 170
-424
+386
 236
-457
+419
 NIL
 setup
 NIL
@@ -1408,14 +1157,14 @@ NIL
 1
 
 CHOOSER
-62
-369
-237
-414
+63
+332
+238
+377
 entrance-mode
 entrance-mode
 "one-way" "two-way"
-1
+0
 
 MONITOR
 887
@@ -1492,7 +1241,7 @@ chance-female
 chance-female
 0
 100
-51.0
+50.0
 1
 1
 %
@@ -1547,15 +1296,15 @@ num-exchange
 11
 
 SLIDER
-64
-330
-237
-363
+65
+292
+238
+325
 num-entrance
 num-entrance
 1
 5
-2.0
+3.0
 1
 1
 NIL
