@@ -46,6 +46,7 @@ turtles-own [
   bathroom-chance
   need-bathroom?
   exit
+  interacting?
 ]
 
 breed [ students student ]
@@ -265,6 +266,7 @@ to go
           set label-color black
           set bathroom-chance 0.002
           set need-bathroom? false
+          set interacting? false
 
           ask turtles with [shape = "student"]
           [
@@ -302,6 +304,7 @@ to go
           set label-color black
           set bathroom-chance 0.002
           set need-bathroom? false
+          set interacting? false
 
           ask turtles with [shape = "professor"]
           [
@@ -339,6 +342,7 @@ to go
           set label-color black
           set bathroom-chance 0.002
           set need-bathroom? false
+          set interacting? false
 
           ask turtles with [shape = "staff"]
           [
@@ -779,58 +783,14 @@ to go
     ]
     ; Interaction Part
 
-    ifelse any? (other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact > 97 [
-      set num-nonverbal num-nonverbal + 1
+    let cur-agent self
+
+    ifelse any? (other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact < 30 and not interacting? [
       if shape = "student" [
-        ask other turtles in-cone vision-nonverbal angle-nonverbal[
-          if shape = "professor" [
-            set num-student-prof num-student-prof + 1
-          ]
-          if shape = "student"[
-            set num-student-student num-student-student + 1
-          ]
-          if shape = "staff"[
-            set num-student-staff num-student-staff + 1
-          ]
-        ]
-      ]
-      if shape = "professor" [
-        ask other turtles in-cone vision-nonverbal angle-nonverbal[
-          if shape = "professor" [
-            set num-prof-prof num-prof-prof + 1
-          ]
-          if shape = "student"[
-            set num-student-prof num-student-prof + 1
-          ]
-          if shape = "staff"[
-            set num-prof-staff num-prof-staff + 1
-          ]
-        ]
-      ]
-      if shape = "staff" [
-        ask other turtles in-cone vision-nonverbal angle-nonverbal[
-          if shape = "staff" [
-            set num-staff-staff num-staff-staff + 1
-          ]
-          if shape = "student"[
-            set num-student-staff num-student-staff + 1
-          ]
-          if shape = "professor"[
-            set num-prof-staff num-prof-staff + 1
-          ]
-        ]
-      ]
-      set interaction-time interaction-time - 1
-      if interaction-time = 0 [
-        set interaction-time 60
-        set chance-interact random 100
-          if random-percent < 0.3 [move]
-      ]
-    ] [
-      ifelse any? (other turtles in-cone vision-cooperative angle-cooperative) and chance-interact > 95 [
-        set num-cooperative num-cooperative + 1
-        if shape = "student" [
-          ask other turtles in-cone vision-cooperative angle-cooperative[
+        ask other turtles in-cone vision-nonverbal angle-nonverbal [
+          if (member? cur-agent other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact < 30 and not interacting? [
+            set num-nonverbal num-nonverbal + 1
+            set interacting? true
             if shape = "professor" [
               set num-student-prof num-student-prof + 1
             ]
@@ -842,8 +802,12 @@ to go
             ]
           ]
         ]
-        if shape = "professor" [
-          ask other turtles in-cone vision-cooperative angle-cooperative[
+      ]
+      if shape = "professor" [
+        ask other turtles in-cone vision-nonverbal angle-nonverbal [
+          if (member? cur-agent other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact < 30 and not interacting? [
+            set num-nonverbal num-nonverbal + 1
+            set interacting? true
             if shape = "professor" [
               set num-prof-prof num-prof-prof + 1
             ]
@@ -855,8 +819,12 @@ to go
             ]
           ]
         ]
-        if shape = "staff" [
-          ask other turtles in-cone vision-cooperative angle-cooperative[
+      ]
+      if shape = "staff" [
+        ask other turtles in-cone vision-nonverbal angle-nonverbal [
+          if (member? cur-agent other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact < 30 and not interacting? [
+            set num-nonverbal num-nonverbal + 1
+            set interacting? true
             if shape = "staff" [
               set num-staff-staff num-staff-staff + 1
             ]
@@ -868,17 +836,20 @@ to go
             ]
           ]
         ]
-        set interaction-time interaction-time - 1
-        if interaction-time = 0 [
-          set interaction-time 60
-          set chance-interact random 100
+      ]
+      set interaction-time interaction-time - 1
+      if interaction-time = 0 [
+        set interaction-time 60
+        set chance-interact random 100
           if random-percent < 0.3 [move]
-        ]
-      ] [
-        ifelse any? (other turtles in-cone vision-exchange angle-exchange) and chance-interact > 90 [
-          set num-exchange num-exchange + 1
-          if shape = "student" [
-            ask other turtles in-cone vision-exchange angle-exchange[
+      ]
+    ] [
+      ifelse any? (other turtles in-cone vision-cooperative angle-cooperative) and chance-interact < 40 and not interacting? [
+        if shape = "student" [
+          ask other turtles in-cone vision-cooperative angle-cooperative [
+            if (member? cur-agent other turtles in-cone vision-cooperative angle-cooperative) and chance-interact < 40 and not interacting? [
+              set num-cooperative num-cooperative + 1
+              set interacting? true
               if shape = "professor" [
                 set num-student-prof num-student-prof + 1
               ]
@@ -890,8 +861,12 @@ to go
               ]
             ]
           ]
-          if shape = "professor" [
-            ask other turtles in-cone vision-exchange angle-exchange[
+        ]
+        if shape = "professor" [
+          ask other turtles in-cone vision-cooperative angle-cooperative [
+            if (member? cur-agent other turtles in-cone vision-cooperative angle-cooperative) and chance-interact < 40 and not interacting? [
+              set num-cooperative num-cooperative + 1
+              set interacting? true
               if shape = "professor" [
                 set num-prof-prof num-prof-prof + 1
               ]
@@ -903,8 +878,12 @@ to go
               ]
             ]
           ]
-          if shape = "staff" [
-            ask other turtles in-cone vision-exchange angle-exchange[
+        ]
+        if shape = "staff" [
+          ask other turtles in-cone vision-cooperative angle-cooperative [
+            if (member? cur-agent other turtles in-cone vision-cooperative angle-cooperative) and chance-interact < 40 and not interacting? [
+              set num-cooperative num-cooperative + 1
+              set interacting? true
               if shape = "staff" [
                 set num-staff-staff num-staff-staff + 1
               ]
@@ -913,6 +892,66 @@ to go
               ]
               if shape = "professor"[
                 set num-prof-staff num-prof-staff + 1
+              ]
+            ]
+          ]
+        ]
+        set interaction-time interaction-time - 1
+        if interaction-time = 0 [
+          set interaction-time 60
+          set chance-interact random 100
+          if random-percent < 0.3 [move]
+        ]
+      ] [
+        ifelse any? (other turtles in-cone vision-exchange angle-exchange) and chance-interact < 50 and not interacting? [
+          if shape = "student" [
+            ask other turtles in-cone vision-exchange angle-exchange [
+              if (member? cur-agent other turtles in-cone vision-exchange angle-exchange) and chance-interact < 50 and not interacting? [
+                set num-exchange num-exchange + 1
+                set interacting? true
+                if shape = "professor" [
+                  set num-student-prof num-student-prof + 1
+                ]
+                if shape = "student"[
+                  set num-student-student num-student-student + 1
+                ]
+                if shape = "staff"[
+                  set num-student-staff num-student-staff + 1
+                ]
+              ]
+            ]
+          ]
+          if shape = "professor" [
+            ask other turtles in-cone vision-exchange angle-exchange [
+              if (member? cur-agent other turtles in-cone vision-exchange angle-exchange) and chance-interact < 50 and not interacting? [
+                set num-exchange num-exchange + 1
+                set interacting? true
+                if shape = "professor" [
+                  set num-prof-prof num-prof-prof + 1
+                ]
+                if shape = "student"[
+                  set num-student-prof num-student-prof + 1
+                ]
+                if shape = "staff"[
+                  set num-prof-staff num-prof-staff + 1
+                ]
+              ]
+            ]
+          ]
+          if shape = "staff" [
+            ask other turtles in-cone vision-exchange angle-exchange [
+              if (member? cur-agent other turtles in-cone vision-exchange angle-exchange) and chance-interact < 50 and not interacting? [
+                set num-exchange num-exchange + 1
+                set interacting? true
+                if shape = "staff" [
+                  set num-staff-staff num-staff-staff + 1
+                ]
+                if shape = "student"[
+                  set num-student-staff num-student-staff + 1
+                ]
+                if shape = "professor"[
+                  set num-prof-staff num-prof-staff + 1
+                ]
               ]
             ]
           ]
@@ -930,6 +969,8 @@ to go
       ]
     ]
   ]
+
+  ask turtles[set interacting? false]
 
 
   tick
