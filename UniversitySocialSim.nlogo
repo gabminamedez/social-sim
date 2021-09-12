@@ -1,3 +1,5 @@
+extensions [nw]
+
 globals [
   heading-range
   forward-movement-range
@@ -7,6 +9,12 @@ globals [
   angle-exchange
   vision-cooperative
   angle-cooperative
+  vision-agent
+  angle-agent
+  interact-time-nonverbal
+  interact-time-cooperative
+  interact-time-exchange
+  move-during-interact-chance
 
 
 
@@ -19,10 +27,30 @@ globals [
   num-nonverbal
   num-cooperative
   num-exchange
+  sum-student-student
+  sum-student-prof
+  sum-student-staff
+  sum-prof-prof
+  sum-prof-staff
+  sum-staff-staff
+  sum-nonverbal
+  sum-cooperative
+  sum-exchange
+  ave-student-student
+  ave-student-prof
+  ave-student-staff
+  ave-prof-prof
+  ave-prof-staff
+  ave-staff-staff
+  ave-nonverbal
+  ave-cooperative
+  ave-exchange
   student-ctr
   prof-ctr
   staff-ctr
   one-way?
+  classroom-list
+  all-classrooms
 ]
 
 patches-own [
@@ -36,7 +64,9 @@ patches-own [
 
 turtles-own [
   gender
-  chance-interact
+  chance-interact-nonverbal
+  chance-interact-cooperative
+  chance-interact-exchange
   persona
   age
   interaction-time
@@ -47,6 +77,10 @@ turtles-own [
   need-bathroom?
   exit
   interacting?
+]
+
+links-own [
+  rewired?
 ]
 
 breed [ students student ]
@@ -66,12 +100,14 @@ end
 to set-globals
   set heading-range 45
   set forward-movement-range 2
-  set vision-nonverbal 3
-  set angle-nonverbal 45
-  set vision-cooperative 1
-  set angle-cooperative 30
-  set vision-exchange 2
-  set angle-exchange 30
+  set vision-agent 3
+  set angle-agent 45
+  set interact-time-nonverbal 5
+  set interact-time-cooperative 10
+  set interact-time-exchange 15
+  set move-during-interact-chance 0.3
+
+
 
   set num-student-student 0
   set num-student-prof 0
@@ -82,7 +118,27 @@ to set-globals
   set num-nonverbal 0
   set num-cooperative 0
   set num-exchange 0
+  set sum-student-student 0
+  set sum-student-prof 0
+  set sum-student-staff 0
+  set sum-prof-prof 0
+  set sum-prof-staff 0
+  set sum-staff-staff 0
+  set sum-nonverbal 0
+  set sum-cooperative 0
+  set sum-exchange 0
+  set ave-student-student 0
+  set ave-student-prof 0
+  set ave-student-staff 0
+  set ave-prof-prof 0
+  set ave-prof-staff 0
+  set ave-staff-staff 0
+  set ave-nonverbal 0
+  set ave-cooperative 0
+  set ave-exchange 0
   ifelse entrance-mode = "one-way"[set one-way? true][set one-way? false]
+  set classroom-list n-of num-open ["tl" "tr" "ml" "mr" "bl" "br"]
+  set all-classrooms ["tl" "tr" "ml" "mr" "bl" "br"]
 end
 
 to set-patches
@@ -161,10 +217,6 @@ to set-patches
     set is-classroom 0 set is-bathroom 0 set is-staffroom 1 set is-hallway 0 set is-wall 0
     set location "bathroom2"
   ]
-  ; use this if wrapped
-;  ask (patch-set patch 11 -1  patch 12 -1  patch 13 -1  patch 14 -1 patch 15 -1  patch 16 -1  patch 17 -1 patch 18 -1 patch 19 -1 patch 20 -1) [
-;    set pcolor green
-;  ]
   ; use if not wrapped
   ask (patch-set patch 11 31 patch 12 31  patch 13 31  patch 14 31 patch 15 31  patch 16 31  patch 17 31 patch 18 31 patch 19 31 patch 20 31) [
     set pcolor green
@@ -178,33 +230,113 @@ to set-agents
   set student-ctr num-students
   set prof-ctr num-professors
   set staff-ctr num-staff
-  ask turtles [
-    set interaction-time 60
+
+  create-students num-students [
+    set shape "student"
+    ifelse one-way?[
+      setxy random-patch-entry 0
+      set exit "down"
+    ][
+      ifelse coin-flip?
+      [setxy random-patch-entry 0
+        set exit "down"
+      ][setxy random-patch-entry 31
+        set exit "up"
+      ]
+    ]
+    ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
+    ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
+
+    set interaction-time 0
     set label insert-item 0 label "    "
     set label insert-item 0 label gender
     set label insert-item 1 label age
     set label-color black
+    set bathroom-chance 0.0005
+    set need-bathroom? false
+    set interacting? false
   ]
+
+  create-professors num-professors [
+    set shape "professor"
+    ifelse one-way?[
+      setxy random-patch-entry 0
+      set exit "down"
+    ][
+      ifelse coin-flip?
+      [setxy random-patch-entry 0
+        set exit "down"][setxy random-patch-entry 31
+        set exit "up"]
+    ]
+    ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
+    ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
+
+    set interaction-time 0
+    set label insert-item 0 label "    "
+    set label insert-item 0 label gender
+    set label insert-item 1 label age
+    set label-color black
+    set bathroom-chance 0.0005
+    set need-bathroom? false
+    set interacting? false
+  ]
+
+  create-staffs num-staff [
+    set shape "staff"
+    ifelse one-way?[
+      setxy random-patch-entry 0
+      set exit "down"
+    ][
+      ifelse coin-flip?
+      [setxy random-patch-entry 0
+        set exit "down"][setxy random-patch-entry 31
+        set exit "up"]
+    ]
+    ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
+    ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
+
+    set interaction-time 0
+    set label insert-item 0 label "    "
+    set label insert-item 0 label gender
+    set label insert-item 1 label age
+    set label-color black
+    set bathroom-chance 0.0005
+    set need-bathroom? false
+    set interacting? false
+  ]
+  wire-lattice
+  ask links [ hide-link ]
+  ask turtles [ hide-turtle ]
 end
 
 to set-personas
   ask turtles
   [
-    set persona 1 + random 4
+    set persona 1 + random 5
     if persona = 1 [
-      set chance-interact random 100
+      set chance-interact-nonverbal random 100
+      set chance-interact-cooperative random 100
+      set chance-interact-exchange random 100
     ]
     if persona = 2[
-      set chance-interact 30 + random 70
+      set chance-interact-nonverbal 30 + random 70
+      set chance-interact-cooperative 30 + random 70
+      set chance-interact-exchange 30 + random 70
     ]
     if persona = 3[
-      set chance-interact 50 + random 50
+      set chance-interact-nonverbal 50 + random 50
+      set chance-interact-cooperative 50 + random 50
+      set chance-interact-exchange 50 + random 50
     ]
     if persona = 4[
-      set chance-interact 60 + random 40
+      set chance-interact-nonverbal 60 + random 40
+      set chance-interact-cooperative 60 + random 40
+      set chance-interact-exchange 60 + random 40
     ]
     if persona = 5[
-      set chance-interact 80 + random 20
+      set chance-interact-nonverbal 80 + random 20
+      set chance-interact-cooperative 80 + random 20
+      set chance-interact-exchange 80 + random 20
     ]
   ]
 end
@@ -214,16 +346,16 @@ to set-destinations
 
   ask turtles with [shape = "student"]
   [
-    set class1 one-of all-classrooms
-    set class2 one-of all-classrooms
-    set class3 one-of all-classrooms
+    set class1 one-of all-open-classrooms
+    set class2 one-of all-open-classrooms
+    set class3 one-of all-open-classrooms
   ]
 
   ask turtles with [shape = "professor"]
   [
-    set class1 one-of all-classrooms
-    set class2 one-of all-classrooms
-    set class3 one-of all-classrooms
+    set class1 one-of all-open-classrooms
+    set class2 one-of all-open-classrooms
+    set class3 one-of all-open-classrooms
   ]
 
   ask turtles with [shape = "staff"]
@@ -236,128 +368,34 @@ end
 
 to go
   let entrances randomize-num-entrance
-
   repeat entrances [
     let agent-type random-type student-ctr prof-ctr staff-ctr
-    if agent-type = 0
-    [
-      if student-ctr > 0 [
+    if agent-type = 0 and student-ctr > 0 [
+      ask one-of turtles with [hidden? and shape = "student"]
+      [
+        show-turtle
         set student-ctr student-ctr - 1
-        create-students 1 [
-          set shape "student"
-          ifelse one-way?[
-            setxy random-patch-entry 0
-            set exit "down"
-          ][
-            ifelse coin-flip?
-            [setxy random-patch-entry 0
-              set exit "down"
-            ][setxy random-patch-entry 31
-              set exit "up"
-            ]
-          ]
-          ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-          ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
-
-          set interaction-time 60
-          set label insert-item 0 label "    "
-          set label insert-item 0 label gender
-          set label insert-item 1 label age
-          set label-color black
-          set bathroom-chance 0.002
-          set need-bathroom? false
-          set interacting? false
-
-          ask turtles with [shape = "student"]
-          [
-            set class1 one-of all-classrooms
-            set class2 one-of all-classrooms
-            set class3 one-of all-classrooms
-          ]
-        ]
       ]
     ]
-    if agent-type = 1
-    [
-
-      if prof-ctr > 0 [
+    if agent-type = 1 and prof-ctr > 0 [
+      ask one-of turtles with [hidden? and shape = "professor"]
+      [
+        show-turtle
         set prof-ctr prof-ctr - 1
-
-        create-professors 1 [
-          set shape "professor"
-          ifelse one-way?[
-            setxy random-patch-entry 0
-            set exit "down"
-          ][
-            ifelse coin-flip?
-            [setxy random-patch-entry 0
-              set exit "down"][setxy random-patch-entry 31
-              set exit "up"]
-          ]
-          ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-          ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
-
-          set interaction-time 60
-          set label insert-item 0 label "    "
-          set label insert-item 0 label gender
-          set label insert-item 1 label age
-          set label-color black
-          set bathroom-chance 0.002
-          set need-bathroom? false
-          set interacting? false
-
-          ask turtles with [shape = "professor"]
-          [
-            set class1 one-of all-classrooms
-            set class2 one-of all-classrooms
-            set class3 one-of all-classrooms
-          ]
-        ]
       ]
     ]
-    if agent-type = 2
-    [
-
-      if staff-ctr > 0 [
+    if agent-type = 2 and staff-ctr > 0 [
+      ask one-of turtles with [hidden? and shape = "staff"]
+      [
+        show-turtle
         set staff-ctr staff-ctr - 1
-
-        create-staffs 1 [
-          set shape "staff"
-          ifelse one-way?[
-            setxy random-patch-entry 0
-            set exit "down"
-          ][
-            ifelse coin-flip?
-            [setxy random-patch-entry 0
-            set exit "down"][setxy random-patch-entry 31
-            set exit "up"]
-          ]
-          ifelse randomize < chance-female [ set gender "F" ] [ set gender "M" ]
-          ifelse randomize < chance-young [ set age "Y" ] [ set age "O" ]
-
-          set interaction-time 60
-          set label insert-item 0 label "    "
-          set label insert-item 0 label gender
-          set label insert-item 1 label age
-          set label-color black
-          set bathroom-chance 0.002
-          set need-bathroom? false
-          set interacting? false
-
-          ask turtles with [shape = "staff"]
-          [
-            set class1 one-of all-bathrooms
-            set class2 one-of all-bathrooms
-            set class3 one-of all-bathrooms
-          ]
-        ]
       ]
     ]
   ]
 
   ; Go to classroom if haven't reached
   if (ticks >= 0) and (ticks <= 200) [
-    ask turtles [
+    ask turtles with [not hidden?] [
 
       if random-percent <= bathroom-chance [
         set need-bathroom? true
@@ -376,10 +414,14 @@ to go
             ifelse (member? patch-here bathroom (gender))[
               face one-of bathroom (gender)
               move
-              if random-percent < 0.1 [set need-bathroom? false]
+              if random-percent < 0.3 [set need-bathroom? false]
             ][
-              face one-of entrance-bathroom (gender)
-              move
+              ifelse location = "hallway"[
+                face one-of entrance-bathroom (gender)
+                move
+              ][
+                go-to-hallway location gender
+              ]
             ]
           ]
         ]
@@ -416,7 +458,7 @@ to go
 
 
   if (ticks >= 200) and (ticks <= 500) [
-    ask turtles [
+    ask turtles with [not hidden?] [
       if random-percent <= bathroom-chance [
         set need-bathroom? true
       ]
@@ -434,10 +476,14 @@ to go
             ifelse (member? patch-here bathroom (gender))[
               face one-of bathroom (gender)
               move
-              if random-percent < 0.1 [set need-bathroom? false]
+              if random-percent < 0.3 [set need-bathroom? false]
             ][
-              face one-of entrance-bathroom (gender)
-              move
+              ifelse location = "hallway"[
+                face one-of entrance-bathroom (gender)
+                move
+              ][
+                go-to-hallway location gender
+              ]
             ]
           ]
         ]
@@ -457,9 +503,13 @@ to go
               move
             ]
           ][
-            if random-percent < 0.2 [
+            ifelse random-percent < 0.2 and location = class1 [
               face one-of classroom (class1)
               move
+            ][
+              if location != class1 [
+                go-to-hallway location gender
+              ]
             ]
           ]
         ]
@@ -468,7 +518,7 @@ to go
   ]
 
   if (ticks >= 500) and (ticks <= 700) [
-    ask turtles [
+    ask turtles with [not hidden?] [
       if random-percent <= bathroom-chance [
         set need-bathroom? true
       ]
@@ -490,10 +540,14 @@ to go
               ifelse (member? patch-here bathroom (gender))[
                 face one-of bathroom (gender)
                 move
-                if random-percent < 0.1 [set need-bathroom? false]
+                if random-percent < 0.3 [set need-bathroom? false]
               ][
-                face one-of entrance-bathroom (gender)
-                move
+                ifelse location = "hallway"[
+                  face one-of entrance-bathroom (gender)
+                  move
+                ][
+                  go-to-hallway location gender
+                ]
               ]
             ]
           ]
@@ -535,7 +589,7 @@ to go
   ]
 
   if (ticks >= 700) and (ticks <= 1000) [
-    ask turtles [
+    ask turtles with [not hidden?] [
       if random-percent <= bathroom-chance [
         set need-bathroom? true
       ]
@@ -553,10 +607,14 @@ to go
             ifelse (member? patch-here bathroom (gender))[
               face one-of bathroom (gender)
               move
-              if random-percent < 0.1 [set need-bathroom? false]
+              if random-percent < 0.3 [set need-bathroom? false]
             ][
-              face one-of entrance-bathroom (gender)
-              move
+              ifelse location = "hallway"[
+                face one-of entrance-bathroom (gender)
+                move
+              ][
+                go-to-hallway location gender
+              ]
             ]
           ]
         ]
@@ -576,13 +634,18 @@ to go
               move
             ]
           ][
-            if (location = class1) and (class1 != class2)[
+            ifelse (location = class1) and (class1 != class2)[
               face one-of entrance-classroom (class1)
               move
-            ]
-            if random-percent < 0.2 and (location = class2) [
-              face one-of classroom (class2)
-              move
+            ][
+              ifelse random-percent < 0.2 and (location = class2) [
+                face one-of classroom (class2)
+                move
+              ][
+                if location != class2 [
+                  go-to-hallway location gender
+                ]
+              ]
             ]
           ]
         ]
@@ -591,7 +654,7 @@ to go
   ]
 
   if (ticks >= 1000) and (ticks <= 1200) [
-    ask turtles [
+    ask turtles with [not hidden?] [
       if random-percent <= bathroom-chance [
         set need-bathroom? true
       ]
@@ -613,10 +676,14 @@ to go
               ifelse (member? patch-here bathroom (gender))[
                 face one-of bathroom (gender)
                 move
-                if random-percent < 0.1 [set need-bathroom? false]
+                if random-percent < 0.3 [set need-bathroom? false]
               ][
-                face one-of entrance-bathroom (gender)
-                move
+                ifelse location = "hallway"[
+                  face one-of entrance-bathroom (gender)
+                  move
+                ][
+                  go-to-hallway location gender
+                ]
               ]
             ]
           ]
@@ -658,7 +725,7 @@ to go
   ]
 
   if (ticks >= 1200) and (ticks <= 1500) [
-    ask turtles [
+    ask turtles with [not hidden?] [
       if random-percent <= bathroom-chance [
         set need-bathroom? true
       ]
@@ -676,10 +743,14 @@ to go
             ifelse (member? patch-here bathroom (gender))[
               face one-of bathroom (gender)
               move
-              if random-percent < 0.1 [set need-bathroom? false]
+              if random-percent < 0.3 [set need-bathroom? false]
             ][
-              face one-of entrance-bathroom (gender)
-              move
+              ifelse location = "hallway"[
+                face one-of entrance-bathroom (gender)
+                move
+              ][
+                go-to-hallway location gender
+              ]
             ]
           ]
         ]
@@ -699,13 +770,18 @@ to go
               move
             ]
           ][
-            if (location = class2) and (class2 != class3)[
+            ifelse (location = class2) and (class2 != class3)[
               face one-of entrance-classroom (class2)
               move
-            ]
-            if random-percent < 0.2 and (location = class3) [
-              face one-of classroom (class3)
-              move
+            ][
+              ifelse random-percent < 0.2 and (location = class3) [
+                face one-of classroom (class3)
+                move
+              ][
+                if location != class3 [
+                  go-to-hallway location gender
+                ]
+              ]
             ]
           ]
         ]
@@ -714,7 +790,7 @@ to go
   ]
 
   if (ticks >= 1500) [
-    ask turtles [
+    ask turtles with [not hidden?] [
       if random-percent < bathroom-chance [
         set need-bathroom? true
       ]
@@ -731,14 +807,13 @@ to go
             ifelse (member? patch-here bathroom (gender))[
               face one-of bathroom (gender)
               move
-              if random-percent < 0.1 [set need-bathroom? false]
+              if random-percent < 0.3 [set need-bathroom? false]
             ][
               ifelse location = "hallway"[
                 face one-of entrance-bathroom (gender)
                 move
               ][
-                face one-of (patch-set patch 15 16 patch 15 17 patch 16 16 patch 16 17)
-                move
+                go-to-hallway location gender
               ]
             ]
           ]
@@ -762,8 +837,7 @@ to go
                 face one-of entrance-classroom (class3)
                 move
               ][
-                face one-of (patch-set patch 15 16 patch 15 17 patch 16 16 patch 16 17)
-                move
+                go-to-hallway location gender
               ]
             ]
           ]
@@ -772,7 +846,7 @@ to go
     ]
   ]
 
-  ask turtles [
+  ask turtles with [not hidden?] [
     ; End of Simulation
     if ticks >= 1500 [
       ifelse one-way?[
@@ -785,193 +859,114 @@ to go
 
     let cur-agent self
 
-    ifelse any? (other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact < 30 and not interacting? [
-      if shape = "student" [
-        ask other turtles in-cone vision-nonverbal angle-nonverbal [
-          if (member? cur-agent other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact < 30 and not interacting? [
-            set num-nonverbal num-nonverbal + 1
+    if any? (other turtles in-cone vision-agent angle-agent) and not interacting? [
+      ask other turtles in-cone vision-agent angle-agent [
+        if (member? cur-agent other turtles in-cone vision-agent angle-agent) and not interacting? [
+          let roll1 random-percent
+          let roll2 random-percent
+          let chance-interact random-percent
+          if link-with cur-agent != nobody [ set chance-interact 1]
+          if roll1 < chance-interact and roll2 < chance-interact [
             set interacting? true
-            if shape = "professor" [
-              set num-student-prof num-student-prof + 1
+            ask cur-agent [set interacting? true]
+            ; DETERMINING INTERACTION TYPE
+            let calculated-interact-nonverbal chance-interact-nonverbal + [chance-interact-nonverbal] of cur-agent
+            let calculated-interact-cooperative chance-interact-cooperative + [chance-interact-cooperative] of cur-agent
+            let calculated-interact-exchange chance-interact-exchange + [chance-interact-exchange] of cur-agent
+
+            if in-class? [
+              set calculated-interact-nonverbal calculated-interact-nonverbal * class-multiplier-nonverbal
+              set calculated-interact-cooperative calculated-interact-cooperative * class-multiplier-cooperative
+              set calculated-interact-exchange calculated-interact-exchange * class-multiplier-exchange
             ]
-            if shape = "student"[
-              set num-student-student num-student-student + 1
+            if interaction-type calculated-interact-nonverbal calculated-interact-cooperative calculated-interact-exchange = "nonverbal" [
+              set interaction-time random interact-time-nonverbal
+              ask cur-agent [set interaction-time random interact-time-nonverbal]
+              set num-nonverbal num-nonverbal + 1
+              set sum-nonverbal sum-nonverbal + interaction-time
+              set ave-nonverbal sum-nonverbal / num-nonverbal
             ]
-            if shape = "staff"[
-              set num-student-staff num-student-staff + 1
-            ]
-          ]
-        ]
-      ]
-      if shape = "professor" [
-        ask other turtles in-cone vision-nonverbal angle-nonverbal [
-          if (member? cur-agent other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact < 30 and not interacting? [
-            set num-nonverbal num-nonverbal + 1
-            set interacting? true
-            if shape = "professor" [
-              set num-prof-prof num-prof-prof + 1
-            ]
-            if shape = "student"[
-              set num-student-prof num-student-prof + 1
-            ]
-            if shape = "staff"[
-              set num-prof-staff num-prof-staff + 1
-            ]
-          ]
-        ]
-      ]
-      if shape = "staff" [
-        ask other turtles in-cone vision-nonverbal angle-nonverbal [
-          if (member? cur-agent other turtles in-cone vision-nonverbal angle-nonverbal) and chance-interact < 30 and not interacting? [
-            set num-nonverbal num-nonverbal + 1
-            set interacting? true
-            if shape = "staff" [
-              set num-staff-staff num-staff-staff + 1
-            ]
-            if shape = "student"[
-              set num-student-staff num-student-staff + 1
-            ]
-            if shape = "professor"[
-              set num-prof-staff num-prof-staff + 1
-            ]
-          ]
-        ]
-      ]
-      set interaction-time interaction-time - 1
-      if interaction-time = 0 [
-        set interaction-time 60
-        set chance-interact random 100
-          if random-percent < 0.3 [move]
-      ]
-    ] [
-      ifelse any? (other turtles in-cone vision-cooperative angle-cooperative) and chance-interact < 40 and not interacting? [
-        if shape = "student" [
-          ask other turtles in-cone vision-cooperative angle-cooperative [
-            if (member? cur-agent other turtles in-cone vision-cooperative angle-cooperative) and chance-interact < 40 and not interacting? [
+            if interaction-type calculated-interact-nonverbal calculated-interact-cooperative calculated-interact-exchange = "cooperative" [
+              set interaction-time random interact-time-cooperative
+              ask cur-agent [set interaction-time random interact-time-cooperative]
               set num-cooperative num-cooperative + 1
-              set interacting? true
+              set sum-cooperative sum-cooperative + interaction-time
+              set ave-cooperative sum-cooperative / num-cooperative
+            ]
+            if interaction-type calculated-interact-nonverbal calculated-interact-cooperative calculated-interact-exchange = "exchange" [
+              set interaction-time random interact-time-exchange
+              ask cur-agent [set interaction-time random interact-time-exchange]
+              set num-exchange num-exchange + 1
+              set sum-exchange sum-exchange + interaction-time
+              set ave-exchange sum-exchange / num-exchange
+            ]
+            ; DETERMINING AGENT TYPE
+            if [shape] of cur-agent = "student" [
               if shape = "professor" [
                 set num-student-prof num-student-prof + 1
+                set sum-student-prof sum-student-prof + interaction-time
+                set ave-student-prof sum-student-prof / num-student-prof
               ]
               if shape = "student"[
                 set num-student-student num-student-student + 1
+                set sum-student-student sum-student-student + interaction-time
+                set ave-student-student sum-student-student / num-student-student
               ]
               if shape = "staff"[
                 set num-student-staff num-student-staff + 1
+                set sum-student-staff sum-student-staff + interaction-time
+                set ave-student-staff sum-student-staff / num-student-staff
               ]
             ]
-          ]
-        ]
-        if shape = "professor" [
-          ask other turtles in-cone vision-cooperative angle-cooperative [
-            if (member? cur-agent other turtles in-cone vision-cooperative angle-cooperative) and chance-interact < 40 and not interacting? [
-              set num-cooperative num-cooperative + 1
-              set interacting? true
+            if [shape] of cur-agent = "professor" [
               if shape = "professor" [
                 set num-prof-prof num-prof-prof + 1
+                set sum-prof-prof sum-prof-prof + interaction-time
+                set ave-prof-prof sum-prof-prof / num-prof-prof
               ]
               if shape = "student"[
                 set num-student-prof num-student-prof + 1
+                set sum-student-prof sum-student-prof + interaction-time
+                set ave-student-prof sum-student-prof / num-student-prof
               ]
               if shape = "staff"[
                 set num-prof-staff num-prof-staff + 1
+                set sum-prof-staff sum-prof-staff + interaction-time
+                set ave-prof-staff sum-prof-staff / num-prof-staff
               ]
             ]
-          ]
-        ]
-        if shape = "staff" [
-          ask other turtles in-cone vision-cooperative angle-cooperative [
-            if (member? cur-agent other turtles in-cone vision-cooperative angle-cooperative) and chance-interact < 40 and not interacting? [
-              set num-cooperative num-cooperative + 1
-              set interacting? true
+            if [shape] of cur-agent = "staff" [
               if shape = "staff" [
                 set num-staff-staff num-staff-staff + 1
+                set sum-staff-staff sum-staff-staff + interaction-time
+                set ave-staff-staff sum-staff-staff / num-staff-staff
               ]
               if shape = "student"[
                 set num-student-staff num-student-staff + 1
+                set sum-student-staff sum-student-staff + interaction-time
+                set ave-student-staff sum-student-staff / num-student-staff
               ]
               if shape = "professor"[
                 set num-prof-staff num-prof-staff + 1
+                set sum-prof-staff sum-prof-staff + interaction-time
+                set ave-prof-staff sum-prof-staff / num-prof-staff
               ]
             ]
           ]
-        ]
-        set interaction-time interaction-time - 1
-        if interaction-time = 0 [
-          set interaction-time 60
-          set chance-interact random 100
-          if random-percent < 0.3 [move]
-        ]
-      ] [
-        ifelse any? (other turtles in-cone vision-exchange angle-exchange) and chance-interact < 50 and not interacting? [
-          if shape = "student" [
-            ask other turtles in-cone vision-exchange angle-exchange [
-              if (member? cur-agent other turtles in-cone vision-exchange angle-exchange) and chance-interact < 50 and not interacting? [
-                set num-exchange num-exchange + 1
-                set interacting? true
-                if shape = "professor" [
-                  set num-student-prof num-student-prof + 1
-                ]
-                if shape = "student"[
-                  set num-student-student num-student-student + 1
-                ]
-                if shape = "staff"[
-                  set num-student-staff num-student-staff + 1
-                ]
-              ]
-            ]
-          ]
-          if shape = "professor" [
-            ask other turtles in-cone vision-exchange angle-exchange [
-              if (member? cur-agent other turtles in-cone vision-exchange angle-exchange) and chance-interact < 50 and not interacting? [
-                set num-exchange num-exchange + 1
-                set interacting? true
-                if shape = "professor" [
-                  set num-prof-prof num-prof-prof + 1
-                ]
-                if shape = "student"[
-                  set num-student-prof num-student-prof + 1
-                ]
-                if shape = "staff"[
-                  set num-prof-staff num-prof-staff + 1
-                ]
-              ]
-            ]
-          ]
-          if shape = "staff" [
-            ask other turtles in-cone vision-exchange angle-exchange [
-              if (member? cur-agent other turtles in-cone vision-exchange angle-exchange) and chance-interact < 50 and not interacting? [
-                set num-exchange num-exchange + 1
-                set interacting? true
-                if shape = "staff" [
-                  set num-staff-staff num-staff-staff + 1
-                ]
-                if shape = "student"[
-                  set num-student-staff num-student-staff + 1
-                ]
-                if shape = "professor"[
-                  set num-prof-staff num-prof-staff + 1
-                ]
-              ]
-            ]
-          ]
-          set interaction-time interaction-time - 1
-          if interaction-time = 0 [
-            set interaction-time 60
-            set chance-interact random 100
-          if random-percent < 0.3 [move]
-          ]
-        ] [
-          set chance-interact random 100
-          if random-percent < 0.3 [move]
-
         ]
       ]
     ]
   ]
-
-  ask turtles[set interacting? false]
-
+  ask turtles with [not hidden?] [
+    if interacting? [
+      set interaction-time interaction-time - 1
+      ifelse interaction-time <= 0 [
+        set interacting? false
+      ][
+        if random-percent < move-during-interact-chance [move]
+      ]
+    ]
+  ]
 
   tick
   if ticks >= 1500 and count turtles = 0 [
@@ -983,20 +978,24 @@ end
 to move
 
   if patch-ahead 1 = nobody or (patch-ahead 1 != nobody and [ pcolor ] of patch-ahead 1 = gray) [
-   set heading heading + 180
+    set heading heading + 180
   ]
 
   let candidate-heading (random-float (2 * heading-range + 1) - heading-range)
   let candidate-movement ((random-float forward-movement-range) / 5)
 
+  let orig-heading heading
+
   right candidate-heading
 
   if patch-ahead 1 = nobody or (patch-ahead 1 != nobody and [ pcolor ] of patch-ahead 1 = gray) [
-   set heading heading + 180
+    set heading heading + 180
   ]
+
   let candidate-patch patch-ahead candidate-movement
 
   forward candidate-movement
+
 end
 
 
@@ -1023,6 +1022,7 @@ to-report random-type [a b c]
   if value < (a + b + c) [report 2]
   report -1
 end
+
 
 to-report random-patch-entry
   report one-of [11 12 13 14 15 16 17 18 19 20]
@@ -1067,11 +1067,93 @@ to-report patches-exit [exiting]
   ]
 end
 
-to-report all-classrooms
-  report ["tl" "tr" "ml" "mr" "bl" "br"]
+to-report interaction-type [nonverbal cooperative exchange]
+  let interaction-sum nonverbal + cooperative + exchange
+  let x random-float interaction-sum
+  if x < nonverbal [report "nonverbal"]
+  if x < nonverbal + cooperative [report "cooperative"]
+  if x < interaction-sum [report "exchange"]
+end
+
+to-report all-open-classrooms
+  report classroom-list
 end
 to-report all-bathrooms
   report ["bathroom1" "bathroom2"]
+end
+
+to-report in-class?
+  if (ticks >= 200 and ticks < 500) or (ticks >= 700 and ticks < 1000) or (ticks >= 1200 and ticks < 1500) [report true]
+  report false
+end
+
+
+
+; IMPORTED CODE FROM SMALL WORLDS MODEL
+
+to wire-lattice
+  ; iterate over the turtles
+  let n 0
+  while [ n < count turtles ] [
+    ; make edges with the next two neighbors
+    ; this makes a lattice with average degree of 4
+    make-edge turtle n
+              turtle ((n + 1) mod count turtles)
+    ; Make the neighbor's neighbor links curved
+    make-edge turtle n
+              turtle ((n + 2) mod count turtles)
+    set n n + 1
+  ]
+end
+
+; Connects two nodes
+to make-edge [ node-A node-B ]
+  ask node-A [
+    create-link-with node-B [
+      set rewired? false
+    ]
+  ]
+end
+
+to rewire-turtles
+
+  let num-rewire floor rewire-chance * count turtles
+  repeat num-rewire [
+    let potential-edges links with [ not rewired? ]
+    ifelse any? potential-edges [
+      ask one-of potential-edges [ rewire-me ]
+    ]
+    [ user-message "all edges have already been rewired once" ]
+  ]
+
+end
+
+
+to rewire-me ; turtle procedure
+  ; node-A remains the same
+  let node-A end1
+  ; as long as A is not connected to everybody
+  if [ count link-neighbors ] of end1 < (count turtles - 1) [
+    ; find a node distinct from A and not already a neighbor of "A"
+    let node-B one-of turtles with [ (self != node-A) and (not link-neighbor? node-A) ]
+    ; wire the new edge
+    ask node-A [ create-link-with node-B [ set rewired? true ] ]
+    die ; remove the old edge
+  ]
+end
+
+to go-to-hallway [room-patch gend]
+  ifelse member? room-patch all-bathrooms [
+    face one-of entrance-bathroom (gend)
+    move
+  ][
+    ifelse member? room-patch all-classrooms [
+      face one-of entrance-classroom (room-patch)
+      move
+    ][
+      move
+    ]
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -1147,10 +1229,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-175
-429
-238
-462
+177
+592
+240
+625
 NIL
 go
 T
@@ -1164,10 +1246,10 @@ NIL
 1
 
 BUTTON
-153
-472
-238
-505
+155
+634
+240
+667
 go-once
 go
 NIL
@@ -1181,10 +1263,10 @@ NIL
 1
 
 BUTTON
-170
-386
-236
-419
+172
+548
+238
+581
 NIL
 setup
 NIL
@@ -1205,7 +1287,7 @@ CHOOSER
 entrance-mode
 entrance-mode
 "one-way" "two-way"
-0
+1
 
 MONITOR
 887
@@ -1350,6 +1432,161 @@ num-entrance
 1
 NIL
 HORIZONTAL
+
+SLIDER
+67
+387
+239
+420
+num-open
+num-open
+1
+6
+1.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+46
+426
+240
+459
+class-multiplier-nonverbal
+class-multiplier-nonverbal
+0
+2.00
+1.84
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+36
+467
+241
+500
+class-multiplier-cooperative
+class-multiplier-cooperative
+0
+2.00
+1.26
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+47
+507
+241
+540
+class-multiplier-exchange
+class-multiplier-exchange
+0
+2.00
+0.69
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+63
+40
+235
+73
+rewire-chance
+rewire-chance
+0
+1.00
+1.0
+0.01
+1
+NIL
+HORIZONTAL
+
+PLOT
+1050
+556
+1457
+731
+Average Interaction Types
+Ticks
+Duration
+0.0
+10.0
+0.0
+5.0
+true
+true
+"" ""
+PENS
+"Nonverbal" 1.0 0 -16777216 true "" "plot ave-nonverbal"
+"Cooperative" 1.0 0 -13345367 true "" "plot ave-cooperative"
+"Exchange" 1.0 0 -2674135 true "" "plot ave-exchange"
+
+PLOT
+1052
+212
+1462
+377
+Average Professor Interactions
+Ticks
+Duration
+0.0
+10.0
+0.0
+5.0
+true
+true
+"" ""
+PENS
+"Professor-Professor" 1.0 0 -16777216 true "" "plot ave-prof-prof"
+"Professor-Student" 1.0 0 -13345367 true "" "plot ave-student-prof"
+"Professor-Staff" 1.0 0 -2674135 true "" "plot ave-prof-staff"
+
+PLOT
+1052
+383
+1461
+548
+Average Staff Interactions
+Ticks
+Duration
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"Staff-Staff" 1.0 0 -16777216 true "" "plot ave-staff-staff"
+"Staff-Student" 1.0 0 -13345367 true "" "plot ave-student-staff"
+"Staff-Professor" 1.0 0 -2674135 true "" "plot ave-prof-staff"
+
+PLOT
+1050
+32
+1463
+205
+Average Student Interactions
+Ticks
+Duration
+0.0
+10.0
+0.0
+5.0
+true
+true
+"" ""
+PENS
+"Student-Student" 1.0 0 -16777216 true "" "plot ave-student-student"
+"Student-Professor" 1.0 0 -13345367 true "" "plot ave-student-prof"
+"Student-Staff" 1.0 0 -2674135 true "" "plot ave-student-staff"
 
 @#$#@#$#@
 ## WHAT IS IT?
