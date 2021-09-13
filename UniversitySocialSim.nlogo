@@ -235,7 +235,7 @@ to set-agents
     set shape "student"
     ifelse one-way?[
       setxy random-patch-entry 0
-      set exit "down"
+      set exit "up"
     ][
       ifelse coin-flip?
       [setxy random-patch-entry 0
@@ -261,7 +261,7 @@ to set-agents
     set shape "professor"
     ifelse one-way?[
       setxy random-patch-entry 0
-      set exit "down"
+      set exit "up"
     ][
       ifelse coin-flip?
       [setxy random-patch-entry 0
@@ -285,7 +285,7 @@ to set-agents
     set shape "staff"
     ifelse one-way?[
       setxy random-patch-entry 0
-      set exit "down"
+      set exit "up"
     ][
       ifelse coin-flip?
       [setxy random-patch-entry 0
@@ -305,6 +305,7 @@ to set-agents
     set interacting? false
   ]
   wire-lattice
+  rewire-turtles
   ask links [ hide-link ]
   ask turtles [ hide-turtle ]
 end
@@ -850,7 +851,7 @@ to go
     ; End of Simulation
     if ticks >= 1500 [
       ifelse one-way?[
-        if pcolor = magenta [die]
+        if pcolor = green [die]
       ][
         if pcolor = magenta or pcolor = green [die]
       ]
@@ -1012,7 +1013,7 @@ to-report coin-flip?
 end
 
 to-report randomize-num-entrance
-  report random num-entrance
+  report random (num-entrance + 1)
 end
 
 to-report random-type [a b c]
@@ -1287,7 +1288,7 @@ CHOOSER
 entrance-mode
 entrance-mode
 "one-way" "two-way"
-1
+0
 
 MONITOR
 887
@@ -1427,7 +1428,7 @@ num-entrance
 num-entrance
 1
 5
-3.0
+1.0
 1
 1
 NIL
@@ -1457,7 +1458,7 @@ class-multiplier-nonverbal
 class-multiplier-nonverbal
 0
 2.00
-1.84
+1.99
 0.01
 1
 NIL
@@ -1472,7 +1473,7 @@ class-multiplier-cooperative
 class-multiplier-cooperative
 0
 2.00
-1.26
+0.99
 0.01
 1
 NIL
