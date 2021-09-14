@@ -313,31 +313,65 @@ end
 to set-personas
   ask turtles
   [
-    set persona 1 + random 5
-    if persona = 1 [
-      set chance-interact-nonverbal random 100
-      set chance-interact-cooperative random 100
-      set chance-interact-exchange random 100
-    ]
-    if persona = 2[
-      set chance-interact-nonverbal 30 + random 70
+    if shape = "student" and gender = "M" and age = "Y" [
+      set chance-interact-nonverbal 50 + random 50
       set chance-interact-cooperative 30 + random 70
+      set chance-interact-exchange 40 + random 60
+    ]
+    if shape = "student" and gender = "M" and age = "O" [
+      set chance-interact-nonverbal 40 + random 60
+      set chance-interact-cooperative 20 + random 80
       set chance-interact-exchange 30 + random 70
     ]
-    if persona = 3[
-      set chance-interact-nonverbal 50 + random 50
-      set chance-interact-cooperative 50 + random 50
-      set chance-interact-exchange 50 + random 50
+    if shape = "student" and gender = "F" and age = "Y" [
+      set chance-interact-nonverbal 30 + random 70
+      set chance-interact-cooperative 60 + random 40
+      set chance-interact-exchange 70 + random 30
     ]
-    if persona = 4[
-      set chance-interact-nonverbal 60 + random 40
+    if shape = "student" and gender = "F" and age = "O" [
+      set chance-interact-nonverbal 20 + random 80
+      set chance-interact-cooperative 50 + random 50
+      set chance-interact-exchange 60 + random 40
+    ]
+    if shape = "professor" and gender = "M" and age = "Y" [
+      set chance-interact-nonverbal 40 + random 60
       set chance-interact-cooperative 60 + random 40
       set chance-interact-exchange 60 + random 40
     ]
-    if persona = 5[
-      set chance-interact-nonverbal 80 + random 20
-      set chance-interact-cooperative 80 + random 20
-      set chance-interact-exchange 80 + random 20
+    if shape = "professor" and gender = "M" and age = "O" [
+      set chance-interact-nonverbal 30 + random 70
+      set chance-interact-cooperative 40 + random 60
+      set chance-interact-exchange 50 + random 50
+    ]
+    if shape = "professor" and gender = "F" and age = "Y" [
+      set chance-interact-nonverbal 70 + random 30
+      set chance-interact-cooperative 70 + random 30
+      set chance-interact-exchange 50 + random 50
+    ]
+    if shape = "professor" and gender = "F" and age = "O" [
+      set chance-interact-nonverbal 70 + random 30
+      set chance-interact-cooperative 60 + random 40
+      set chance-interact-exchange 60 + random 40
+    ]
+    if shape = "staff" and gender = "M" and age = "Y" [
+      set chance-interact-nonverbal 20 + random 80
+      set chance-interact-cooperative 30 + random 70
+      set chance-interact-exchange 60 + random 40
+    ]
+    if shape = "staff" and gender = "M" and age = "O" [
+      set chance-interact-nonverbal 20 + random 80
+      set chance-interact-cooperative 40 + random 60
+      set chance-interact-exchange 70 + random 30
+    ]
+    if shape = "staff" and gender = "F" and age = "Y" [
+      set chance-interact-nonverbal 30 + random 100
+      set chance-interact-cooperative 60 + random 100
+      set chance-interact-exchange 60 + random 100
+    ]
+    if shape = "staff" and gender = "F" and age = "O" [
+      set chance-interact-nonverbal 50 + random 50
+      set chance-interact-cooperative 30 + random 70
+      set chance-interact-exchange 40 + random 60
     ]
   ]
 end
@@ -1443,7 +1477,7 @@ num-open
 num-open
 1
 6
-1.0
+6.0
 1
 1
 NIL
@@ -1458,7 +1492,7 @@ class-multiplier-nonverbal
 class-multiplier-nonverbal
 0
 2.00
-1.99
+2.0
 0.01
 1
 NIL
@@ -1473,7 +1507,7 @@ class-multiplier-cooperative
 class-multiplier-cooperative
 0
 2.00
-0.99
+1.0
 0.01
 1
 NIL
@@ -1488,7 +1522,7 @@ class-multiplier-exchange
 class-multiplier-exchange
 0
 2.00
-0.69
+1.0
 0.01
 1
 NIL
