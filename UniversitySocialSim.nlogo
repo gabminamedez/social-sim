@@ -3,12 +3,6 @@ extensions [nw]
 globals [
   heading-range
   forward-movement-range
-  vision-nonverbal
-  angle-nonverbal
-  vision-exchange
-  angle-exchange
-  vision-cooperative
-  angle-cooperative
   vision-agent
   angle-agent
   interact-time-nonverbal
