@@ -27,7 +27,8 @@ public class MainScreenController extends Controller {
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
 
-    @FXML private void randomClick() {
+    @FXML
+    private void randomClick() {
         System.out.println(spawnsSlider.getValue());
     }
 

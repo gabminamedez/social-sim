@@ -1,4 +1,8 @@
 package com.socialsim.university.model.core.environment;
 
-public class Environment {
+import com.socialsim.university.model.simulator.SimulationObject;
+
+import java.io.Serializable;
+
+public interface Environment extends SimulationObject, Serializable {
 }
