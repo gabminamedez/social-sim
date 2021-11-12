@@ -1,4 +1,10 @@
 package com.socialsim.university.model.core.environment.patch.patchobject;
 
-public class PatchObject {
+import com.socialsim.university.model.core.environment.BaseUniversityObject;
+
+public abstract class PatchObject extends BaseUniversityObject {
+
+    public PatchObject() {
+    }
+
 }

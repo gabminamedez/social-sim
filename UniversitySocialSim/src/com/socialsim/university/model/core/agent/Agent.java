@@ -1,4 +1,6 @@
 package com.socialsim.university.model.core.agent;
 
-public class Agent {
+import com.socialsim.university.model.simulator.SimulationObject;
+
+public interface Agent extends SimulationObject {
 }
