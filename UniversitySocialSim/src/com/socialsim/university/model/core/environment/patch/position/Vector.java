@@ -7,7 +7,6 @@ public class Vector {
     private Coordinates startingPosition;
     private double heading;
     private Coordinates futurePosition;
-
     private double xDisplacement;
     private double yDisplacement;
     private double magnitude;
@@ -16,7 +15,6 @@ public class Vector {
         this.startingPosition = vector.getStartingPosition();
         this.heading = vector.getHeading();
         this.futurePosition = vector.getFuturePosition();
-
         this.xDisplacement = vector.getXDisplacement();
         this.yDisplacement = vector.getYDisplacement();
         this.magnitude = vector.getMagnitude();
@@ -29,7 +27,6 @@ public class Vector {
             double magnitude
     ) {
         setVector(startingPosition, heading, futurePosition);
-
         this.magnitude = magnitude;
     }
 
@@ -50,7 +47,6 @@ public class Vector {
         this.futurePosition = futurePosition;
         this.xDisplacement = xDisplacement;
         this.yDisplacement = yDisplacement;
-
         this.magnitude = magnitude;
     }
 
@@ -62,10 +58,8 @@ public class Vector {
         this.startingPosition = currentPosition;
         this.heading = currentHeading;
         this.futurePosition = futurePosition;
-
         this.xDisplacement = this.futurePosition.getX() - this.startingPosition.getX();
         this.yDisplacement = this.futurePosition.getY() - this.startingPosition.getY();
-
         this.magnitude = Coordinates.distance(this.startingPosition, this.futurePosition);
     }
 
@@ -127,10 +121,7 @@ public class Vector {
                     endingPosition,
                     sumX,
                     sumY,
-                    Vector.computeMagnitude(
-                            startingPosition,
-                            endingPosition
-                    )
+                    Vector.computeMagnitude(startingPosition, endingPosition)
             );
         }
         else {

@@ -71,10 +71,8 @@ public class Coordinates extends Location {
     public static double headingTowards(Coordinates sourceCoordinates, Coordinates targetCoordinates) {
         double x = targetCoordinates.getX();
         double y = targetCoordinates.getY();
-
         double dx = x - sourceCoordinates.getX();
         double dy = y - sourceCoordinates.getY();
-
         double adjacentLength = dx;
         double hypotenuseLength = distance(sourceCoordinates, targetCoordinates);
         double angle = Math.acos(adjacentLength / hypotenuseLength);
@@ -101,7 +99,7 @@ public class Coordinates extends Location {
     public static double headingDifference(double heading1, double heading2) {
         double headingDifference = Math.abs(heading1 - heading2);
 
-        if(headingDifference > Math.toRadians(180)) {
+        if (headingDifference > Math.toRadians(180)) {
             headingDifference = Math.toRadians(360) - headingDifference;
         }
 

@@ -23,8 +23,7 @@ public class MatrixPosition extends Location {
     }
 
     public static boolean inBounds(MatrixPosition matrixPosition, University university) {
-        return matrixPosition.getRow() >= 0 && matrixPosition.getRow() < university.getRows()
-                && matrixPosition.getColumn() >= 0 && matrixPosition.getColumn() < university.getColumns();
+        return matrixPosition.getRow() >= 0 && matrixPosition.getRow() < university.getRows() && matrixPosition.getColumn() >= 0 && matrixPosition.getColumn() < university.getColumns();
     }
 
     @Override
@@ -32,8 +31,8 @@ public class MatrixPosition extends Location {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MatrixPosition that = (MatrixPosition) o;
-        return row == that.row &&
-                column == that.column;
+
+        return row == that.row && column == that.column;
     }
 
     @Override

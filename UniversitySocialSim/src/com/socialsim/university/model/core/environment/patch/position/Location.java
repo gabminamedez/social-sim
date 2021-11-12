@@ -25,7 +25,8 @@ public class Location extends BaseUniversityObject implements Environment {
 
         if (MatrixPosition.inBounds(matrixPosition, university)) {
             return matrixPosition;
-        } else {
+        }
+        else {
             return null;
         }
     }

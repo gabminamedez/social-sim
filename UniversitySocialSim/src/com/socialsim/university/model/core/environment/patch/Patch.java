@@ -1,46 +1,55 @@
 package com.socialsim.university.model.core.environment.patch;
 
+import com.socialsim.university.model.core.agent.guard.Guard;
+import com.socialsim.university.model.core.agent.janitor.Janitor;
+import com.socialsim.university.model.core.agent.officer.Officer;
+import com.socialsim.university.model.core.agent.professor.Professor;
+import com.socialsim.university.model.core.agent.student.Student;
 import com.socialsim.university.model.core.environment.BaseUniversityObject;
 import com.socialsim.university.model.core.environment.Environment;
+import com.socialsim.university.model.core.environment.University;
+import com.socialsim.university.model.core.environment.patch.patchobject.Amenity;
+import com.socialsim.university.model.core.environment.patch.position.Coordinates;
+import com.socialsim.university.model.core.environment.patch.position.MatrixPosition;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Patch extends BaseUniversityObject implements Environment, Comparable<Patch> {
 
     public static final double PATCH_SIZE_IN_SQUARE_METERS = 0.6;
-
-    // Denotes the position of this patch based on a discrete row x column matrix
     private final MatrixPosition matrixPosition;
-
-    // Denotes the center of this patch in a Cartesian pixel coordinate system
     private final Coordinates patchCenterCoordinates;
 
-    // Denotes the list of passengers that are currently on this patch
-    private final CopyOnWriteArrayList<Passenger> passengers;
+    private final CopyOnWriteArrayList<Guard> guards;
+    private final CopyOnWriteArrayList<Janitor> janitors;
+    private final CopyOnWriteArrayList<Officer> officers;
+    private final CopyOnWriteArrayList<Professor> professors;
+    private final CopyOnWriteArrayList<Student> students;
 
-    // Denotes the amenity block present on this patch
     private Amenity.AmenityBlock amenityBlock;
-
-    // Denotes the floor which contains this patch
-    private final Floor floor;
-
-    // Denotes the positions of the neighbors of this patch (because the serializer can't handle references to the
-    // patch itself)
+    private final University university;
     private final List<MatrixPosition> neighborIndices;
-
-    // Denotes the individual floor field value of this patch, given the queueable goal patch and the desired state
     private final Map<Queueable, Map<QueueingFloorField.FloorFieldState, Double>> floorFieldValues;
 
-    public Patch(Floor floor, MatrixPosition matrixPosition) {
+    public Patch(University university, MatrixPosition matrixPosition) {
         super();
 
         this.matrixPosition = matrixPosition;
         this.patchCenterCoordinates = Coordinates.getPatchCenterCoordinates(this);
 
-        this.passengers = new CopyOnWriteArrayList<>();
+        this.guards = new CopyOnWriteArrayList<>();
+        this.janitors = new CopyOnWriteArrayList<>();
+        this.officers = new CopyOnWriteArrayList<>();
+        this.professors = new CopyOnWriteArrayList<>();
+        this.students = new CopyOnWriteArrayList<>();
+
         this.amenityBlock = null;
-        this.floor = floor;
-
+        this.university = university;
         this.neighborIndices = this.computeNeighboringPatches();
-
         this.floorFieldValues = new HashMap<>();
     }
 
@@ -52,8 +61,24 @@ public class Patch extends BaseUniversityObject implements Environment, Comparab
         return patchCenterCoordinates;
     }
 
-    public CopyOnWriteArrayList<Passenger> getPassengers() {
-        return passengers;
+    public CopyOnWriteArrayList<Guard> getGuards() {
+        return guards;
+    }
+
+    public CopyOnWriteArrayList<Guard> getJanitors() {
+        return janitors;
+    }
+
+    public CopyOnWriteArrayList<Guard> getOfficers() {
+        return officers;
+    }
+
+    public CopyOnWriteArrayList<Guard> getProfessors() {
+        return professors;
+    }
+
+    public CopyOnWriteArrayList<Guard> getStudents() {
+        return students;
     }
 
     public Map<Queueable, Map<QueueingFloorField.FloorFieldState, Double>> getFloorFieldValues() {
@@ -68,8 +93,8 @@ public class Patch extends BaseUniversityObject implements Environment, Comparab
         this.amenityBlock = amenityBlock;
     }
 
-    public Floor getFloor() {
-        return floor;
+    public University getUniversity() {
+        return university;
     }
 
     private List<MatrixPosition> computeNeighboringPatches() {
@@ -86,7 +111,7 @@ public class Patch extends BaseUniversityObject implements Environment, Comparab
             neighboringPatchIndices.add(new MatrixPosition(patchRow - 1, patchColumn));
         }
 
-        if (patchRow - 1 >= 0 && patchColumn + 1 < this.getFloor().getColumns()) {
+        if (patchRow - 1 >= 0 && patchColumn + 1 < this.getUniversity().getColumns()) {
             neighboringPatchIndices.add(new MatrixPosition(patchRow - 1, patchColumn + 1));
         }
 
@@ -94,19 +119,19 @@ public class Patch extends BaseUniversityObject implements Environment, Comparab
             neighboringPatchIndices.add(new MatrixPosition(patchRow, patchColumn - 1));
         }
 
-        if (patchColumn + 1 < this.getFloor().getColumns()) {
+        if (patchColumn + 1 < this.getUniversity().getColumns()) {
             neighboringPatchIndices.add(new MatrixPosition(patchRow, patchColumn + 1));
         }
 
-        if (patchRow + 1 < this.getFloor().getRows() && patchColumn - 1 >= 0) {
+        if (patchRow + 1 < this.getUniversity().getRows() && patchColumn - 1 >= 0) {
             neighboringPatchIndices.add(new MatrixPosition(patchRow + 1, patchColumn - 1));
         }
 
-        if (patchRow + 1 < this.getFloor().getRows()) {
+        if (patchRow + 1 < this.getUniversity().getRows()) {
             neighboringPatchIndices.add(new MatrixPosition(patchRow + 1, patchColumn));
         }
 
-        if (patchRow + 1 < this.getFloor().getRows() && patchColumn + 1 < this.getFloor().getColumns()) {
+        if (patchRow + 1 < this.getUniversity().getRows() && patchColumn + 1 < this.getUniversity().getColumns()) {
             neighboringPatchIndices.add(new MatrixPosition(patchRow + 1, patchColumn + 1));
         }
 
@@ -118,7 +143,7 @@ public class Patch extends BaseUniversityObject implements Environment, Comparab
 
         for (MatrixPosition neighboringPatchIndex : this.neighborIndices) {
             neighboringPatches.add(
-                    this.getFloor().getPatch(neighboringPatchIndex.getRow(), neighboringPatchIndex.getColumn())
+                    this.getUniversity().getPatch(neighboringPatchIndex.getRow(), neighboringPatchIndex.getColumn())
             );
         }
 
@@ -148,9 +173,11 @@ public class Patch extends BaseUniversityObject implements Environment, Comparab
 
         if (thisRow > patchRow) {
             return 1;
-        } else if (thisRow == patchRow) {
+        }
+        else if (thisRow == patchRow) {
             return Integer.compare(thisColumn, patchColumn);
-        } else {
+        }
+        else {
             return -1;
         }
     }

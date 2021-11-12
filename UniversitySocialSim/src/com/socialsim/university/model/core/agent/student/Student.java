@@ -12,7 +12,7 @@ public class Student extends PatchObject implements Agent {
     private final int age;
 
     // Handles how this passenger is displayed
-    // private final PassengerGraphic passengerGraphic;
+    private final PassengerGraphic passengerGraphic;
 
     // Contains the mechanisms for this passenger's movement
     private final StudentMovement studentMovement;
