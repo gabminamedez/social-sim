@@ -3,7 +3,6 @@ package com.socialsim.university.model.core.environment;
 import com.socialsim.university.controller.Main;
 import com.socialsim.university.model.core.agent.guard.Guard;
 import com.socialsim.university.model.core.agent.janitor.Janitor;
-import com.socialsim.university.model.core.agent.officer.Officer;
 import com.socialsim.university.model.core.agent.professor.Professor;
 import com.socialsim.university.model.core.agent.student.Student;
 import com.socialsim.university.model.core.environment.patch.Patch;
@@ -21,7 +20,6 @@ public class University extends BaseUniversityObject implements Environment {
     private final Patch[][] patches;
     private final CopyOnWriteArrayList<Guard> guards;
     private final CopyOnWriteArrayList<Janitor> janitors;
-    private final CopyOnWriteArrayList<Officer> officers;
     private final CopyOnWriteArrayList<Professor> professors;
     private final CopyOnWriteArrayList<Student> students;
 
@@ -54,7 +52,6 @@ public class University extends BaseUniversityObject implements Environment {
 
         this.guards = new CopyOnWriteArrayList<>();
         this.janitors = new CopyOnWriteArrayList<>();
-        this.officers = new CopyOnWriteArrayList<>();
         this.professors = new CopyOnWriteArrayList<>();
         this.students = new CopyOnWriteArrayList<>();
 
@@ -118,10 +115,6 @@ public class University extends BaseUniversityObject implements Environment {
 
     public CopyOnWriteArrayList<Janitor> getJanitors() {
         return janitors;
-    }
-
-    public CopyOnWriteArrayList<Officer> getOfficers() {
-        return officers;
     }
 
     public CopyOnWriteArrayList<Professor> getProfessors() {

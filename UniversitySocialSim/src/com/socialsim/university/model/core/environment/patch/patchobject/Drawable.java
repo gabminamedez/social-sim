@@ -1,4 +1,7 @@
 package com.socialsim.university.model.core.environment.patch.patchobject;
 
-public class Drawable {
+public interface Drawable {
+    AmenityGraphic getGraphicObject();
+
+    AmenityGraphicLocation getGraphicLocation();
 }

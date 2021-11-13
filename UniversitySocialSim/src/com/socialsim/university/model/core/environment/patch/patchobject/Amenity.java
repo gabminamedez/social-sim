@@ -1,7 +1,10 @@
 package com.socialsim.university.model.core.environment.patch.patchobject;
 
+import com.socialsim.university.controller.Main;
 import com.socialsim.university.model.core.environment.BaseUniversityObject;
 import com.socialsim.university.model.core.environment.Environment;
+import com.socialsim.university.model.core.environment.patch.Patch;
+import com.socialsim.university.model.core.environment.patch.position.MatrixPosition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +42,6 @@ public abstract class Amenity extends PatchObject implements Environment {
         return attractors;
     }
 
-    // Denotes a single component of an amenity that occupies one patch
     public abstract static class AmenityBlock implements Environment {
         private Amenity parent;
         private final Patch patch;
@@ -72,14 +74,12 @@ public abstract class Amenity extends PatchObject implements Environment {
             return hasGraphic;
         }
 
-        // Convert the list of amenity block templates to a list of amenity blocks
         public static List<AmenityBlock> convertToAmenityBlocks(
                 Patch referencePatch,
                 List<AmenityFootprint.Rotation.AmenityBlockTemplate> amenityBlockTemplates
         ) {
             List<AmenityBlock> amenityBlocks = new ArrayList<>();
 
-            // Convert each template into an actual amenity block
             for (AmenityFootprint.Rotation.AmenityBlockTemplate amenityBlockTemplate : amenityBlockTemplates) {
                 // Compute for the position of the patch using the offset data
                 int row
@@ -95,7 +95,6 @@ public abstract class Amenity extends PatchObject implements Environment {
                         column
                 );
 
-                // If the position is out of bounds, return null
                 if (!MatrixPosition.inBounds(
                         patchPosition,
                         Main.simulator.getStation()
@@ -103,7 +102,6 @@ public abstract class Amenity extends PatchObject implements Environment {
                     return null;
                 }
 
-                // Create the amenity block, then add it to the list
                 Patch patch = Main.simulator.getCurrentFloor().getPatch(row, column);
 
                 assert getAmenityBlockFactory(amenityBlockTemplate.getAmenityClass()) != null;
@@ -147,8 +145,7 @@ public abstract class Amenity extends PatchObject implements Environment {
             }
         }
 
-        // Template class for amenity block factories
-        public abstract static class AmenityBlockFactory extends BaseStationObject.StationObjectFactory {
+        public abstract static class AmenityBlockFactory extends BaseUniversityObject.UniversityObjectFactory {
             public abstract AmenityBlock create(
                     Patch patch,
                     boolean attractor,
