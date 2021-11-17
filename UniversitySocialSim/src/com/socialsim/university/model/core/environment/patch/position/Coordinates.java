@@ -5,7 +5,7 @@ import com.socialsim.university.model.simulator.Simulator;
 
 import java.util.Objects;
 
-public class Coordinates extends Location {
+public class Coordinates extends Location { // Represents a pair of 2D Cartesian coordinates in the simulation
 
     private double x;
     private double y;

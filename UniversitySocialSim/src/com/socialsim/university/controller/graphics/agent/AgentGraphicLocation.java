@@ -2,11 +2,11 @@ package com.socialsim.university.controller.graphics.agent;
 
 import com.socialsim.university.controller.graphics.GraphicLocation;
 
-public class StudentGraphicLocation extends GraphicLocation {
+public class AgentGraphicLocation extends GraphicLocation {
 
     public static final int BASE_IMAGE_UNIT = 64;
 
-    public StudentGraphicLocation(int graphicRow, int graphicColumn) {
+    public AgentGraphicLocation(int graphicRow, int graphicColumn) {
         super(graphicRow, graphicColumn);
     }
 

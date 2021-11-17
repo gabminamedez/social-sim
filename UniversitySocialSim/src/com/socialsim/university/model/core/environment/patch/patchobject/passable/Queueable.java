@@ -1,18 +1,24 @@
 package com.socialsim.university.model.core.environment.patch.patchobject.passable;
 
+import com.socialsim.university.model.core.environment.patch.patchfield.headful.QueueObject;
+import com.socialsim.university.model.core.environment.patch.patchfield.headful.QueueingPatchField;
+import com.socialsim.university.model.core.environment.patch.patchobject.Amenity;
+
+import java.util.List;
+
 public interface Queueable {
 
     // Retrieves the floor field states of this queueable
-    List<QueueingFloorField.FloorFieldState> retrieveFloorFieldStates();
+    List<QueueingPatchField.PatchFieldState> retrieveFloorFieldStates();
 
     // Retrieves a floor field of this queueable, given the state
-    QueueingFloorField retrieveFloorField(QueueObject queueObject, QueueingFloorField.FloorFieldState floorFieldState);
+    QueueingPatchField retrieveFloorField(QueueObject queueObject, QueueingPatchField.PatchFieldState floorFieldState);
 
     // Denotes whether this queueable's floor fields are filled
     boolean isFloorFieldsComplete();
 
     // Delete a floor field of a certain state in this queueable
-    void deleteFloorField(QueueingFloorField.FloorFieldState floorFieldState);
+    void deleteFloorField(QueueingPatchField.PatchFieldState floorFieldState);
 
     // Delete all floor fields in this queueable
     void deleteAllFloorFields();
@@ -23,7 +29,8 @@ public interface Queueable {
     static Queueable toQueueable(Amenity amenity) {
         if (isQueueable(amenity)) {
             return (Queueable) amenity;
-        } else {
+        }
+        else {
             return null;
         }
     }

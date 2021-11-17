@@ -1,4 +1,6 @@
 package com.socialsim.university.model.core.environment.patch.patchfield.headless;
 
-public class HeadlessPatchField {
+import com.socialsim.university.model.core.environment.patch.patchfield.PatchField;
+
+public abstract class HeadlessPatchField extends PatchField {
 }

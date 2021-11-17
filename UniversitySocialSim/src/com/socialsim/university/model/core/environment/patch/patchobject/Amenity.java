@@ -1,9 +1,16 @@
 package com.socialsim.university.model.core.environment.patch.patchobject;
 
 import com.socialsim.university.controller.Main;
+import com.socialsim.university.controller.graphics.amenity.AmenityFootprint;
 import com.socialsim.university.model.core.environment.BaseUniversityObject;
 import com.socialsim.university.model.core.environment.Environment;
 import com.socialsim.university.model.core.environment.patch.Patch;
+import com.socialsim.university.model.core.environment.patch.patchobject.miscellaneous.Wall;
+import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.Board;
+import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.Chair;
+import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.Fountain;
+import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.blockable.Security;
+import com.socialsim.university.model.core.environment.patch.patchobject.passable.portal.Door;
 import com.socialsim.university.model.core.environment.patch.position.MatrixPosition;
 
 import java.util.ArrayList;
@@ -74,31 +81,17 @@ public abstract class Amenity extends PatchObject implements Environment {
             return hasGraphic;
         }
 
-        public static List<AmenityBlock> convertToAmenityBlocks(
-                Patch referencePatch,
-                List<AmenityFootprint.Rotation.AmenityBlockTemplate> amenityBlockTemplates
-        ) {
+        public static List<AmenityBlock> convertToAmenityBlocks(Patch referencePatch, List<AmenityFootprint.Rotation.AmenityBlockTemplate> amenityBlockTemplates) {
             List<AmenityBlock> amenityBlocks = new ArrayList<>();
 
             for (AmenityFootprint.Rotation.AmenityBlockTemplate amenityBlockTemplate : amenityBlockTemplates) {
                 // Compute for the position of the patch using the offset data
-                int row
-                        = referencePatch.getMatrixPosition().getRow()
-                        + amenityBlockTemplate.getOffset().getRowOffset();
+                int row = referencePatch.getMatrixPosition().getRow() + amenityBlockTemplate.getOffset().getRowOffset();
+                int column = referencePatch.getMatrixPosition().getColumn() + amenityBlockTemplate.getOffset().getColumnOffset();
 
-                int column
-                        = referencePatch.getMatrixPosition().getColumn()
-                        + amenityBlockTemplate.getOffset().getColumnOffset();
+                MatrixPosition patchPosition = new MatrixPosition(row, column);
 
-                MatrixPosition patchPosition = new MatrixPosition(
-                        row,
-                        column
-                );
-
-                if (!MatrixPosition.inBounds(
-                        patchPosition,
-                        Main.simulator.getStation()
-                )) {
+                if (!MatrixPosition.inBounds(patchPosition, Main.simulator.getStation())) {
                     return null;
                 }
 
@@ -120,27 +113,25 @@ public abstract class Amenity extends PatchObject implements Environment {
         }
 
         private static AmenityBlockFactory getAmenityBlockFactory(Class<? extends Amenity> amenityClass) {
-            if (amenityClass == StationGate.class) {
-                return StationGate.StationGateBlock.stationGateBlockFactory;
-            } else if (amenityClass == Security.class) {
-                return Security.SecurityBlock.securityBlockFactory;
-            } else if (amenityClass == Turnstile.class) {
-                return Turnstile.TurnstileBlock.turnstileBlockFactory;
-            } else if (amenityClass == TrainDoor.class) {
-                return TrainDoor.TrainDoorBlock.trainDoorBlockFactory;
-            } else if (amenityClass == Track.class) {
-                return Track.TrackBlock.trackBlockFactory;
-            } else if (amenityClass == TicketBooth.class) {
-                return TicketBooth.TicketBoothBlock.ticketBoothBlockFactory;
-            } else if (amenityClass == StairPortal.class) {
-                return StairPortal.StairPortalBlock.stairPortalBlockFactory;
-            } else if (amenityClass == EscalatorPortal.class) {
-                return EscalatorPortal.EscalatorPortalBlock.escalatorPortalBlockFactory;
-            } else if (amenityClass == ElevatorPortal.class) {
-                return ElevatorPortal.ElevatorPortalBlock.elevatorPortalBlockFactory;
-            } else if (amenityClass == Wall.class) {
+            if (amenityClass == Wall.class) {
                 return Wall.WallBlock.wallBlockFactory;
-            } else {
+            }
+            else if (amenityClass == Security.class) {
+                return Security.SecurityBlock.securityBlockFactory;
+            }
+            else if (amenityClass == Board.class) {
+                return Board.BoardBlock.boardBlockFactory;
+            }
+            else if (amenityClass == Chair.class) {
+                return Chair.ChairBlock.chairBlockFactory;
+            }
+            else if (amenityClass == Fountain.class) {
+                return Fountain.FountainBlock.fountainBlockFactory;
+            }
+            else if (amenityClass == Door.class) {
+                return Door.DoorBlock.doorBlockFactory;
+            }
+            else {
                 return null;
             }
         }

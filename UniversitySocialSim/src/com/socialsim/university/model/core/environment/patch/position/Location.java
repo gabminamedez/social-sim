@@ -6,7 +6,7 @@ import com.socialsim.university.model.core.environment.University;
 
 public class Location extends BaseUniversityObject implements Environment {
 
-    public static MatrixPosition screenCoordinatesToMatrixPosition(
+    public static MatrixPosition screenCoordinatesToMatrixPosition( // Convert the given continuous screen coordinates to a discrete row and column
             University university,
             double x,
             double y,

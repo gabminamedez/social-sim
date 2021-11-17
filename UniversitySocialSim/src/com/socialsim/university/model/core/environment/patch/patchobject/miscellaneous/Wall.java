@@ -1,5 +1,9 @@
 package com.socialsim.university.model.core.environment.patch.patchobject.miscellaneous;
 
+import com.socialsim.university.controller.graphics.amenity.AmenityFootprint;
+import com.socialsim.university.controller.graphics.amenity.AmenityGraphic;
+import com.socialsim.university.controller.graphics.amenity.AmenityGraphicLocation;
+import com.socialsim.university.controller.graphics.amenity.WallGraphic;
 import com.socialsim.university.model.core.environment.patch.Patch;
 import com.socialsim.university.model.core.environment.patch.patchobject.Amenity;
 
@@ -18,8 +22,7 @@ public class Wall extends Obstacle {
         wallFootprint = new AmenityFootprint();
         AmenityFootprint.Rotation upView = new AmenityFootprint.Rotation(AmenityFootprint.Rotation.Orientation.UP);
 
-        AmenityFootprint.Rotation.AmenityBlockTemplate block00
-                = new AmenityFootprint.Rotation.AmenityBlockTemplate(
+        AmenityFootprint.Rotation.AmenityBlockTemplate block00 = new AmenityFootprint.Rotation.AmenityBlockTemplate(
                 upView.getOrientation(),
                 0,
                 0,

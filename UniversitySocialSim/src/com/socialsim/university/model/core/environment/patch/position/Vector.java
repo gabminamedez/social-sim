@@ -2,7 +2,7 @@ package com.socialsim.university.model.core.environment.patch.position;
 
 import java.util.List;
 
-public class Vector {
+public class Vector { // Create a vector given the starting position, the heading, and the future position
 
     private Coordinates startingPosition;
     private double heading;
@@ -20,12 +20,7 @@ public class Vector {
         this.magnitude = vector.getMagnitude();
     }
 
-    public Vector(
-            Coordinates startingPosition,
-            double heading,
-            Coordinates futurePosition,
-            double magnitude
-    ) {
+    public Vector(Coordinates startingPosition, double heading, Coordinates futurePosition, double magnitude) {
         setVector(startingPosition, heading, futurePosition);
         this.magnitude = magnitude;
     }
@@ -34,14 +29,7 @@ public class Vector {
         return Coordinates.distance(startingPosition, futurePosition);
     }
 
-    public Vector(
-            Coordinates startingPosition,
-            double heading,
-            Coordinates futurePosition,
-            double xDisplacement,
-            double yDisplacement,
-            double magnitude
-    ) {
+    public Vector(Coordinates startingPosition, double heading, Coordinates futurePosition, double xDisplacement, double yDisplacement, double magnitude) {
         this.startingPosition = startingPosition;
         this.heading = heading;
         this.futurePosition = futurePosition;
@@ -50,11 +38,7 @@ public class Vector {
         this.magnitude = magnitude;
     }
 
-    public void setVector(
-            Coordinates currentPosition,
-            double currentHeading,
-            Coordinates futurePosition
-    ) {
+    public void setVector(Coordinates currentPosition, double currentHeading, Coordinates futurePosition) {
         this.startingPosition = currentPosition;
         this.heading = currentHeading;
         this.futurePosition = futurePosition;
@@ -111,7 +95,6 @@ public class Vector {
         double endX = startingPosition.getX() + sumX;
         double endY = startingPosition.getY() + sumY;
         Coordinates endingPosition = new Coordinates(endX, endY);
-
         double newHeading = Coordinates.headingTowards(startingPosition, endingPosition);
 
         if (!Double.isNaN(newHeading)) {

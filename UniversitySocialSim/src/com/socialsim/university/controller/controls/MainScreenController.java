@@ -17,8 +17,10 @@ public class MainScreenController extends Controller {
     @FXML private Canvas foregroundCanvas;
     @FXML private Canvas markingsCanvas;
     @FXML private TabPane sidebar;
-    @FXML private Spinner studentsSpinner;
+    @FXML private Spinner guardsSpinner;
+    @FXML private Spinner janitorsSpinner;
     @FXML private Spinner professorsSpinner;
+    @FXML private Spinner studentsSpinner;
     @FXML private Slider spawnsSlider;
     @FXML private Slider classroomsSlider;
     @FXML private ChoiceBox entranceChoice;

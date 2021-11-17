@@ -1,42 +1,43 @@
 package com.socialsim.university.model.core.environment.patch.patchfield.headful;
 
-public class QueueObject {
+import com.socialsim.university.model.core.agent.Agent;
+import com.socialsim.university.model.core.environment.patch.patchfield.AbstractPatchField;
 
-    // Any amenity that is queueable must contain a hashmap of floor fields
-    // Given a passenger state, a floor field may be retrieved from that goal
-    private final Map<QueueingFloorField.FloorFieldState, QueueingFloorField> floorFields = new HashMap<>();
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
-    // Denotes the list of passengers who are queueing for this goal
-    private final LinkedList<Passenger> passengersQueueing = new LinkedList<>();
+public class QueueObject extends AbstractPatchField { // Any amenity that is queueable must contain a hashmap of floor fields
 
-    // Denotes the passenger at the back of the queue
-    private Passenger lastPassengerQueueing;
+    private final Map<QueueingPatchField.PatchFieldState, QueueingPatchField> patchFields = new HashMap<>(); // Given a passenger state, a floor field may be retrieved from that goal
 
-    // Denotes the passenger currently being serviced by this queueable
-    private Passenger passengerServiced;
+    private final LinkedList<Agent> agentsQueueing = new LinkedList<>();
 
-    public Map<QueueingFloorField.FloorFieldState, QueueingFloorField> getFloorFields() {
-        return floorFields;
+    private Agent lastAgentQueueing; // Denotes the agent at the back of the queue
+    private Agent agentServiced; // Denotes the agent currently being serviced by this queueable
+
+    public Map<QueueingPatchField.PatchFieldState, QueueingPatchField> getFloorFields() {
+        return patchFields;
     }
 
-    public LinkedList<Passenger> getPassengersQueueing() {
-        return passengersQueueing;
+    public LinkedList<Agent> getGuardsQueueing() {
+        return agentsQueueing;
     }
 
-    public Passenger getLastPassengerQueueing() {
-        return lastPassengerQueueing;
+    public Agent getLastAgentQueueing() {
+        return lastAgentQueueing;
     }
 
-    public void setLastPassengerQueueing(Passenger lastPassengerQueueing) {
-        this.lastPassengerQueueing = lastPassengerQueueing;
+    public void setLastAgentQueueing(Agent lastAgentQueueing) {
+        this.lastAgentQueueing = lastAgentQueueing;
     }
 
-    public Passenger getPassengerServiced() {
-        return passengerServiced;
+    public Agent getAgentServiced() {
+        return agentServiced;
     }
 
-    public void setPassengerServiced(Passenger passengerServiced) {
-        this.passengerServiced = passengerServiced;
+    public void setAgentServiced(Agent agentServiced) {
+        this.agentServiced = agentServiced;
     }
 
 }

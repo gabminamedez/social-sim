@@ -42,12 +42,20 @@
         <TabPane fx:id="sidebar" prefHeight="642.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
             <Tab text="Configure">
                 <VBox prefHeight="794.0" prefWidth="286.0">
-                    <TitledPane animated="false" collapsible="false" prefHeight="70.0" prefWidth="100.0" text="Number of students: ">
-                        <Spinner fx:id="studentsSpinner" prefHeight="25.0" prefWidth="79.0" />
+                    <TitledPane animated="false" collapsible="false" prefHeight="70.0" prefWidth="100.0" text="Number of guards: ">
+                        <Spinner fx:id="guardsSpinner" prefHeight="25.0" prefWidth="79.0" />
+                    </TitledPane>
+
+                    <TitledPane animated="false" collapsible="false" prefHeight="70.0" prefWidth="100.0" text="Number of spinners: ">
+                        <Spinner fx:id="janitorsSpinner" prefHeight="25.0" prefWidth="79.0" />
                     </TitledPane>
 
                     <TitledPane animated="false" collapsible="false" prefHeight="70.0" prefWidth="100.0" text="Number of professors: ">
                         <Spinner fx:id="professorsSpinner" prefHeight="25.0" prefWidth="79.0" />
+                    </TitledPane>
+
+                    <TitledPane animated="false" collapsible="false" prefHeight="70.0" prefWidth="100.0" text="Number of students: ">
+                        <Spinner fx:id="studentsSpinner" prefHeight="25.0" prefWidth="79.0" />
                     </TitledPane>
 
                     <TitledPane animated="false" collapsible="false" prefHeight="70.0" prefWidth="100.0" text="Spawns per tick: ">
