@@ -1,5 +1,6 @@
 package com.socialsim.university.model.simulator;
 
+import com.socialsim.university.controller.Main;
 import com.socialsim.university.model.core.agent.guard.Guard;
 import com.socialsim.university.model.core.agent.janitor.Janitor;
 import com.socialsim.university.model.core.agent.professor.Professor;
@@ -87,10 +88,7 @@ public class Simulator {
                     playSemaphore.acquire();
 
                     while (this.isRunning()) {
-                        // Update the pertinent variables when ticking
-
-                        // Draw all agents in each floor
-                        for (Floor floor : Main.simulator.station.getFloors()) {
+                        for (Floor floor : Main.simulator.university.getFloors()) {
                             updateFloor(floor);
                         }
 
@@ -103,7 +101,6 @@ public class Simulator {
                                         < speedAwarenessLimitMilliseconds
                         );
 
-                        // Increment (tick) the clock
                         this.time.tick();
 
                         Thread.sleep(SimulationTime.SLEEP_TIME_MILLISECONDS.get());
@@ -115,9 +112,7 @@ public class Simulator {
         }).start();
     }
 
-    // Reset the simulation
     public void reset() {
-        // Reset the simulation time
         this.time.reset();
     }
 
