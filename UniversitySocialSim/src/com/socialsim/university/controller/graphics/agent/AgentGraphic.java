@@ -1,14 +1,13 @@
 package com.socialsim.university.controller.graphics.agent;
 
 import com.socialsim.university.controller.graphics.Graphic;
-import com.socialsim.university.controller.graphics.amenity.Changeable;
 import com.socialsim.university.model.core.agent.Agent;
 import com.socialsim.university.model.core.environment.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AgentGraphic extends Graphic implements Changeable {
+public class AgentGraphic extends Graphic {
 
     public static final String AGENT_SPRITE_SHEET_URL = "com/socialsim/university/view/image/agent_spritesheet.png";
     public static final List<AgentGraphicLocation> maleGuardGraphics;
@@ -124,7 +123,6 @@ public class AgentGraphic extends Graphic implements Changeable {
         return this.graphics.get(this.graphicIndex);
     }
 
-    @Override
     public void change() {
         Agent agent = this.agent;
 
