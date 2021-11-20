@@ -1,7 +1,6 @@
 package com.socialsim.university.model.core.environment.patch.patchobject;
 
 import com.socialsim.university.controller.Main;
-import com.socialsim.university.controller.graphics.amenity.AmenityFootprint;
 import com.socialsim.university.model.core.environment.BaseUniversityObject;
 import com.socialsim.university.model.core.environment.Environment;
 import com.socialsim.university.model.core.environment.patch.Patch;
@@ -137,12 +136,7 @@ public abstract class Amenity extends PatchObject implements Environment {
         }
 
         public abstract static class AmenityBlockFactory extends BaseUniversityObject.UniversityObjectFactory {
-            public abstract AmenityBlock create(
-                    Patch patch,
-                    boolean attractor,
-                    boolean hasGraphic,
-                    AmenityFootprint.Rotation.Orientation... orientation
-            );
+            public abstract AmenityBlock create(Patch patch, boolean attractor, boolean hasGraphic);
         }
     }
 
