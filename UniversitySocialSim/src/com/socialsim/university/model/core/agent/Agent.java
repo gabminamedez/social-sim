@@ -3,7 +3,7 @@ package com.socialsim.university.model.core.agent;
 import com.socialsim.university.controller.graphics.agent.AgentGraphic;
 import com.socialsim.university.model.core.environment.patch.Patch;
 import com.socialsim.university.model.core.environment.patch.patchobject.PatchObject;
-import com.socialsim.university.model.core.environment.patch.patchobject.passable.portal.Door;
+import com.socialsim.university.model.core.environment.patch.patchobject.passable.gate.UniversityGate;
 
 import java.util.Objects;
 
@@ -50,8 +50,8 @@ public class Agent extends PatchObject {
         this.age = age;
 
         this.agentGraphic = new AgentGraphic(this);
-        Door door = (Door) spawnPatch.getAmenityBlock().getParent();
-        this.agentMovement = new AgentMovement(door, this, spawnPatch.getPatchCenterCoordinates());
+        UniversityGate universityGate = (UniversityGate) spawnPatch.getAmenityBlock().getParent();
+        this.agentMovement = new AgentMovement(universityGate, this, spawnPatch.getPatchCenterCoordinates());
     }
 
     public int getId() {

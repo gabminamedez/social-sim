@@ -2,7 +2,7 @@ package com.socialsim.university.controller.graphics.amenity;
 
 import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.Board;
 
-public class BoardGraphic {
+public class BoardGraphic extends AmenityGraphic {
 
     private static final int ROW_SPAN = 1;
     private static final int COLUMN_SPAN = 2;

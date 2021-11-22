@@ -8,7 +8,7 @@ import com.socialsim.university.model.core.environment.patch.patchobject.passabl
 import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.Chair;
 import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.Fountain;
 import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.blockable.Security;
-import com.socialsim.university.model.core.environment.patch.patchobject.passable.portal.Door;
+import com.socialsim.university.model.core.environment.patch.patchobject.passable.gate.Door;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +40,10 @@ public abstract class AmenityGraphic extends Graphic {
         final List<AmenityGraphicLocation> securityGraphic = new ArrayList<>();
         securityGraphic.add(new AmenityGraphicLocation(4, 0));
         AMENITY_GRAPHICS.put(Security.class, securityGraphic);
+
+        final List<AmenityGraphicLocation> universityGateGraphic = new ArrayList<>(); // TODO: Fix this
+        universityGateGraphic.add(new AmenityGraphicLocation(0, 1));
+        AMENITY_GRAPHICS.put(Wall.class, universityGateGraphic);
 
         final List<AmenityGraphicLocation> wallGraphic = new ArrayList<>();
         wallGraphic.add(new AmenityGraphicLocation(0, 1));

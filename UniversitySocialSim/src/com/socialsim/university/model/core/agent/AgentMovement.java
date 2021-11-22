@@ -1,42 +1,24 @@
 package com.socialsim.university.model.core.agent;
 
+import com.socialsim.university.model.core.environment.patch.Patch;
+import com.socialsim.university.model.core.environment.patch.patchobject.Amenity;
+import com.socialsim.university.model.core.environment.patch.position.Coordinates;
+
+import java.util.Stack;
+
 public class AgentMovement {
 
-    // Denotes the owner of this passenger movement object
-    private final Passenger parent;
-
-    // Denotes the positional and navigational variables of the current passenger
-    // Denotes the position of the passenger
+    private final Agent parent;
     private final Coordinates position;
-
-    // Denotes the distance (m) the passenger walks in one second
-    private final double preferredWalkingDistance;
+    private final double preferredWalkingDistance; // Denotes the distance (m) the passenger walks in one second
     private double currentWalkingDistance;
-
-    // Denotes the proposed and actual heading of the passenger in degrees where
-    // E = 0 degrees
-    // N = 90 degrees
-    // W = 180 degrees
-    // S = 270 degrees
-    private double proposedHeading;
+    private double proposedHeading; // Denotes the proposed heading of the passenger in degrees where E = 0 degrees, N = 90, W = 180, Se = 270
     private double heading;
-
-    // Denotes this passenger's previous heading
     private double previousHeading;
-
-    // Denotes the patch the passenger is currently in
     private Patch currentPatch;
-
-    // Denotes the amenity the passenger is currently in, if any
     private Amenity currentAmenity;
-
-    // Denotes the patch of the passenger's goal
     private Patch goalPatch;
-
-    // Denotes the amenity the passenger is aiming for
     private Amenity goalAmenity;
-
-    // Denotes the attractor the passenger is aiming for
     private Amenity.AmenityBlock goalAttractor;
 
     // Denotes the state of this passenger's floor field

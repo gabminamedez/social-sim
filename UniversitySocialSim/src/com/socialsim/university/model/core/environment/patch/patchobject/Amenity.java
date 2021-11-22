@@ -9,7 +9,7 @@ import com.socialsim.university.model.core.environment.patch.patchobject.passabl
 import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.Chair;
 import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.Fountain;
 import com.socialsim.university.model.core.environment.patch.patchobject.passable.goal.blockable.Security;
-import com.socialsim.university.model.core.environment.patch.patchobject.passable.portal.Door;
+import com.socialsim.university.model.core.environment.patch.patchobject.passable.gate.Door;
 import com.socialsim.university.model.core.environment.patch.position.MatrixPosition;
 
 import java.util.ArrayList;

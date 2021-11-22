@@ -1,6 +1,6 @@
 package com.socialsim.university.controller.graphics.amenity;
 
-import com.socialsim.university.model.core.environment.patch.patchobject.passable.portal.Door;
+import com.socialsim.university.model.core.environment.patch.patchobject.passable.gate.Door;
 
 public class DoorGraphic {
 

@@ -13,17 +13,17 @@ import java.util.Objects;
 
 public class QueueingPatchField extends HeadfulPatchField {
 
-    public static QueueingPatchFieldFactory queueingFloorFieldFactory;
+    public static QueueingPatchFieldFactory queueingPatchFieldFactory;
 
     static {
-        queueingFloorFieldFactory = new QueueingPatchFieldFactory();
+        queueingPatchFieldFactory = new QueueingPatchFieldFactory();
     }
 
     protected QueueingPatchField(Queueable target) {
         super(target);
     }
 
-    public static boolean addFloorFieldValue(Patch patch, Queueable target, PatchFieldState patchFieldState, double value) {
+    public static boolean addPatchFieldValue(Patch patch, Queueable target, PatchFieldState patchFieldState, double value) {
         // When adding a floor field value, these things have to happen:
         //   1) Register the patch where the floor field value is to be drawn to the target queueable's floor field
         //   2) Add the floor field value to the patch itself
@@ -84,7 +84,7 @@ public class QueueingPatchField extends HeadfulPatchField {
     }
 
     // In a given patch, delete an individual floor field value in a floor field owned by a given target
-    public static void deleteFloorFieldValue(Patch patch, Queueable target, PatchFieldState patchFieldState) {
+    public static void deletePatchFieldValue(Patch patch, Queueable target, PatchFieldState patchFieldState) {
         // When deleting a floor field value, these things have to happen:
         //   1) Unregister the patch where the floor field value to be deleted is from the target queueable's floor
         //      field
@@ -98,7 +98,7 @@ public class QueueingPatchField extends HeadfulPatchField {
     }
 
     // Clear the given floor field
-    public static void clearFloorField(QueueingPatchField queueingPatchField, PatchFieldState patchFieldState) {
+    public static void clearPatchField(QueueingPatchField queueingPatchField, PatchFieldState patchFieldState) {
         // In each patch in the floor field to be deleted, delete the reference to its target. This deletes the value within that patch. Note that deletion should only be done when the patch contains a floor field value in the given floor field state.
         List<Patch> associatedPatches = queueingPatchField.getAssociatedPatches();
         Queueable target = queueingPatchField.getTarget();
@@ -106,7 +106,7 @@ public class QueueingPatchField extends HeadfulPatchField {
         List<Patch> associatedPatchesCopy = new ArrayList<>(associatedPatches);
 
         for (Patch patch : associatedPatchesCopy) {
-            QueueingPatchField.deleteFloorFieldValue(patch, target, patchFieldState);
+            QueueingPatchField.deletePatchFieldValue(patch, target, patchFieldState);
         }
 
         associatedPatchesCopy.clear();
