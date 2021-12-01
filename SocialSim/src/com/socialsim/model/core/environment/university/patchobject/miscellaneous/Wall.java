@@ -2,7 +2,7 @@ package com.socialsim.model.core.environment.university.patchobject.miscellaneou
 
 import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.controller.graphics.amenity.WallGraphic;
+import com.socialsim.controller.graphics.amenity.University.WallGraphic;
 import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.miscellaneous.Obstacle;

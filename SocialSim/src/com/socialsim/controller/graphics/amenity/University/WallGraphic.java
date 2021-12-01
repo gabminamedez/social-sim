@@ -1,5 +1,6 @@
-package com.socialsim.controller.graphics.amenity;
+package com.socialsim.controller.graphics.amenity.University;
 
+import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.model.core.environment.university.patchobject.miscellaneous.Wall;
 
 public class WallGraphic extends AmenityGraphic {

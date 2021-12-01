@@ -12,6 +12,7 @@ public class Agent extends PatchObject {
     private static int agentCount = 0;
     private static int guardCount = 0;
     private static int janitorCount = 0;
+    private static int officerCount = 0;
     private static int professorCount = 0;
     private static int studentCount = 0;
 
@@ -36,6 +37,9 @@ public class Agent extends PatchObject {
         }
         else if (type == Agent.Type.JANITOR) {
             Agent.janitorCount++;
+        }
+        else if (type == Type.OFFICER) {
+            Agent.officerCount++;
         }
         else if (type == Agent.Type.PROFESSOR) {
             Agent.professorCount++;
@@ -104,7 +108,7 @@ public class Agent extends PatchObject {
     }
 
     public enum Type {
-        GUARD, JANITOR, PROFESSOR, STUDENT
+        GUARD, JANITOR, OFFICER, PROFESSOR, STUDENT
     }
 
     public enum Gender {

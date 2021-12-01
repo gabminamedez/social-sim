@@ -3,10 +3,8 @@ package com.socialsim.controller.graphics.amenity;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.university.patchobject.miscellaneous.Wall;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Board;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Chair;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Fountain;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Security;
+import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.controller.graphics.Graphic;
 
 import java.util.ArrayList;
@@ -15,38 +13,70 @@ import java.util.List;
 
 public abstract class AmenityGraphic extends Graphic {
 
-    public static final String AMENITY_SPRITE_SHEET_URL = "com/crowdsimulation/view/image/amenity_spritesheet.png";
+    public static final String AMENITY_SPRITE_SHEET_URL = "com/crowdsimulation/view/image/University/amenity_spritesheet.png";
     public static final HashMap<Class<?>, List<AmenityGraphicLocation>> AMENITY_GRAPHICS = new HashMap<>();
 
     static {
+        final List<AmenityGraphicLocation> wallGraphic = new ArrayList<>();
+        wallGraphic.add(new AmenityGraphicLocation(0, 1));
+        AMENITY_GRAPHICS.put(Wall.class, wallGraphic);
+
+        final List<AmenityGraphicLocation> universityGateGraphic = new ArrayList<>();
+        universityGateGraphic.add(new AmenityGraphicLocation(8, 2));
+        AMENITY_GRAPHICS.put(UniversityGate.class, universityGateGraphic);
+
+        final List<AmenityGraphicLocation> benchGraphic = new ArrayList<>();
+        benchGraphic.add(new AmenityGraphicLocation(1, 2)); // Horizontal
+        benchGraphic.add(new AmenityGraphicLocation(2, 0)); // Vertical
+        AMENITY_GRAPHICS.put(Bench.class, benchGraphic);
+
         final List<AmenityGraphicLocation> boardGraphic = new ArrayList<>();
-        boardGraphic.add(new AmenityGraphicLocation(6, 0));
+        boardGraphic.add(new AmenityGraphicLocation(4, 0)); // Horizontal; Facing down
+        boardGraphic.add(new AmenityGraphicLocation(4, 2)); // Vertical; Facing right
+        boardGraphic.add(new AmenityGraphicLocation(4, 3)); // Vertical; Facing left
+        boardGraphic.add(new AmenityGraphicLocation(5, 0)); // Horizontal; Facing up
         AMENITY_GRAPHICS.put(Board.class, boardGraphic);
+
+        final List<AmenityGraphicLocation> bulletinGraphic = new ArrayList<>();
+        bulletinGraphic.add(new AmenityGraphicLocation(6, 0)); // Horizontal; Facing down
+        bulletinGraphic.add(new AmenityGraphicLocation(6, 2)); // Vertical; Facing right
+        bulletinGraphic.add(new AmenityGraphicLocation(6, 3)); // Vertical; Facing left
+        bulletinGraphic.add(new AmenityGraphicLocation(7, 0)); // Horizontal; Facing up
+        AMENITY_GRAPHICS.put(Bulletin.class, bulletinGraphic);
 
         final List<AmenityGraphicLocation> chairGraphic = new ArrayList<>();
         chairGraphic.add(new AmenityGraphicLocation(0, 0));
         AMENITY_GRAPHICS.put(Chair.class, chairGraphic);
 
         final List<AmenityGraphicLocation> doorGraphic = new ArrayList<>();
-        doorGraphic.add(new AmenityGraphicLocation(2, 0));
-        doorGraphic.add(new AmenityGraphicLocation(2, 1));
+        doorGraphic.add(new AmenityGraphicLocation(9, 2)); // Horizontal
+        doorGraphic.add(new AmenityGraphicLocation(10, 0)); // Vertical
         AMENITY_GRAPHICS.put(Door.class, doorGraphic);
 
         final List<AmenityGraphicLocation> fountainGraphic = new ArrayList<>();
         fountainGraphic.add(new AmenityGraphicLocation(1, 0));
         AMENITY_GRAPHICS.put(Fountain.class, fountainGraphic);
 
+        final List<AmenityGraphicLocation> labTableGraphic = new ArrayList<>();
+        labTableGraphic.add(new AmenityGraphicLocation(8, 0));
+        AMENITY_GRAPHICS.put(LabTable.class, labTableGraphic);
+
+        final List<AmenityGraphicLocation> profTableGraphic = new ArrayList<>();
+        profTableGraphic.add(new AmenityGraphicLocation(0, 2)); // Horizontal
+        profTableGraphic.add(new AmenityGraphicLocation(2, 1)); // Vertical
+        AMENITY_GRAPHICS.put(ProfTable.class, profTableGraphic);
+
         final List<AmenityGraphicLocation> securityGraphic = new ArrayList<>();
-        securityGraphic.add(new AmenityGraphicLocation(4, 0));
+        securityGraphic.add(new AmenityGraphicLocation(2, 2));
         AMENITY_GRAPHICS.put(Security.class, securityGraphic);
 
-        final List<AmenityGraphicLocation> universityGateGraphic = new ArrayList<>(); // TODO: Fix this
-        universityGateGraphic.add(new AmenityGraphicLocation(0, 1));
-        AMENITY_GRAPHICS.put(Wall.class, universityGateGraphic);
+        final List<AmenityGraphicLocation> staircaseGraphic = new ArrayList<>();
+        staircaseGraphic.add(new AmenityGraphicLocation(2, 3));
+        AMENITY_GRAPHICS.put(Staircase.class, staircaseGraphic);
 
-        final List<AmenityGraphicLocation> wallGraphic = new ArrayList<>();
-        wallGraphic.add(new AmenityGraphicLocation(0, 1));
-        AMENITY_GRAPHICS.put(Wall.class, wallGraphic);
+        final List<AmenityGraphicLocation> trashGraphic = new ArrayList<>();
+        trashGraphic.add(new AmenityGraphicLocation(1, 1));
+        AMENITY_GRAPHICS.put(Trash.class, trashGraphic);
     }
 
     protected final Amenity amenity;

@@ -1,10 +1,11 @@
-package com.socialsim.controller.graphics.amenity;
+package com.socialsim.controller.graphics.amenity.University;
 
+import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 
 public class UniversityGateGraphic extends AmenityGraphic {
 
-    private static final int ROW_SPAN = 2;
+    private static final int ROW_SPAN = 1;
     private static final int COLUMN_SPAN = 2;
 
     private static final int NORMAL_ROW_OFFSET = 0;

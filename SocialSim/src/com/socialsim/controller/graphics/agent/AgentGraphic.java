@@ -9,15 +9,17 @@ import java.util.List;
 
 public class AgentGraphic extends Graphic {
 
-    public static final String AGENT_SPRITE_SHEET_URL = "com/socialsim/view/image/agent_spritesheet.png";
+    public static final String AGENT_SPRITE_SHEET_URL = "com/socialsim/view/image/University/agent_spritesheet.png";
     public static final List<AgentGraphicLocation> maleGuardGraphics;
     public static final List<AgentGraphicLocation> femaleGuardGraphics;
     public static final List<AgentGraphicLocation> maleJanitorGraphics;
     public static final List<AgentGraphicLocation> femaleJanitorGraphics;
-    public static final List<AgentGraphicLocation> maleProfessorGraphics;
-    public static final List<AgentGraphicLocation> femaleProfessorGraphics;
     public static final List<AgentGraphicLocation> maleStudentGraphics;
     public static final List<AgentGraphicLocation> femaleStudentGraphics;
+    public static final List<AgentGraphicLocation> maleOfficerGraphics;
+    public static final List<AgentGraphicLocation> femaleOfficerGraphics;
+    public static final List<AgentGraphicLocation> maleProfessorGraphics;
+    public static final List<AgentGraphicLocation> femaleProfessorGraphics;
 
     static {
         maleGuardGraphics = new ArrayList<>();
@@ -44,29 +46,41 @@ public class AgentGraphic extends Graphic {
         femaleJanitorGraphics.add(new AgentGraphicLocation(3, 2));
         femaleJanitorGraphics.add(new AgentGraphicLocation(3, 3));
 
-        maleProfessorGraphics = new ArrayList<>();
-        maleProfessorGraphics.add(new AgentGraphicLocation(4, 0));
-        maleProfessorGraphics.add(new AgentGraphicLocation(4, 1));
-        maleProfessorGraphics.add(new AgentGraphicLocation(4, 2));
-        maleProfessorGraphics.add(new AgentGraphicLocation(4, 3));
-
-        femaleProfessorGraphics = new ArrayList<>();
-        femaleProfessorGraphics.add(new AgentGraphicLocation(5, 0));
-        femaleProfessorGraphics.add(new AgentGraphicLocation(5, 1));
-        femaleProfessorGraphics.add(new AgentGraphicLocation(5, 2));
-        femaleProfessorGraphics.add(new AgentGraphicLocation(5, 3));
-
         maleStudentGraphics = new ArrayList<>();
-        maleStudentGraphics.add(new AgentGraphicLocation(6, 0));
-        maleStudentGraphics.add(new AgentGraphicLocation(6, 1));
-        maleStudentGraphics.add(new AgentGraphicLocation(6, 2));
-        maleStudentGraphics.add(new AgentGraphicLocation(6, 3));
+        maleStudentGraphics.add(new AgentGraphicLocation(4, 0));
+        maleStudentGraphics.add(new AgentGraphicLocation(4, 1));
+        maleStudentGraphics.add(new AgentGraphicLocation(4, 2));
+        maleStudentGraphics.add(new AgentGraphicLocation(4, 3));
 
         femaleStudentGraphics = new ArrayList<>();
-        femaleStudentGraphics.add(new AgentGraphicLocation(7, 0));
-        femaleStudentGraphics.add(new AgentGraphicLocation(7, 1));
-        femaleStudentGraphics.add(new AgentGraphicLocation(7, 2));
-        femaleStudentGraphics.add(new AgentGraphicLocation(7, 3));
+        femaleStudentGraphics.add(new AgentGraphicLocation(5, 0));
+        femaleStudentGraphics.add(new AgentGraphicLocation(5, 1));
+        femaleStudentGraphics.add(new AgentGraphicLocation(5, 2));
+        femaleStudentGraphics.add(new AgentGraphicLocation(5, 3));
+
+        maleOfficerGraphics = new ArrayList<>();
+        maleOfficerGraphics.add(new AgentGraphicLocation(6, 0));
+        maleOfficerGraphics.add(new AgentGraphicLocation(6, 1));
+        maleOfficerGraphics.add(new AgentGraphicLocation(6, 2));
+        maleOfficerGraphics.add(new AgentGraphicLocation(6, 3));
+
+        femaleOfficerGraphics = new ArrayList<>();
+        femaleOfficerGraphics.add(new AgentGraphicLocation(7, 0));
+        femaleOfficerGraphics.add(new AgentGraphicLocation(7, 1));
+        femaleOfficerGraphics.add(new AgentGraphicLocation(7, 2));
+        femaleOfficerGraphics.add(new AgentGraphicLocation(7, 3));
+
+        maleProfessorGraphics = new ArrayList<>();
+        maleProfessorGraphics.add(new AgentGraphicLocation(8, 0));
+        maleProfessorGraphics.add(new AgentGraphicLocation(8, 1));
+        maleProfessorGraphics.add(new AgentGraphicLocation(8, 2));
+        maleProfessorGraphics.add(new AgentGraphicLocation(8, 3));
+
+        femaleProfessorGraphics = new ArrayList<>();
+        femaleProfessorGraphics.add(new AgentGraphicLocation(9, 0));
+        femaleProfessorGraphics.add(new AgentGraphicLocation(9, 1));
+        femaleProfessorGraphics.add(new AgentGraphicLocation(9, 2));
+        femaleProfessorGraphics.add(new AgentGraphicLocation(9, 3));
     }
 
     private final Agent agent;
@@ -90,6 +104,12 @@ public class AgentGraphic extends Graphic {
         }
         else if (agent.getType() == Agent.Type.JANITOR && agent.getGender() == Agent.Gender.FEMALE) {
             agentGraphics = femaleJanitorGraphics;
+        }
+        else if (agent.getType() == Agent.Type.OFFICER && agent.getGender() == Agent.Gender.MALE) {
+            agentGraphics = maleOfficerGraphics;
+        }
+        else if (agent.getType() == Agent.Type.OFFICER && agent.getGender() == Agent.Gender.FEMALE) {
+            agentGraphics = femaleOfficerGraphics;
         }
         else if (agent.getType() == Agent.Type.PROFESSOR && agent.getGender() == Agent.Gender.MALE) {
             agentGraphics = maleProfessorGraphics;
