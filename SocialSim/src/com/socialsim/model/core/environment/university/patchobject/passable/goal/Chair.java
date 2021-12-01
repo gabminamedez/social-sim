@@ -7,11 +7,11 @@ import com.socialsim.controller.graphics.amenity.University.ChairGraphic;
 import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchfield.headful.QueueObject;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
-import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
+import com.socialsim.model.core.environment.patch.patchobject.passable.goal.QueueableGoal;
 
 import java.util.List;
 
-public class Chair extends Goal {
+public class Chair extends QueueableGoal {
 
     public static final Chair.ChairFactory chairFactory;
     private final ChairGraphic chairGraphic;

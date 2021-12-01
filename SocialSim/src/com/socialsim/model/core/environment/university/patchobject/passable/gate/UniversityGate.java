@@ -3,9 +3,11 @@ package com.socialsim.model.core.environment.university.patchobject.passable.gat
 import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.UniversityGateGraphic;
+import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.passable.gate.Gate;
+import com.socialsim.model.core.environment.university.University;
 
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class UniversityGate extends Gate {
 
     @Override
     public String toString() {
-        return "Station entrance/exit" + ((this.enabled) ? "" : " (disabled)");
+        return "University entrance/exit" + ((this.enabled) ? "" : " (disabled)");
     }
 
     @Override
@@ -59,12 +61,25 @@ public class UniversityGate extends Gate {
         return this.universityGateGraphic.getGraphicLocation();
     }
 
+    @Override
+    public Agent spawnAgent() { // Spawn an agent in this position
+        University university = this.getAmenityBlocks().get(0).getPatch().getUniversity();
+        GateBlock spawner = this.getSpawners().get(0);
+
+        if (university != null) {
+            return Agent.agentFactory.create(Agent.Type.STUDENT, Agent.Gender.MALE, 21, spawner.getPatch());
+        }
+        else {
+            return null;
+        }
+    }
+
     public enum UniversityGateMode {
-        ENTRANCE("Entrance"), EXIT("Exit"), ENTRANCE_AND_EXIT("Entrance and exit");
+        ENTRANCE("Entrance"), EXIT("Exit"), ENTRANCE_AND_EXIT("Entrance and Exit");
 
         private final String name;
 
-        StationGateMode(String name) {
+        UniversityGateMode(String name) {
             this.name = name;
         }
 

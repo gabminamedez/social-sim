@@ -1,11 +1,10 @@
 package com.socialsim.model.core.environment.patch.patchobject.passable.goal;
 
 import com.socialsim.model.core.environment.patch.patchfield.headful.QueueObject;
-import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
 
 import java.util.List;
 
-public abstract class BlockableAmenity extends Goal {
+public abstract class BlockableAmenity extends QueueableGoal {
 
     private boolean blockEntry; // Denotes whether agents are able to pass through this amenity
 

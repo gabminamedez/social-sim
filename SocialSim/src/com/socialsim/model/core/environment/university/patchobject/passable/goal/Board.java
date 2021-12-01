@@ -6,11 +6,11 @@ import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.BoardGraphic;
 import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
-import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
+import com.socialsim.model.core.environment.patch.patchobject.passable.goal.QueueableGoal;
 
 import java.util.List;
 
-public class Board extends Goal {
+public class Board extends QueueableGoal {
 
     public static final BoardFactory boardFactory;
     private final BoardGraphic boardGraphic;
