@@ -5,21 +5,24 @@ import com.socialsim.model.core.environment.patch.patchobject.Drawable;
 import com.socialsim.model.core.environment.patch.patchobject.passable.Queueable;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.passable.NonObstacle;
+import com.socialsim.model.simulator.Simulator;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class QueueableGoal extends NonObstacle implements Queueable, Drawable {
 
     private int waitingTime;
     private int waitingTimeLeft;
-    private final QueueObject queueObject;
+    private final Map<QueueObject, AmenityBlock> queueObjectAmenityBlockMap;
 
-    protected QueueableGoal(List<AmenityBlock> amenityBlocks, boolean enabled, int waitingTime, QueueObject queueObject) {
+    protected QueueableGoal(List<AmenityBlock> amenityBlocks, boolean enabled, int waitingTime) {
         super(amenityBlocks, enabled);
 
         this.waitingTime = waitingTime;
-        this.waitingTimeLeft = this.waitingTime;
-        this.queueObject = queueObject;
+        this.queueObjectAmenityBlockMap = new HashMap<>();
+        resetWaitingTime();
     }
 
     public int getWaitingTime() {
@@ -30,20 +33,42 @@ public abstract class QueueableGoal extends NonObstacle implements Queueable, Dr
         this.waitingTime = waitingTime;
     }
 
-    public boolean allowPass() {
+    public Map<QueueObject, AmenityBlock> getQueueObjectAmenityBlockMap() {
+        return queueObjectAmenityBlockMap;
+    }
+
+    public boolean allowPass() { // Check if this goal will now allow an agent to pass
         this.waitingTimeLeft--;
 
-        if (this.waitingTimeLeft <= 0) {
-            this.waitingTimeLeft = this.waitingTime;
+        return this.waitingTimeLeft <= 0;
+    }
 
-            return true;
+    public void resetWaitingTime() {
+        final int minimumWaitingTime = 1;
+
+        double standardDeviation = 0.0;
+
+//        if (this instanceof Security) {
+//            standardDeviation = Security.standardDeviation;
+//        } else if (this instanceof TicketBooth) {
+//            standardDeviation = TicketBooth.standardDeviation;
+//        } else if (this instanceof Turnstile) {
+//            standardDeviation = Turnstile.standardDeviation;
+//        }
+
+        double computedWaitingTime = Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * standardDeviation + this.waitingTime;
+
+        int waitingTimeLeft = (int) Math.round(computedWaitingTime);
+
+        if (waitingTimeLeft <= minimumWaitingTime) {
+            waitingTimeLeft = minimumWaitingTime;
         }
 
-        return false;
+        this.waitingTimeLeft = waitingTimeLeft;
     }
 
     public static boolean isQueueableGoal(Amenity amenity) {
-        return amenity instanceof QueueableGoal;
+        return amenity instanceof Goal;
     }
 
     public static QueueableGoal toQueueableGoal(Amenity amenity) {
@@ -53,11 +78,6 @@ public abstract class QueueableGoal extends NonObstacle implements Queueable, Dr
         else {
             return null;
         }
-    }
-
-
-    public QueueObject getQueueObject() {
-        return this.queueObject;
     }
 
     public static abstract class QueueableGoalFactory extends AmenityFactory {

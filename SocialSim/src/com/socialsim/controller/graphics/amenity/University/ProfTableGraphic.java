@@ -1,10 +1,11 @@
 package com.socialsim.controller.graphics.amenity.University;
 
 import com.socialsim.controller.graphics.GraphicsController;
+import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.footprint.AmenityFootprint;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.ProfTable;
 
-public class ProfTableGraphic {
+public class ProfTableGraphic extends AmenityGraphic {
 
     private static final int ROW_SPAN_VERTICAL = 2;
     private static final int COLUMN_SPAN_VERTICAL = 1;

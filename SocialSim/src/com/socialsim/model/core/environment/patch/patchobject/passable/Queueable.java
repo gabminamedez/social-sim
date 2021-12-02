@@ -8,23 +8,19 @@ import java.util.List;
 
 public interface Queueable {
 
-    // Retrieves the floor field states of this queueable
-    List<QueueingPatchField.PatchFieldState> retrieveFloorFieldStates();
+    List<QueueingPatchField.PatchFieldState> retrievePatchFieldStates(); // Retrieves the patch field states of this queueable
 
-    // Retrieves a floor field of this queueable, given the state
-    QueueingPatchField retrieveFloorField(QueueObject queueObject, QueueingPatchField.PatchFieldState floorFieldState);
+    QueueingPatchField retrievePatchField(QueueObject queueObject, QueueingPatchField.PatchFieldState patchFieldState); // Retrieves a patch field of this queueable, given the state
 
-    // Denotes whether this queueable's floor fields are filled
-    boolean isFloorFieldsComplete();
+    boolean isPatchFieldsComplete(); // Denotes whether this queueable's patch fields are filled
 
-    // Delete a floor field of a certain state in this queueable
-    void deleteFloorField(QueueingPatchField.PatchFieldState floorFieldState);
+    void deletePatchField(QueueingPatchField.PatchFieldState patchFieldState); // Delete a patch field of a certain state in this queueable
 
-    // Delete all floor fields in this queueable
-    void deleteAllFloorFields();
+    void deleteAllPatchFields(); // Delete all patch fields in this queueable
 
-    // Retrieve the queue object
-    QueueObject getQueueObject();
+    QueueObject getQueueObject(); // Retrieve the queue object
+
+    boolean isFree(QueueObject queueObject); // Check if this queueable is free, given the goal queue object
 
     static Queueable toQueueable(Amenity amenity) {
         if (isQueueable(amenity)) {

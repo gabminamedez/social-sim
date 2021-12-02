@@ -1,6 +1,5 @@
 package com.socialsim.model.core.environment.patch.patchobject.passable.goal;
 
-import com.socialsim.model.core.environment.patch.patchfield.headful.QueueObject;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.Drawable;
 import com.socialsim.model.core.environment.patch.patchobject.passable.NonObstacle;
