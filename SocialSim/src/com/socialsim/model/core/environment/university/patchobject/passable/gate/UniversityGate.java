@@ -4,17 +4,19 @@ import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.UniversityGateGraphic;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.university.University;
 
+import java.util.HashSet;
 import java.util.List;
 
 public class UniversityGate extends Gate {
 
     private double chancePerSecond; // Denotes the chance of generating an agent per second
     private UniversityGateMode universityGateMode; // Denotes the mode of this station gate (whether it's entry/exit only, or both)
+    private int agentBacklogCount; // Denotes the number of agents who are supposed to enter the station gate, but cannot
     public static final UniversityGateFactory universityGateFactory;
     private final UniversityGateGraphic universityGateGraphic;
 
@@ -27,6 +29,7 @@ public class UniversityGate extends Gate {
 
         this.chancePerSecond = chancePerSecond;
         this.universityGateMode = universityGateMode;
+        this.agentBacklogCount = 0;
         this.universityGateGraphic = new UniversityGateGraphic(this);
     }
 
@@ -40,6 +43,18 @@ public class UniversityGate extends Gate {
 
     public UniversityGateMode getUniversityGateMode() {
         return universityGateMode;
+    }
+
+    public int getAgentBacklogCount() {
+        return agentBacklogCount;
+    }
+
+    public void incrementBacklogs() {
+        this.agentBacklogCount++;
+    }
+
+    public void resetBacklogs() {
+        this.agentBacklogCount = 0;
     }
 
     public void setUniversityGateMode(UniversityGateMode universityGateMode) {
@@ -74,6 +89,57 @@ public class UniversityGate extends Gate {
         }
     }
 
+    public boolean isGateFree() {
+        HashSet<UniversityPatch> patchesToCheck = new HashSet<>();
+        boolean patchesFree = true;
+
+        // Check if all attractors and spawners in this amenity have no agents
+        for (AmenityBlock attractor : this.getAttractors()) {
+            patchesToCheck.add(attractor.getPatch());
+            patchesToCheck.addAll(attractor.getPatch().getNeighbors());
+        }
+
+        for (GateBlock spawner : this.getSpawners()) {
+            patchesToCheck.add(spawner.getPatch());
+            patchesToCheck.addAll(spawner.getPatch().getNeighbors());
+        }
+
+        for (UniversityPatch patchToCheck : patchesToCheck) {
+            if (!patchToCheck.getAgents().isEmpty()) {
+                patchesFree = false;
+                break;
+            }
+        }
+
+        return patchesFree;
+    }
+
+    public Agent spawnAgentFromBacklogs(boolean forceEntry) { // Spawn an agent from the backlogs
+        University university = this.getAmenityBlocks().get(0).getPatch().getUniversity();
+
+        if (university != null) {
+            List<Agent> universityGateQueue = university.getAgentBacklogs();
+
+            if (!universityGateQueue.isEmpty()) { // If the backlog queue isn't empty, check if this gate is free from agents
+                if (forceEntry || this.isGateFree()) { // If this gate is free from other agents, get one from the backlog queue
+                    Agent agent = universityGateQueue.remove(0);
+                    UniversityPatch spawnPatch = this.getSpawners().get(0).getPatch();
+
+                    return agent;
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
     public enum UniversityGateMode {
         ENTRANCE("Entrance"), EXIT("Exit"), ENTRANCE_AND_EXIT("Entrance and Exit");
 
@@ -96,13 +162,13 @@ public class UniversityGate extends Gate {
             universityGateBlockFactory = new UniversityGateBlockFactory();
         }
 
-        private UniversityGateBlock(Patch patch, boolean attractor, boolean hasGraphic) {
+        private UniversityGateBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
             super(patch, attractor, hasGraphic);
         }
 
         public static class UniversityGateBlockFactory extends Amenity.AmenityBlock.AmenityBlockFactory {
             @Override
-            public UniversityGateBlock create(Patch patch, boolean attractor, boolean hasGraphic) {
+            public UniversityGateBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
                 return new UniversityGateBlock(patch, attractor, hasGraphic);
             }
         }

@@ -1,10 +1,10 @@
 package com.socialsim.model.core.environment.patch.position;
 
-import com.socialsim.model.core.environment.university.BaseUniversityObject;
+import com.socialsim.model.core.environment.patch.BaseObject;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.university.University;
 
-public class Location extends BaseUniversityObject implements Environment {
+public class Location extends BaseObject implements Environment {
 
     public static MatrixPosition screenCoordinatesToMatrixPosition( // Convert the given continuous screen coordinates to a discrete row and column
             University university,

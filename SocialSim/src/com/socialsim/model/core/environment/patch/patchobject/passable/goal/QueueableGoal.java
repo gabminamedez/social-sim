@@ -46,15 +46,7 @@ public abstract class QueueableGoal extends NonObstacle implements Queueable, Dr
     public void resetWaitingTime() {
         final int minimumWaitingTime = 1;
 
-        double standardDeviation = 0.0;
-
-//        if (this instanceof Security) {
-//            standardDeviation = Security.standardDeviation;
-//        } else if (this instanceof TicketBooth) {
-//            standardDeviation = TicketBooth.standardDeviation;
-//        } else if (this instanceof Turnstile) {
-//            standardDeviation = Turnstile.standardDeviation;
-//        }
+        double standardDeviation = 15.2;
 
         double computedWaitingTime = Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * standardDeviation + this.waitingTime;
 

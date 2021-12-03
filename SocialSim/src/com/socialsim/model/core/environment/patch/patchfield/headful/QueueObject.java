@@ -1,7 +1,7 @@
 package com.socialsim.model.core.environment.patch.patchfield.headful;
 
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.core.environment.patch.patchfield.AbstractPatchField;
 import com.socialsim.model.core.environment.patch.patchobject.passable.Queueable;
 
@@ -12,13 +12,13 @@ import java.util.Map;
 public class QueueObject extends AbstractPatchField { // Any amenity that is queueable must contain a hashmap of floor fields
 
     private final Queueable parent; // Denotes the parent queueable of this queue object
-    private final Patch patch; // Denotes the patch where this queue object is
+    private final UniversityPatch patch; // Denotes the patch where this queue object is
     private final Map<QueueingPatchField.PatchFieldState, QueueingPatchField> patchFields = new HashMap<>(); // Any amenity that is queueable must contain a hashmap of floor fields
     private final LinkedList<Agent> agentsQueueing = new LinkedList<>(); // Denotes the list of agents who are queueing for this goal
     private Agent lastAgentQueueing; // Denotes the agent at the back of the queue
     private Agent agentServiced; // Denotes the agent currently being serviced by this queueable
 
-    public QueueObject(Queueable parent, Patch patch) {
+    public QueueObject(Queueable parent, UniversityPatch patch) {
         this.parent = parent;
         this.patch = patch;
     }
@@ -27,7 +27,7 @@ public class QueueObject extends AbstractPatchField { // Any amenity that is que
         return parent;
     }
 
-    public Patch getPatch() {
+    public UniversityPatch getPatch() {
         return patch;
     }
 

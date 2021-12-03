@@ -1,7 +1,7 @@
 package com.socialsim.model.core.agent;
 
 import com.socialsim.controller.graphics.agent.AgentGraphic;
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.core.environment.patch.patchobject.PatchObject;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 
@@ -30,7 +30,7 @@ public class Agent extends PatchObject {
         agentFactory = new Agent.AgentFactory();
     }
 
-    private Agent(Agent.Type type, Agent.Gender gender, int age, Patch spawnPatch) {
+    private Agent(Agent.Type type, Agent.Gender gender, int age, UniversityPatch spawnPatch) {
         this.id = agentCount;
         if (type == Agent.Type.GUARD) {
             Agent.guardCount++;
@@ -82,8 +82,8 @@ public class Agent extends PatchObject {
         return agentMovement;
     }
 
-    public static class AgentFactory extends UniversityObjectFactory {
-        public Agent create(Agent.Type type, Agent.Gender gender, int age, Patch spawnPatch) {
+    public static class AgentFactory extends ObjectFactory {
+        public Agent create(Agent.Type type, Agent.Gender gender, int age, UniversityPatch spawnPatch) {
             return new Agent(type, gender, age, spawnPatch);
         }
     }

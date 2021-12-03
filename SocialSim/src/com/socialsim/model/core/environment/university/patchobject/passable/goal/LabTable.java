@@ -3,7 +3,7 @@ package com.socialsim.model.core.environment.university.patchobject.passable.goa
 import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.LabTableGraphic;
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
 
@@ -47,13 +47,13 @@ public class LabTable extends Goal {
             labTableBlockFactory = new LabTable.LabTableBlock.LabTableBlockFactory();
         }
 
-        private LabTableBlock(Patch patch, boolean attractor, boolean hasGraphic) {
+        private LabTableBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
             super(patch, attractor, hasGraphic);
         }
 
         public static class LabTableBlockFactory extends Amenity.AmenityBlock.AmenityBlockFactory {
             @Override
-            public LabTable.LabTableBlock create(Patch patch, boolean attractor, boolean hasGraphic) {
+            public LabTable.LabTableBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
                 return new LabTable.LabTableBlock(patch, attractor, hasGraphic);
             }
         }

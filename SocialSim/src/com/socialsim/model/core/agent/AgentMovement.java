@@ -1,6 +1,6 @@
 package com.socialsim.model.core.agent;
 
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.position.Coordinates;
 
@@ -15,9 +15,9 @@ public class AgentMovement {
     private double proposedHeading; // Denotes the proposed heading of the passenger in degrees where E = 0 degrees, N = 90, W = 180, Se = 270
     private double heading;
     private double previousHeading;
-    private Patch currentPatch;
+    private UniversityPatch currentPatch;
     private Amenity currentAmenity;
-    private Patch goalPatch;
+    private UniversityPatch goalPatch;
     private Amenity goalAmenity;
     private Amenity.AmenityBlock goalAttractor;
 
@@ -28,13 +28,13 @@ public class AgentMovement {
     private QueueingFloorField goalFloorField;
 
     // Denotes the patch with the nearest queueing patch
-    private Patch goalNearestQueueingPatch;
+    private UniversityPatch goalNearestQueueingPatch;
 
     // Denotes the route plan of this passenger
     private RoutePlan routePlan;
 
     // Denotes the current path followed by this passenger, if any
-    private Stack<Patch> currentPath;
+    private Stack<UniversityPatch> currentPath;
 
     // Get the floor where this passenger currently is
     private Floor currentFloor;
@@ -109,10 +109,10 @@ public class AgentMovement {
     private boolean shouldStepForward;
 
     // Denotes the patches to explore for obstacles or passengers
-    private List<Patch> toExplore;
+    private List<UniversityPatch> toExplore;
 
     // Denotes the recent patches this passenger has been in
-    private final HashMap<Patch, Integer> recentPatches;
+    private final HashMap<UniversityPatch, Integer> recentPatches;
 
     // The vectors of this passenger
     private final List<Vector> repulsiveForceFromPassengers;
@@ -193,13 +193,13 @@ public class AgentMovement {
     public void setPosition(Coordinates coordinates) {
         final int timeElapsedExpiration = 10;
 
-        Patch previousPatch = this.currentPatch;
+        UniversityPatch previousPatch = this.currentPatch;
 
         this.position.setX(coordinates.getX());
         this.position.setY(coordinates.getY());
 
         // Get the patch of the new position
-        Patch newPatch = this.currentFloor.getPatch(new Coordinates(coordinates.getX(), coordinates.getY()));
+        UniversityPatch newPatch = this.currentFloor.getPatch(new Coordinates(coordinates.getX(), coordinates.getY()));
 
         // If the newer position is on a different patch, remove the passenger from its old patch, then
         // add it to the new patch
@@ -208,8 +208,8 @@ public class AgentMovement {
             newPatch.getPassengers().add(this.parent);
 
             // Remove this passenger from the patch set of the previous patch
-            SortedSet<Patch> previousPatchSet = previousPatch.getFloor().getPassengerPatchSet();
-            SortedSet<Patch> newPatchSet = newPatch.getFloor().getPassengerPatchSet();
+            SortedSet<UniversityPatch> previousPatchSet = previousPatch.getFloor().getPassengerPatchSet();
+            SortedSet<UniversityPatch> newPatchSet = newPatch.getFloor().getPassengerPatchSet();
 
             if (
                     previousPatchSet.contains(previousPatch)
@@ -244,11 +244,11 @@ public class AgentMovement {
         return heading;
     }
 
-    public Patch getCurrentPatch() {
+    public UniversityPatch getCurrentPatch() {
         return currentPatch;
     }
 
-    public void setCurrentPatch(Patch currentPatch) {
+    public void setCurrentPatch(UniversityPatch currentPatch) {
         this.currentPatch = currentPatch;
     }
 
@@ -260,7 +260,7 @@ public class AgentMovement {
         return goalAttractor;
     }
 
-    public Patch getGoalPatch() {
+    public UniversityPatch getGoalPatch() {
         return goalPatch;
     }
 
@@ -276,7 +276,7 @@ public class AgentMovement {
         return goalFloorField;
     }
 
-    public Patch getGoalNearestQueueingPatch() {
+    public UniversityPatch getGoalNearestQueueingPatch() {
         return goalNearestQueueingPatch;
     }
 
@@ -288,7 +288,7 @@ public class AgentMovement {
         this.routePlan = routePlan;
     }
 
-    public Stack<Patch> getCurrentPath() {
+    public Stack<UniversityPatch> getCurrentPath() {
         return currentPath;
     }
 
@@ -336,11 +336,11 @@ public class AgentMovement {
         return hasEncounteredAnyQueueingPassenger;
     }
 
-    public List<Patch> getToExplore() {
+    public List<UniversityPatch> getToExplore() {
         return toExplore;
     }
 
-    public HashMap<Patch, Integer> getRecentPatches() {
+    public HashMap<UniversityPatch, Integer> getRecentPatches() {
         return recentPatches;
     }
 
@@ -416,19 +416,19 @@ public class AgentMovement {
 
     // Use the A* algorithm (with Euclidian distance to compute the f-score) to find the shortest path to the given goal
     // patch
-    public Stack<Patch> computePath(
-            Patch startingPatch,
-            Patch goalPatch
+    public Stack<UniversityPatch> computePath(
+            UniversityPatch startingPatch,
+            UniversityPatch goalPatch
     ) {
-        HashSet<Patch> openSet = new HashSet<>();
+        HashSet<UniversityPatch> openSet = new HashSet<>();
 
-        HashMap<Patch, Double> gScores = new HashMap<>();
-        HashMap<Patch, Double> fScores = new HashMap<>();
+        HashMap<UniversityPatch, Double> gScores = new HashMap<>();
+        HashMap<UniversityPatch, Double> fScores = new HashMap<>();
 
-        HashMap<Patch, Patch> cameFrom = new HashMap<>();
+        HashMap<UniversityPatch, UniversityPatch> cameFrom = new HashMap<>();
 
-        for (Patch[] patchRow : startingPatch.getFloor().getPatches()) {
-            for (Patch patch : patchRow) {
+        for (UniversityPatch[] patchRow : startingPatch.getFloor().getPatches()) {
+            for (UniversityPatch patch : patchRow) {
                 gScores.put(patch, Double.MAX_VALUE);
                 fScores.put(patch, Double.MAX_VALUE);
             }
@@ -446,12 +446,12 @@ public class AgentMovement {
         openSet.add(startingPatch);
 
         while (!openSet.isEmpty()) {
-            Patch patchToExplore;
+            UniversityPatch patchToExplore;
 
             double minimumDistance = Double.MAX_VALUE;
-            Patch patchWithMinimumDistance = null;
+            UniversityPatch patchWithMinimumDistance = null;
 
-            for (Patch patchInQueue : openSet) {
+            for (UniversityPatch patchInQueue : openSet) {
                 double fScore = fScores.get(patchInQueue);
 
                 if (fScore < minimumDistance) {
@@ -463,8 +463,8 @@ public class AgentMovement {
             patchToExplore = patchWithMinimumDistance;
 
             if (patchToExplore.equals(goalPatch)) {
-                Stack<Patch> path = new Stack<>();
-                Patch currentPatch = goalPatch;
+                Stack<UniversityPatch> path = new Stack<>();
+                UniversityPatch currentPatch = goalPatch;
 
 //                path.push(currentPatch);
 
@@ -480,9 +480,9 @@ public class AgentMovement {
 
             openSet.remove(patchToExplore);
 
-            List<Patch> patchToExploreNeighbors = patchToExplore.getNeighbors();
+            List<UniversityPatch> patchToExploreNeighbors = patchToExplore.getNeighbors();
 
-            for (Patch patchToExploreNeighbor : patchToExploreNeighbors) {
+            for (UniversityPatch patchToExploreNeighbor : patchToExploreNeighbors) {
                 if (
                         patchToExploreNeighbor.getAmenityBlock() == null
                 ) {
@@ -802,7 +802,7 @@ public class AgentMovement {
         final double minimumObstacleStopDistance = 0.6;
 
         // Get the relevant patches
-        List<Patch> patchesToExplore
+        List<UniversityPatch> patchesToExplore
                 = Floor.get7x7Field(this.currentPatch, this.proposedHeading, true, Math.toRadians(360.0));
 
         this.toExplore = patchesToExplore;
@@ -872,7 +872,7 @@ public class AgentMovement {
                 TreeMap<Double, Passenger> passengersWithinFieldOfView = new TreeMap<>();
 
                 // Look around the patches that fall on the passenger's field of view
-                for (Patch patch : patchesToExplore) {
+                for (UniversityPatch patch : patchesToExplore) {
                     // Do not apply social forces from obstacles if the passenger is in the queueing action, i.e., when the
                     // passenger is following a floor field
                     // If this patch has an obstacle, take note of it to add a repulsive force from it later
@@ -1008,7 +1008,7 @@ public class AgentMovement {
                 final int passengersProcessedLimit = 5;
 
                 // Look around the patches that fall on the passenger's field of view
-                for (Patch patch : patchesToExplore) {
+                for (UniversityPatch patch : patchesToExplore) {
                     // If this patch has an obstacle, take note of it to add a repulsive force from it later
                     Amenity.AmenityBlock patchAmenityBlock = patch.getAmenityBlock();
 
@@ -1149,7 +1149,7 @@ public class AgentMovement {
                 Turnstile turnstile = (Turnstile) this.currentPatch.getAmenityBlock().getParent();
 
                 QueueingFloorField.FloorFieldState floorFieldState;
-                Patch apexLocation;
+                UniversityPatch apexLocation;
 
                 if (this.direction == Direction.BOARDING) {
                     floorFieldState = turnstile.getTurnstileFloorFieldStateBoarding();
@@ -1656,7 +1656,7 @@ public class AgentMovement {
 
     // Check if this passenger has reached its goal's queueing floor field
     public boolean hasReachedQueueingFloorField() {
-        for (Patch patch : this.goalFloorField.getAssociatedPatches()) {
+        for (UniversityPatch patch : this.goalFloorField.getAssociatedPatches()) {
             if (isOnOrCloseToPatch(patch)) {
                 return true;
             }
@@ -1693,7 +1693,7 @@ public class AgentMovement {
     // Check if this passenger has reached an apex of its floor field
     public boolean hasReachedQueueingFloorFieldApex() {
         // If the passenger is in any of this floor field's apices, return true
-        for (Patch apex : this.goalFloorField.getApices()) {
+        for (UniversityPatch apex : this.goalFloorField.getApices()) {
             if (isOnOrCloseToPatch(apex)) {
                 return true;
             }
@@ -1768,7 +1768,7 @@ public class AgentMovement {
         Coordinates offsetPatchCenter = this.getFuturePosition(
                 patchCenter,
                 this.previousHeading,
-                Patch.PATCH_SIZE_IN_SQUARE_METERS * 0.1
+                UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS * 0.1
         );
 
         this.setPosition(offsetPatchCenter);
@@ -1804,15 +1804,15 @@ public class AgentMovement {
     }
 
     // Check if this passenger has reached the specified patch
-    private boolean isOnPatch(Patch patch) {
-        return ((int) (this.position.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS)) == patch.getMatrixPosition().getColumn()
-                && ((int) (this.position.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS)) == patch.getMatrixPosition().getRow();
+    private boolean isOnPatch(UniversityPatch patch) {
+        return ((int) (this.position.getX() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS)) == patch.getMatrixPosition().getColumn()
+                && ((int) (this.position.getY() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS)) == patch.getMatrixPosition().getRow();
     }
 
     // Check if this passenger is adequately close enough to a patch
     // In this case, a passenger is close enough to a patch when the distance between this passenger and the patch is
     // less than the distance covered by the passenger per second
-    private boolean isOnOrCloseToPatch(Patch patch) {
+    private boolean isOnOrCloseToPatch(UniversityPatch patch) {
         return Coordinates.distance(this.position, patch.getPatchCenterCoordinates()) <= this.preferredWalkingDistance;
     }
 
@@ -1849,7 +1849,7 @@ public class AgentMovement {
         this.currentFloor.getStation().getPassengersInStation().remove(this.parent);
 
         // Remove this passenger from its current floor's patch set, if necessary
-        SortedSet<Patch> currentPatchSet = this.currentPatch.getFloor().getPassengerPatchSet();
+        SortedSet<UniversityPatch> currentPatchSet = this.currentPatch.getFloor().getPassengerPatchSet();
 
         if (
                 currentPatchSet.contains(this.currentPatch)
@@ -1863,7 +1863,7 @@ public class AgentMovement {
     public void faceNextPosition() {
         double newHeading;
         boolean willFaceQueueingPatch;
-        Patch proposedGoalPatch;
+        UniversityPatch proposedGoalPatch;
 
         // iI the passenger is already heading for a queueable, no need to seek its floor fields again, as
         // it has already done so, and is now just heading to the goal itself
@@ -2150,19 +2150,19 @@ public class AgentMovement {
     }
 
     // From a set of patches associated with a goal's floor field, get the nearest patch below a threshold
-    public Patch getPatchWithNearestFloorFieldValue() {
+    public UniversityPatch getPatchWithNearestFloorFieldValue() {
         final double maximumFloorFieldValueThreshold = 0.8;
 
         // Get the patches associated with the current goal
-        List<Patch> associatedPatches = this.goalFloorField.getAssociatedPatches();
+        List<UniversityPatch> associatedPatches = this.goalFloorField.getAssociatedPatches();
 
         double minimumDistance = Double.MAX_VALUE;
-        Patch nearestPatch = null;
+        UniversityPatch nearestPatch = null;
 
         // Look for the nearest patch from the patches associated with the floor field
         double distanceFromPassenger;
 
-        for (Patch patch : associatedPatches) {
+        for (UniversityPatch patch : associatedPatches) {
             double floorFieldValue
                     = patch.getFloorFieldValues().get(this.getGoalAmenityAsQueueable()).get(this.goalFloorFieldState);
 
@@ -2181,19 +2181,19 @@ public class AgentMovement {
     }
 
     // Get the next queueing patch in a floor field given the current floor field state
-    private Patch getBestQueueingPatch() {
+    private UniversityPatch getBestQueueingPatch() {
         // Get the patches to explore
-        List<Patch> patchesToExplore
+        List<UniversityPatch> patchesToExplore
                 = Floor.get7x7Field(this.currentPatch, this.proposedHeading, true, this.fieldOfViewAngle);
 
         this.toExplore = patchesToExplore;
 
         // Collect the patches with the highest floor field values
-        List<Patch> highestPatches = new ArrayList<>();
+        List<UniversityPatch> highestPatches = new ArrayList<>();
 
         double maximumFloorFieldValue = 0.0;
 
-        for (Patch patch : patchesToExplore) {
+        for (UniversityPatch patch : patchesToExplore) {
             Map<QueueingFloorField.FloorFieldState, Double> floorFieldStateDoubleMap
                     = patch.getFloorFieldValues().get(this.getGoalAmenityAsQueueable());
 
@@ -2228,7 +2228,7 @@ public class AgentMovement {
 
         // If there are more than one highest valued-patches, choose the one where it would take the least heading
         // difference
-        Patch chosenPatch = highestPatches.get(0)/* = null*/;
+        UniversityPatch chosenPatch = highestPatches.get(0)/* = null*/;
 
         List<Double> headingChanges = new ArrayList<>();
 //        List<Double> distances = new ArrayList<>();
@@ -2238,7 +2238,7 @@ public class AgentMovement {
 
 //        double distance;
 
-        for (Patch patch : highestPatches) {
+        for (UniversityPatch patch : highestPatches) {
             headingToHighestPatch = Coordinates.headingTowards(this.position, patch.getPatchCenterCoordinates());
             headingChangeRequired = Coordinates.headingDifference(this.proposedHeading, headingToHighestPatch);
 
@@ -2267,7 +2267,7 @@ public class AgentMovement {
     }
 
     // Check if the given patch has an obstacle
-    private boolean hasObstacle(Patch patch) {
+    private boolean hasObstacle(UniversityPatch patch) {
         Amenity.AmenityBlock amenityBlock = patch.getAmenityBlock();
 
         if (amenityBlock == null) {
@@ -2315,7 +2315,7 @@ public class AgentMovement {
         final double distanceToTargetCoordinates = Coordinates.distance(sourceCoordinates, targetCoordinates);
         final double headingToTargetCoordinates = Coordinates.headingTowards(sourceCoordinates, targetCoordinates);
 
-        Patch startingPatch = this.currentFloor.getPatch(sourceCoordinates);
+        UniversityPatch startingPatch = this.currentFloor.getPatch(sourceCoordinates);
 
         Coordinates currentPosition = new Coordinates(sourceCoordinates);
         double distanceCovered = 0.0;
@@ -2346,11 +2346,11 @@ public class AgentMovement {
     }
 
     // Update the passenger's recent patches
-    private void updateRecentPatches(Patch currentPatch, final int timeElapsedExpiration) {
-        List<Patch> patchesToForget = new ArrayList<>();
+    private void updateRecentPatches(UniversityPatch currentPatch, final int timeElapsedExpiration) {
+        List<UniversityPatch> patchesToForget = new ArrayList<>();
 
         // Update the time elapsed in all of the recent patches
-        for (Map.Entry<Patch, Integer> recentPatchesAndTimeElapsed : this.recentPatches.entrySet()) {
+        for (Map.Entry<UniversityPatch, Integer> recentPatchesAndTimeElapsed : this.recentPatches.entrySet()) {
             this.recentPatches.put(recentPatchesAndTimeElapsed.getKey(), recentPatchesAndTimeElapsed.getValue() + 1);
 
             // Remove all patches that are equal to the expiration time given
@@ -2367,7 +2367,7 @@ public class AgentMovement {
         }
 
         // Remove all patches set to be forgotten
-        for (Patch patchToForget : patchesToForget) {
+        for (UniversityPatch patchToForget : patchesToForget) {
             this.recentPatches.remove(patchToForget);
         }
     }

@@ -1,6 +1,6 @@
 package com.socialsim.model.core.environment.patch.position;
 
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.Objects;
@@ -20,12 +20,12 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
         this.y = y;
     }
 
-    public static Coordinates getPatchCenterCoordinates(Patch patch) {
+    public static Coordinates getPatchCenterCoordinates(UniversityPatch patch) {
         double column = patch.getMatrixPosition().getColumn();
         double row = patch.getMatrixPosition().getRow();
 
-        double centeredX = column * Patch.PATCH_SIZE_IN_SQUARE_METERS + Patch.PATCH_SIZE_IN_SQUARE_METERS * 0.5;
-        double centeredY = row * Patch.PATCH_SIZE_IN_SQUARE_METERS + Patch.PATCH_SIZE_IN_SQUARE_METERS * 0.5;
+        double centeredX = column * UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS + UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS * 0.5;
+        double centeredY = row * UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS + UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS * 0.5;
 
         return new Coordinates(centeredX, centeredY);
     }
@@ -53,7 +53,7 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
         return Math.sqrt(Math.pow(x - sourceCoordinates.getX(), 2) + Math.pow(y - sourceCoordinates.getY(), 2));
     }
 
-    public static double distance(Patch sourcePatch, Patch targetPatch) {
+    public static double distance(UniversityPatch sourcePatch, UniversityPatch targetPatch) {
         PatchPair patchPair = new Coordinates.PatchPair(sourcePatch, targetPatch);
         Double cachedDistance = Simulator.DISTANCE_CACHE.get(patchPair);
 
@@ -143,10 +143,10 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
     }
 
     public static class PatchPair {
-        private final Patch patch1;
-        private final Patch patch2;
+        private final UniversityPatch patch1;
+        private final UniversityPatch patch2;
 
-        public PatchPair(Patch patch1, Patch patch2) {
+        public PatchPair(UniversityPatch patch1, UniversityPatch patch2) {
             this.patch1 = patch1;
             this.patch2 = patch2;
         }

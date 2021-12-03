@@ -3,7 +3,7 @@ package com.socialsim.model.core.environment.university;
 import com.socialsim.controller.Main;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.Environment;
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.patch.BaseObject;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.position.Coordinates;
 import com.socialsim.model.core.environment.patch.position.MatrixPosition;
@@ -14,15 +14,15 @@ import com.socialsim.model.core.environment.university.patchobject.passable.goal
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class University extends BaseUniversityObject implements Environment {
+public class University extends BaseObject implements Environment {
 
     private final int rows;
     private final int columns;
-    private final Patch[][] patches;
+    private final UniversityPatch[][] patches;
     private final CopyOnWriteArrayList<Agent> agents;
 
-    private final SortedSet<Patch> amenityPatchSet;
-    private final SortedSet<Patch> agentPatchSet;
+    private final SortedSet<UniversityPatch> amenityPatchSet;
+    private final SortedSet<UniversityPatch> agentPatchSet;
 
     private final List<Wall> walls;
     private final List<UniversityGate> universityGates;
@@ -37,6 +37,7 @@ public class University extends BaseUniversityObject implements Environment {
     private final List<Security> securities;
     private final List<Staircase> staircases;
     private final List<Trash> trashes;
+    List<Agent> agentBacklogs;
 
     private static final University.UniversityFactory universityFactory;
 
@@ -47,7 +48,7 @@ public class University extends BaseUniversityObject implements Environment {
     public University(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
-        this.patches = new Patch[rows][columns];
+        this.patches = new UniversityPatch[rows][columns];
         this.initializePatches();
 
         this.agents = new CopyOnWriteArrayList<>();
@@ -68,6 +69,7 @@ public class University extends BaseUniversityObject implements Environment {
         this.securities = Collections.synchronizedList(new ArrayList<>());
         this.staircases = Collections.synchronizedList(new ArrayList<>());
         this.trashes = Collections.synchronizedList(new ArrayList<>());
+        this.agentBacklogs = Collections.synchronizedList(new ArrayList<>());
     }
 
     private void initializePatches() {
@@ -76,7 +78,7 @@ public class University extends BaseUniversityObject implements Environment {
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
                 matrixPosition = new MatrixPosition(row, column);
-                patches[row][column] = new Patch(this, matrixPosition);
+                patches[row][column] = new UniversityPatch(this, matrixPosition);
             }
         }
     }
@@ -89,19 +91,19 @@ public class University extends BaseUniversityObject implements Environment {
         return columns;
     }
 
-    public Patch getPatch(Coordinates coordinates) {
-        return getPatch((int) (coordinates.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS), (int) (coordinates.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS));
+    public UniversityPatch getPatch(Coordinates coordinates) {
+        return getPatch((int) (coordinates.getY() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS), (int) (coordinates.getX() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS));
     }
 
-    public Patch getPatch(MatrixPosition matrixPosition) {
+    public UniversityPatch getPatch(MatrixPosition matrixPosition) {
         return getPatch(matrixPosition.getRow(), matrixPosition.getColumn());
     }
 
-    public Patch getPatch(int row, int column) {
+    public UniversityPatch getPatch(int row, int column) {
         return patches[row][column];
     }
 
-    public Patch[][] getPatches() {
+    public UniversityPatch[][] getPatches() {
         return this.patches;
     }
 
@@ -109,11 +111,11 @@ public class University extends BaseUniversityObject implements Environment {
         return agents;
     }
 
-    public SortedSet<Patch> getAmenityPatchSet() {
+    public SortedSet<UniversityPatch> getAmenityPatchSet() {
         return amenityPatchSet;
     }
 
-    public SortedSet<Patch> getAgentPatchSet() {
+    public SortedSet<UniversityPatch> getAgentPatchSet() {
         return agentPatchSet;
     }
 
@@ -169,6 +171,10 @@ public class University extends BaseUniversityObject implements Environment {
         return trashes;
     }
 
+    public List<Agent> getAgentBacklogs() {
+        return agentBacklogs;
+    }
+
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {
         if (amenityClass == Wall.class) {
             return this.getWalls();
@@ -215,12 +221,12 @@ public class University extends BaseUniversityObject implements Environment {
     }
 
     // Get patches in the agent's field of vision
-    public static List<Patch> get7x7Field(Patch centerPatch, double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
-        int truncatedX = (int) (centerPatch.getPatchCenterCoordinates().getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
-        int truncatedY = (int) (centerPatch.getPatchCenterCoordinates().getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
+    public static List<UniversityPatch> get7x7Field(UniversityPatch centerPatch, double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
+        int truncatedX = (int) (centerPatch.getPatchCenterCoordinates().getX() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS);
+        int truncatedY = (int) (centerPatch.getPatchCenterCoordinates().getY() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS);
 
-        Patch chosenPatch;
-        List<Patch> patchesToExplore = new ArrayList<>();
+        UniversityPatch chosenPatch;
+        List<UniversityPatch> patchesToExplore = new ArrayList<>();
 
         for (int rowOffset = -3; rowOffset <= 3; rowOffset++) {
             for (int columnOffset = -3; columnOffset <= 3; columnOffset++) {
@@ -267,7 +273,7 @@ public class University extends BaseUniversityObject implements Environment {
         return patchesToExplore;
     }
 
-    public static class UniversityFactory extends BaseUniversityObject.UniversityObjectFactory {
+    public static class UniversityFactory extends BaseObject.ObjectFactory {
         public University create(int rows, int columns) {
             return new University(rows, columns);
         }

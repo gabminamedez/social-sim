@@ -1,6 +1,6 @@
 package com.socialsim.controller.graphics.amenity.footprint;
 
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 
 import java.util.ArrayList;
@@ -69,14 +69,14 @@ public class AmenityFootprint {
 
         public static class AmenityBlockTemplate {
             private final Orientation orientation;
-            private final Patch.Offset offset;
+            private final UniversityPatch.Offset offset;
             private final Class<? extends Amenity> amenityClass;
             private final boolean attractor;
             private final boolean hasGraphic;
 
             public AmenityBlockTemplate(Orientation orientation, int rowOffset, int columnOffset, Class<? extends Amenity> amenityClass, boolean attractor, boolean hasGraphic) {
                 this.orientation = orientation;
-                this.offset = new Patch.Offset(rowOffset, columnOffset);
+                this.offset = new UniversityPatch.Offset(rowOffset, columnOffset);
                 this.amenityClass = amenityClass;
                 this.attractor = attractor;
                 this.hasGraphic = hasGraphic;
@@ -86,7 +86,7 @@ public class AmenityFootprint {
                 return orientation;
             }
 
-            public Patch.Offset getOffset() {
+            public UniversityPatch.Offset getOffset() {
                 return offset;
             }
 
@@ -103,7 +103,7 @@ public class AmenityFootprint {
             }
 
             // Convert the list of amenity block templates to a list of amenity blocks
-            public static List<Amenity.AmenityBlock> realizeAmenityBlockTemplates(Patch cursorPatch, List<AmenityBlockTemplate> amenityBlockTemplates) {
+            public static List<Amenity.AmenityBlock> realizeAmenityBlockTemplates(UniversityPatch cursorPatch, List<AmenityBlockTemplate> amenityBlockTemplates) {
                 return Amenity.AmenityBlock.convertToAmenityBlocks(cursorPatch, amenityBlockTemplates);
             }
         }
