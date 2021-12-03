@@ -18,10 +18,10 @@ public class Bench extends Goal {
         benchFactory = new Bench.BenchFactory();
     }
 
-    protected Bench(List<AmenityBlock> amenityBlocks, boolean enabled) {
+    protected Bench(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
         super(amenityBlocks, enabled);
 
-        this.benchGraphic = new BenchGraphic(this);
+        this.benchGraphic = new BenchGraphic(this, facing);
     }
 
 
@@ -60,8 +60,8 @@ public class Bench extends Goal {
     }
 
     public static class BenchFactory extends GoalFactory {
-        public Bench create(List<AmenityBlock> amenityBlocks, boolean enabled) {
-            return new Bench(amenityBlocks, enabled);
+        public static Bench create(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
+            return new Bench(amenityBlocks, enabled, facing);
         }
     }
 

@@ -22,7 +22,7 @@ public class Agent extends PatchObject {
     private final int age;
 
     private final AgentGraphic agentGraphic;
-    private final AgentMovement agentMovement;
+    // private final AgentMovement agentMovement;
 
     public static final Agent.AgentFactory agentFactory;
 
@@ -55,7 +55,7 @@ public class Agent extends PatchObject {
 
         this.agentGraphic = new AgentGraphic(this);
         UniversityGate universityGate = (UniversityGate) spawnPatch.getAmenityBlock().getParent();
-        this.agentMovement = new AgentMovement(universityGate, this, spawnPatch.getPatchCenterCoordinates());
+        // this.agentMovement = new AgentMovement(universityGate, this, spawnPatch.getPatchCenterCoordinates());
     }
 
     public int getId() {
@@ -78,9 +78,9 @@ public class Agent extends PatchObject {
         return agentGraphic;
     }
 
-    public AgentMovement getAgentMovement() {
-        return agentMovement;
-    }
+//    public AgentMovement getAgentMovement() {
+//        return agentMovement;
+//    }
 
     public static class AgentFactory extends ObjectFactory {
         public Agent create(Agent.Type type, Agent.Gender gender, int age, UniversityPatch spawnPatch) {

@@ -60,7 +60,7 @@ public class Trash extends Goal {
     }
 
     public static class TrashFactory extends GoalFactory {
-        public Trash create(List<AmenityBlock> amenityBlocks, boolean enabled) {
+        public static Trash create(List<AmenityBlock> amenityBlocks, boolean enabled) {
             return new Trash(amenityBlocks, enabled);
         }
     }

@@ -60,7 +60,7 @@ public class Chair extends Goal {
     }
 
     public static class ChairFactory extends GoalFactory {
-        public Chair create(List<AmenityBlock> amenityBlocks, boolean enabled) {
+        public static Chair create(List<AmenityBlock> amenityBlocks, boolean enabled) {
             return new Chair(amenityBlocks, enabled);
         }
     }

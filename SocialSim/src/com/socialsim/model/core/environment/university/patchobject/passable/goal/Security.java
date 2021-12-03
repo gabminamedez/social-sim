@@ -4,7 +4,6 @@ import com.socialsim.model.core.environment.patch.patchfield.headful.QueueObject
 import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.SecurityGraphic;
-import com.socialsim.model.core.agent.AgentMovement;
 import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.core.environment.patch.patchfield.headful.QueueingPatchField;
 import com.socialsim.model.core.environment.patch.patchobject.passable.goal.BlockableAmenity;
@@ -30,8 +29,9 @@ public class Security extends BlockableAmenity {
         super(amenityBlocks, enabled, waitingTime, blockAgents);
 
         this.queueObject = new QueueObject(this, this.getAttractors().get(0).getPatch());
-        this.securityPatchFieldState = new QueueingPatchField.PatchFieldState(AgentMovement.Disposition.BOARDING, AgentMovement.State.IN_QUEUE, this);
+        // this.securityPatchFieldState = new QueueingPatchField.PatchFieldState(AgentMovement.Disposition.BOARDING, AgentMovement.State.IN_QUEUE, this);
         QueueingPatchField queueingPatchField = QueueingPatchField.queueingPatchFieldFactory.create(this); // Add a blank patch field
+        this.securityPatchFieldState = null;
         this.getQueueObject().getPatchFields().put(this.securityPatchFieldState, queueingPatchField); // Using the patch field state defined earlier, create the patch field
         this.getQueueObjectAmenityBlockMap().put(this.getQueueObject(), this.getAttractors().get(0)); // Define the relationships between the queue objects and the attractors
         this.securityGraphic = new SecurityGraphic(this);
@@ -124,7 +124,7 @@ public class Security extends BlockableAmenity {
     }
 
     public static class SecurityFactory extends Goal.GoalFactory {
-        public Security create(List<AmenityBlock> amenityBlocks, boolean enabled, int waitingTime, boolean blockAgents) {
+        public static Security create(List<AmenityBlock> amenityBlocks, boolean enabled, int waitingTime, boolean blockAgents) {
             return new Security(amenityBlocks, enabled, waitingTime, blockAgents);
         }
     }

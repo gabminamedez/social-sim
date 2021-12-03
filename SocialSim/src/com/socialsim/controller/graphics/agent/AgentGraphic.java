@@ -146,21 +146,21 @@ public class AgentGraphic extends Graphic {
     public void change() {
         Agent agent = this.agent;
 
-        double agentHeading = agent.getAgentMovement().getHeading();
-        double agentHeadingDegrees = Math.toDegrees(agentHeading);
-
-        if (agentHeadingDegrees >= 315 && agentHeadingDegrees < 360 || agentHeadingDegrees >= 0 && agentHeadingDegrees < 45) {
-            this.graphicIndex = 1;
-        }
-        else if (agentHeadingDegrees >= 45 && agentHeadingDegrees < 135) {
-            this.graphicIndex = 0;
-        }
-        else if (agentHeadingDegrees >= 135 && agentHeadingDegrees < 225) {
-            this.graphicIndex = 3;
-        }
-        else if (agentHeadingDegrees >= 225 && agentHeadingDegrees < 315) {
-            this.graphicIndex = 2;
-        }
+//        double agentHeading = agent.getAgentMovement().getHeading();
+//        double agentHeadingDegrees = Math.toDegrees(agentHeading);
+//
+//        if (agentHeadingDegrees >= 315 && agentHeadingDegrees < 360 || agentHeadingDegrees >= 0 && agentHeadingDegrees < 45) {
+//            this.graphicIndex = 1;
+//        }
+//        else if (agentHeadingDegrees >= 45 && agentHeadingDegrees < 135) {
+//            this.graphicIndex = 0;
+//        }
+//        else if (agentHeadingDegrees >= 135 && agentHeadingDegrees < 225) {
+//            this.graphicIndex = 3;
+//        }
+//        else if (agentHeadingDegrees >= 225 && agentHeadingDegrees < 315) {
+//            this.graphicIndex = 2;
+//        }
     }
 
     public static class AmenityGraphicScale implements Environment {

@@ -155,7 +155,7 @@ public class UniversityGate extends Gate {
         }
     }
 
-    public static class UniversityGateBlock extends Amenity.AmenityBlock {
+    public static class UniversityGateBlock extends Gate.GateBlock {
         public static UniversityGateBlockFactory universityGateBlockFactory;
 
         static {
@@ -163,19 +163,24 @@ public class UniversityGate extends Gate {
         }
 
         private UniversityGateBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
-            super(patch, attractor, hasGraphic);
+            super(patch, attractor, true, hasGraphic);
         }
 
-        public static class UniversityGateBlockFactory extends Amenity.AmenityBlock.AmenityBlockFactory {
+        public static class UniversityGateBlockFactory extends Gate.GateBlock.GateBlockFactory {
             @Override
             public UniversityGateBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
                 return new UniversityGateBlock(patch, attractor, hasGraphic);
+            }
+
+            @Override
+            public GateBlock create(UniversityPatch patch, boolean attractor, boolean spawner, boolean hasGraphic) {
+                return null;
             }
         }
     }
 
     public static class UniversityGateFactory extends GateFactory {
-        public UniversityGate create(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerSecond, UniversityGateMode stationGateMode) {
+        public static UniversityGate create(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerSecond, UniversityGateMode stationGateMode) {
             return new UniversityGate(amenityBlocks, enabled, chancePerSecond, stationGateMode);
         }
     }

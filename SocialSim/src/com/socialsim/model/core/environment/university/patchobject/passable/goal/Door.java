@@ -18,10 +18,10 @@ public class Door extends Goal {
         doorFactory = new Door.DoorFactory();
     }
 
-    protected Door(List<AmenityBlock> amenityBlocks, boolean enabled) {
+    protected Door(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
         super(amenityBlocks, enabled);
 
-        this.doorGraphic = new DoorGraphic(this);
+        this.doorGraphic = new DoorGraphic(this, facing);
     }
 
 
@@ -60,8 +60,8 @@ public class Door extends Goal {
     }
 
     public static class DoorFactory extends GoalFactory {
-        public Door create(List<AmenityBlock> amenityBlocks, boolean enabled) {
-            return new Door(amenityBlocks, enabled);
+        public static Door create(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
+            return new Door(amenityBlocks, enabled, facing);
         }
     }
 

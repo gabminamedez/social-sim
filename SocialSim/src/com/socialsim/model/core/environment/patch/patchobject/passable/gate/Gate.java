@@ -1,6 +1,5 @@
 package com.socialsim.model.core.environment.patch.patchobject.passable.gate;
 
-import com.socialsim.controller.graphics.amenity.footprint.AmenityFootprint;
 import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.core.environment.patch.patchobject.Drawable;
 import com.socialsim.model.core.environment.patch.patchobject.passable.NonObstacle;
@@ -39,7 +38,7 @@ public abstract class Gate extends NonObstacle implements Drawable {
     public abstract Agent spawnAgent(); // Spawn an agent in this position
 
     public void despawnPassenger(Agent agent) { // Despawn an agent in this position
-        agent.getAgentMovement().despawn();
+        // agent.getAgentMovement().despawn();
     }
 
     public static abstract class GateBlock extends AmenityBlock {
@@ -56,7 +55,7 @@ public abstract class Gate extends NonObstacle implements Drawable {
         }
 
         public static abstract class GateBlockFactory extends AmenityBlockFactory {
-            public abstract GateBlock create(UniversityPatch patch, boolean attractor, boolean spawner, boolean hasGraphic, AmenityFootprint.Rotation.Orientation... orientation);
+            public abstract GateBlock create(UniversityPatch patch, boolean attractor, boolean spawner, boolean hasGraphic);
         }
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 public abstract class AmenityGraphic extends Graphic {
 
-    public static final String AMENITY_SPRITE_SHEET_URL = "com/crowdsimulation/view/image/University/amenity_spritesheet.png";
+    public static final String AMENITY_SPRITE_SHEET_URL = "com/socialsim/view/image/University/amenity_spritesheet.png";
     public static final HashMap<Class<?>, List<AmenityGraphicLocation>> AMENITY_GRAPHICS = new HashMap<>();
 
     static {

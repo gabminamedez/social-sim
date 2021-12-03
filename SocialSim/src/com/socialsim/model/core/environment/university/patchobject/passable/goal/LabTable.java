@@ -60,7 +60,7 @@ public class LabTable extends Goal {
     }
 
     public static class LabTableFactory extends GoalFactory {
-        public LabTable create(List<AmenityBlock> amenityBlocks, boolean enabled) {
+        public static LabTable create(List<AmenityBlock> amenityBlocks, boolean enabled) {
             return new LabTable(amenityBlocks, enabled);
         }
     }

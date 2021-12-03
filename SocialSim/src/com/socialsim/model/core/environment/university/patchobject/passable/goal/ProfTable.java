@@ -18,10 +18,10 @@ public class ProfTable extends Goal {
         profTableFactory = new ProfTable.ProfTableFactory();
     }
 
-    protected ProfTable(List<AmenityBlock> amenityBlocks, boolean enabled) {
+    protected ProfTable(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
         super(amenityBlocks, enabled);
 
-        this.profTableGraphic = new ProfTableGraphic(this);
+        this.profTableGraphic = new ProfTableGraphic(this, facing);
     }
 
 
@@ -60,8 +60,8 @@ public class ProfTable extends Goal {
     }
 
     public static class ProfTableFactory extends GoalFactory {
-        public ProfTable create(List<AmenityBlock> amenityBlocks, boolean enabled) {
-            return new ProfTable(amenityBlocks, enabled);
+        public static ProfTable create(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
+            return new ProfTable(amenityBlocks, enabled, facing);
         }
     }
 

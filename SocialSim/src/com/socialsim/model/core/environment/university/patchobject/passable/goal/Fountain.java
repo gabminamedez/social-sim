@@ -4,7 +4,6 @@ import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.FountainGraphic;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.agent.AgentMovement;
 import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.core.environment.patch.patchfield.headful.QueueObject;
 import com.socialsim.model.core.environment.patch.patchfield.headful.QueueingPatchField;
@@ -32,8 +31,9 @@ public class Fountain extends QueueableGoal {
 
         this.queueObject = new QueueObject(this, this.getAttractors().get(0).getPatch());
         this.agentActing = null;
-        this.fountainPatchFieldState = new QueueingPatchField.PatchFieldState(AgentMovement.Disposition.BOARDING, AgentMovement.State.IN_QUEUE, this);
+        // this.fountainPatchFieldState = new QueueingPatchField.PatchFieldState(AgentMovement.Disposition.BOARDING, AgentMovement.State.IN_QUEUE, this);
         QueueingPatchField queueingPatchField = QueueingPatchField.queueingPatchFieldFactory.create(this); // Add a blank patch field
+        this.fountainPatchFieldState = null;
         this.getQueueObject().getPatchFields().put(this.fountainPatchFieldState, queueingPatchField); // Using the patch field state defined earlier, create the patch field
         this.getQueueObjectAmenityBlockMap().put(this.getQueueObject(), this.getAttractors().get(0)); // Define the relationships between the queue objects and the attractors
         this.fountainGraphic = new FountainGraphic(this);
@@ -132,7 +132,7 @@ public class Fountain extends QueueableGoal {
     }
 
     public static class FountainFactory extends Goal.GoalFactory {
-        public Fountain create(List<AmenityBlock> amenityBlocks, boolean enabled, int waitingTime) {
+        public static Fountain create(List<AmenityBlock> amenityBlocks, boolean enabled, int waitingTime) {
             return new Fountain(amenityBlocks, enabled, waitingTime);
         }
     }

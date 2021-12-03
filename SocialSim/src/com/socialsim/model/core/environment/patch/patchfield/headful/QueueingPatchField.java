@@ -1,6 +1,5 @@
 package com.socialsim.model.core.environment.patch.patchfield.headful;
 
-import com.socialsim.model.core.agent.AgentMovement;
 import com.socialsim.model.core.environment.university.UniversityPatch;
 import com.socialsim.model.core.environment.patch.patchfield.AbstractPatchField;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
@@ -37,7 +36,7 @@ public class QueueingPatchField extends HeadfulPatchField {
     private static boolean registerPatch(UniversityPatch patch, Queueable target, PatchFieldState patchFieldState, double value) {
         final double EPSILON = 1E-6;
 
-        QueueingPatchField queueingPatchField = target.retrieveFloorField(target.getQueueObject(), patchFieldState);
+        QueueingPatchField queueingPatchField = target.retrievePatchField(target.getQueueObject(), patchFieldState);
         List<UniversityPatch> associatedPatches = queueingPatchField.getAssociatedPatches();
 
         Amenity amenity = ((Amenity) target);
@@ -74,7 +73,7 @@ public class QueueingPatchField extends HeadfulPatchField {
     private static void unregisterPatch(UniversityPatch patch, Queueable target, PatchFieldState patchFieldState, double value) {
         final double EPSILON = 1E-6;
 
-        QueueingPatchField queueingPatchField = target.retrieveFloorField(target.getQueueObject(), patchFieldState);
+        QueueingPatchField queueingPatchField = target.retrievePatchField(target.getQueueObject(), patchFieldState);
         queueingPatchField.getAssociatedPatches().remove(patch); // Unregister the patch from this target
 
         // If the value being removed is 1.0, this means this floor field won't have an apex anymore
@@ -113,50 +112,53 @@ public class QueueingPatchField extends HeadfulPatchField {
     }
 
     public static class PatchFieldState extends AbstractPatchField { // A combination of a passenger's direction, state, and current target, this object is used for the differentiation of floor fields
-        private final AgentMovement.Direction direction;
-        private final AgentMovement.State state;
-        private final Queueable target;
-
-        public PatchFieldState(AgentMovement.Direction direction, AgentMovement.State state, Queueable target) {
-            this.direction = direction;
-            this.state = state;
-            this.target = target;
+        public PatchFieldState() {
         }
 
-        public AgentMovement.Direction getDirection() {
-            return direction;
-        }
-
-        public AgentMovement.State getState() {
-            return state;
-        }
-
-        public Queueable getTarget() {
-            return target;
-        }
-
-        @Override
-        public String toString() {
-            if (direction != null) {
-                return direction.toString();
-            }
-            else {
-                return "(any direction)";
-            }
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PatchFieldState that = (PatchFieldState) o;
-            return direction == that.direction && state == that.state && target.equals(that.target);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(direction, state, target);
-        }
+//        private final AgentMovement.Direction direction;
+//        private final AgentMovement.State state;
+//        private final Queueable target;
+//
+//        public PatchFieldState(AgentMovement.Direction direction, AgentMovement.State state, Queueable target) {
+//            this.direction = direction;
+//            this.state = state;
+//            this.target = target;
+//        }
+//
+//        public AgentMovement.Direction getDirection() {
+//            return direction;
+//        }
+//
+//        public AgentMovement.State getState() {
+//            return state;
+//        }
+//
+//        public Queueable getTarget() {
+//            return target;
+//        }
+//
+//        @Override
+//        public String toString() {
+//            if (direction != null) {
+//                return direction.toString();
+//            }
+//            else {
+//                return "(any direction)";
+//            }
+//        }
+//
+//        @Override
+//        public boolean equals(Object o) {
+//            if (this == o) return true;
+//            if (o == null || getClass() != o.getClass()) return false;
+//            PatchFieldState that = (PatchFieldState) o;
+//            return direction == that.direction && state == that.state && target.equals(that.target);
+//        }
+//
+//        @Override
+//        public int hashCode() {
+//            return Objects.hash(direction, state, target);
+//        }
     }
 
     public static class QueueingPatchFieldFactory extends HeadfulPatchFieldFactory {

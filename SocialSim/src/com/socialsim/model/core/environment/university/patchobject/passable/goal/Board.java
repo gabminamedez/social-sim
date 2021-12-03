@@ -18,10 +18,10 @@ public class Board extends Goal {
         boardFactory = new Board.BoardFactory();
     }
 
-    protected Board(List<AmenityBlock> amenityBlocks, boolean enabled) {
+    protected Board(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
         super(amenityBlocks, enabled);
 
-        this.boardGraphic = new BoardGraphic(this);
+        this.boardGraphic = new BoardGraphic(this, facing);
     }
 
 
@@ -60,8 +60,8 @@ public class Board extends Goal {
     }
 
     public static class BoardFactory extends GoalFactory {
-        public Board create(List<AmenityBlock> amenityBlocks, boolean enabled) {
-            return new Board(amenityBlocks, enabled);
+        public static Board create(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
+            return new Board(amenityBlocks, enabled, facing);
         }
     }
 

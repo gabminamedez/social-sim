@@ -18,10 +18,10 @@ public class Bulletin extends Goal {
         bulletinFactory = new Bulletin.BulletinFactory();
     }
 
-    protected Bulletin(List<AmenityBlock> amenityBlocks, boolean enabled) {
+    protected Bulletin(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
         super(amenityBlocks, enabled);
 
-        this.bulletinGraphic = new BulletinGraphic(this);
+        this.bulletinGraphic = new BulletinGraphic(this, facing);
     }
 
 
@@ -60,8 +60,8 @@ public class Bulletin extends Goal {
     }
 
     public static class BulletinFactory extends GoalFactory {
-        public Bulletin create(List<AmenityBlock> amenityBlocks, boolean enabled) {
-            return new Bulletin(amenityBlocks, enabled);
+        public static Bulletin create(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
+            return new Bulletin(amenityBlocks, enabled, facing);
         }
     }
 

@@ -55,17 +55,9 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
 
     public static double distance(UniversityPatch sourcePatch, UniversityPatch targetPatch) {
         PatchPair patchPair = new Coordinates.PatchPair(sourcePatch, targetPatch);
-        Double cachedDistance = Simulator.DISTANCE_CACHE.get(patchPair);
+        double distance = Coordinates.distance(sourcePatch.getPatchCenterCoordinates(), targetPatch.getPatchCenterCoordinates());
 
-        if (cachedDistance == null) {
-            double distance = Coordinates.distance(sourcePatch.getPatchCenterCoordinates(), targetPatch.getPatchCenterCoordinates());
-            Simulator.DISTANCE_CACHE.put(patchPair, distance);
-
-            return distance;
-        }
-        else {
-            return cachedDistance;
-        }
+        return distance;
     }
 
     public static double headingTowards(Coordinates sourceCoordinates, Coordinates targetCoordinates) {

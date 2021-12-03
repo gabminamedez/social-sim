@@ -89,12 +89,7 @@ public class Simulator {
 
                         // Redraw the visualization
                         // If the refreshes are frequent enough, update the visualization in a speed-aware manner
-                        // That is, avoid having too many refreshes within a short period of time
-                        Main.mainScreenController.drawStationViewFloorForeground(
-                                Main.simulator.getCurrentFloor(),
-                                SimulationTime.SLEEP_TIME_MILLISECONDS.get()
-                                        < speedAwarenessLimitMilliseconds
-                        );
+                        Main.mainScreenController.drawUniversityViewForeground(Main.simulator.getUniversity(), SimulationTime.SLEEP_TIME_MILLISECONDS.get() < speedAwarenessLimitMilliseconds);
 
                         this.time.tick();
                         Thread.sleep(SimulationTime.SLEEP_TIME_MILLISECONDS.get());
@@ -1285,53 +1280,53 @@ public class Simulator {
 //        }
 //    }
 
-    private static void spawnAgent(Gate gate, University university) {
-        Agent agent = gate.spawnAgent();
-
-        if (gate instanceof UniversityGate) {
-            if (agent != null) {
-                if (agent.getAgentMovement() != null) {
-                    university.getAgents().add(agent);
-                    university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch()); // Add the agent's patch position to its current floor's patch set as well
-                }
-                else { // The agent was spawned, but outside, so insert agent into the queue
-                    university.getAgentBacklogs().add(agent);
-                }
-            }
-        }
-        else {
-            if (agent != null) {
-                university.getAgents().add(agent);
-                university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-            }
-        }
-    }
+//    private static void spawnAgent(Gate gate, University university) {
+//        Agent agent = gate.spawnAgent();
+//
+//        if (gate instanceof UniversityGate) {
+//            if (agent != null) {
+//                if (agent.getAgentMovement() != null) {
+//                    university.getAgents().add(agent);
+//                    university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch()); // Add the agent's patch position to its current floor's patch set as well
+//                }
+//                else { // The agent was spawned, but outside, so insert agent into the queue
+//                    university.getAgentBacklogs().add(agent);
+//                }
+//            }
+//        }
+//        else {
+//            if (agent != null) {
+//                university.getAgents().add(agent);
+//                university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+//            }
+//        }
+//    }
 
     // Spawn agents from the backlogs of the university gate
-    public static void spawnAgentFromUniversityGateBacklog(UniversityGate stationGate, University university) {
-        List<Agent> agentsToSpawn = new ArrayList<>();
-        final int additionalAgentsToSpawnPerTick = 2;
-        Agent agent = stationGate.spawnAgentFromBacklogs(false); // Spawn two more after the first one has already been spawned
-
-        if (agent != null) {
-            agentsToSpawn.add(agent);
-
-            for (int spawnTimes = 0; spawnTimes < additionalAgentsToSpawnPerTick; spawnTimes++) {
-                agent = stationGate.spawnAgentFromBacklogs(true); // Force the spawning of more agents, to avoid long backlogs
-
-                if (agent == null) { // No more to spawn, stop iterating
-                    break;
-                }
-                else {
-                    agentsToSpawn.add(agent);
-                }
-            }
-        }
-
-        for (Agent agentToSpawn : agentsToSpawn) {
-            university.getAgents().add(agentToSpawn);
-            university.getAgentPatchSet().add(agentToSpawn.getAgentMovement().getCurrentPatch());
-        }
-    }
+//    public static void spawnAgentFromUniversityGateBacklog(UniversityGate stationGate, University university) {
+//        List<Agent> agentsToSpawn = new ArrayList<>();
+//        final int additionalAgentsToSpawnPerTick = 2;
+//        Agent agent = stationGate.spawnAgentFromBacklogs(false); // Spawn two more after the first one has already been spawned
+//
+//        if (agent != null) {
+//            agentsToSpawn.add(agent);
+//
+//            for (int spawnTimes = 0; spawnTimes < additionalAgentsToSpawnPerTick; spawnTimes++) {
+//                agent = stationGate.spawnAgentFromBacklogs(true); // Force the spawning of more agents, to avoid long backlogs
+//
+//                if (agent == null) { // No more to spawn, stop iterating
+//                    break;
+//                }
+//                else {
+//                    agentsToSpawn.add(agent);
+//                }
+//            }
+//        }
+//
+//        for (Agent agentToSpawn : agentsToSpawn) {
+//            university.getAgents().add(agentToSpawn);
+//            university.getAgentPatchSet().add(agentToSpawn.getAgentMovement().getCurrentPatch());
+//        }
+//    }
 
 }

@@ -60,7 +60,7 @@ public class Staircase extends Goal {
     }
 
     public static class StaircaseFactory extends GoalFactory {
-        public Staircase create(List<AmenityBlock> amenityBlocks, boolean enabled) {
+        public static Staircase create(List<AmenityBlock> amenityBlocks, boolean enabled) {
             return new Staircase(amenityBlocks, enabled);
         }
     }
