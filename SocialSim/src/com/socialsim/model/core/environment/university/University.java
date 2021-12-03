@@ -1,43 +1,42 @@
 package com.socialsim.model.core.environment.university;
 
 import com.socialsim.controller.Main;
-import com.socialsim.model.core.environment.Place;
-import com.socialsim.university.model.core.agent.guard.Guard;
-import com.socialsim.university.model.core.agent.janitor.Janitor;
-import com.socialsim.university.model.core.agent.professor.Professor;
-import com.socialsim.university.model.core.agent.student.Student;
+import com.socialsim.model.core.agent.Agent;
+import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.position.Coordinates;
 import com.socialsim.model.core.environment.patch.position.MatrixPosition;
+import com.socialsim.model.core.environment.university.patchobject.miscellaneous.Wall;
+import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class University extends BaseUniversityObject implements Place {
+public class University extends BaseUniversityObject implements Environment {
 
     private final int rows;
     private final int columns;
     private final Patch[][] patches;
-    private final CopyOnWriteArrayList<Guard> guards;
-    private final CopyOnWriteArrayList<Janitor> janitors;
-    private final CopyOnWriteArrayList<Professor> professors;
-    private final CopyOnWriteArrayList<Student> students;
+    private final CopyOnWriteArrayList<Agent> agents;
 
     private final SortedSet<Patch> amenityPatchSet;
-    private final SortedSet<Patch> guardPatchSet;
-    private final SortedSet<Patch> janitorPatchSet;
-    private final SortedSet<Patch> officerPatchSet;
-    private final SortedSet<Patch> professorPatchSet;
-    private final SortedSet<Patch> studentPatchSet;
+    private final SortedSet<Patch> agentPatchSet;
 
-     private final List<StationGate> stationGates;
-     private final List<Security> securities;
-     private final List<TicketBooth> ticketBooths;
-     private final List<Turnstile> turnstiles;
-     private final List<TrainDoor> trainDoors;
-     private final List<Track> tracks;
-     private final List<Wall> walls;
+    private final List<Wall> walls;
+    private final List<UniversityGate> universityGates;
+    private final List<Bench> benches;
+    private final List<Board> boards;
+    private final List<Bulletin> bulletins;
+    private final List<Chair> chairs;
+    private final List<Door> doors;
+    private final List<Fountain> fountains;
+    private final List<LabTable> labTables;
+    private final List<ProfTable> profTables;
+    private final List<Security> securities;
+    private final List<Staircase> staircases;
+    private final List<Trash> trashes;
 
     private static final University.UniversityFactory universityFactory;
 
@@ -51,25 +50,24 @@ public class University extends BaseUniversityObject implements Place {
         this.patches = new Patch[rows][columns];
         this.initializePatches();
 
-        this.guards = new CopyOnWriteArrayList<>();
-        this.janitors = new CopyOnWriteArrayList<>();
-        this.professors = new CopyOnWriteArrayList<>();
-        this.students = new CopyOnWriteArrayList<>();
+        this.agents = new CopyOnWriteArrayList<>();
 
         this.amenityPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
-        this.guardPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
-        this.janitorPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
-        this.officerPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
-        this.professorPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
-        this.studentPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
+        this.agentPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
 
-        this.stationGates = Collections.synchronizedList(new ArrayList<>());
-        this.securities = Collections.synchronizedList(new ArrayList<>());
-        this.ticketBooths = Collections.synchronizedList(new ArrayList<>());
-        this.turnstiles = Collections.synchronizedList(new ArrayList<>());
-        this.trainDoors = Collections.synchronizedList(new ArrayList<>());
-        this.tracks = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
+        this.universityGates = Collections.synchronizedList(new ArrayList<>());
+        this.benches = Collections.synchronizedList(new ArrayList<>());
+        this.boards = Collections.synchronizedList(new ArrayList<>());
+        this.bulletins = Collections.synchronizedList(new ArrayList<>());
+        this.chairs = Collections.synchronizedList(new ArrayList<>());
+        this.doors = Collections.synchronizedList(new ArrayList<>());
+        this.fountains = Collections.synchronizedList(new ArrayList<>());
+        this.labTables = Collections.synchronizedList(new ArrayList<>());
+        this.profTables = Collections.synchronizedList(new ArrayList<>());
+        this.securities = Collections.synchronizedList(new ArrayList<>());
+        this.staircases = Collections.synchronizedList(new ArrayList<>());
+        this.trashes = Collections.synchronizedList(new ArrayList<>());
     }
 
     private void initializePatches() {
@@ -92,10 +90,7 @@ public class University extends BaseUniversityObject implements Place {
     }
 
     public Patch getPatch(Coordinates coordinates) {
-        return getPatch(
-                (int) (coordinates.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS),
-                (int) (coordinates.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS)
-        );
+        return getPatch((int) (coordinates.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS), (int) (coordinates.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS));
     }
 
     public Patch getPatch(MatrixPosition matrixPosition) {
@@ -110,31 +105,109 @@ public class University extends BaseUniversityObject implements Place {
         return this.patches;
     }
 
-    public CopyOnWriteArrayList<Guard> getGuards() {
-        return guards;
+    public CopyOnWriteArrayList<Agent> getAgents() {
+        return agents;
     }
 
-    public CopyOnWriteArrayList<Janitor> getJanitors() {
-        return janitors;
+    public SortedSet<Patch> getAmenityPatchSet() {
+        return amenityPatchSet;
     }
 
-    public CopyOnWriteArrayList<Professor> getProfessors() {
-        return professors;
+    public SortedSet<Patch> getAgentPatchSet() {
+        return agentPatchSet;
     }
 
-    public CopyOnWriteArrayList<Student> getStudents() {
-        return students;
+    public List<Wall> getWalls() {
+        return walls;
+    }
+
+    public List<UniversityGate> getUniversityGates() {
+        return universityGates;
+    }
+
+    public List<Bench> getBenches() {
+        return benches;
+    }
+
+    public List<Board> getBoards() {
+        return boards;
+    }
+
+    public List<Bulletin> getBulletins() {
+        return bulletins;
+    }
+
+    public List<Chair> getChairs() {
+        return chairs;
+    }
+
+    public List<Door> getDoors() {
+        return doors;
+    }
+
+    public List<Fountain> getFountains() {
+        return fountains;
+    }
+
+    public List<LabTable> getLabTables() {
+        return labTables;
+    }
+
+    public List<ProfTable> getProfTables() {
+        return profTables;
+    }
+
+    public List<Security> getSecurities() {
+        return securities;
+    }
+
+    public List<Staircase> getStaircases() {
+        return staircases;
+    }
+
+    public List<Trash> getTrashes() {
+        return trashes;
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {
-        if (amenityClass == StationGate.class) {
-            return this.getStationGates();
+        if (amenityClass == Wall.class) {
+            return this.getWalls();
+        }
+        else if (amenityClass == UniversityGate.class) {
+            return this.getUniversityGates();
+        }
+        else if (amenityClass == Bench.class) {
+            return this.getBenches();
+        }
+        else if (amenityClass == Board.class) {
+            return this.getBoards();
+        }
+        else if (amenityClass == Bulletin.class) {
+            return this.getBulletins();
+        }
+        else if (amenityClass == Chair.class) {
+            return this.getChairs();
+        }
+        else if (amenityClass == Door.class) {
+            return this.getDoors();
+        }
+        else if (amenityClass == Fountain.class) {
+            return this.getFountains();
+        }
+        else if (amenityClass == LabTable.class) {
+            return this.getLabTables();
+        }
+        else if (amenityClass == ProfTable.class) {
+            return this.getProfTables();
         }
         else if (amenityClass == Security.class) {
             return this.getSecurities();
         }
-        else if (amenityClass == TicketBooth.class) {
-            return this.getTicketBooths();
+        else if (amenityClass == Staircase.class) {
+            return this.getStaircases();
+        }
+        else if (amenityClass == Trash.class) {
+            return this.getTrashes();
         }
         else {
             return null;
@@ -165,7 +238,7 @@ public class University extends BaseUniversityObject implements Place {
                     yCondition = truncatedY + rowOffset > 0;
                 }
                 else if (rowOffset > 0) {
-                    yCondition = truncatedY + rowOffset < Main.simulator.getCurrentFloor().getRows();
+                    yCondition = truncatedY + rowOffset < Main.simulator.getUniversity().getRows();
                 }
                 else {
                     yCondition = true;
@@ -175,23 +248,16 @@ public class University extends BaseUniversityObject implements Place {
                     xCondition = truncatedX + columnOffset > 0;
                 }
                 else if (columnOffset > 0) {
-                    xCondition = truncatedX + columnOffset < Main.simulator.getCurrentFloor().getColumns();
+                    xCondition = truncatedX + columnOffset < Main.simulator.getUniversity().getColumns();
                 }
                 else {
                     xCondition = true;
                 }
 
                 if (xCondition && yCondition) {
-                    chosenPatch = Main.simulator.getCurrentFloor().getPatch(
-                            truncatedY + rowOffset,
-                            truncatedX + columnOffset
-                    );
+                    chosenPatch = Main.simulator.getUniversity().getPatch(truncatedY + rowOffset, truncatedX + columnOffset);
 
-                    if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(
-                            centerPatch.getPatchCenterCoordinates(),
-                            chosenPatch.getPatchCenterCoordinates(),
-                            heading,
-                            fieldOfViewAngle)) {
+                    if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(centerPatch.getPatchCenterCoordinates(), chosenPatch.getPatchCenterCoordinates(), heading, fieldOfViewAngle)) {
                         patchesToExplore.add(chosenPatch);
                     }
                 }

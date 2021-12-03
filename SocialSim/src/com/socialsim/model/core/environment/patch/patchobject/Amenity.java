@@ -1,15 +1,11 @@
 package com.socialsim.model.core.environment.patch.patchobject;
 
-import com.socialsim.controller.Main;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.university.patchobject.miscellaneous.Wall;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Board;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Chair;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Fountain;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Security;
+import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.model.core.environment.university.BaseUniversityObject;
 import com.socialsim.model.core.environment.patch.Patch;
-import com.socialsim.model.core.environment.patch.position.MatrixPosition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,55 +75,45 @@ public abstract class Amenity extends PatchObject implements Environment {
             return hasGraphic;
         }
 
-        public static List<AmenityBlock> convertToAmenityBlocks(Patch referencePatch, List<AmenityFootprint.Rotation.AmenityBlockTemplate> amenityBlockTemplates) {
-            List<AmenityBlock> amenityBlocks = new ArrayList<>();
-
-            for (AmenityFootprint.Rotation.AmenityBlockTemplate amenityBlockTemplate : amenityBlockTemplates) {
-                // Compute for the position of the patch using the offset data
-                int row = referencePatch.getMatrixPosition().getRow() + amenityBlockTemplate.getOffset().getRowOffset();
-                int column = referencePatch.getMatrixPosition().getColumn() + amenityBlockTemplate.getOffset().getColumnOffset();
-
-                MatrixPosition patchPosition = new MatrixPosition(row, column);
-
-                if (!MatrixPosition.inBounds(patchPosition, Main.simulator.getStation())) {
-                    return null;
-                }
-
-                Patch patch = Main.simulator.getCurrentFloor().getPatch(row, column);
-
-                assert getAmenityBlockFactory(amenityBlockTemplate.getAmenityClass()) != null;
-
-                AmenityBlock amenityBlock = getAmenityBlockFactory(amenityBlockTemplate.getAmenityClass()).create(
-                        patch,
-                        amenityBlockTemplate.isAttractor(),
-                        amenityBlockTemplate.hasGraphic(),
-                        amenityBlockTemplate.getOrientation()
-                );
-
-                amenityBlocks.add(amenityBlock);
-            }
-
-            return amenityBlocks;
-        }
-
         private static AmenityBlockFactory getAmenityBlockFactory(Class<? extends Amenity> amenityClass) {
             if (amenityClass == Wall.class) {
                 return Wall.WallBlock.wallBlockFactory;
             }
-            else if (amenityClass == Security.class) {
-                return Security.SecurityBlock.securityBlockFactory;
+            if (amenityClass == UniversityGate.class) {
+                return UniversityGate.UniversityGateBlock.universityGateBlockFactory;
+            }
+            if (amenityClass == Bench.class) {
+                return Bench.BenchBlock.benchBlockFactory;
             }
             else if (amenityClass == Board.class) {
                 return Board.BoardBlock.boardBlockFactory;
             }
+            else if (amenityClass == Bulletin.class) {
+                return Bulletin.BulletinBlock.bulletinBlockFactory;
+            }
             else if (amenityClass == Chair.class) {
                 return Chair.ChairBlock.chairBlockFactory;
+            }
+            else if (amenityClass == Door.class) {
+                return Door.DoorBlock.doorBlockFactory;
             }
             else if (amenityClass == Fountain.class) {
                 return Fountain.FountainBlock.fountainBlockFactory;
             }
-            else if (amenityClass == Door.class) {
-                return Door.DoorBlock.doorBlockFactory;
+            else if (amenityClass == LabTable.class) {
+                return LabTable.LabTableBlock.labTableBlockFactory;
+            }
+            else if (amenityClass == ProfTable.class) {
+                return ProfTable.ProfTableBlock.profTableBlockFactory;
+            }
+            else if (amenityClass == Security.class) {
+                return Security.SecurityBlock.securityBlockFactory;
+            }
+            else if (amenityClass == Staircase.class) {
+                return Staircase.StaircaseBlock.staircaseBlockFactory;
+            }
+            else if (amenityClass == Trash.class) {
+                return Trash.TrashBlock.trashBlockFactory;
             }
             else {
                 return null;
