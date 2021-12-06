@@ -122,10 +122,8 @@ public class GraphicsController extends Controller {
 
             // Draw graphics corresponding to whatever is in the content of the patch; If the patch has no amenity on it, just draw a blank patch
             Amenity.AmenityBlock patchAmenityBlock = currentPatch.getAmenityBlock();
-            Class<? extends PatchField> patchPatchField = currentPatch.getPatchField();
+            PatchField patchPatchField = currentPatch.getPatchField();
             Color patchColor;
-
-
 
             if (patchAmenityBlock == null) {
                 patchColor = Color.rgb(244, 244, 244);
@@ -165,17 +163,22 @@ public class GraphicsController extends Controller {
                 }
             }
 
-            if (patchPatchField == Bathroom.class) {
-                patchColor = Color.rgb(118, 237, 244);
+            if (patchPatchField.getClass() == Bathroom.class) {
+                if (((Bathroom) patchPatchField).getIsFemale()) {
+                    patchColor = Color.rgb(232, 116, 206);
+                }
+                else {
+                    patchColor = Color.rgb(118, 237, 244);
+                }
                 backgroundGraphicsContext.setFill(patchColor);
                 backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
             }
-            else if(patchPatchField == Classroom.class) {
+            else if(patchPatchField.getClass() == Classroom.class) {
                 patchColor = Color.rgb(243, 222, 206);
                 backgroundGraphicsContext.setFill(patchColor);
                 backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
             }
-            else if(patchPatchField == Laboratory.class) {
+            else if(patchPatchField.getClass() == Laboratory.class) {
                 patchColor = Color.rgb(28, 39, 137);
                 backgroundGraphicsContext.setFill(patchColor);
                 backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);

@@ -11,7 +11,7 @@ public class Laboratory extends PatchField {
         super(patches);
 
         for(Patch patch : patches) {
-            patch.setPatchField(Laboratory.class);
+            patch.setPatchField(this);
         }
     }
 

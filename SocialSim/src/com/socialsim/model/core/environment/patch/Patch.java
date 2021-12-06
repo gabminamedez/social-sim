@@ -19,7 +19,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     private final Coordinates patchCenterCoordinates;
     private final CopyOnWriteArrayList<Agent> agents;
     private Amenity.AmenityBlock amenityBlock; // Denotes the amenity block present on this patch
-    private Class<? extends PatchField> patchField;
+    private PatchField patchField;
     private final Environment environment;
     private final List<MatrixPosition> neighborIndices;
     private final List<MatrixPosition> neighbor7x7Indices; // Denotes the positions of the neighbors of this patch within a 7x7 range
@@ -65,11 +65,11 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         this.amenityBlock = amenityBlock;
     }
 
-    public Class<? extends PatchField> getPatchField() {
+    public PatchField getPatchField() {
         return patchField;
     }
 
-    public void setPatchField(Class<? extends PatchField> patchField) {
+    public void setPatchField(PatchField patchField) {
         this.patchField = patchField;
     }
 

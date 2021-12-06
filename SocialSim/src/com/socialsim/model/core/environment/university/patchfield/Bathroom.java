@@ -7,11 +7,15 @@ import java.util.List;
 
 public class Bathroom extends PatchField {
 
+    private final boolean isFemale;
+
     protected Bathroom(boolean isFemale, List<Patch> patches) {
         super(patches);
 
+        this.isFemale = isFemale;
+
         for(Patch patch : patches) {
-            patch.setPatchField(Bathroom.class);
+            patch.setPatchField(this);
         }
     }
 
@@ -22,7 +26,7 @@ public class Bathroom extends PatchField {
     }
 
     public boolean getIsFemale() {
-        return this.getIsFemale();
+        return this.isFemale;
     }
 
     public static class BathroomFactory extends PatchFieldFactory {

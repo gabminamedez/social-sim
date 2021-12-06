@@ -11,7 +11,7 @@ public class Classroom extends PatchField {
         super(patches);
 
         for(Patch patch : patches) {
-            patch.setPatchField(Classroom.class);
+            patch.setPatchField(this);
         }
     }
 
