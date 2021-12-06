@@ -1,15 +1,14 @@
 package com.socialsim.model.core.environment.patch.patchfield;
 
-import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.patch.BaseObject;
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PatchField extends BaseObject implements Environment {
+public abstract class PatchField extends BaseObject {
 
-    private final List<UniversityPatch> associatedPatches;
+    private final List<Patch> associatedPatches;
 
     protected PatchField() {
         super();
@@ -17,7 +16,14 @@ public abstract class PatchField extends BaseObject implements Environment {
         this.associatedPatches = new ArrayList<>();
     }
 
-    public List<UniversityPatch> getAssociatedPatches() {
+    protected PatchField(List<Patch> patches) {
+        super();
+
+        this.associatedPatches = new ArrayList<>();
+        associatedPatches.addAll(patches);
+    }
+
+    public List<Patch> getAssociatedPatches() {
         return associatedPatches;
     }
 

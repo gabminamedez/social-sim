@@ -4,8 +4,7 @@ import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.UniversityGateGraphic;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.university.UniversityPatch;
-import com.socialsim.model.core.environment.patch.patchobject.Amenity;
+import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.university.University;
 
@@ -16,7 +15,7 @@ public class UniversityGate extends Gate {
 
     private double chancePerSecond; // Denotes the chance of generating an agent per second
     private UniversityGateMode universityGateMode; // Denotes the mode of this station gate (whether it's entry/exit only, or both)
-    private int agentBacklogCount; // Denotes the number of agents who are supposed to enter the station gate, but cannot
+    private int agentBacklogCount; // Denotes the number of agents who are supposed to enter the gate, but cannot
     public static final UniversityGateFactory universityGateFactory;
     private final UniversityGateGraphic universityGateGraphic;
 
@@ -78,7 +77,7 @@ public class UniversityGate extends Gate {
 
     @Override
     public Agent spawnAgent() { // Spawn an agent in this position
-        University university = this.getAmenityBlocks().get(0).getPatch().getUniversity();
+        University university = (University) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
         GateBlock spawner = this.getSpawners().get(0);
 
         if (university != null) {
@@ -90,7 +89,7 @@ public class UniversityGate extends Gate {
     }
 
     public boolean isGateFree() {
-        HashSet<UniversityPatch> patchesToCheck = new HashSet<>();
+        HashSet<Patch> patchesToCheck = new HashSet<>();
         boolean patchesFree = true;
 
         // Check if all attractors and spawners in this amenity have no agents
@@ -104,7 +103,7 @@ public class UniversityGate extends Gate {
             patchesToCheck.addAll(spawner.getPatch().getNeighbors());
         }
 
-        for (UniversityPatch patchToCheck : patchesToCheck) {
+        for (Patch patchToCheck : patchesToCheck) {
             if (!patchToCheck.getAgents().isEmpty()) {
                 patchesFree = false;
                 break;
@@ -115,7 +114,7 @@ public class UniversityGate extends Gate {
     }
 
     public Agent spawnAgentFromBacklogs(boolean forceEntry) { // Spawn an agent from the backlogs
-        University university = this.getAmenityBlocks().get(0).getPatch().getUniversity();
+        University university = (University) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
 
         if (university != null) {
             List<Agent> universityGateQueue = university.getAgentBacklogs();
@@ -123,7 +122,7 @@ public class UniversityGate extends Gate {
             if (!universityGateQueue.isEmpty()) { // If the backlog queue isn't empty, check if this gate is free from agents
                 if (forceEntry || this.isGateFree()) { // If this gate is free from other agents, get one from the backlog queue
                     Agent agent = universityGateQueue.remove(0);
-                    UniversityPatch spawnPatch = this.getSpawners().get(0).getPatch();
+                    Patch spawnPatch = this.getSpawners().get(0).getPatch();
 
                     return agent;
                 }
@@ -162,18 +161,18 @@ public class UniversityGate extends Gate {
             universityGateBlockFactory = new UniversityGateBlockFactory();
         }
 
-        private UniversityGateBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+        private UniversityGateBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             super(patch, attractor, true, hasGraphic);
         }
 
         public static class UniversityGateBlockFactory extends Gate.GateBlock.GateBlockFactory {
             @Override
-            public UniversityGateBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+            public UniversityGateBlock create(Patch patch, boolean attractor, boolean hasGraphic) {
                 return new UniversityGateBlock(patch, attractor, hasGraphic);
             }
 
             @Override
-            public GateBlock create(UniversityPatch patch, boolean attractor, boolean spawner, boolean hasGraphic) {
+            public GateBlock create(Patch patch, boolean attractor, boolean spawner, boolean hasGraphic) {
                 return null;
             }
         }

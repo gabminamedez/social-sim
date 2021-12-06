@@ -3,7 +3,7 @@ package com.socialsim.model.core.environment.university.patchobject.miscellaneou
 import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.WallGraphic;
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.miscellaneous.Obstacle;
 
@@ -41,13 +41,13 @@ public class Wall extends Obstacle {
             wallBlockFactory = new Wall.WallBlock.WallBlockFactory();
         }
 
-        private WallBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+        private WallBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             super(patch, attractor, hasGraphic);
         }
 
         public static class WallBlockFactory extends Amenity.AmenityBlock.AmenityBlockFactory {
             @Override
-            public Wall.WallBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+            public Wall.WallBlock create(Patch patch, boolean attractor, boolean hasGraphic) {
                 return new Wall.WallBlock(patch, attractor, hasGraphic);
             }
         }

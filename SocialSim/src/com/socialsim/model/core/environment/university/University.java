@@ -1,12 +1,10 @@
 package com.socialsim.model.core.environment.university;
 
-import com.socialsim.controller.Main;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.patch.BaseObject;
+import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
-import com.socialsim.model.core.environment.patch.position.Coordinates;
-import com.socialsim.model.core.environment.patch.position.MatrixPosition;
 import com.socialsim.model.core.environment.university.patchobject.miscellaneous.Wall;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
@@ -14,15 +12,11 @@ import com.socialsim.model.core.environment.university.patchobject.passable.goal
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class University extends BaseObject implements Environment {
+public class University extends Environment {
 
-    private final int rows;
-    private final int columns;
-    private final UniversityPatch[][] patches;
     private final CopyOnWriteArrayList<Agent> agents;
-
-    private final SortedSet<UniversityPatch> amenityPatchSet;
-    private final SortedSet<UniversityPatch> agentPatchSet;
+    private final SortedSet<Patch> amenityPatchSet;
+    private final SortedSet<Patch> agentPatchSet;
 
     private final List<Wall> walls;
     private final List<UniversityGate> universityGates;
@@ -46,10 +40,7 @@ public class University extends BaseObject implements Environment {
     }
 
     public University(int rows, int columns) {
-        this.rows = rows;
-        this.columns = columns;
-        this.patches = new UniversityPatch[rows][columns];
-        this.initializePatches();
+        super(rows, columns);
 
         this.agents = new CopyOnWriteArrayList<>();
 
@@ -72,50 +63,17 @@ public class University extends BaseObject implements Environment {
         this.agentBacklogs = Collections.synchronizedList(new ArrayList<>());
     }
 
-    private void initializePatches() {
-        MatrixPosition matrixPosition;
-
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
-                matrixPosition = new MatrixPosition(row, column);
-                patches[row][column] = new UniversityPatch(this, matrixPosition);
-            }
-        }
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public int getColumns() {
-        return columns;
-    }
-
-    public UniversityPatch getPatch(Coordinates coordinates) {
-        return getPatch((int) (coordinates.getY() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS), (int) (coordinates.getX() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS));
-    }
-
-    public UniversityPatch getPatch(MatrixPosition matrixPosition) {
-        return getPatch(matrixPosition.getRow(), matrixPosition.getColumn());
-    }
-
-    public UniversityPatch getPatch(int row, int column) {
-        return patches[row][column];
-    }
-
-    public UniversityPatch[][] getPatches() {
-        return this.patches;
-    }
-
     public CopyOnWriteArrayList<Agent> getAgents() {
         return agents;
     }
 
-    public SortedSet<UniversityPatch> getAmenityPatchSet() {
+    @Override
+    public SortedSet<Patch> getAmenityPatchSet() {
         return amenityPatchSet;
     }
 
-    public SortedSet<UniversityPatch> getAgentPatchSet() {
+    @Override
+    public SortedSet<Patch> getAgentPatchSet() {
         return agentPatchSet;
     }
 
@@ -218,59 +176,6 @@ public class University extends BaseObject implements Environment {
         else {
             return null;
         }
-    }
-
-    // Get patches in the agent's field of vision
-    public static List<UniversityPatch> get7x7Field(UniversityPatch centerPatch, double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
-        int truncatedX = (int) (centerPatch.getPatchCenterCoordinates().getX() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS);
-        int truncatedY = (int) (centerPatch.getPatchCenterCoordinates().getY() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS);
-
-        UniversityPatch chosenPatch;
-        List<UniversityPatch> patchesToExplore = new ArrayList<>();
-
-        for (int rowOffset = -3; rowOffset <= 3; rowOffset++) {
-            for (int columnOffset = -3; columnOffset <= 3; columnOffset++) {
-                boolean xCondition;
-                boolean yCondition;
-                boolean isCenterPatch = rowOffset == 0 && columnOffset == 0;
-
-                if (!includeCenterPatch) {
-                    if (isCenterPatch) {
-                        continue;
-                    }
-                }
-
-                if (rowOffset < 0) {
-                    yCondition = truncatedY + rowOffset > 0;
-                }
-                else if (rowOffset > 0) {
-                    yCondition = truncatedY + rowOffset < Main.simulator.getUniversity().getRows();
-                }
-                else {
-                    yCondition = true;
-                }
-
-                if (columnOffset < 0) {
-                    xCondition = truncatedX + columnOffset > 0;
-                }
-                else if (columnOffset > 0) {
-                    xCondition = truncatedX + columnOffset < Main.simulator.getUniversity().getColumns();
-                }
-                else {
-                    xCondition = true;
-                }
-
-                if (xCondition && yCondition) {
-                    chosenPatch = Main.simulator.getUniversity().getPatch(truncatedY + rowOffset, truncatedX + columnOffset);
-
-                    if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(centerPatch.getPatchCenterCoordinates(), chosenPatch.getPatchCenterCoordinates(), heading, fieldOfViewAngle)) {
-                        patchesToExplore.add(chosenPatch);
-                    }
-                }
-            }
-        }
-
-        return patchesToExplore;
     }
 
     public static class UniversityFactory extends BaseObject.ObjectFactory {

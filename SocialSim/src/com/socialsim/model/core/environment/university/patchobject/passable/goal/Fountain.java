@@ -4,7 +4,7 @@ import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.FountainGraphic;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchfield.headful.QueueObject;
 import com.socialsim.model.core.environment.patch.patchfield.headful.QueueingPatchField;
 import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
@@ -119,13 +119,13 @@ public class Fountain extends QueueableGoal {
             fountainBlockFactory = new FountainBlockFactory();
         }
 
-        private FountainBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+        private FountainBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             super(patch, attractor, hasGraphic);
         }
 
         public static class FountainBlockFactory extends AmenityBlockFactory {
             @Override
-            public FountainBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+            public FountainBlock create(Patch patch, boolean attractor, boolean hasGraphic) {
                 return new FountainBlock(patch, attractor, hasGraphic);
             }
         }

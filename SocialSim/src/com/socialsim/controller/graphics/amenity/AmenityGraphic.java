@@ -1,6 +1,5 @@
 package com.socialsim.controller.graphics.amenity;
 
-import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.university.patchobject.miscellaneous.Wall;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
@@ -121,7 +120,7 @@ public abstract class AmenityGraphic extends Graphic {
         return this.graphics.get(this.graphicIndex);
     }
 
-    public static class AmenityGraphicScale implements Environment {
+    public static class AmenityGraphicScale {
         private int rowSpan;
         private int columnSpan;
 
@@ -147,7 +146,7 @@ public abstract class AmenityGraphic extends Graphic {
         }
     }
 
-    public static class AmenityGraphicOffset implements Environment {
+    public static class AmenityGraphicOffset {
         private int rowOffset;
         private int columnOffset;
 

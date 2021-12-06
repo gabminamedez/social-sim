@@ -3,10 +3,9 @@ package com.socialsim.controller.graphics;
 import com.socialsim.controller.Controller;
 import com.socialsim.controller.Main;
 import com.socialsim.controller.graphics.agent.AgentGraphic;
-import com.socialsim.controller.graphics.agent.AgentGraphicLocation;
 import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.model.core.agent.Agent;
+import com.socialsim.model.core.environment.patch.patchfield.PatchField;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.Drawable;
 import com.socialsim.model.core.environment.patch.patchobject.passable.NonObstacle;
@@ -14,7 +13,10 @@ import com.socialsim.model.core.environment.patch.position.Coordinates;
 import com.socialsim.model.core.environment.patch.position.Location;
 import com.socialsim.model.core.environment.patch.position.MatrixPosition;
 import com.socialsim.model.core.environment.university.University;
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.university.patchfield.Bathroom;
+import com.socialsim.model.core.environment.university.patchfield.Classroom;
+import com.socialsim.model.core.environment.university.patchfield.Laboratory;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -37,7 +39,7 @@ public class GraphicsController extends Controller {
     private static Double lockedX;
     private static Double lockedY;
     private static boolean drawMeasurement;
-    private static UniversityPatch measurementStartPatch;
+    private static Patch measurementStartPatch;
     public static boolean willPeek;
     private static long millisecondsLastCanvasRefresh;
 
@@ -92,13 +94,13 @@ public class GraphicsController extends Controller {
     private static void drawUniversityObjects(University university, boolean background, GraphicsContext backgroundGraphicsContext, GraphicsContext foregroundGraphicsContext, double tileSize) {
         // Draw all the patches of this university
         // If the background is supposed to be drawn, draw from all the patches; If not, draw only from the combined agent and amenity set
-        List<UniversityPatch> patches;
+        List<Patch> patches;
 
         if (background) {
             patches = Arrays.stream(university.getPatches()).flatMap(Arrays::stream).collect(Collectors.toList());
         }
         else {
-            SortedSet<UniversityPatch> amenityAgentSet = new TreeSet<>(); // Combine this university's amenity and agent set into a single set
+            SortedSet<Patch> amenityAgentSet = new TreeSet<>(); // Combine this university's amenity and agent set into a single set
 
             amenityAgentSet.addAll(new ArrayList<>(university.getAmenityPatchSet()));
             amenityAgentSet.addAll(new ArrayList<>(university.getAgentPatchSet()));
@@ -106,21 +108,24 @@ public class GraphicsController extends Controller {
             patches = new ArrayList<>(amenityAgentSet);
         }
 
-        for (UniversityPatch patch : patches) {
+        for (Patch patch : patches) {
             if (patch == null) {
                 continue;
             }
 
             int row = patch.getMatrixPosition().getRow();
             int column = patch.getMatrixPosition().getColumn();
-            UniversityPatch currentPatch = university.getPatch(row, column); // Get the current patch
+            Patch currentPatch = university.getPatch(row, column); // Get the current patch
 
             boolean drawGraphicTransparently;
             drawGraphicTransparently = false;
 
             // Draw graphics corresponding to whatever is in the content of the patch; If the patch has no amenity on it, just draw a blank patch
             Amenity.AmenityBlock patchAmenityBlock = currentPatch.getAmenityBlock();
+            Class<? extends PatchField> patchPatchField = currentPatch.getPatchField();
             Color patchColor;
+
+
 
             if (patchAmenityBlock == null) {
                 patchColor = Color.rgb(244, 244, 244);
@@ -160,6 +165,22 @@ public class GraphicsController extends Controller {
                 }
             }
 
+            if (patchPatchField == Bathroom.class) {
+                patchColor = Color.rgb(118, 237, 244);
+                backgroundGraphicsContext.setFill(patchColor);
+                backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+            }
+            else if(patchPatchField == Classroom.class) {
+                patchColor = Color.rgb(243, 222, 206);
+                backgroundGraphicsContext.setFill(patchColor);
+                backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+            }
+            else if(patchPatchField == Laboratory.class) {
+                patchColor = Color.rgb(28, 39, 137);
+                backgroundGraphicsContext.setFill(patchColor);
+                backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+            }
+
             if (!background) { // Draw each agent in this patch, if the foreground is to be drawn
 //                for (Agent agent : patch.getAgents()) {
 //                    AgentGraphicLocation agentGraphicLocation = agent.getAgentGraphic().getGraphicLocation();
@@ -176,7 +197,7 @@ public class GraphicsController extends Controller {
         }
     }
 
-    private static UniversityPatch retrievePatchFromMouseClick(MouseEvent event) {
+    private static Patch retrievePatchFromMouseClick(MouseEvent event) {
         double mouseX = event.getX();
         double mouseY = event.getY();
 
@@ -198,7 +219,7 @@ public class GraphicsController extends Controller {
                 tileSize);
 
         if (matrixPosition != null) { // When the position given is a null, this means the mouse has been dragged out of bounds
-            UniversityPatch patchAtMousePosition = Main.simulator.getUniversity().getPatch(matrixPosition);
+            Patch patchAtMousePosition = Main.simulator.getUniversity().getPatch(matrixPosition);
 
             if (GraphicsController.drawMeasurement) { // If a measurement is requested, compute it; Compute for the start coordinates, if one hasn't been computed yet
                 if (GraphicsController.measurementStartPatch == null) {
@@ -221,7 +242,7 @@ public class GraphicsController extends Controller {
 //    }
 
     public static Coordinates getScaledCoordinates(Coordinates coordinates) {
-        return new Coordinates(coordinates.getX() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS, coordinates.getY() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS);
+        return new Coordinates(coordinates.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS, coordinates.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
     }
 
 }

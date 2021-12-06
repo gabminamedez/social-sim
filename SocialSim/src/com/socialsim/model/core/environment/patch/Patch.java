@@ -1,7 +1,7 @@
-package com.socialsim.model.core.environment.university;
+package com.socialsim.model.core.environment.patch;
 
 import com.socialsim.model.core.environment.Environment;
-import com.socialsim.model.core.environment.patch.BaseObject;
+import com.socialsim.model.core.environment.patch.patchfield.PatchField;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.passable.Queueable;
 import com.socialsim.model.core.environment.patch.position.Coordinates;
@@ -12,27 +12,29 @@ import com.socialsim.model.core.environment.patch.patchfield.headful.QueueingPat
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class UniversityPatch extends BaseObject implements Environment, Comparable<UniversityPatch> {
+public class Patch extends BaseObject implements Comparable<Patch> {
 
     public static final double PATCH_SIZE_IN_SQUARE_METERS = 0.6;
     private final MatrixPosition matrixPosition;
     private final Coordinates patchCenterCoordinates;
     private final CopyOnWriteArrayList<Agent> agents;
     private Amenity.AmenityBlock amenityBlock; // Denotes the amenity block present on this patch
-    private final University university;
+    private Class<? extends PatchField> patchField;
+    private final Environment environment;
     private final List<MatrixPosition> neighborIndices;
     private final List<MatrixPosition> neighbor7x7Indices; // Denotes the positions of the neighbors of this patch within a 7x7 range
     private int amenityBlocksAround; // Denotes the number of amenity blocks around this patch
     private final Map<Queueable, Map<QueueingPatchField.PatchFieldState, Double>> floorFieldValues; // Denotes the individual floor field value of this patch, given the queueable goal patch and the desired state
 
-    public UniversityPatch(University university, MatrixPosition matrixPosition) {
+    public Patch(Environment environment, MatrixPosition matrixPosition) {
         super();
 
         this.matrixPosition = matrixPosition;
         this.patchCenterCoordinates = Coordinates.getPatchCenterCoordinates(this);
         this.agents = new CopyOnWriteArrayList<>();
         this.amenityBlock = null;
-        this.university = university;
+        this.patchField = null;
+        this.environment = environment;
         this.neighborIndices = this.computeNeighboringPatches();
         this.neighbor7x7Indices = this.compute7x7Neighbors();
         this.amenityBlocksAround = 0;
@@ -63,12 +65,20 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
         this.amenityBlock = amenityBlock;
     }
 
+    public Class<? extends PatchField> getPatchField() {
+        return patchField;
+    }
+
+    public void setPatchField(Class<? extends PatchField> patchField) {
+        this.patchField = patchField;
+    }
+
     public int getAmenityBlocksAround() {
         return amenityBlocksAround;
     }
 
-    public University getUniversity() {
-        return university;
+    public Environment getEnvironment() {
+        return environment;
     }
 
     private List<MatrixPosition> computeNeighboringPatches() {
@@ -85,7 +95,7 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
             neighboringPatchIndices.add(new MatrixPosition(patchRow - 1, patchColumn));
         }
 
-        if (patchRow - 1 >= 0 && patchColumn + 1 < this.getUniversity().getColumns()) { // Top-right of patch
+        if (patchRow - 1 >= 0 && patchColumn + 1 < this.getEnvironment().getColumns()) { // Top-right of patch
             neighboringPatchIndices.add(new MatrixPosition(patchRow - 1, patchColumn + 1));
         }
 
@@ -93,31 +103,31 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
             neighboringPatchIndices.add(new MatrixPosition(patchRow, patchColumn - 1));
         }
 
-        if (patchColumn + 1 < this.getUniversity().getColumns()) { // Right of patch
+        if (patchColumn + 1 < this.getEnvironment().getColumns()) { // Right of patch
             neighboringPatchIndices.add(new MatrixPosition(patchRow, patchColumn + 1));
         }
 
-        if (patchRow + 1 < this.getUniversity().getRows() && patchColumn - 1 >= 0) { // Bottom-left of patch
+        if (patchRow + 1 < this.getEnvironment().getRows() && patchColumn - 1 >= 0) { // Bottom-left of patch
             neighboringPatchIndices.add(new MatrixPosition(patchRow + 1, patchColumn - 1));
         }
 
-        if (patchRow + 1 < this.getUniversity().getRows()) { // Bottom of patch
+        if (patchRow + 1 < this.getEnvironment().getRows()) { // Bottom of patch
             neighboringPatchIndices.add(new MatrixPosition(patchRow + 1, patchColumn));
         }
 
-        if (patchRow + 1 < this.getUniversity().getRows() && patchColumn + 1 < this.getUniversity().getColumns()) { // Bottom-right of patch
+        if (patchRow + 1 < this.getEnvironment().getRows() && patchColumn + 1 < this.getEnvironment().getColumns()) { // Bottom-right of patch
             neighboringPatchIndices.add(new MatrixPosition(patchRow + 1, patchColumn + 1));
         }
 
         return neighboringPatchIndices;
     }
 
-    private List<MatrixPosition> compute7x7Neighbors() {
+    private List<MatrixPosition> compute7x7Neighbors() { // Field of vision
         int patchRow = this.matrixPosition.getRow();
         int patchColumn = this.matrixPosition.getColumn();
 
-        int truncatedX = (int) (this.getPatchCenterCoordinates().getX() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS);
-        int truncatedY = (int) (this.getPatchCenterCoordinates().getY() / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS);
+        int truncatedX = (int) (this.getPatchCenterCoordinates().getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
+        int truncatedY = (int) (this.getPatchCenterCoordinates().getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
 
         List<MatrixPosition> patchIndicesToExplore = new ArrayList<>();
 
@@ -130,7 +140,7 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
                     yCondition = truncatedY + rowOffset > 0;
                 }
                 else if (rowOffset > 0) {
-                    yCondition = truncatedY + rowOffset < university.getRows();
+                    yCondition = truncatedY + rowOffset < environment.getRows();
                 }
                 else {
                     yCondition = true;
@@ -140,7 +150,7 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
                     xCondition = truncatedX + columnOffset > 0;
                 }
                 else if (columnOffset > 0) {
-                    xCondition = truncatedX + columnOffset < university.getColumns();
+                    xCondition = truncatedX + columnOffset < environment.getColumns();
                 }
                 else {
                     xCondition = true;
@@ -155,11 +165,11 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
         return patchIndicesToExplore;
     }
 
-    public List<UniversityPatch> getNeighbors() {
-        List<UniversityPatch> neighboringPatches = new ArrayList<>();
+    public List<Patch> getNeighbors() {
+        List<Patch> neighboringPatches = new ArrayList<>();
 
         for (MatrixPosition neighboringPatchIndex : this.neighborIndices) {
-            UniversityPatch patch = this.getUniversity().getPatch(neighboringPatchIndex.getRow(), neighboringPatchIndex.getColumn());
+            Patch patch = this.getEnvironment().getPatch(neighboringPatchIndex.getRow(), neighboringPatchIndex.getColumn());
 
             if (patch != null) {
                 neighboringPatches.add(patch);
@@ -169,11 +179,11 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
         return neighboringPatches;
     }
 
-    public List<UniversityPatch> get7x7Neighbors(boolean includeCenterPatch) {
-        List<UniversityPatch> neighboringPatches = new ArrayList<>();
+    public List<Patch> get7x7Neighbors(boolean includeCenterPatch) {
+        List<Patch> neighboringPatches = new ArrayList<>();
 
         for (MatrixPosition neighboringPatchIndex : this.neighbor7x7Indices) {
-            UniversityPatch patch = this.getUniversity().getPatch(neighboringPatchIndex.getRow(), neighboringPatchIndex.getColumn());
+            Patch patch = this.getEnvironment().getPatch(neighboringPatchIndex.getRow(), neighboringPatchIndex.getColumn());
 
             if (patch != null) {
                 if (!includeCenterPatch || !patch.equals(this)) {
@@ -188,7 +198,7 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
     public void signalAddAmenityBlock() { // Signal to this patch and to its neighbors that an amenity block was added here
         this.incrementAmenityBlocksAround();
 
-        for (UniversityPatch neighbor : this.getNeighbors()) {
+        for (Patch neighbor : this.getNeighbors()) {
             neighbor.incrementAmenityBlocksAround();
         }
     }
@@ -196,7 +206,7 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
     public void signalRemoveAmenityBlock() { // Signal to this patch and to its neighbors that an amenity block was removed from here
         this.decrementAmenityBlocksAround();
 
-        for (UniversityPatch neighbor : this.getNeighbors()) {
+        for (Patch neighbor : this.getNeighbors()) {
             neighbor.decrementAmenityBlocksAround();
         }
     }
@@ -217,7 +227,7 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UniversityPatch patch = (UniversityPatch) o;
+        Patch patch = (Patch) o;
 
         return matrixPosition.equals(patch.matrixPosition);
     }
@@ -228,7 +238,7 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
     }
 
     @Override
-    public int compareTo(UniversityPatch patch) {
+    public int compareTo(Patch patch) {
         int thisRow = this.getMatrixPosition().getRow();
         int patchRow = patch.getMatrixPosition().getRow();
 
@@ -251,11 +261,11 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
         return "[" + this.getMatrixPosition().getRow() + ", " + this.getMatrixPosition().getColumn() + "]";
     }
 
-    public static class UniversityPatchPair implements Environment {
-        private final UniversityPatch patch1;
-        private final UniversityPatch patch2;
+    public static class PatchPair {
+        private final Patch patch1;
+        private final Patch patch2;
 
-        public UniversityPatchPair(UniversityPatch patch1, UniversityPatch patch2) {
+        public PatchPair(Patch patch1, Patch patch2) {
             this.patch1 = patch1;
             this.patch2 = patch2;
         }
@@ -264,7 +274,7 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            UniversityPatchPair patchPair = (UniversityPatchPair) o;
+            PatchPair patchPair = (PatchPair) o;
             return patch1.equals(patchPair.patch1) && patch2.equals(patchPair.patch2);
         }
 
@@ -294,19 +304,19 @@ public class UniversityPatch extends BaseObject implements Environment, Comparab
             return this.offset.getColumn();
         }
 
-        public static Offset getOffsetFromPatch(UniversityPatch patch, UniversityPatch reference) {
+        public static Offset getOffsetFromPatch(Patch patch, Patch reference) {
             int rowOffset = patch.getMatrixPosition().getRow() - reference.getMatrixPosition().getRow();
             int columnOffset = patch.getMatrixPosition().getColumn() - reference.getMatrixPosition().getColumn();
 
             return new Offset(rowOffset, columnOffset);
         }
 
-        public static UniversityPatch getPatchFromOffset(University university, UniversityPatch reference, Offset offset) {
+        public static Patch getPatchFromOffset(Environment environment, Patch reference, Offset offset) {
             int newRow = reference.getMatrixPosition().getRow() + offset.getRowOffset();
             int newColumn = reference.getMatrixPosition().getColumn() + offset.getColumnOffset();
 
-            if (newRow >= 0 && newRow < university.getRows() && newColumn >= 0 && newColumn < university.getColumns()) {
-                UniversityPatch patch = university.getPatch(newRow, newColumn);
+            if (newRow >= 0 && newRow < environment.getRows() && newColumn >= 0 && newColumn < environment.getColumns()) {
+                Patch patch = environment.getPatch(newRow, newColumn);
 
                 if (patch.getAmenityBlock() == null) {
                     return patch;

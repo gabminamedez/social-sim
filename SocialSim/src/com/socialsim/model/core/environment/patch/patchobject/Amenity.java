@@ -1,16 +1,15 @@
 package com.socialsim.model.core.environment.patch.patchobject;
 
-import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.university.patchobject.miscellaneous.Wall;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.model.core.environment.patch.BaseObject;
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Amenity extends PatchObject implements Environment {
+public abstract class Amenity extends PatchObject /*implements Environment*/ {
 
     private final List<AmenityBlock> amenityBlocks;
     private final List<AmenityBlock> attractors;
@@ -43,13 +42,13 @@ public abstract class Amenity extends PatchObject implements Environment {
         return attractors;
     }
 
-    public abstract static class AmenityBlock implements Environment {
+    public abstract static class AmenityBlock /*implements Environment*/ {
         private Amenity parent;
-        private final UniversityPatch patch;
+        private final Patch patch;
         private final boolean attractor;
         private final boolean hasGraphic;
 
-        protected AmenityBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+        protected AmenityBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             this.patch = patch;
             this.attractor = attractor;
             this.hasGraphic = hasGraphic;
@@ -63,7 +62,7 @@ public abstract class Amenity extends PatchObject implements Environment {
             this.parent = parent;
         }
 
-        public UniversityPatch getPatch() {
+        public Patch getPatch() {
             return patch;
         }
 
@@ -121,7 +120,7 @@ public abstract class Amenity extends PatchObject implements Environment {
         }
 
         public abstract static class AmenityBlockFactory extends BaseObject.ObjectFactory {
-            public abstract AmenityBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic);
+            public abstract AmenityBlock create(Patch patch, boolean attractor, boolean hasGraphic);
         }
     }
 

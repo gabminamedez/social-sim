@@ -2,7 +2,6 @@ package com.socialsim.controller.graphics.agent;
 
 import com.socialsim.controller.graphics.Graphic;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,7 +162,7 @@ public class AgentGraphic extends Graphic {
 //        }
     }
 
-    public static class AmenityGraphicScale implements Environment {
+    public static class AmenityGraphicScale {
         private int rowSpan;
         private int columnSpan;
 
@@ -189,7 +188,7 @@ public class AgentGraphic extends Graphic {
         }
     }
 
-    public static class AmenityGraphicOffset implements Environment {
+    public static class AmenityGraphicOffset {
         private int rowOffset;
         private int columnOffset;
 

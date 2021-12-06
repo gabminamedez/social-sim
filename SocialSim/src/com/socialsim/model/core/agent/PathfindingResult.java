@@ -1,20 +1,20 @@
 package com.socialsim.model.core.agent;
 
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
 
 import java.util.List;
 
 public class PathfindingResult {
 
-    private final List<UniversityPatch> path;
+    private final List<Patch> path;
     private final double distance;
 
-    public PathfindingResult(List<UniversityPatch> path, double distance) {
+    public PathfindingResult(List<Patch> path, double distance) {
         this.path = path;
         this.distance = distance;
     }
 
-    public List<UniversityPatch> getPath() {
+    public List<Patch> getPath() {
         return path;
     }
 

@@ -1,14 +1,13 @@
 package com.socialsim.model.core.environment.patch.patchfield.headful;
 
-import com.socialsim.model.core.environment.university.UniversityPatch;
-import com.socialsim.model.core.environment.patch.patchfield.AbstractPatchField;
+import com.socialsim.model.core.environment.patch.BaseObject;
+import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.passable.Queueable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class QueueingPatchField extends HeadfulPatchField {
 
@@ -22,7 +21,7 @@ public class QueueingPatchField extends HeadfulPatchField {
         super(target);
     }
 
-    public static boolean addPatchFieldValue(UniversityPatch patch, Queueable target, PatchFieldState patchFieldState, double value) {
+    public static boolean addPatchFieldValue(Patch patch, Queueable target, PatchFieldState patchFieldState, double value) {
         // When adding a floor field value, these things have to happen:
         //   1) Register the patch where the floor field value is to be drawn to the target queueable's floor field
         //   2) Add the floor field value to the patch itself
@@ -33,11 +32,11 @@ public class QueueingPatchField extends HeadfulPatchField {
     }
 
     // Add the patch to the floor fields kept tracked by the target queueable
-    private static boolean registerPatch(UniversityPatch patch, Queueable target, PatchFieldState patchFieldState, double value) {
+    private static boolean registerPatch(Patch patch, Queueable target, PatchFieldState patchFieldState, double value) {
         final double EPSILON = 1E-6;
 
         QueueingPatchField queueingPatchField = target.retrievePatchField(target.getQueueObject(), patchFieldState);
-        List<UniversityPatch> associatedPatches = queueingPatchField.getAssociatedPatches();
+        List<Patch> associatedPatches = queueingPatchField.getAssociatedPatches();
 
         Amenity amenity = ((Amenity) target);
 
@@ -70,7 +69,7 @@ public class QueueingPatchField extends HeadfulPatchField {
     }
 
     // Remove the patch from the floor fields kept tracked on by the target queueable
-    private static void unregisterPatch(UniversityPatch patch, Queueable target, PatchFieldState patchFieldState, double value) {
+    private static void unregisterPatch(Patch patch, Queueable target, PatchFieldState patchFieldState, double value) {
         final double EPSILON = 1E-6;
 
         QueueingPatchField queueingPatchField = target.retrievePatchField(target.getQueueObject(), patchFieldState);
@@ -83,7 +82,7 @@ public class QueueingPatchField extends HeadfulPatchField {
     }
 
     // In a given patch, delete an individual floor field value in a floor field owned by a given target
-    public static void deletePatchFieldValue(UniversityPatch patch, Queueable target, PatchFieldState patchFieldState) {
+    public static void deletePatchFieldValue(Patch patch, Queueable target, PatchFieldState patchFieldState) {
         // When deleting a floor field value, these things have to happen:
         //   1) Unregister the patch where the floor field value to be deleted is from the target queueable's floor
         //      field
@@ -99,19 +98,19 @@ public class QueueingPatchField extends HeadfulPatchField {
     // Clear the given floor field
     public static void clearPatchField(QueueingPatchField queueingPatchField, PatchFieldState patchFieldState) {
         // In each patch in the floor field to be deleted, delete the reference to its target. This deletes the value within that patch. Note that deletion should only be done when the patch contains a floor field value in the given floor field state.
-        List<UniversityPatch> associatedPatches = queueingPatchField.getAssociatedPatches();
+        List<Patch> associatedPatches = queueingPatchField.getAssociatedPatches();
         Queueable target = queueingPatchField.getTarget();
 
-        List<UniversityPatch> associatedPatchesCopy = new ArrayList<>(associatedPatches);
+        List<Patch> associatedPatchesCopy = new ArrayList<>(associatedPatches);
 
-        for (UniversityPatch patch : associatedPatchesCopy) {
+        for (Patch patch : associatedPatchesCopy) {
             QueueingPatchField.deletePatchFieldValue(patch, target, patchFieldState);
         }
 
         associatedPatchesCopy.clear();
     }
 
-    public static class PatchFieldState extends AbstractPatchField { // A combination of a passenger's direction, state, and current target, this object is used for the differentiation of floor fields
+    public static class PatchFieldState extends BaseObject { // A combination of a passenger's direction, state, and current target, this object is used for the differentiation of floor fields
         public PatchFieldState() {
         }
 

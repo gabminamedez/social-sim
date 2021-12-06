@@ -1,8 +1,6 @@
 package com.socialsim.controller.graphics;
 
-import com.socialsim.model.core.environment.Environment;
-
-public abstract class GraphicLocation implements Environment {
+public abstract class GraphicLocation {
 
     protected final int graphicRow;
     protected final int graphicColumn;

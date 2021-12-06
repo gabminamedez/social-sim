@@ -3,7 +3,7 @@ package com.socialsim.model.core.environment.university.patchobject.passable.goa
 import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.ProfTableGraphic;
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
 
@@ -47,13 +47,13 @@ public class ProfTable extends Goal {
             profTableBlockFactory = new ProfTable.ProfTableBlock.ProfTableBlockFactory();
         }
 
-        private ProfTableBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+        private ProfTableBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             super(patch, attractor, hasGraphic);
         }
 
         public static class ProfTableBlockFactory extends Amenity.AmenityBlock.AmenityBlockFactory {
             @Override
-            public ProfTable.ProfTableBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+            public ProfTable.ProfTableBlock create(Patch patch, boolean attractor, boolean hasGraphic) {
                 return new ProfTable.ProfTableBlock(patch, attractor, hasGraphic);
             }
         }

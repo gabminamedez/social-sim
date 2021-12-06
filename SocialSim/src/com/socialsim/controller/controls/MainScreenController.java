@@ -5,7 +5,10 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.graphics.GraphicsController;
 import com.socialsim.controller.graphics.amenity.University.mapper.*;
 import com.socialsim.model.core.environment.university.University;
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.university.patchfield.Bathroom;
+import com.socialsim.model.core.environment.university.patchfield.Classroom;
+import com.socialsim.model.core.environment.university.patchfield.Laboratory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -52,8 +55,8 @@ public class MainScreenController extends Controller {
     public void initialize() {
         int width = 40; // Value may be from 25-100
         int length = 100; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS); // 67 rows
-        int columns = (int) Math.ceil(length / UniversityPatch.PATCH_SIZE_IN_SQUARE_METERS); // 167 cols
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 67 rows
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 167 cols
         University university = new University(rows, columns);
         initializeUniversity(university);
         setElements();
@@ -62,105 +65,131 @@ public class MainScreenController extends Controller {
     public void initializeUniversity(University university) {
         Main.simulator.resetToDefaultConfiguration(university);
         GraphicsController.tileSize = backgroundCanvas.getHeight() / Main.simulator.getUniversity().getRows();
-        mapUniversityAmenities();
+        mapUniversity();
         drawInterface();
     }
 
-    public void mapUniversityAmenities() {
+    public void mapUniversity() {
         University university = Main.simulator.getUniversity();
-        List<UniversityPatch> patches = new ArrayList<>();
+
+        List<Patch> classroomPatches = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 20; j++) {
+                classroomPatches.add(university.getPatch(i, j));
+            }
+        }
+        Classroom.classroomFactory.create(classroomPatches);
+
+        List<Patch> bathroomPatches = new ArrayList<>();
+        for (int i = 20; i < 40; i++) {
+            for (int j = 20; j < 40; j++) {
+                bathroomPatches.add(university.getPatch(i, j));
+            }
+        }
+        Bathroom.bathroomFactory.create(false, bathroomPatches);
+
+        List<Patch> laboratoryPatches = new ArrayList<>();
+        for (int i = 40; i < 60; i++) {
+            for (int j = 40; j < 60; j++) {
+                laboratoryPatches.add(university.getPatch(i, j));
+            }
+        }
+        Laboratory.laboratoryFactory.create(laboratoryPatches);
+
+        List<Patch> patches = new ArrayList<>();
         patches.add(university.getPatch(0,0));
         patches.add(university.getPatch(1,0));
         patches.add(university.getPatch(0,1));
         WallMapper.draw(patches);
 
-        List<UniversityPatch> patches2 = new ArrayList<>();
+        List<Patch> patches2 = new ArrayList<>();
         patches2.add(university.getPatch(2,2));
         patches2.add(university.getPatch(2,0));
         patches2.add(university.getPatch(0,2));
         ChairMapper.draw(patches2);
 
-        List<UniversityPatch> patches3 = new ArrayList<>();
+        List<Patch> patches3 = new ArrayList<>();
         patches3.add(university.getPatch(3,3));
         patches3.add(university.getPatch(3,0));
         patches3.add(university.getPatch(0,3));
         FountainMapper.draw(patches3);
 
-        List<UniversityPatch> patches4 = new ArrayList<>();
+        List<Patch> patches4 = new ArrayList<>();
         patches4.add(university.getPatch(4,4));
         patches4.add(university.getPatch(4,0));
         patches4.add(university.getPatch(0,4));
         TrashMapper.draw(patches4);
 
-        List<UniversityPatch> patches5 = new ArrayList<>();
+        List<Patch> patches5 = new ArrayList<>();
         patches5.add(university.getPatch(5,5));
+        patches5.add(university.getPatch(7,5));
         SecurityMapper.draw(patches5);
 
-        List<UniversityPatch> patches6 = new ArrayList<>();
+        List<Patch> patches6 = new ArrayList<>();
         patches6.add(university.getPatch(6,6));
         StaircaseMapper.draw(patches6);
 
-        List<UniversityPatch> patches7 = new ArrayList<>();
+        List<Patch> patches7 = new ArrayList<>();
         patches7.add(university.getPatch(7,7));
         LabTableMapper.draw(patches7);
 
-        List<UniversityPatch> patches8 = new ArrayList<>();
+        List<Patch> patches8 = new ArrayList<>();
         patches8.add(university.getPatch(8,8));
         BenchMapper.draw(patches8, "RIGHT");
 
-        List<UniversityPatch> patches9 = new ArrayList<>();
+        List<Patch> patches9 = new ArrayList<>();
         patches9.add(university.getPatch(9,9));
         BenchMapper.draw(patches9, "DOWN");
 
-        List<UniversityPatch> patches10 = new ArrayList<>();
+        List<Patch> patches10 = new ArrayList<>();
         patches10.add(university.getPatch(10,10));
         ProfTableMapper.draw(patches10, "LEFT");
 
-        List<UniversityPatch> patches11 = new ArrayList<>();
+        List<Patch> patches11 = new ArrayList<>();
         patches11.add(university.getPatch(11,11));
         ProfTableMapper.draw(patches11, "UP");
 
-        List<UniversityPatch> patches12 = new ArrayList<>();
+        List<Patch> patches12 = new ArrayList<>();
         patches12.add(university.getPatch(12,12));
         UniversityGateMapper.draw(patches12);
 
-        List<UniversityPatch> patches13 = new ArrayList<>();
+        List<Patch> patches13 = new ArrayList<>();
         patches13.add(university.getPatch(13,13));
         DoorMapper.draw(patches13, "RIGHT");
 
-        List<UniversityPatch> patches14 = new ArrayList<>();
+        List<Patch> patches14 = new ArrayList<>();
         patches14.add(university.getPatch(14,14));
         DoorMapper.draw(patches14, "DOWN");
 
-        List<UniversityPatch> patches15 = new ArrayList<>();
+        List<Patch> patches15 = new ArrayList<>();
         patches15.add(university.getPatch(15,15));
         BoardMapper.draw(patches15, "LEFT");
 
-        List<UniversityPatch> patches16 = new ArrayList<>();
+        List<Patch> patches16 = new ArrayList<>();
         patches16.add(university.getPatch(16,16));
         BoardMapper.draw(patches16, "UP");
 
-        List<UniversityPatch> patches17 = new ArrayList<>();
+        List<Patch> patches17 = new ArrayList<>();
         patches17.add(university.getPatch(17,17));
         BoardMapper.draw(patches17, "RIGHT");
 
-        List<UniversityPatch> patches18 = new ArrayList<>();
+        List<Patch> patches18 = new ArrayList<>();
         patches18.add(university.getPatch(18,18));
         BoardMapper.draw(patches18, "DOWN");
 
-        List<UniversityPatch> patches19 = new ArrayList<>();
+        List<Patch> patches19 = new ArrayList<>();
         patches19.add(university.getPatch(19,19));
         BulletinMapper.draw(patches19, "LEFT");
 
-        List<UniversityPatch> patches20 = new ArrayList<>();
+        List<Patch> patches20 = new ArrayList<>();
         patches20.add(university.getPatch(20,20));
         BulletinMapper.draw(patches20, "UP");
 
-        List<UniversityPatch> patches21 = new ArrayList<>();
+        List<Patch> patches21 = new ArrayList<>();
         patches21.add(university.getPatch(21,21));
         BulletinMapper.draw(patches21, "RIGHT");
 
-        List<UniversityPatch> patches22 = new ArrayList<>();
+        List<Patch> patches22 = new ArrayList<>();
         patches22.add(university.getPatch(22,22));
         BulletinMapper.draw(patches22, "DOWN");
     }

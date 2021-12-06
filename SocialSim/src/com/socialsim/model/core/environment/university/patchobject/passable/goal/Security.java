@@ -4,7 +4,7 @@ import com.socialsim.model.core.environment.patch.patchfield.headful.QueueObject
 import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.SecurityGraphic;
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchfield.headful.QueueingPatchField;
 import com.socialsim.model.core.environment.patch.patchobject.passable.goal.BlockableAmenity;
 import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
@@ -111,13 +111,13 @@ public class Security extends BlockableAmenity {
             securityBlockFactory = new SecurityBlockFactory();
         }
 
-        private SecurityBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+        private SecurityBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             super(patch, attractor, hasGraphic);
         }
 
         public static class SecurityBlockFactory extends AmenityBlockFactory {
             @Override
-            public SecurityBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+            public SecurityBlock create(Patch patch, boolean attractor, boolean hasGraphic) {
                 return new SecurityBlock(patch, attractor, hasGraphic);
             }
         }

@@ -3,7 +3,7 @@ package com.socialsim.model.core.environment.university.patchobject.passable.goa
 import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.BenchGraphic;
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
 
@@ -47,13 +47,13 @@ public class Bench extends Goal {
             benchBlockFactory = new Bench.BenchBlock.BenchBlockFactory();
         }
 
-        private BenchBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+        private BenchBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             super(patch, attractor, hasGraphic);
         }
 
         public static class BenchBlockFactory extends Amenity.AmenityBlock.AmenityBlockFactory {
             @Override
-            public Bench.BenchBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+            public Bench.BenchBlock create(Patch patch, boolean attractor, boolean hasGraphic) {
                 return new Bench.BenchBlock(patch, attractor, hasGraphic);
             }
         }

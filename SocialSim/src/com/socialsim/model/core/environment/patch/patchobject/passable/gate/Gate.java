@@ -1,6 +1,6 @@
 package com.socialsim.model.core.environment.patch.patchobject.passable.gate;
 
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Drawable;
 import com.socialsim.model.core.environment.patch.patchobject.passable.NonObstacle;
 import com.socialsim.model.core.agent.Agent;
@@ -44,7 +44,7 @@ public abstract class Gate extends NonObstacle implements Drawable {
     public static abstract class GateBlock extends AmenityBlock {
         private final boolean spawner;
 
-        public GateBlock(UniversityPatch patch, boolean attractor, boolean spawner, boolean hasGraphic) {
+        public GateBlock(Patch patch, boolean attractor, boolean spawner, boolean hasGraphic) {
             super(patch, attractor, hasGraphic);
 
             this.spawner = spawner;
@@ -55,7 +55,7 @@ public abstract class Gate extends NonObstacle implements Drawable {
         }
 
         public static abstract class GateBlockFactory extends AmenityBlockFactory {
-            public abstract GateBlock create(UniversityPatch patch, boolean attractor, boolean spawner, boolean hasGraphic);
+            public abstract GateBlock create(Patch patch, boolean attractor, boolean spawner, boolean hasGraphic);
         }
     }
 

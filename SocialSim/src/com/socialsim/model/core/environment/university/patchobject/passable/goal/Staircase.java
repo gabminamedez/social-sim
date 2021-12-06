@@ -3,7 +3,7 @@ package com.socialsim.model.core.environment.university.patchobject.passable.goa
 import com.socialsim.controller.graphics.amenity.AmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.graphics.amenity.University.StaircaseGraphic;
-import com.socialsim.model.core.environment.university.UniversityPatch;
+import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
 import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
 
@@ -47,13 +47,13 @@ public class Staircase extends Goal {
             staircaseBlockFactory = new Staircase.StaircaseBlock.StaircaseBlockFactory();
         }
 
-        private StaircaseBlock(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+        private StaircaseBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             super(patch, attractor, hasGraphic);
         }
 
         public static class StaircaseBlockFactory extends Amenity.AmenityBlock.AmenityBlockFactory {
             @Override
-            public Staircase.StaircaseBlock create(UniversityPatch patch, boolean attractor, boolean hasGraphic) {
+            public Staircase.StaircaseBlock create(Patch patch, boolean attractor, boolean hasGraphic) {
                 return new Staircase.StaircaseBlock(patch, attractor, hasGraphic);
             }
         }
