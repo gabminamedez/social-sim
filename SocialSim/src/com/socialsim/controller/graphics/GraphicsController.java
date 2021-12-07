@@ -17,6 +17,7 @@ import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.university.patchfield.Bathroom;
 import com.socialsim.model.core.environment.university.patchfield.Classroom;
 import com.socialsim.model.core.environment.university.patchfield.Laboratory;
+import com.socialsim.model.core.environment.university.patchfield.Wall;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -163,25 +164,32 @@ public class GraphicsController extends Controller {
                 }
             }
 
-            if (patchPatchField.getClass() == Bathroom.class) {
-                if (((Bathroom) patchPatchField).getIsFemale()) {
-                    patchColor = Color.rgb(232, 116, 206);
+            if (patchPatchField != null) {
+                if (patchPatchField.getClass() == Bathroom.class) {
+                    if (((Bathroom) patchPatchField).getIsFemale()) {
+                        patchColor = Color.rgb(232, 116, 206);
+                    }
+                    else {
+                        patchColor = Color.rgb(118, 237, 244);
+                    }
+                    backgroundGraphicsContext.setFill(patchColor);
+                    backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }
-                else {
-                    patchColor = Color.rgb(118, 237, 244);
+                else if(patchPatchField.getClass() == Classroom.class) {
+                    patchColor = Color.rgb(243, 222, 206);
+                    backgroundGraphicsContext.setFill(patchColor);
+                    backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }
-                backgroundGraphicsContext.setFill(patchColor);
-                backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
-            }
-            else if(patchPatchField.getClass() == Classroom.class) {
-                patchColor = Color.rgb(243, 222, 206);
-                backgroundGraphicsContext.setFill(patchColor);
-                backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
-            }
-            else if(patchPatchField.getClass() == Laboratory.class) {
-                patchColor = Color.rgb(28, 39, 137);
-                backgroundGraphicsContext.setFill(patchColor);
-                backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+                else if(patchPatchField.getClass() == Laboratory.class) {
+                    patchColor = Color.rgb(28, 39, 137);
+                    backgroundGraphicsContext.setFill(patchColor);
+                    backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+                }
+                else if (patchPatchField.getClass() == Wall.class) {
+                    patchColor = Color.rgb(104, 101, 101);
+                    backgroundGraphicsContext.setFill(patchColor);
+                    backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+                }
             }
 
             if (!background) { // Draw each agent in this patch, if the foreground is to be drawn

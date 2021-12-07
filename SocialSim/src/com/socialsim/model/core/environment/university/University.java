@@ -5,7 +5,6 @@ import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.patch.BaseObject;
 import com.socialsim.model.core.environment.patch.Patch;
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
-import com.socialsim.model.core.environment.university.patchobject.miscellaneous.Wall;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 
@@ -18,7 +17,6 @@ public class University extends Environment {
     private final SortedSet<Patch> amenityPatchSet;
     private final SortedSet<Patch> agentPatchSet;
 
-    private final List<Wall> walls;
     private final List<UniversityGate> universityGates;
     private final List<Bench> benches;
     private final List<Board> boards;
@@ -47,7 +45,6 @@ public class University extends Environment {
         this.amenityPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
         this.agentPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
 
-        this.walls = Collections.synchronizedList(new ArrayList<>());
         this.universityGates = Collections.synchronizedList(new ArrayList<>());
         this.benches = Collections.synchronizedList(new ArrayList<>());
         this.boards = Collections.synchronizedList(new ArrayList<>());
@@ -75,10 +72,6 @@ public class University extends Environment {
     @Override
     public SortedSet<Patch> getAgentPatchSet() {
         return agentPatchSet;
-    }
-
-    public List<Wall> getWalls() {
-        return walls;
     }
 
     public List<UniversityGate> getUniversityGates() {
@@ -134,10 +127,7 @@ public class University extends Environment {
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {
-        if (amenityClass == Wall.class) {
-            return this.getWalls();
-        }
-        else if (amenityClass == UniversityGate.class) {
+        if (amenityClass == UniversityGate.class) {
             return this.getUniversityGates();
         }
         else if (amenityClass == Bench.class) {

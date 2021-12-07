@@ -14,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Patch extends BaseObject implements Comparable<Patch> {
 
-    public static final double PATCH_SIZE_IN_SQUARE_METERS = 0.6;
+    public static final double PATCH_SIZE_IN_SQUARE_METERS = 1.0;
     private final MatrixPosition matrixPosition;
     private final Coordinates patchCenterCoordinates;
     private final CopyOnWriteArrayList<Agent> agents;

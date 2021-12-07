@@ -1,6 +1,5 @@
 package com.socialsim.model.core.environment.patch.patchobject;
 
-import com.socialsim.model.core.environment.university.patchobject.miscellaneous.Wall;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.model.core.environment.patch.BaseObject;
@@ -9,7 +8,7 @@ import com.socialsim.model.core.environment.patch.Patch;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Amenity extends PatchObject /*implements Environment*/ {
+public abstract class Amenity extends PatchObject {
 
     private final List<AmenityBlock> amenityBlocks;
     private final List<AmenityBlock> attractors;
@@ -42,7 +41,7 @@ public abstract class Amenity extends PatchObject /*implements Environment*/ {
         return attractors;
     }
 
-    public abstract static class AmenityBlock /*implements Environment*/ {
+    public abstract static class AmenityBlock {
         private Amenity parent;
         private final Patch patch;
         private final boolean attractor;
@@ -75,9 +74,6 @@ public abstract class Amenity extends PatchObject /*implements Environment*/ {
         }
 
         private static AmenityBlockFactory getAmenityBlockFactory(Class<? extends Amenity> amenityClass) {
-            if (amenityClass == Wall.class) {
-                return Wall.WallBlock.wallBlockFactory;
-            }
             if (amenityClass == UniversityGate.class) {
                 return UniversityGate.UniversityGateBlock.universityGateBlockFactory;
             }

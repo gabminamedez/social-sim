@@ -1,7 +1,6 @@
 package com.socialsim.controller.graphics.amenity;
 
 import com.socialsim.model.core.environment.patch.patchobject.Amenity;
-import com.socialsim.model.core.environment.university.patchobject.miscellaneous.Wall;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.controller.graphics.Graphic;
@@ -16,10 +15,6 @@ public abstract class AmenityGraphic extends Graphic {
     public static final HashMap<Class<?>, List<AmenityGraphicLocation>> AMENITY_GRAPHICS = new HashMap<>();
 
     static {
-        final List<AmenityGraphicLocation> wallGraphic = new ArrayList<>();
-        wallGraphic.add(new AmenityGraphicLocation(0, 1));
-        AMENITY_GRAPHICS.put(Wall.class, wallGraphic);
-
         final List<AmenityGraphicLocation> universityGateGraphic = new ArrayList<>();
         universityGateGraphic.add(new AmenityGraphicLocation(8, 2));
         AMENITY_GRAPHICS.put(UniversityGate.class, universityGateGraphic);
