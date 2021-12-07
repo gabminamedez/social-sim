@@ -16,7 +16,7 @@ public abstract class AmenityGraphic extends Graphic {
 
     static {
         final List<AmenityGraphicLocation> universityGateGraphic = new ArrayList<>();
-        universityGateGraphic.add(new AmenityGraphicLocation(8, 2));
+        universityGateGraphic.add(new AmenityGraphicLocation(12, 2));
         AMENITY_GRAPHICS.put(UniversityGate.class, universityGateGraphic);
 
         final List<AmenityGraphicLocation> benchGraphic = new ArrayList<>();
@@ -26,16 +26,16 @@ public abstract class AmenityGraphic extends Graphic {
 
         final List<AmenityGraphicLocation> boardGraphic = new ArrayList<>();
         boardGraphic.add(new AmenityGraphicLocation(4, 0)); // Horizontal; Facing down
-        boardGraphic.add(new AmenityGraphicLocation(4, 2)); // Vertical; Facing right
-        boardGraphic.add(new AmenityGraphicLocation(4, 3)); // Vertical; Facing left
-        boardGraphic.add(new AmenityGraphicLocation(5, 0)); // Horizontal; Facing up
+        boardGraphic.add(new AmenityGraphicLocation(4, 2)); // Horizontal; Facing up
+        boardGraphic.add(new AmenityGraphicLocation(6, 0)); // Vertical; Facing right
+        boardGraphic.add(new AmenityGraphicLocation(6, 2)); // Vertical; Facing left
         AMENITY_GRAPHICS.put(Board.class, boardGraphic);
 
         final List<AmenityGraphicLocation> bulletinGraphic = new ArrayList<>();
-        bulletinGraphic.add(new AmenityGraphicLocation(6, 0)); // Horizontal; Facing down
-        bulletinGraphic.add(new AmenityGraphicLocation(6, 2)); // Vertical; Facing right
-        bulletinGraphic.add(new AmenityGraphicLocation(6, 3)); // Vertical; Facing left
-        bulletinGraphic.add(new AmenityGraphicLocation(7, 0)); // Horizontal; Facing up
+        bulletinGraphic.add(new AmenityGraphicLocation(8, 0)); // Horizontal; Facing down
+        bulletinGraphic.add(new AmenityGraphicLocation(8, 2)); // Horizontal; Facing up
+        bulletinGraphic.add(new AmenityGraphicLocation(10, 0)); // Vertical; Facing right
+        bulletinGraphic.add(new AmenityGraphicLocation(10, 2)); // Vertical; Facing left
         AMENITY_GRAPHICS.put(Bulletin.class, bulletinGraphic);
 
         final List<AmenityGraphicLocation> chairGraphic = new ArrayList<>();
@@ -43,8 +43,8 @@ public abstract class AmenityGraphic extends Graphic {
         AMENITY_GRAPHICS.put(Chair.class, chairGraphic);
 
         final List<AmenityGraphicLocation> doorGraphic = new ArrayList<>();
-        doorGraphic.add(new AmenityGraphicLocation(9, 2)); // Horizontal
-        doorGraphic.add(new AmenityGraphicLocation(10, 0)); // Vertical
+        doorGraphic.add(new AmenityGraphicLocation(13, 2)); // Horizontal
+        doorGraphic.add(new AmenityGraphicLocation(14, 0)); // Vertical
         AMENITY_GRAPHICS.put(Door.class, doorGraphic);
 
         final List<AmenityGraphicLocation> fountainGraphic = new ArrayList<>();
@@ -52,7 +52,7 @@ public abstract class AmenityGraphic extends Graphic {
         AMENITY_GRAPHICS.put(Fountain.class, fountainGraphic);
 
         final List<AmenityGraphicLocation> labTableGraphic = new ArrayList<>();
-        labTableGraphic.add(new AmenityGraphicLocation(8, 0));
+        labTableGraphic.add(new AmenityGraphicLocation(12, 0));
         AMENITY_GRAPHICS.put(LabTable.class, labTableGraphic);
 
         final List<AmenityGraphicLocation> profTableGraphic = new ArrayList<>();

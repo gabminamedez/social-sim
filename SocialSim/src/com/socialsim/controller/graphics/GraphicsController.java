@@ -181,7 +181,7 @@ public class GraphicsController extends Controller {
                     backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }
                 else if(patchPatchField.getClass() == Laboratory.class) {
-                    patchColor = Color.rgb(28, 39, 137);
+                    patchColor = Color.rgb(225, 220, 218);
                     backgroundGraphicsContext.setFill(patchColor);
                     backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }

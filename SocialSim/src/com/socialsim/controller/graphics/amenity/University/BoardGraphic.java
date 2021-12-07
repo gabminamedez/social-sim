@@ -23,10 +23,10 @@ public class BoardGraphic extends AmenityGraphic {
                 NORMAL_ROW_OFFSET, NORMAL_COLUMN_OFFSET);
 
         switch (facing) {
-            case "UP" -> this.graphicIndex = 3;
-            case "RIGHT" -> this.graphicIndex = 1;
+            case "UP" -> this.graphicIndex = 1;
+            case "RIGHT" -> this.graphicIndex = 2;
             case "DOWN" -> this.graphicIndex = 0;
-            case "LEFT" -> this.graphicIndex = 2;
+            case "LEFT" -> this.graphicIndex = 3;
         }
     }
 
