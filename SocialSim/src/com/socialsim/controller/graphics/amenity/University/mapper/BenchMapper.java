@@ -24,16 +24,36 @@ public class BenchMapper extends AmenityMapper {
             patch.setAmenityBlock(amenityBlock);
 
             if(facing.equals("UP") || facing.equals("DOWN")) { // Horizontal
-                Patch rightPatch = Main.simulator.getUniversity().getPatch(origPatchRow, origPatchCol + 1);
-                Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(rightPatch, true, false);
+                Patch patch2 = Main.simulator.getUniversity().getPatch(origPatchRow, origPatchCol + 1);
+                Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(patch2, true, false);
                 amenityBlocks.add(amenityBlock2);
-                rightPatch.setAmenityBlock(amenityBlock2);
+                patch2.setAmenityBlock(amenityBlock2);
+
+                Patch patch3 = Main.simulator.getUniversity().getPatch(origPatchRow, origPatchCol + 2);
+                Amenity.AmenityBlock amenityBlock3 = amenityBlockFactory.create(patch3, true, true);
+                amenityBlocks.add(amenityBlock3);
+                patch3.setAmenityBlock(amenityBlock3);
+
+                Patch patch4 = Main.simulator.getUniversity().getPatch(origPatchRow, origPatchCol + 3);
+                Amenity.AmenityBlock amenityBlock4 = amenityBlockFactory.create(patch4, true, false);
+                amenityBlocks.add(amenityBlock4);
+                patch4.setAmenityBlock(amenityBlock4);
             }
             else {
-                Patch lowerPatch = Main.simulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
-                Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(lowerPatch, true, false);
+                Patch patch2 = Main.simulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
+                Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(patch2, true, false);
                 amenityBlocks.add(amenityBlock2);
-                lowerPatch.setAmenityBlock(amenityBlock2);
+                patch2.setAmenityBlock(amenityBlock2);
+
+                Patch patch3 = Main.simulator.getUniversity().getPatch(origPatchRow + 2, origPatchCol);
+                Amenity.AmenityBlock amenityBlock3 = amenityBlockFactory.create(patch3, true, true);
+                amenityBlocks.add(amenityBlock3);
+                patch3.setAmenityBlock(amenityBlock3);
+
+                Patch patch4 = Main.simulator.getUniversity().getPatch(origPatchRow + 3, origPatchCol);
+                Amenity.AmenityBlock amenityBlock4 = amenityBlockFactory.create(patch4, true, false);
+                amenityBlocks.add(amenityBlock4);
+                patch4.setAmenityBlock(amenityBlock4);
             }
 
             Bench benchToAdd = Bench.BenchFactory.create(amenityBlocks, true, facing);
