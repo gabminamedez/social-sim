@@ -5,7 +5,7 @@ import com.socialsim.model.core.environment.generic.patchobject.Drawable;
 import com.socialsim.model.core.environment.generic.patchobject.passable.Queueable;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
-import com.socialsim.model.simulator.Simulator;
+import com.socialsim.model.simulator.UniversitySimulator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +48,7 @@ public abstract class QueueableGoal extends NonObstacle implements Queueable, Dr
 
         double standardDeviation = 15.2;
 
-        double computedWaitingTime = Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * standardDeviation + this.waitingTime;
+        double computedWaitingTime = UniversitySimulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * standardDeviation + this.waitingTime;
 
         int waitingTimeLeft = (int) Math.round(computedWaitingTime);
 

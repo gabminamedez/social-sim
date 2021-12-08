@@ -1,8 +1,8 @@
 package com.socialsim.model.core.environment.university.patchobject.passable.goal;
 
-import com.socialsim.controller.graphics.amenity.university.UniversityAmenityGraphic;
-import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.controller.graphics.amenity.university.graphic.ProfTableGraphic;
+import com.socialsim.controller.university.graphics.UniversityAmenityGraphic;
+import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
+import com.socialsim.controller.university.graphics.amenity.graphic.ProfTableGraphic;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Goal;

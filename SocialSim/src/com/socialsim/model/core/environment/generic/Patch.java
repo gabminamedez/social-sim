@@ -81,6 +81,10 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         return environment;
     }
 
+    public void addAgent(Agent newAgent) {
+        this.agents.add(newAgent);
+    }
+
     private List<MatrixPosition> computeNeighboringPatches() {
         int patchRow = this.matrixPosition.getRow();
         int patchColumn = this.matrixPosition.getColumn();

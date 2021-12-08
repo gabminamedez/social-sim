@@ -1,8 +1,8 @@
 package com.socialsim.model.core.environment.university.patchobject.passable.gate;
 
-import com.socialsim.controller.graphics.amenity.university.UniversityAmenityGraphic;
-import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.controller.graphics.amenity.university.graphic.UniversityGateGraphic;
+import com.socialsim.controller.university.graphics.UniversityAmenityGraphic;
+import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
+import com.socialsim.controller.university.graphics.amenity.graphic.UniversityGateGraphic;
 import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;

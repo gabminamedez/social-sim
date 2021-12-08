@@ -1,9 +1,9 @@
 package com.socialsim.controller;
 
-import com.socialsim.controller.controls.UniversityScreenController;
-import com.socialsim.controller.controls.ScreenController;
-import com.socialsim.controller.controls.WelcomeScreenController;
-import com.socialsim.model.simulator.Simulator;
+import com.socialsim.controller.university.controls.UniversityScreenController;
+import com.socialsim.controller.generic.controls.ScreenController;
+import com.socialsim.controller.generic.controls.WelcomeScreenController;
+import com.socialsim.model.simulator.UniversitySimulator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,9 +11,11 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    public static Simulator simulator = null;
+    public static UniversitySimulator universitySimulator = null;
     public static boolean hasMadeChoice = false;
-    public static UniversityScreenController mainScreenController;
+    public static FXMLLoader mainScreenLoader;
+    public static Parent mainRoot;
+    public static ScreenController mainScreenController;
 
     public static void main(String[] args) {
         launch(args);
@@ -26,10 +28,6 @@ public class Main extends Application {
         FXMLLoader welcomeInterfaceLoader = ScreenController.getLoader(getClass(), "/com/socialsim/view/WelcomeScreen.fxml");
         Parent welcomeRoot = welcomeInterfaceLoader.load();
         WelcomeScreenController welcomeScreenController = welcomeInterfaceLoader.getController();
-
-        FXMLLoader mainInterfaceLoader = null;
-        Parent mainRoot = null;
-        UniversityScreenController mainController = null;
 
         while (true) {
             welcomeScreenController.setClosedWithAction(false);
@@ -51,7 +49,9 @@ public class Main extends Application {
                     break;
                 }
                 else if (WelcomeScreenController.environment.equals("University")) {
-                    mainInterfaceLoader = ScreenController.getLoader(getClass(), "/com/socialsim/view/UniversityScreen.fxml");
+                    mainScreenLoader = ScreenController.getLoader(getClass(), "/com/socialsim/view/UniversityScreen.fxml");
+                    mainRoot = mainScreenLoader.load();
+                    mainScreenController = (UniversityScreenController) mainScreenLoader.getController();
                 }
             }
             else if (!welcomeScreenController.isClosedWithAction()) {
@@ -62,15 +62,12 @@ public class Main extends Application {
                 break;
             }
 
-            mainRoot = mainInterfaceLoader.load();
-            mainController = mainInterfaceLoader.getController();
-            Main.mainScreenController = mainController;
-            mainController.showWindow(mainRoot, "University SocialSim", true, false);
+            mainScreenController.showWindow(mainRoot, "University SocialSim", true, false);
         }
     }
 
     private void initializeSimulator() {
-        simulator = new Simulator();
+        universitySimulator = new UniversitySimulator();
     }
 
 }
