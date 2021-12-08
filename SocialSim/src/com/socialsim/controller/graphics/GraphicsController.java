@@ -2,18 +2,18 @@ package com.socialsim.controller.graphics;
 
 import com.socialsim.controller.Controller;
 import com.socialsim.controller.Main;
-import com.socialsim.controller.graphics.agent.AgentGraphic;
-import com.socialsim.controller.graphics.amenity.AmenityGraphic;
+import com.socialsim.controller.graphics.agent.university.UniversityAgentGraphic;
+import com.socialsim.controller.graphics.amenity.university.UniversityAmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.model.core.environment.patch.patchfield.PatchField;
-import com.socialsim.model.core.environment.patch.patchobject.Amenity;
-import com.socialsim.model.core.environment.patch.patchobject.Drawable;
-import com.socialsim.model.core.environment.patch.patchobject.passable.NonObstacle;
-import com.socialsim.model.core.environment.patch.position.Coordinates;
-import com.socialsim.model.core.environment.patch.position.Location;
-import com.socialsim.model.core.environment.patch.position.MatrixPosition;
+import com.socialsim.model.core.environment.generic.patchfield.PatchField;
+import com.socialsim.model.core.environment.generic.patchobject.Amenity;
+import com.socialsim.model.core.environment.generic.patchobject.Drawable;
+import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
+import com.socialsim.model.core.environment.generic.position.Coordinates;
+import com.socialsim.model.core.environment.generic.position.Location;
+import com.socialsim.model.core.environment.generic.position.MatrixPosition;
 import com.socialsim.model.core.environment.university.University;
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.patchfield.Bathroom;
 import com.socialsim.model.core.environment.university.patchfield.Classroom;
 import com.socialsim.model.core.environment.university.patchfield.Laboratory;
@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 
 public class GraphicsController extends Controller {
 
-    private static final Image AMENITY_SPRITE_SHEET = new Image(AmenityGraphic.AMENITY_SPRITE_SHEET_URL);
-    private static final Image AGENT_SPRITE_SHEET = new Image(AgentGraphic.AGENT_SPRITE_SHEET_URL);
+    private static final Image AMENITY_SPRITE_SHEET = new Image(UniversityAmenityGraphic.AMENITY_SPRITE_SHEET_URL);
+    private static final Image AGENT_SPRITE_SHEET = new Image(UniversityAgentGraphic.AGENT_SPRITE_SHEET_URL);
     public static List<Amenity.AmenityBlock> firstPortalAmenityBlocks;
     public static double tileSize;
     private static boolean isDrawingStraightX;

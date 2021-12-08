@@ -1,10 +1,7 @@
 package com.socialsim.model.simulator;
 
 import com.socialsim.controller.Main;
-import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.patch.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.university.University;
-import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;

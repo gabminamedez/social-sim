@@ -1,13 +1,13 @@
 package com.socialsim.model.core.environment.university.patchobject.passable.goal;
 
-import com.socialsim.model.core.environment.patch.patchfield.headful.QueueObject;
-import com.socialsim.controller.graphics.amenity.AmenityGraphic;
+import com.socialsim.model.core.environment.generic.patchfield.headful.QueueObject;
+import com.socialsim.controller.graphics.amenity.university.UniversityAmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.controller.graphics.amenity.University.SecurityGraphic;
-import com.socialsim.model.core.environment.patch.Patch;
-import com.socialsim.model.core.environment.patch.patchfield.headful.QueueingPatchField;
-import com.socialsim.model.core.environment.patch.patchobject.passable.goal.BlockableAmenity;
-import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
+import com.socialsim.controller.graphics.amenity.university.graphic.SecurityGraphic;
+import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.generic.patchfield.headful.QueueingPatchField;
+import com.socialsim.model.core.environment.generic.patchobject.passable.goal.BlockableAmenity;
+import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Goal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +95,7 @@ public class Security extends BlockableAmenity {
     }
 
     @Override
-    public AmenityGraphic getGraphicObject() {
+    public UniversityAmenityGraphic getGraphicObject() {
         return this.securityGraphic;
     }
 

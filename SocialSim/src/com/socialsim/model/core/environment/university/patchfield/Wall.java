@@ -1,7 +1,7 @@
 package com.socialsim.model.core.environment.university.patchfield;
 
-import com.socialsim.model.core.environment.patch.Patch;
-import com.socialsim.model.core.environment.patch.patchfield.PatchField;
+import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 
 import java.util.List;
 

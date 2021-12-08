@@ -1,14 +1,14 @@
 package com.socialsim.model.core.environment.university.patchobject.passable.goal;
 
-import com.socialsim.controller.graphics.amenity.AmenityGraphic;
+import com.socialsim.controller.graphics.amenity.university.UniversityAmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.controller.graphics.amenity.University.FountainGraphic;
+import com.socialsim.controller.graphics.amenity.university.graphic.FountainGraphic;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.patch.Patch;
-import com.socialsim.model.core.environment.patch.patchfield.headful.QueueObject;
-import com.socialsim.model.core.environment.patch.patchfield.headful.QueueingPatchField;
-import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
-import com.socialsim.model.core.environment.patch.patchobject.passable.goal.QueueableGoal;
+import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.generic.patchfield.headful.QueueObject;
+import com.socialsim.model.core.environment.generic.patchfield.headful.QueueingPatchField;
+import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Goal;
+import com.socialsim.model.core.environment.generic.patchobject.passable.goal.QueueableGoal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +103,7 @@ public class Fountain extends QueueableGoal {
     }
 
     @Override
-    public AmenityGraphic getGraphicObject() {
+    public UniversityAmenityGraphic getGraphicObject() {
         return this.fountainGraphic;
     }
 

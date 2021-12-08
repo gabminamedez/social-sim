@@ -1,6 +1,6 @@
 package com.socialsim.model.core.agent;
 
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.generic.Patch;
 
 import java.util.List;
 

@@ -1,10 +1,10 @@
 package com.socialsim.model.core.environment.university;
 
-import com.socialsim.model.core.agent.Agent;
+import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.Environment;
-import com.socialsim.model.core.environment.patch.BaseObject;
-import com.socialsim.model.core.environment.patch.Patch;
-import com.socialsim.model.core.environment.patch.patchobject.Amenity;
+import com.socialsim.model.core.environment.generic.BaseObject;
+import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class University extends Environment {
 
-    private final CopyOnWriteArrayList<Agent> agents;
+    private final CopyOnWriteArrayList<UniversityAgent> agents;
     private final SortedSet<Patch> amenityPatchSet;
     private final SortedSet<Patch> agentPatchSet;
 
@@ -29,7 +29,7 @@ public class University extends Environment {
     private final List<Security> securities;
     private final List<Staircase> staircases;
     private final List<Trash> trashes;
-    List<Agent> agentBacklogs;
+    List<UniversityAgent> agentBacklogs;
 
     private static final University.UniversityFactory universityFactory;
 
@@ -60,7 +60,7 @@ public class University extends Environment {
         this.agentBacklogs = Collections.synchronizedList(new ArrayList<>());
     }
 
-    public CopyOnWriteArrayList<Agent> getAgents() {
+    public CopyOnWriteArrayList<UniversityAgent> getAgents() {
         return agents;
     }
 
@@ -122,7 +122,7 @@ public class University extends Environment {
         return trashes;
     }
 
-    public List<Agent> getAgentBacklogs() {
+    public List<UniversityAgent> getAgentBacklogs() {
         return agentBacklogs;
     }
 
@@ -169,7 +169,7 @@ public class University extends Environment {
     }
 
     public static class UniversityFactory extends BaseObject.ObjectFactory {
-        public University create(int rows, int columns) {
+        public static University create(int rows, int columns) {
             return new University(rows, columns);
         }
     }

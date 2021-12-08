@@ -1,11 +1,11 @@
 package com.socialsim.model.core.environment.university.patchobject.passable.gate;
 
-import com.socialsim.controller.graphics.amenity.AmenityGraphic;
+import com.socialsim.controller.graphics.amenity.university.UniversityAmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.controller.graphics.amenity.University.UniversityGateGraphic;
-import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.patch.Patch;
-import com.socialsim.model.core.environment.patch.patchobject.passable.gate.Gate;
+import com.socialsim.controller.graphics.amenity.university.graphic.UniversityGateGraphic;
+import com.socialsim.model.core.agent.university.UniversityAgent;
+import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.university.University;
 
 import java.util.HashSet;
@@ -66,7 +66,7 @@ public class UniversityGate extends Gate {
     }
 
     @Override
-    public AmenityGraphic getGraphicObject() {
+    public UniversityAmenityGraphic getGraphicObject() {
         return this.universityGateGraphic;
     }
 
@@ -76,12 +76,12 @@ public class UniversityGate extends Gate {
     }
 
     @Override
-    public Agent spawnAgent() { // Spawn an agent in this position
+    public UniversityAgent spawnAgent() { // Spawn an agent in this position
         University university = (University) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
         GateBlock spawner = this.getSpawners().get(0);
 
         if (university != null) {
-            return Agent.agentFactory.create(Agent.Type.STUDENT, Agent.Gender.MALE, 21, spawner.getPatch());
+            return UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, UniversityAgent.Gender.MALE, 21, spawner.getPatch());
         }
         else {
             return null;
@@ -113,15 +113,15 @@ public class UniversityGate extends Gate {
         return patchesFree;
     }
 
-    public Agent spawnAgentFromBacklogs(boolean forceEntry) { // Spawn an agent from the backlogs
+    public UniversityAgent spawnAgentFromBacklogs(boolean forceEntry) { // Spawn an agent from the backlogs
         University university = (University) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
 
         if (university != null) {
-            List<Agent> universityGateQueue = university.getAgentBacklogs();
+            List<UniversityAgent> universityGateQueue = university.getAgentBacklogs();
 
             if (!universityGateQueue.isEmpty()) { // If the backlog queue isn't empty, check if this gate is free from agents
                 if (forceEntry || this.isGateFree()) { // If this gate is free from other agents, get one from the backlog queue
-                    Agent agent = universityGateQueue.remove(0);
+                    UniversityAgent agent = universityGateQueue.remove(0);
                     Patch spawnPatch = this.getSpawners().get(0).getPatch();
 
                     return agent;

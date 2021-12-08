@@ -1,11 +1,11 @@
 package com.socialsim.model.core.environment.university.patchobject.passable.goal;
 
-import com.socialsim.controller.graphics.amenity.AmenityGraphic;
+import com.socialsim.controller.graphics.amenity.university.UniversityAmenityGraphic;
 import com.socialsim.controller.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.controller.graphics.amenity.University.ChairGraphic;
-import com.socialsim.model.core.environment.patch.Patch;
-import com.socialsim.model.core.environment.patch.patchobject.Amenity;
-import com.socialsim.model.core.environment.patch.patchobject.passable.goal.Goal;
+import com.socialsim.controller.graphics.amenity.university.graphic.ChairGraphic;
+import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.generic.patchobject.Amenity;
+import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Goal;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class Chair extends Goal {
     }
 
     @Override
-    public AmenityGraphic getGraphicObject() {
+    public UniversityAmenityGraphic getGraphicObject() {
         return this.chairGraphic;
     }
 

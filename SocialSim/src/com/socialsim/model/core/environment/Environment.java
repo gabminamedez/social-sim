@@ -1,10 +1,10 @@
 package com.socialsim.model.core.environment;
 
 import com.socialsim.controller.Main;
-import com.socialsim.model.core.environment.patch.BaseObject;
-import com.socialsim.model.core.environment.patch.position.Coordinates;
-import com.socialsim.model.core.environment.patch.position.MatrixPosition;
-import com.socialsim.model.core.environment.patch.Patch;
+import com.socialsim.model.core.environment.generic.BaseObject;
+import com.socialsim.model.core.environment.generic.position.Coordinates;
+import com.socialsim.model.core.environment.generic.position.MatrixPosition;
+import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.simulator.SimulationObject;
 
 import java.io.Serializable;
