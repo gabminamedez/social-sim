@@ -81,7 +81,8 @@ public class UniversityGate extends Gate {
         GateBlock spawner = this.getSpawners().get(0);
 
         if (university != null) {
-            return UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, UniversityAgent.Gender.MALE, 21, spawner.getPatch());
+            // return UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, UniversityAgent.Gender.MALE, 21, spawner.getPatch());
+            return null; // For the meantime
         }
         else {
             return null;

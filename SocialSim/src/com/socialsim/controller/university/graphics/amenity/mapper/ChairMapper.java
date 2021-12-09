@@ -21,7 +21,7 @@ public class ChairMapper extends AmenityMapper {
             patch.setAmenityBlock(amenityBlock);
 
             Chair chairToAdd = Chair.ChairFactory.create(amenityBlocks, true);
-            Main.simulator.getUniversity().getChairs().add(chairToAdd);
+            Main.universitySimulator.getUniversity().getChairs().add(chairToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
             amenityBlocks.clear();
         }

@@ -3,7 +3,7 @@ package com.socialsim.controller;
 import com.socialsim.controller.university.controls.UniversityScreenController;
 import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.generic.controls.WelcomeScreenController;
-import com.socialsim.model.simulator.UniversitySimulator;
+import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

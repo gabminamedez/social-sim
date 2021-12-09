@@ -24,20 +24,20 @@ public class ProfTableMapper extends AmenityMapper {
             patch.setAmenityBlock(amenityBlock);
 
             if(facing.equals("UP") || facing.equals("DOWN")) {
-                Patch rightPatch = Main.simulator.getUniversity().getPatch(origPatchRow, origPatchCol + 1);
+                Patch rightPatch = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 1);
                 Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(rightPatch, true, false);
                 amenityBlocks.add(amenityBlock2);
                 rightPatch.setAmenityBlock(amenityBlock2);
             }
             else {
-                Patch lowerPatch = Main.simulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
+                Patch lowerPatch = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
                 Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(lowerPatch, true, false);
                 amenityBlocks.add(amenityBlock2);
                 lowerPatch.setAmenityBlock(amenityBlock2);
             }
 
             ProfTable profTableToAdd = ProfTable.ProfTableFactory.create(amenityBlocks, true, facing);
-            Main.simulator.getUniversity().getProfTables().add(profTableToAdd);
+            Main.universitySimulator.getUniversity().getProfTables().add(profTableToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
             amenityBlocks.clear();
         }

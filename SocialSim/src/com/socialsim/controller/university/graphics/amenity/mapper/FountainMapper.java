@@ -21,7 +21,7 @@ public class FountainMapper extends AmenityMapper {
             patch.setAmenityBlock(amenityBlock);
 
             Fountain fountainToAdd = Fountain.FountainFactory.create(amenityBlocks, true, 20);
-            Main.simulator.getUniversity().getFountains().add(fountainToAdd);
+            Main.universitySimulator.getUniversity().getFountains().add(fountainToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
             amenityBlocks.clear();
         }

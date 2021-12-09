@@ -2,11 +2,9 @@ package com.socialsim.controller.university.graphics;
 
 import com.socialsim.controller.generic.Controller;
 import com.socialsim.controller.Main;
-import com.socialsim.controller.generic.graphics.agent.AgentGraphicLocation;
 import com.socialsim.controller.university.graphics.agent.UniversityAgentGraphic;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.generic.patchobject.Drawable;
@@ -266,11 +264,11 @@ public class UniversityGraphicsController extends Controller {
         }
     }
 
-    public static Coordinates getScaledAgentCoordinates(Agent agent) {
+//    public static Coordinates getScaledAgentCoordinates(Agent agent) {
 //        Coordinates agentPosition = agent.getAgentMovement().getPosition();
-
+//
 //        return UniversityGraphicsController.getScaledCoordinates(agentPosition);
-    }
+//    }
 
     public static Coordinates getScaledCoordinates(Coordinates coordinates) {
         return new Coordinates(coordinates.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS, coordinates.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
