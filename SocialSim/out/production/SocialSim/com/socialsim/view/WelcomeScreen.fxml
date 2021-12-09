@@ -24,7 +24,7 @@
                     </FXCollections>
                 </items>
             </ChoiceBox>
-                <Button fx:id="startButton" mnemonicParsing="false" onAction="#gotoEnvironment" prefHeight="25.0" prefWidth="246.0" text="Create blank station" />
+                <Button fx:id="startButton" mnemonicParsing="false" onAction="#gotoEnvironment" prefHeight="25.0" prefWidth="246.0" text="Go to Environment" />
             </children>
             <HBox.margin>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

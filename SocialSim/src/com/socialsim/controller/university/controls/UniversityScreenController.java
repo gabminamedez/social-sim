@@ -66,14 +66,14 @@ public class UniversityScreenController extends ScreenController {
     }
 
     public void initializeUniversity(University university) {
-        Main.simulator.resetToDefaultConfiguration(university);
-        UniversityGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.simulator.getUniversity().getRows();
+        Main.universitySimulator.resetToDefaultConfiguration(university);
+        UniversityGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.universitySimulator.getUniversity().getRows();
         mapUniversity();
         drawInterface();
     }
 
     public void mapUniversity() {
-        University university = Main.simulator.getUniversity();
+        University university = Main.universitySimulator.getUniversity();
         int rows = university.getRows();
         int cols = university.getColumns();
 
@@ -344,8 +344,8 @@ public class UniversityScreenController extends ScreenController {
     }
 
     private void drawInterface() {
-        drawUniversityViewBackground(Main.simulator.getUniversity()); // Initially draw the University environment
-        drawUniversityViewForeground(Main.simulator.getUniversity(), false); // Then draw the agents in the University
+        drawUniversityViewBackground(Main.universitySimulator.getUniversity()); // Initially draw the University environment
+        drawUniversityViewForeground(Main.universitySimulator.getUniversity(), false); // Then draw the agents in the University
     }
 
     public void drawUniversityViewBackground(University university) { // Draw the university view background
@@ -362,8 +362,8 @@ public class UniversityScreenController extends ScreenController {
     }
 
     public void updateSimulationTime() {
-        LocalTime currentTime = Main.simulator.getSimulationTime().getTime();
-        long elapsedTime = Main.simulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS);
+        LocalTime currentTime = Main.universitySimulator.getSimulationTime().getTime();
+        long elapsedTime = Main.universitySimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS);
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
         elapsedTimeText.setText("Elapsed time: " + timeString + " (" + elapsedTime + " s)");
@@ -373,8 +373,8 @@ public class UniversityScreenController extends ScreenController {
         stackPane.setScaleX(CANVAS_SCALE);
         stackPane.setScaleY(CANVAS_SCALE);
 
-        double rowsScaled = Main.simulator.getUniversity().getRows() * UniversityGraphicsController.tileSize;
-        double columnsScaled = Main.simulator.getUniversity().getColumns() * UniversityGraphicsController.tileSize;
+        double rowsScaled = Main.universitySimulator.getUniversity().getRows() * UniversityGraphicsController.tileSize;
+        double columnsScaled = Main.universitySimulator.getUniversity().getColumns() * UniversityGraphicsController.tileSize;
 
         stackPane.setPrefWidth(columnsScaled);
         stackPane.setPrefHeight(rowsScaled);
@@ -391,27 +391,27 @@ public class UniversityScreenController extends ScreenController {
 
     @FXML
     public void playAction() {
-        if (!Main.simulator.isRunning()) { // Not yet running to running (play simulation)
-            Main.simulator.setRunning(true);
-            Main.simulator.getPlaySemaphore().release();
+        if (!Main.universitySimulator.isRunning()) { // Not yet running to running (play simulation)
+            Main.universitySimulator.setRunning(true);
+            Main.universitySimulator.getPlaySemaphore().release();
             playButton.setText("Pause");
         }
         else {
-            Main.simulator.setRunning(false);
+            Main.universitySimulator.setRunning(false);
             playButton.setText("Play");
         }
     }
 
     @FXML
     public void resetAction() {
-        Main.simulator.reset();
+        Main.universitySimulator.reset();
 
         // Clear all passengers
 //        clearUniversity(Main.simulator.getUniversity());
 
-        drawUniversityViewForeground(Main.simulator.getUniversity(), false); // Redraw the canvas
+        drawUniversityViewForeground(Main.universitySimulator.getUniversity(), false); // Redraw the canvas
 
-        if (Main.simulator.isRunning()) { // If the simulator is running, stop it
+        if (Main.universitySimulator.isRunning()) { // If the simulator is running, stop it
             playAction();
             playButton.setSelected(false);
         }

@@ -1,14 +1,15 @@
-package com.socialsim.model.simulator;
+package com.socialsim.model.simulator.university;
 
 import com.socialsim.controller.Main;
 import com.socialsim.controller.university.controls.UniversityScreenController;
 import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.simulator.SimulationTime;
+import com.socialsim.model.simulator.Simulator;
 
-import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class UniversitySimulator {
+public class UniversitySimulator extends Simulator {
 
     private University university;
 
@@ -16,11 +17,11 @@ public class UniversitySimulator {
     private final AtomicBoolean running;
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
-    public static final Random RANDOM_NUMBER_GENERATOR; // Random number generator for all purposes in the simulation
+    // public static final Random RANDOM_NUMBER_GENERATOR; // Random number generator for all purposes in the simulation
 
-    static {
-        RANDOM_NUMBER_GENERATOR = new Random();
-    }
+//    static {
+//        RANDOM_NUMBER_GENERATOR = new Random();
+//    }
 
     public UniversitySimulator() {
         this.university = null;

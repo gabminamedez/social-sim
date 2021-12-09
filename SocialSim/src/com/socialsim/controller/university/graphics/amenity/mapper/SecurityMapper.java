@@ -23,13 +23,13 @@ public class SecurityMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock);
             patch.setAmenityBlock(amenityBlock);
 
-            Patch lowerPatch = Main.simulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
+            Patch lowerPatch = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
             Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(lowerPatch, true, false);
             amenityBlocks.add(amenityBlock2);
             lowerPatch.setAmenityBlock(amenityBlock2);
 
             Security securityToAdd = Security.SecurityFactory.create(amenityBlocks, true, 20, false);
-            Main.simulator.getUniversity().getSecurities().add(securityToAdd);
+            Main.universitySimulator.getUniversity().getSecurities().add(securityToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
             amenityBlocks.clear();
         }

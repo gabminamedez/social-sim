@@ -23,13 +23,13 @@ public class StaircaseMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock);
             patch.setAmenityBlock(amenityBlock);
 
-            Patch lowerPatch = Main.simulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
+            Patch lowerPatch = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
             Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(lowerPatch, true, false);
             amenityBlocks.add(amenityBlock2);
             lowerPatch.setAmenityBlock(amenityBlock2);
 
             Staircase staircaseToAdd = Staircase.StaircaseFactory.create(amenityBlocks, true);
-            Main.simulator.getUniversity().getStaircases().add(staircaseToAdd);
+            Main.universitySimulator.getUniversity().getStaircases().add(staircaseToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
             amenityBlocks.clear();
         }

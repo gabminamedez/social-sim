@@ -21,7 +21,7 @@ public class TrashMapper extends AmenityMapper {
             patch.setAmenityBlock(amenityBlock);
 
             Trash trashToAdd = Trash.TrashFactory.create(amenityBlocks, true);
-            Main.simulator.getUniversity().getTrashes().add(trashToAdd);
+            Main.universitySimulator.getUniversity().getTrashes().add(trashToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
             amenityBlocks.clear();
         }

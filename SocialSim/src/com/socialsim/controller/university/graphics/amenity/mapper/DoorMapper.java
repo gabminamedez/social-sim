@@ -24,20 +24,20 @@ public class DoorMapper extends AmenityMapper {
             patch.setAmenityBlock(amenityBlock);
 
             if(facing.equals("UP") || facing.equals("DOWN")) {
-                Patch rightPatch = Main.simulator.getUniversity().getPatch(origPatchRow, origPatchCol + 1);
+                Patch rightPatch = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 1);
                 Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(rightPatch, true, false);
                 amenityBlocks.add(amenityBlock2);
                 rightPatch.setAmenityBlock(amenityBlock2);
             }
             else {
-                Patch lowerPatch = Main.simulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
+                Patch lowerPatch = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
                 Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(lowerPatch, true, false);
                 amenityBlocks.add(amenityBlock2);
                 lowerPatch.setAmenityBlock(amenityBlock2);
             }
 
             Door doorToAdd = Door.DoorFactory.create(amenityBlocks, true, facing);
-            Main.simulator.getUniversity().getDoors().add(doorToAdd);
+            Main.universitySimulator.getUniversity().getDoors().add(doorToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
             amenityBlocks.clear();
         }

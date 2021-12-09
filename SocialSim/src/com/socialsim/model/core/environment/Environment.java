@@ -5,6 +5,7 @@ import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.MatrixPosition;
 import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.simulator.SimulationObject;
 
 import java.io.Serializable;
@@ -59,11 +60,11 @@ public abstract class Environment extends BaseObject implements SimulationObject
     }
 
     // Get patches in the agent's field of vision
-    public static List<Patch> get7x7Field(Patch centerPatch, double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
+    public static List<Patch> get7x7Field(Environment environment, Patch centerPatch, double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
         int truncatedX = (int) (centerPatch.getPatchCenterCoordinates().getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
         int truncatedY = (int) (centerPatch.getPatchCenterCoordinates().getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
 
-        Patch chosenPatch;
+        Patch chosenPatch = null;
         List<Patch> patchesToExplore = new ArrayList<>();
 
         for (int rowOffset = -3; rowOffset <= 3; rowOffset++) {
@@ -82,7 +83,7 @@ public abstract class Environment extends BaseObject implements SimulationObject
                     yCondition = truncatedY + rowOffset > 0;
                 }
                 else if (rowOffset > 0) {
-                    yCondition = truncatedY + rowOffset < Main.simulator.getUniversity().getRows();
+                    yCondition = truncatedY + rowOffset < 60;
                 }
                 else {
                     yCondition = true;
@@ -92,14 +93,16 @@ public abstract class Environment extends BaseObject implements SimulationObject
                     xCondition = truncatedX + columnOffset > 0;
                 }
                 else if (columnOffset > 0) {
-                    xCondition = truncatedX + columnOffset < Main.simulator.getUniversity().getColumns();
+                    xCondition = truncatedX + columnOffset < 120;
                 }
                 else {
                     xCondition = true;
                 }
 
                 if (xCondition && yCondition) {
-                    chosenPatch = Main.simulator.getUniversity().getPatch(truncatedY + rowOffset, truncatedX + columnOffset);
+                    if (environment instanceof University) {
+                        chosenPatch = Main.universitySimulator.getUniversity().getPatch(truncatedY + rowOffset, truncatedX + columnOffset);
+                    }
 
                     if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(centerPatch.getPatchCenterCoordinates(), chosenPatch.getPatchCenterCoordinates(), heading, fieldOfViewAngle)) {
                         patchesToExplore.add(chosenPatch);

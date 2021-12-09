@@ -4,7 +4,7 @@ import com.socialsim.controller.university.graphics.agent.UniversityAgentGraphic
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
-import com.socialsim.model.simulator.UniversitySimulator;
+import com.socialsim.model.simulator.Simulator;
 
 import java.util.Objects;
 
@@ -24,7 +24,7 @@ public class UniversityAgent extends Agent {
     private UniversityAgent.Persona persona = null;
 
     private final UniversityAgentGraphic agentGraphic;
-    // private final AgentMovement agentMovement;
+//    private final UniversityAgentMovement agentMovement;
 
     public static final UniversityAgent.UniversityAgentFactory agentFactory;
 
@@ -53,16 +53,24 @@ public class UniversityAgent extends Agent {
         }
         UniversityAgent.agentCount++;
 
-        this.gender = UniversitySimulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? Gender.FEMALE : Gender.MALE;
+        this.gender = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? Gender.FEMALE : Gender.MALE;
 
-        if (this.type == Type.GUARD || this.type == Type.JANITOR || this.type == Type.OFFICER) {
-            this.ageGroup = UniversitySimulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
-            this.persona = null;
+        if (this.type == Type.GUARD) {
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+            this.persona = Persona.GUARD;
+        }
+        else if(this.type == Type.JANITOR) {
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+            this.persona = Persona.JANITOR;
+        }
+        else if(this.type == Type.OFFICER) {
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+            this.persona = Persona.OFFICER;
         }
         else if (this.type == Type.PROFESSOR) {
-            this.ageGroup = UniversitySimulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
 
-            boolean isStrict = UniversitySimulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+            boolean isStrict = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
             if (isStrict) {
                 this.persona = Persona.STRICT_PROFESSOR;
             }
@@ -73,9 +81,9 @@ public class UniversityAgent extends Agent {
         else if (this.type == Type.STUDENT) {
             this.ageGroup = AgeGroup.FROM_15_TO_24;
 
-            boolean isIntrovert = UniversitySimulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-            int yearLevel = UniversitySimulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
-            boolean isOrg = UniversitySimulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+            boolean isIntrovert = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+            int yearLevel = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
+            boolean isOrg = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
 
             if (isIntrovert && yearLevel == 1 && !isOrg) {
                 this.persona = Persona.INT_Y1_STUDENT;
@@ -129,12 +137,12 @@ public class UniversityAgent extends Agent {
 
         this.agentGraphic = new UniversityAgentGraphic(this);
         if (inOnStart) { // If the agent is already inside the environment on initialization
-            spawnPatch.addAgent(this);
+            // this.agentMovement = new UniversityAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates());
         }
         else {
             UniversityGate universityGate = (UniversityGate) spawnPatch.getAmenityBlock().getParent();
+            // this.agentMovement = new UniversityAgentMovement(universityGate, this, 1.27, spawnPatch.getPatchCenterCoordinates());
         }
-        // this.agentMovement = new AgentMovement(universityGate, this, spawnPatch.getPatchCenterCoordinates());
     }
 
     public int getId() {
@@ -161,7 +169,7 @@ public class UniversityAgent extends Agent {
         return agentGraphic;
     }
 
-//    public AgentMovement getAgentMovement() {
+//    public UniversityAgentMovement getAgentMovement() {
 //        return agentMovement;
 //    }
 
@@ -203,6 +211,7 @@ public class UniversityAgent extends Agent {
     }
 
     public enum Persona {
+        GUARD, JANITOR, OFFICER,
         INT_Y1_STUDENT, INT_Y2_STUDENT, INT_Y3_STUDENT, INT_Y4_STUDENT,
         INT_Y1_ORG_STUDENT, INT_Y2_ORG_STUDENT, INT_Y3_ORG_STUDENT, INT_Y4_ORG_STUDENT,
         EXT_Y1_STUDENT, EXT_Y2_STUDENT, EXT_Y3_STUDENT, EXT_Y4_STUDENT,
