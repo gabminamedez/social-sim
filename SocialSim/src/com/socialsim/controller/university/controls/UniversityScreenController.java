@@ -90,7 +90,7 @@ public class UniversityScreenController extends ScreenController {
                 }
             }
         }
-        Wall.wallFactory.create(wallPatches);
+        Wall.wallFactory.create(wallPatches, 1);
 
         List<Patch> fBathroomPatches = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
@@ -98,7 +98,7 @@ public class UniversityScreenController extends ScreenController {
                 fBathroomPatches.add(university.getPatch(i, j));
             }
         }
-        Bathroom.bathroomFactory.create(true, fBathroomPatches);
+        Bathroom.bathroomFactory.create(fBathroomPatches, 1);
 
         List<Patch> mBathroomPatches = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
@@ -106,7 +106,7 @@ public class UniversityScreenController extends ScreenController {
                 mBathroomPatches.add(university.getPatch(i, j));
             }
         }
-        Bathroom.bathroomFactory.create(false, mBathroomPatches);
+        Bathroom.bathroomFactory.create(mBathroomPatches, 2);
 
         List<Patch> classroom1Patches = new ArrayList<>();
         for (int i = 4; i < 24; i++) {
@@ -114,7 +114,7 @@ public class UniversityScreenController extends ScreenController {
                 classroom1Patches.add(university.getPatch(i, j));
             }
         }
-        Classroom.classroomFactory.create(classroom1Patches);
+        Classroom.classroomFactory.create(classroom1Patches, 1);
 
         List<Patch> classroom2Patches = new ArrayList<>();
         for (int i = 4; i < 24; i++) {
@@ -122,7 +122,7 @@ public class UniversityScreenController extends ScreenController {
                 classroom2Patches.add(university.getPatch(i, j));
             }
         }
-        Classroom.classroomFactory.create(classroom2Patches);
+        Classroom.classroomFactory.create(classroom2Patches, 2);
 
         List<Patch> classroom3Patches = new ArrayList<>();
         for (int i = 9; i < 24; i++) {
@@ -130,7 +130,7 @@ public class UniversityScreenController extends ScreenController {
                 classroom3Patches.add(university.getPatch(i, j));
             }
         }
-        Classroom.classroomFactory.create(classroom3Patches);
+        Classroom.classroomFactory.create(classroom3Patches, 3);
 
         List<Patch> classroom4Patches = new ArrayList<>();
         for (int i = 36; i < 56; i++) {
@@ -138,7 +138,7 @@ public class UniversityScreenController extends ScreenController {
                 classroom4Patches.add(university.getPatch(i, j));
             }
         }
-        Classroom.classroomFactory.create(classroom4Patches);
+        Classroom.classroomFactory.create(classroom4Patches, 4);
 
         List<Patch> classroom5Patches = new ArrayList<>();
         for (int i = 36; i < 56; i++) {
@@ -146,7 +146,7 @@ public class UniversityScreenController extends ScreenController {
                 classroom5Patches.add(university.getPatch(i, j));
             }
         }
-        Classroom.classroomFactory.create(classroom5Patches);
+        Classroom.classroomFactory.create(classroom5Patches, 5);
 
         List<Patch> laboratoryPatches = new ArrayList<>();
         for (int i = 36; i < 56; i++) {
@@ -154,7 +154,7 @@ public class UniversityScreenController extends ScreenController {
                 laboratoryPatches.add(university.getPatch(i, j));
             }
         }
-        Laboratory.laboratoryFactory.create(laboratoryPatches);
+        Laboratory.laboratoryFactory.create(laboratoryPatches, 1);
 
         List<Patch> benchRightPatches = new ArrayList<>();
         benchRightPatches.add(university.getPatch(43,0));

@@ -24,6 +24,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -126,7 +127,7 @@ public class UniversityGraphicsController extends Controller {
 
             // Draw graphics corresponding to whatever is in the content of the patch; If the patch has no amenity on it, just draw a blank patch
             Amenity.AmenityBlock patchAmenityBlock = currentPatch.getAmenityBlock();
-            PatchField patchPatchField = currentPatch.getPatchField();
+            Pair<PatchField, Integer> patchNumPair = currentPatch.getPatchField();
             Color patchColor;
 
             if (patchAmenityBlock == null) {
@@ -167,9 +168,11 @@ public class UniversityGraphicsController extends Controller {
                 }
             }
 
-            if (patchPatchField != null) {
+            if (patchNumPair != null) {
+                PatchField patchPatchField = patchNumPair.getKey();
+
                 if (patchPatchField.getClass() == Bathroom.class) {
-                    if (((Bathroom) patchPatchField).getIsFemale()) {
+                    if (patchNumPair.getValue() == 1) {
                         patchColor = Color.rgb(232, 116, 206);
                     }
                     else {

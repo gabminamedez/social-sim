@@ -8,6 +8,7 @@ import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.MatrixPosition;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.generic.patchfield.headful.QueueingPatchField;
+import javafx.util.Pair;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -19,7 +20,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     private final Coordinates patchCenterCoordinates;
     private final CopyOnWriteArrayList<Agent> agents;
     private Amenity.AmenityBlock amenityBlock; // Denotes the amenity block present on this patch
-    private PatchField patchField;
+    private Pair<PatchField, Integer> patchField;
     private final Environment environment;
     private final List<MatrixPosition> neighborIndices;
     private final List<MatrixPosition> neighbor7x7Indices; // Denotes the positions of the neighbors of this patch within a 7x7 range
@@ -65,11 +66,11 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         this.amenityBlock = amenityBlock;
     }
 
-    public PatchField getPatchField() {
+    public Pair<PatchField, Integer> getPatchField() {
         return patchField;
     }
 
-    public void setPatchField(PatchField patchField) {
+    public void setPatchField(Pair<PatchField, Integer> patchField) {
         this.patchField = patchField;
     }
 

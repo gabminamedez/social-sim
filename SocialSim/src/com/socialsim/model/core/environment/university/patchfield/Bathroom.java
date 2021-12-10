@@ -2,20 +2,18 @@ package com.socialsim.model.core.environment.university.patchfield;
 
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.Patch;
+import javafx.util.Pair;
 
 import java.util.List;
 
 public class Bathroom extends PatchField {
 
-    private final boolean isFemale;
-
-    protected Bathroom(boolean isFemale, List<Patch> patches) {
+    protected Bathroom(List<Patch> patches, int num) {
         super(patches);
 
-        this.isFemale = isFemale;
-
+        Pair<PatchField, Integer> pair = new Pair<>(this, num);
         for(Patch patch : patches) {
-            patch.setPatchField(this);
+            patch.setPatchField(pair);
         }
     }
 
@@ -25,13 +23,9 @@ public class Bathroom extends PatchField {
         bathroomFactory = new BathroomFactory();
     }
 
-    public boolean getIsFemale() {
-        return this.isFemale;
-    }
-
     public static class BathroomFactory extends PatchFieldFactory {
-        public Bathroom create(boolean isFemale, List<Patch> patches) {
-            return new Bathroom(isFemale, patches);
+        public Bathroom create(List<Patch> patches, int num) {
+            return new Bathroom(patches, num);
         }
     }
 
