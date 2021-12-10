@@ -14,6 +14,7 @@
 //import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 //import com.socialsim.model.core.environment.generic.patchobject.passable.goal.BlockableAmenity;
 //import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Goal;
+//import com.socialsim.model.core.environment.generic.patchobject.passable.goal.QueueableGoal;
 //import com.socialsim.model.core.environment.generic.position.Coordinates;
 //import com.socialsim.model.core.environment.generic.position.Vector;
 //import com.socialsim.model.core.environment.university.University;
@@ -361,6 +362,10 @@
 //        return Goal.toGoal(this.goalAmenity);
 //    }
 //
+//    public QueueableGoal getGoalAmenityAsQueueableGoal() {
+//        return QueueableGoal.toQueueableGoal(this.goalAmenity);
+//    }
+//
 //    public BlockableAmenity getGoalAmenityAsBlockable() {
 //        return BlockableAmenity.asBlockable(this.goalAmenity);
 //    }
@@ -544,8 +549,6 @@
 //                Amenity currentAmenity;
 //                QueueObject currentQueueObject;
 //
-//                List<QueueObject> turnstileQueueObjects = new ArrayList<>();
-//
 //                currentAmenity = candidateAttractor.getParent();
 //
 //                if (currentAmenity instanceof Queueable) { // Only collect queue objects from queueables
@@ -608,7 +611,6 @@
 //
 //        for (Amenity.AmenityBlock attractor : goal.getAttractors()) {
 //            distance = Coordinates.distance(this.position, attractor.getPatch().getPatchCenterCoordinates());
-//
 //            if (distance < minimumDistance) {
 //                minimumDistance = distance;
 //                nearestAttractor = attractor;
@@ -623,7 +625,6 @@
 //        }
 //        else { // If not, compute the next coordinates normally
 //            Coordinates futurePosition = this.getFuturePosition(this.position, heading, walkingDistance);
-//
 //            double newX = futurePosition.getX();
 //            double newY = futurePosition.getY();
 //
@@ -650,24 +651,19 @@
 //        // The smallest repulsion an agent may inflict on another
 //        final double minimumAgentRepulsion = 0.01 * this.preferredWalkingDistance;
 //
-//        // If the agent has not moved a sufficient distance for more than this number of ticks, the agent
-//        // will be considered stuck
-//        final int noMovementTicksThreshold = (this.getGoalAmenityAsGoal() != null) ? this.getGoalAmenityAsGoal().getWaitingTime() : 5;
+//        // If the agent has not moved a sufficient distance for more than this number of ticks, the agent will be considered stuck
+//        final int noMovementTicksThreshold = (this.getGoalAmenityAsQueueableGoal() != null) ? this.getGoalAmenityAsQueueableGoal().getWaitingTime() : 5;
 //
-//        // If the agent has not seen new patches for more than this number of ticks, the agent will be considered
-//        // stuck
+//        // If the agent has not seen new patches for more than this number of ticks, the agent will be considered stuck
 //        final int noNewPatchesSeenTicksThreshold = 5;
 //
-//        // If the agent has been moving a sufficient distance for at least this number of ticks, this agent will
-//        // be out of the stuck state, if it was
+//        // If the agent has been moving a sufficient distance for at least this number of ticks, this agent will be out of the stuck state, if it was
 //        final int unstuckTicksThreshold = 60;
 //
-//        // If the distance the agent moves per tick is less than this distance, this agent is considered to not
-//        // have moved
+//        // If the distance the agent moves per tick is less than this distance, this agent is considered to not have moved
 //        final double noMovementThreshold = 0.01 * this.preferredWalkingDistance;
 //
-//        // If the size of the agent's memory of recent patches is less than this number, the agent is considered
-//        // to not have moved
+//        // If the size of the agent's memory of recent patches is less than this number, the agent is considered to not have moved
 //        final double noNewPatchesSeenThreshold = 5;
 //
 //        // The distance to another agent before this agent slows down
@@ -695,13 +691,7 @@
 //        // The distance from the agent's center by which repulsive effects from obstacles are at a maximum
 //        final double minimumObstacleStopDistance = 0.6;
 //
-//        List<Patch> patchesToExplore = this.get7x7Field(
-//                this.proposedHeading,
-//                true,
-//                Math.toRadians(360.0)
-//        );
-//
-////        this.toExplore = patchesToExplore;
+//        List<Patch> patchesToExplore = this.get7x7Field(this.proposedHeading, true, Math.toRadians(360.0));
 //
 //        // Clear vectors from the previous computations
 //        this.repulsiveForceFromAgents.clear();
@@ -1181,42 +1171,14 @@
 //                    vectorsToAdd.add(attractiveForce);
 //                }
 //            }
-//        } else {
+//        }
+//        else {
 //            proposedNewPosition = this.computeFirstStepPosition();
 //
-//            // Check if the patch representing the future position has someone on it
-//            // Only proceed when there is no one there
-////            if (
-////                    this.hasNoAgent(this.currentFloor.getPatch(proposedNewPosition))
-////                            || this.getCurrentTurnstileGate() != null
-////            ) {
-////                this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null;
-//
 //            // Get the attractive force of this agent to the new position
-//            this.attractiveForce = this.computeAttractiveForce(
-//                    new Coordinates(this.position),
-//                    Coordinates.headingTowards(
-//                            this.position,
-//                            proposedNewPosition
-//                    ),
-//                    proposedNewPosition,
-//                    this.preferredWalkingDistance
-//            );
-//
+//            this.attractiveForce = this.computeAttractiveForce(new Coordinates(this.position), Coordinates.headingTowards(this.position, proposedNewPosition), proposedNewPosition, this.preferredWalkingDistance);
 //            vectorsToAdd.add(attractiveForce);
-////            }
-//
 //            this.shouldStepForward = false;
-//        }
-//
-//        // Here ends the few ticks of grace period for the agent to leave its starting patch
-//        if (
-//                !this.willPathfind
-//                        && !this.hasPathfound
-//                        && this.parent.getTicketType() == TicketBooth.TicketType.STORED_VALUE
-//                        && !hasJustLeftGoal()
-//        ) {
-//            this.beginStoredValuePathfinding();
 //        }
 //
 //        // Take note of the previous walking distance of this agent
@@ -1225,10 +1187,7 @@
 //        vectorsToAdd.addAll(this.repulsiveForceFromAgents);
 //
 //        // Then compute the partial motivation force of the agent
-//        Vector partialMotivationForce = Vector.computeResultantVector(
-//                new Coordinates(this.position),
-//                vectorsToAdd
-//        );
+//        Vector partialMotivationForce = Vector.computeResultantVector(new Coordinates(this.position), vectorsToAdd);
 //
 //        // If the resultant vector is null (i.e., no change in position), simply don't move at all
 //        if (!this.shouldStopAtPlatform && partialMotivationForce != null) {
@@ -1416,19 +1375,14 @@
 //            }
 //        }
 //
-//        // If it reaches this point, there is no movement to be made
-//        this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null;
+//        this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null; // If it reaches this point, there is no movement to be made
 //
 //        this.stop();
 //
-//        // There was no movement by this agent, so increment the pertinent counter
-//        this.distanceMovedInTick = 0.0;
-//
+//        this.distanceMovedInTick = 0.0; // There was no movement by this agent, so increment the pertinent counter
 //        this.noMovementCounter++;
 //        this.movementCounter = 0;
-//
 //        this.timeSinceLeftPreviousGoal++;
-//
 //        this.ticksAcceleratedOrMaintainedSpeed = 0;
 //
 //        return false;
@@ -1725,24 +1679,18 @@
 //        this.isWaitingOnAmenity = true;
 //    }
 //
-//    // Check if the goal of this agent is currently not servicing anyone
-//    public boolean isGoalFree() {
-//        return this.getGoalAmenityAsGoal().isFree(this.goalQueueObject)
-//                && this.goalQueueObject.getPatch().getAgents().isEmpty();
+//    public boolean isQueueableGoalFree() { // Check if the goal of this agent is currently not servicing anyone
+//        return this.getGoalAmenityAsQueueableGoal().isFree(this.goalQueueObject) && this.goalQueueObject.getPatch().getAgents().isEmpty();
 //    }
 //
-//    // Check if this agent the one currently served by its goal
-//    public boolean isServicedByGoal() {
+//    public boolean isServicedByQueueableGoal() { // Check if this agent the one currently served by its goal
 //        Agent agentServiced = this.goalQueueObject.getAgentServiced();
 //
 //        return agentServiced != null && agentServiced.equals(this.parent);
 //    }
 //
-//    // Check if this agent is at the front of the queue
-//    public boolean isAtQueueFront() {
-//        LinkedList<Agent> agentsQueueing
-//                = this.goalQueueObject.getAgentsQueueing();
-//
+//    public boolean isAtQueueFront() { // Check if this agent is at the front of the queue
+//        LinkedList<Agent> agentsQueueing = this.goalQueueObject.getAgentsQueueing();
 //        if (agentsQueueing.isEmpty()) {
 //            return false;
 //        }
@@ -1750,138 +1698,95 @@
 //        return agentsQueueing.getFirst() == this.parent;
 //    }
 //
-//    // Have this agent stop waiting for an amenity to become vacant
-//    public void endWaitingOnAmenity() {
+//    public void endWaitingOnAmenity() { // Have this agent stop waiting for an amenity to become vacant
 //        this.isWaitingOnAmenity = false;
 //    }
 //
 //    // Check if this agent has reached its goal
 //    public boolean hasReachedGoal() {
-//        // If the agent is still waiting for an amenity to be vacant, it hasn't reached the goal yet
-//        if (this.isWaitingOnAmenity) {
+//        if (this.isWaitingOnAmenity) { // If the agent is still waiting for an amenity to be vacant, it hasn't reached the goal yet
 //            return false;
 //        }
 //
 //        return isOnOrCloseToPatch(this.goalAttractor.getPatch());
 //    }
 //
-//    // Set the agent's current amenity and position as it reaches the next goal
-//    public void reachGoal() {
-//        // Just in case the agent isn't actually on its goal, but is adequately close to it, just move the agent
-//        // there
+//    public void reachGoal() { // Set the agent's current amenity and position as it reaches the next goal
+//        // Just in case the agent isn't actually on its goal, but is adequately close to it, just move the agent there
 //        // Make sure to offset the agent from the center a little so a force will be applied to this agent
 //        Coordinates patchCenter = this.goalAttractor.getPatch().getPatchCenterCoordinates();
-//        Coordinates offsetPatchCenter = this.getFuturePosition(
-//                patchCenter,
-//                this.previousHeading,
-//                Patch.PATCH_SIZE_IN_SQUARE_METERS * 0.1
-//        );
+//        Coordinates offsetPatchCenter = this.getFuturePosition(patchCenter, this.previousHeading, Patch.PATCH_SIZE_IN_SQUARE_METERS * 0.1);
 //
 //        this.setPosition(offsetPatchCenter);
-//
-//        // Set the current amenity
 //        this.currentAmenity = this.goalAmenity;
-//
-//        if (this.currentAmenity instanceof Turnstile) {
-//            // If this goal is a turnstile, set the heading
-//            this.heading = this.computeFirstStepHeading();
-//        }
 //    }
 //
-//    // Set the agent's next patch in its current path as it reaches it
-//    public void reachPatchInPath() {
-//        // Keep popping while there are still patches from the path to pop and these patches are still close enough to
-//        // the agent
+//    public void reachPatchInPath() { // Set the agent's next patch in its current path as it reaches it
 //        Patch nextPatch;
 //
+//        // Keep popping while there are still patches from the path to pop and these patches are still close enough to the agent
 //        do {
 //            this.currentPath.getPath().pop();
 //
-//            // If there are no more next patches, terminate the loop
-//            if (!this.currentPath.getPath().isEmpty()) {
+//            if (!this.currentPath.getPath().isEmpty()) { // If there are no more next patches, terminate the loop
 //                nextPatch = this.currentPath.getPath().peek();
-//            } else {
+//            }
+//            else {
 //                break;
 //            }
-//        } while (
-//                !this.currentPath.getPath().isEmpty()
-//                        && nextPatch.getAmenityBlocksAround() == 0
-//                        && this.isOnOrCloseToPatch(nextPatch)
-//                        && this.hasClearLineOfSight(
-//                        this.position,
-//                        nextPatch.getPatchCenterCoordinates(),
-//                        true
-//                )
-//        );
+//        } while (!this.currentPath.getPath().isEmpty() && nextPatch.getAmenityBlocksAround() == 0 && this.isOnOrCloseToPatch(nextPatch)
+//                        && this.hasClearLineOfSight(this.position, nextPatch.getPatchCenterCoordinates(), true));
 //    }
 //
-//    // Have this agent's goal service this agent
-//    public void beginServicingThisAgent() {
-//        // This agent will now be the one to be served next
+//    public void beginServicingThisAgent() { // Have this agent's goal service this agent
 //        this.goalQueueObject.setAgentServiced(this.parent);
 //    }
 //
-//    // Have this agent's goal finish serving this agent
-//    public void endServicingThisAgent() {
-//        // This agent is done being serviced by this goal
+//    public void endServicingThisAgent() { // Have this agent's goal finish serving this agent
 //        this.goalQueueObject.setAgentServiced(null);
 //
-//        // Reset the goal's waiting time counter
-//        if (this.getGoalAmenityAsGoal() != null) {
-//            this.getGoalAmenityAsGoal().resetWaitingTime();
+//        if (this.getGoalAmenityAsQueueableGoal() != null) { // Reset the goal's waiting time counter
+//            this.getGoalAmenityAsQueueableGoal().resetWaitingTime();
 //        }
 //    }
 //
-//    // Check if this agent has reached its final goal
-//    public boolean hasReachedFinalGoal() {
+//    public boolean hasReachedFinalGoal() { // Check if this agent has reached its final goal
 //        return !this.routePlan.getCurrentRoutePlan().hasNext();
 //    }
 //
-//    // Check if this agent has reached the final patch in its current path
-//    public boolean hasAgentReachedFinalPatchInPath() {
+//    public boolean hasAgentReachedFinalPatchInPath() { // Check if this agent has reached the final patch in its current path
 //        return this.currentPath.getPath().isEmpty();
 //    }
 //
-//    // Check if this agent has reached the specified patch
-//    private boolean isOnPatch(Patch patch) {
-//        return ((int) (this.position.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS)) == patch.getMatrixPosition().getColumn()
-//                && ((int) (this.position.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS)) == patch.getMatrixPosition().getRow();
+//    private boolean isOnPatch(Patch patch) { // Check if this agent has reached the specified patch
+//        return ((int) (this.position.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS)) == patch.getMatrixPosition().getColumn() && ((int) (this.position.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS)) == patch.getMatrixPosition().getRow();
 //    }
 //
 //    // Check if this agent is adequately close enough to a patch
-//    // In this case, a agent is close enough to a patch when the distance between this agent and the patch is
-//    // less than the distance covered by the agent per second
+//    // In this case, a agent is close enough to a patch when the distance between this agent and the patch is less than the distance covered by the agent per second
 //    private boolean isOnOrCloseToPatch(Patch patch) {
 //        return Coordinates.distance(this.position, patch.getPatchCenterCoordinates()) <= this.preferredWalkingDistance;
 //    }
 //
-//    // Check if this agent is allowed by its goal to pass
-//    public boolean isAllowedPass() {
-//        boolean allowPassAsGoal = this.getGoalAmenityAsGoal().allowPass();
+//    public boolean isAllowedPass() { // Check if this agent is allowed by its goal to pass
+//        boolean allowPassAsGoal = this.getGoalAmenityAsQueueableGoal().allowPass();
 //
-//        Blockable blockable = this.getGoalAmenityAsBlockable();
+//        BlockableAmenity blockable = this.getGoalAmenityAsBlockable();
 //
 //        if (blockable != null) {
 //            return allowPassAsGoal && !blockable.blockEntry();
-//        } else {
+//        }
+//        else {
 //            return allowPassAsGoal;
 //        }
 //    }
 //
-//    // Despawn this agent
-//    public void despawn() {
+//    public void despawn() { // Despawn this agent
 //        if (this.currentPatch != null) {
-//            // Remove the agent from its patch
 //            this.currentPatch.getAgents().remove(this.parent);
+//            this.getUniversity().getAgents().remove(this.parent);
 //
-//            // Remove this agent from this floor
-//            this.currentFloor.getAgentsInFloor().remove(this.parent);
-//
-//            // Remove this agent from this station
-//            this.currentFloor.getStation().getAgentsInStation().remove(this.parent);
-//
-//            // Remove this agent from its current floor's patch set, if necessary
-//            SortedSet<Patch> currentPatchSet = this.currentPatch.getFloor().getAgentPatchSet();
+//            SortedSet<Patch> currentPatchSet = this.getUniversity().getAgentPatchSet();
 //
 //            if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
 //                currentPatchSet.remove(this.currentPatch);
@@ -1889,8 +1794,7 @@
 //        }
 //    }
 //
-//    // Have the agent face its current goal, or its queueing area, or the agent at the end of the queue
-//    public void faceNextPosition() {
+//    public void faceNextPosition() { // Have the agent face its current goal, or its queueing area, or the agent at the end of the queue
 //        double newHeading;
 //        boolean willFaceQueueingPatch;
 //        Patch proposedGoalPatch;
@@ -2086,10 +1990,8 @@
 //        this.proposedHeading = newHeading;
 //    }
 //
-//    // While the agent is already on a floor field, have the agent face the one with the highest value
-//    public void chooseBestQueueingPatch() {
-//        // Retrieve the patch with the highest floor field value around the agent's vicinity
-//        this.goalNearestQueueingPatch = this.getBestQueueingPatch();
+//    public void chooseBestQueueingPatch() { // While the agent is already on a floor field, have the agent face the one with the highest value
+//        this.goalNearestQueueingPatch = this.getBestQueueingPatch(); // Retrieve the patch with the highest floor field value around the agent's vicinity
 //        this.goalPatch = this.goalNearestQueueingPatch;
 //    }
 //
@@ -2229,8 +2131,7 @@
 //        return true;
 //    }
 //
-//    // Make this agent free from being stuck
-//    public void free() {
+//    public void free() { // Make this agent free from being stuck
 //        this.isStuck = false;
 //
 //        this.stuckCounter = 0;
@@ -2238,7 +2139,6 @@
 //        this.noNewPatchesSeenCounter = 0;
 //
 //        this.currentPath = null;
-//
 //        this.isReadyToFree = false;
 //    }
 //
