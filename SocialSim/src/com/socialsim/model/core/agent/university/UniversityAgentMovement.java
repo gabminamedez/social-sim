@@ -5,9 +5,11 @@
 //import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
 //import com.socialsim.model.core.environment.generic.BaseObject;
 //import com.socialsim.model.core.environment.generic.Patch;
+//import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 //import com.socialsim.model.core.environment.generic.patchfield.headful.QueueObject;
 //import com.socialsim.model.core.environment.generic.patchfield.headful.QueueingPatchField;
 //import com.socialsim.model.core.environment.generic.patchobject.Amenity;
+//import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
 //import com.socialsim.model.core.environment.generic.patchobject.passable.Queueable;
 //import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 //import com.socialsim.model.core.environment.generic.patchobject.passable.goal.BlockableAmenity;
@@ -15,6 +17,7 @@
 //import com.socialsim.model.core.environment.generic.position.Coordinates;
 //import com.socialsim.model.core.environment.generic.position.Vector;
 //import com.socialsim.model.core.environment.university.University;
+//import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 //import com.socialsim.model.core.environment.university.patchobject.passable.goal.Security;
 //import com.socialsim.model.simulator.Simulator;
 //
@@ -35,12 +38,14 @@
 //
 //    private Patch currentPatch;
 //    private Amenity currentAmenity;
+//    private PatchField currentPatchField;
 //    private Patch goalPatch;
 //    private Amenity goalAmenity;
 //    private QueueObject goalQueueObject;
 //    private Amenity.AmenityBlock goalAttractor;
-//    private QueueingPatchField.PatchFieldState goalPatchFieldState; // Denotes the state of this agent's floor field
-//    private QueueingPatchField goalPatchField; // Denotes the patch field of the agent goal
+//    private PatchField goalPatchField;
+//    private QueueingPatchField.PatchFieldState goalQueueingPatchFieldState; // Denotes the state of this agent's floor field
+//    private QueueingPatchField goalQueueingPatchField; // Denotes the patch field of the agent goal
 //    private Patch goalNearestQueueingPatch; // Denotes the patch with the nearest queueing patch
 //
 //    private UniversityRoutePlan routePlan;
@@ -75,7 +80,7 @@
 //    private Vector attractiveForce;
 //    private Vector motivationForce;
 //
-//    public UniversityAgentMovement(Gate gate, Agent parent, double baseWalkingDistance, Coordinates coordinates) {
+//    public UniversityAgentMovement(Gate gate, Agent parent, double baseWalkingDistance, Coordinates coordinates) { // For !inOnStart agents
 //        this.parent = parent;
 //        this.position = new Coordinates(coordinates.getX(), coordinates.getY());
 //
@@ -112,7 +117,7 @@
 //        resetGoal(false); // Set the agent goal
 //    }
 //
-//    public UniversityAgentMovement(Patch spawnPatch, Agent parent, double baseWalkingDistance, Coordinates coordinates) {
+//    public UniversityAgentMovement(Patch spawnPatch, Agent parent, double baseWalkingDistance, Coordinates coordinates) { // For inOnStart agents
 //        this.parent = parent;
 //        this.position = new Coordinates(coordinates.getX(), coordinates.getY());
 //
@@ -121,13 +126,13 @@
 //        this.preferredWalkingDistance = this.baseWalkingDistance;
 //        this.currentWalkingDistance = preferredWalkingDistance;
 //
-//        // All newly generated agents will face the north by default
-//        this.proposedHeading = Math.toRadians(90.0);
-//        this.heading = Math.toRadians(90.0);
-//        this.previousHeading = Math.toRadians(90.0);
-//        this.fieldOfViewAngle = Math.toRadians(90.0);
+//        // All inOnStart agents will face the south by default
+//        this.proposedHeading = Math.toRadians(270.0);
+//        this.heading = Math.toRadians(270.0);
+//        this.previousHeading = Math.toRadians(270.0);
+//        this.fieldOfViewAngle = Math.toRadians(270.0);
 //
-//        // Add this agent to the start patch
+//        // Add this agent to the spawn patch
 //        this.currentPatch = spawnPatch;
 //        this.currentPatch.getAgents().add(parent);
 //        this.university = (University) currentPatch.getEnvironment();
@@ -137,8 +142,8 @@
 //        this.ticksAcceleratedOrMaintainedSpeed = 0;
 //
 //        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent);
-//        this.state = State.WALKING;
-//        this.action = Action.WILL_QUEUE;
+//        this.state = State.STANDING;
+//        this.action = Action.STANDING;
 //
 //        this.recentPatches = new ConcurrentHashMap<>();
 //
@@ -212,6 +217,10 @@
 //        return currentAmenity;
 //    }
 //
+//    public PatchField getCurrentPatchField() {
+//        return currentPatchField;
+//    }
+//
 //    public Amenity.AmenityBlock getGoalAttractor() {
 //        return goalAttractor;
 //    }
@@ -224,12 +233,16 @@
 //        return goalAmenity;
 //    }
 //
-//    public QueueingPatchField.PatchFieldState getGoalPatchFieldState() {
-//        return goalPatchFieldState;
+//    public PatchField getGoalPatchField() {
+//        return goalPatchField;
 //    }
 //
-//    public QueueingPatchField getGoalPatchField() {
-//        return goalPatchField;
+//    public QueueingPatchField.PatchFieldState getGoalQueueingPatchFieldState() {
+//        return goalQueueingPatchFieldState;
+//    }
+//
+//    public QueueingPatchField getGoalQueueingPatchField() {
+//        return goalQueueingPatchField;
 //    }
 //
 //    public Patch getGoalNearestQueueingPatch() {
@@ -447,8 +460,9 @@
 //        this.goalAmenity = null;
 //        this.goalQueueObject = null;
 //        this.goalAttractor = null;
-//        this.goalPatchFieldState = null; // Take note of the patch field state of this agent
-//        this.goalPatchField = null; // Take note of the patch field of the agent's goal
+//        this.goalPatchField = null;
+//        this.goalQueueingPatchFieldState = null; // Take note of the patch field state of this agent
+//        this.goalQueueingPatchField = null; // Take note of the patch field of the agent's goal
 //        this.goalNearestQueueingPatch = null; // Take note of the agent's nearest queueing patch
 //
 //        this.hasEncounteredAgentToFollow = false; // No agents have been encountered yet
@@ -469,330 +483,108 @@
 //        this.free(); // This agent is not yet stuck
 //    }
 //
+//    public void nextPlanItem () { // Parent function to extract the next item in this agent's route plan
+//        Class<? extends BaseObject> nextItem = this.routePlan.getCurrentClass();
+//
+//        if (PatchField.class.isAssignableFrom(nextItem)) {
+//            goToRoom(nextItem);
+//        }
+//        else if (Amenity.class.isAssignableFrom(nextItem)) {
+//            chooseGoal(nextItem);
+//        }
+//    }
+//
+//    public void goToRoom(Class<? extends BaseObject> nextRoomClass) {
+//        // TODO: go to room mechanisms
+//    }
+//
 //    // Set the nearest goal to this agent; That goal should also have the fewer agents queueing for it
 //    // To determine this, for each two agents in the queue (or fraction thereof), a penalty of one tile is added to the distance to this goal
-//    public void chooseGoal() {
+//    public void chooseGoal(Class<? extends BaseObject> nextAmenityClass) {
 //        if (this.goalAmenity == null) { // Only set the goal if one hasn't been set yet
-//            // Set the next amenity class
-//            Class<? extends BaseObject> nextAmenityClass = this.routePlan.getCurrentClass();
+//            // Get the amenity list in this university
+//            List<? extends Amenity> amenityListInFloor = this.university.getAmenityList((Class<? extends Amenity>) nextAmenityClass);
 //
-//            // Get the floors in this station which have the next amenity
-//            Station currentStation = this.currentFloor.getStation();
-//            Set<Floor> floorsWithNextAmenityClass = currentStation.getAmenityFloorIndex().get(nextAmenityClass);
+//            Amenity chosenAmenity = null;
+//            QueueObject chosenQueueObject = null;
+//            Amenity.AmenityBlock chosenAttractor = null;
 //
-//            // Get the amenity cluster where this agent came from
-//            Station.AmenityCluster originAmenityCluster
-//                    = currentStation.getAmenityClusterByAmenityAssorted().get(this.currentAmenity);
+//            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>(); // Compile all attractors from each amenity in the amenity list
 //
-//            // Get the amenity list in this floor
-//            List<? extends Amenity> amenityListInFloor = this.currentFloor.getAmenityList(nextAmenityClass);
+//            for (Amenity amenity : amenityListInFloor) {
+//                NonObstacle nonObstacle = ((NonObstacle) amenity);
 //
-//            // If this floor does not contain the next amenity class, consult the directory of each portal that serves
-//            // this floor and see which portals should be entered to reach the floor with the desired amenity class
-//            boolean willSeekPortal = false;
+//                if (!nonObstacle.isEnabled()) { // Only consider enabled amenities
+//                    continue;
+//                }
 //
-//            if (!floorsWithNextAmenityClass.contains(this.currentFloor)) {
-//                willSeekPortal = true;
-//            } else {
-//                // If there are no goal portals to be followed, simply have the agent choose its goal
-//                Amenity chosenAmenity = null;
-//                QueueObject chosenQueueObject = null;
-//                Amenity.AmenityBlock chosenAttractor = null;
-//                TrainDoor.TrainDoorEntranceLocation chosenTrainDoorEntranceLocation = null;
+//                // Filter the amenity search space only to what is compatible with this agent
+//                if (amenity instanceof UniversityGate) {
+//                    // If the goal of the agent is a station gate, this means the agent is leaving; So only consider station gates which allow exits and accepts the agent's direction
+//                    UniversityGate universityGateExit = ((UniversityGate) amenity);
 //
-//                // Compile all attractors from each amenity in the amenity list
-//                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-//
-//                for (Amenity amenity : amenityListInFloor) {
-//                    // Only consider amenities which are in the same assorted cluster as the amenity where the agent
-//                    // came from
-//                    Station.AmenityCluster amenityCluster
-//                            = currentStation.getAmenityClusterByAmenityAssorted().get(amenity);
-//
-//                    if (amenityCluster.equals(originAmenityCluster)) {
-//                        // Only considered enabled amenities
-//                        NonObstacle nonObstacle = ((NonObstacle) amenity);
-//
-//                        // Only consider enabled amenities
-//                        if (!nonObstacle.isEnabled()) {
-//                            continue;
-//                        }
-//
-//                        // Filter the amenity search space only to what is compatible with this agent
-//                        if (amenity instanceof StationGate) {
-//                            // If the goal of the agent is a station gate, this means the agent is leaving
-//                            // So only consider station gates which allow exits and accepts the agent's direction
-//                            StationGate stationGateExit = ((StationGate) amenity);
-//
-//                            if (stationGateExit.getStationGateMode() == StationGate.StationGateMode.ENTRANCE) {
-//                                continue;
-//                            } else {
-//                                if (
-//                                        !stationGateExit.getStationGateAgentTravelDirections().contains(
-//                                                this.travelDirection
-//                                        )
-//                                ) {
-//                                    continue;
-//                                }
-//                            }
-//                        } else if (amenity instanceof TrainDoor) {
-//                            // Only consider train doors which match this agent's travel direction
-//                            TrainDoor trainDoor = ((TrainDoor) amenity);
-//
-//                            if (trainDoor.getPlatformDirection() != this.travelDirection) {
-//                                continue;
-//                            }
-//
-//                            // Also, if the train door has a female-only restriction, make sure this agent is also
-//                            // female
-//                            if (trainDoor.isFemaleOnly() && this.parent.getGender() != Agent.AgentInformation.Gender.FEMALE) {
-//                                continue;
-//                            }
-//                        }
-//
-//                        // Compute the distance to each attractor
-//                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) {
-//                            double distanceToAttractor = Coordinates.distance(
-//                                    currentStation,
-//                                    this.currentPatch,
-//                                    attractor.getPatch()
-//                            );
-//
-//                            distancesToAttractors.put(attractor, distanceToAttractor);
-//                        }
+//                    if (universityGateExit.getUniversityGateMode() == UniversityGate.UniversityGateMode.ENTRANCE) {
+//                        continue;
 //                    }
 //                }
 //
-//                double minimumAttractorScore = Double.MAX_VALUE;
+//                for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+//                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+//                    distancesToAttractors.put(attractor, distanceToAttractor);
+//                }
+//            }
 //
-//                // Then for each compiled amenity and their distance from this agent, see which has the smallest
-//                // distance while taking into account the agents queueing for that amenity, if any
-//                for (
-//                        Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry
-//                        : distancesToAttractors.entrySet()
-//                ) {
-//                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-//                    Double candidateDistance = distancesToAttractorEntry.getValue();
+//            double minimumAttractorScore = Double.MAX_VALUE;
 //
-//                    Amenity currentAmenity;
-//                    QueueObject currentQueueObject;
-//                    TrainDoor.TrainDoorEntranceLocation currentTrainDoorEntranceLocation = null;
+//            // Then for each compiled amenity and their distance from this agent, see which has the smallest distance while taking into account the agents queueing for that amenity, if any
+//            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
+//                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+//                Double candidateDistance = distancesToAttractorEntry.getValue();
 //
-//                    List<QueueObject> turnstileQueueObjects = new ArrayList<>();
+//                Amenity currentAmenity;
+//                QueueObject currentQueueObject;
 //
-//                    currentAmenity = candidateAttractor.getParent();
+//                List<QueueObject> turnstileQueueObjects = new ArrayList<>();
 //
-//                    // Only collect queue objects from queueables
-//                    if (currentAmenity instanceof Queueable) {
-//                        if (currentAmenity instanceof Turnstile) {
-//                            Turnstile turnstile = ((Turnstile) currentAmenity);
+//                currentAmenity = candidateAttractor.getParent();
 //
-////                            currentQueueObject
-////                                    = turnstile.getQueueObjects().get(this.disposition);
+//                if (currentAmenity instanceof Queueable) { // Only collect queue objects from queueables
+//                    Queueable queueable = ((Queueable) currentAmenity);
+//                    currentQueueObject = queueable.getQueueObject();
+//                }
+//                else {
+//                    currentQueueObject = null;
+//                }
 //
-//                            turnstileQueueObjects.addAll(turnstile.getQueueObjects().values());
+//                // If this is a queueable, take into account the agents queueing (except if it is a security gate)
+//                // If this is not a queueable (or if it's a security gate), the distance will suffice
+//                double attractorScore;
 //
-////                            turnstileQueueObjects = (List<QueueObject>) turnstile.getQueueObjects().values();
-//                        } else if (currentAmenity instanceof TrainDoor) {
-//                            TrainDoor trainDoor = ((TrainDoor) currentAmenity);
-//
-//                            currentTrainDoorEntranceLocation
-//                                    = trainDoor.getTrainDoorEntranceLocationFromAttractor(candidateAttractor);
-//                            currentQueueObject
-//                                    = trainDoor.getQueueObjectFromTrainDoorEntranceLocation(
-//                                    currentTrainDoorEntranceLocation
-//                            );
-//                        } else {
-//                            Queueable queueable = ((Queueable) currentAmenity);
-//
-//                            currentQueueObject = queueable.getQueueObject();
-//                        }
-//                    } else {
-//                        currentQueueObject = null;
+//                if (currentQueueObject != null) {
+//                    if (!(currentAmenity instanceof Security)) {
+//                        double agentPenalty = 25.0; // Avoid queueing to long lines
+//                        attractorScore = candidateDistance + currentQueueObject.getAgentsQueueing().size() * agentPenalty;
 //                    }
-//
-//                    // If this is a queueable, take into account the agents queueing (except if it is a security gate)
-//                    // If this is not a queueable (or if it's a security gate), the distance will suffice
-//                    double attractorScore;
-//
-//                    if (currentQueueObject != null) {
-//                        if (!(currentAmenity instanceof Security)) {
-//                            // Avoid queueing to long lines
-//                            double agentPenalty = (currentAmenity instanceof TrainDoor) ? 50.0 : 25.0;
-//
-//                            if (currentAmenity instanceof Turnstile) {
-//                                double agentsQueueingForTurnstile = 0.0;
-//
-//                                for (QueueObject queueObject : turnstileQueueObjects) {
-//                                    agentsQueueingForTurnstile += queueObject.getAgentsQueueing().size();
-//                                }
-//
-//                                double modifiedCandidateDistance = candidateDistance;
-//
-//                                final double candidateDistanceLimit = 15.0;
-//                                final double distantCandidatePenalty = 100.0;
-//
-//                                if (modifiedCandidateDistance > candidateDistanceLimit) {
-//                                    modifiedCandidateDistance = candidateDistance * distantCandidatePenalty;
-//                                }
-//
-//                                attractorScore
-//                                        = modifiedCandidateDistance
-//                                        + agentsQueueingForTurnstile * agentPenalty;
-//                            } else {
-//                                attractorScore
-//                                        = candidateDistance
-//                                        + currentQueueObject.getAgentsQueueing().size() * agentPenalty;
-//                            }
-//                        } else {
-//                            attractorScore = candidateDistance;
-//                        }
-//                    } else {
+//                    else {
 //                        attractorScore = candidateDistance;
 //                    }
-//
-//                    if (attractorScore < minimumAttractorScore) {
-//                        minimumAttractorScore = attractorScore;
-//
-//                        chosenAmenity = currentAmenity;
-//                        chosenQueueObject = currentQueueObject;
-//                        chosenAttractor = candidateAttractor;
-//                        chosenTrainDoorEntranceLocation = currentTrainDoorEntranceLocation;
-//                    }
+//                }
+//                else {
+//                    attractorScore = candidateDistance;
 //                }
 //
-//                // If no amenities in this floor were found to have a path from this agent, seek the portals instead
-//                if (chosenAmenity == null) {
-//                    willSeekPortal = true;
-//                } else {
-//                    // Set the goal nearest to this agent
-//                    this.goalAmenity = chosenAmenity;
-//                    this.goalQueueObject = chosenQueueObject;
-//                    this.goalAttractor = chosenAttractor;
-//                    this.goalPatch = chosenAttractor.getPatch();
-//                    this.goalTrainDoorEntranceLocation = chosenTrainDoorEntranceLocation;
+//                if (attractorScore < minimumAttractorScore) {
+//                    minimumAttractorScore = attractorScore;
+//                    chosenAmenity = currentAmenity;
+//                    chosenQueueObject = currentQueueObject;
+//                    chosenAttractor = candidateAttractor;
 //                }
 //            }
 //
-//            if (willSeekPortal) {
-//                // Get the nearest relevant portal to this agent
-//                Portal.Directory.DirectoryItem directoryItemOfAgent = new Portal.Directory.DirectoryItem(
-//                        this.travelDirection,
-//                        nextAmenityClass,
-//                        currentStation.getAmenityClusterByAmenity().get(this.currentAmenity),
-//                        null,
-//                        0.0
-//                );
-//
-//                TreeMap<Double, Portal> relevantPortals = new TreeMap<>();
-//
-//                // TODO: Consider other portals
-//
-//                // Compile the stair portals that serve this floor
-//                List<StairShaft> stairShafts = currentStation.getStairShafts();
-//
-//                double distanceToPortal;
-//                double distanceToTraverse;
-//                double peopleInPortalScore;
-//
-//                double portalScore;
-//
-//                for (StairShaft stairShaft : stairShafts) {
-//                    StairPortal lowerStairPortal = (StairPortal) stairShaft.getLowerPortal();
-//                    StairPortal upperStairPortal = (StairPortal) stairShaft.getUpperPortal();
-//
-//                    // Only consider amenities which are in the same assorted cluster as the amenity where the agent
-//                    // came from
-//                    Station.AmenityCluster lowerAmenityCluster
-//                            = currentStation.getAmenityClusterByAmenityAssorted().get(lowerStairPortal);
-//
-//                    Station.AmenityCluster upperAmenityCluster
-//                            = currentStation.getAmenityClusterByAmenityAssorted().get(upperStairPortal);
-//
-//                    if (lowerStairPortal.getFloorServed().equals(currentFloor)) {
-//                        if (lowerAmenityCluster.equals(originAmenityCluster)) {
-//                            Portal.Directory.DirectoryItem directoryItemInPortal
-//                                    = lowerStairPortal.getDirectory().get(directoryItemOfAgent);
-//
-//                            if (directoryItemInPortal != null) {
-////                                // Only consider attractors in amenities which are accessible from the current position
-////                                AgentPath path = computePathWithinFloor(
-////                                        this.currentPatch,
-////                                        lowerStairPortal.getAttractors().get(0).getPatch(),
-////                                        true,
-////                                        false
-////                                );
-////
-////                                if (path != null) {
-//                                // Other than merely considering the distance to the portal, also take into account the
-//                                // distance it would take to reach the goal through the portal, as well as the number of
-//                                // people already in that portal
-//                                distanceToPortal = Coordinates.distance(
-//                                        currentStation,
-//                                        this.currentPatch,
-//                                        lowerStairPortal.getAttractors().get(0).getPatch()
-//                                );
-//
-//                                distanceToTraverse = directoryItemInPortal.getDistance();
-//
-//                                final double peopleInPortalPenalty = 10.0;
-//                                peopleInPortalScore
-//                                        = lowerStairPortal.getStairShaft().getAgentsAscending()
-//                                        * peopleInPortalPenalty;
-//
-//                                portalScore = distanceToPortal + distanceToTraverse + peopleInPortalScore;
-//
-//                                relevantPortals.put(
-//                                        portalScore,
-//                                        lowerStairPortal
-//                                );
-//                            }
-////                            }
-//                        }
-//                    }
-//
-//                    if (upperStairPortal.getFloorServed().equals(currentFloor)) {
-//                        if (upperAmenityCluster.equals(originAmenityCluster)) {
-//                            Portal.Directory.DirectoryItem directoryItemInPortal
-//                                    = upperStairPortal.getDirectory().get(directoryItemOfAgent);
-//
-//                            if (directoryItemInPortal != null) {
-////                                // Only consider attractors in amenities which are accessible from the current position
-////                                AgentPath path = computePathWithinFloor(
-////                                        this.currentPatch,
-////                                        upperStairPortal.getAttractors().get(0).getPatch(),
-////                                        true,
-////                                        false
-////                                );
-////
-////                                if (path != null) {
-//                                // Other than merely considering the distance to the portal, also take into account the
-//                                // distance it would take to reach the goal through the portal
-//                                distanceToPortal = Coordinates.distance(
-//                                        currentStation,
-//                                        this.currentPatch,
-//                                        upperStairPortal.getAttractors().get(0).getPatch()
-//                                );
-//
-//                                distanceToTraverse = directoryItemInPortal.getDistance();
-//
-//                                final double peopleInPortalPenalty = 10.0;
-//                                peopleInPortalScore
-//                                        = upperStairPortal.getStairShaft().getAgentsDescending()
-//                                        * peopleInPortalPenalty;
-//
-//                                portalScore = distanceToPortal + distanceToTraverse + peopleInPortalScore;
-//
-//                                relevantPortals.put(
-//                                        portalScore,
-//                                        upperStairPortal
-//                                );
-////                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+//            this.goalAmenity = chosenAmenity;
+//            this.goalQueueObject = chosenQueueObject;
+//            this.goalAttractor = chosenAttractor;
+//            this.goalPatch = chosenAttractor.getPatch();
 //        }
 //    }
 //
@@ -1119,7 +911,7 @@
 //                                    = PatchFieldPatch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable());
 //
 //                            if (PatchFieldValues != null) {
-//                                PatchFieldValue = PatchFieldValues.get(this.goalPatchFieldState);
+//                                PatchFieldValue = PatchFieldValues.get(this.goalQueueingPatchFieldState);
 //                            }
 //
 //                            if (
@@ -1889,7 +1681,7 @@
 //    }
 //
 //    public boolean hasReachedQueueingPatchField() { // Check if this agent has reached its goal's queueing patch field
-//        for (Patch patch : this.goalPatchField.getAssociatedPatches()) {
+//        for (Patch patch : this.goalQueueingPatchField.getAssociatedPatches()) {
 //            if (isOnOrCloseToPatch(patch) && hasClearLineOfSight(this.position, patch.getPatchCenterCoordinates(), true)) {
 //                return true;
 //            }
@@ -1920,7 +1712,7 @@
 //
 //    public boolean hasReachedQueueingPatchFieldApex() { // Check if this agent has reached an apex of its floor field
 //        // If the agent is in any of this floor field's apices, return true
-//        for (Patch apex : this.goalPatchField.getApices()) {
+//        for (Patch apex : this.goalQueueingPatchField.getApices()) {
 //            if (isOnOrCloseToPatch(apex)) {
 //                return true;
 //            }
@@ -1963,24 +1755,6 @@
 //        this.isWaitingOnAmenity = false;
 //    }
 //
-//    // Have this agent stop waiting for a portal to become vacant
-//    public void endWaitingOnPortal() {
-//        this.isWaitingOnPortal = false;
-//    }
-//
-//    // Enable pathfinding for stored value card agents
-//    public void beginStoredValuePathfinding() {
-//        this.willPathfind = true;
-//    }
-//
-//    // Disable pathfinding for stored value card agents
-//    public void endStoredValuePathfinding() {
-//        this.currentPath = null;
-//
-//        this.willPathfind = false;
-//        this.hasPathfound = true;
-//    }
-//
 //    // Check if this agent has reached its goal
 //    public boolean hasReachedGoal() {
 //        // If the agent is still waiting for an amenity to be vacant, it hasn't reached the goal yet
@@ -2008,10 +1782,7 @@
 //        // Set the current amenity
 //        this.currentAmenity = this.goalAmenity;
 //
-//        // If this goal is a portal, add it to the list of visited portals
-//        if (this.currentAmenity instanceof Portal) {
-//            this.visitedPortals.add((Portal) this.currentAmenity);
-//        } else if (this.currentAmenity instanceof Turnstile) {
+//        if (this.currentAmenity instanceof Turnstile) {
 //            // If this goal is a turnstile, set the heading
 //            this.heading = this.computeFirstStepHeading();
 //        }
@@ -2097,218 +1868,6 @@
 //        }
 //    }
 //
-//    // Check if this agent will enter the train
-//    public boolean willEnterTrain() {
-//        TrainDoor closestTrainDoor = getGoalAmenityAsTrainDoor();
-//
-//        if (closestTrainDoor != null) {
-//            // If the goal train door is open, check if the agent is willing to ride the train
-//            if (isTrainDoorOpen(closestTrainDoor)) {
-//                // TODO: Have a better way of checking whether this agent has necessary information, or not
-//                //  perhaps insert a different agent information object to a agent when at train simulation and
-//                //  at station editing?
-//                if (this.getRoutePlan().getOriginStation() != null) {
-//                    // TODO: Get station in a better way
-//                    com.trainsimulation.model.core.environment.trainservice.agentservice.stationset.Station station
-//                            = this.getRoutePlan().getOriginStation();
-//
-//                    final double loadLimit = 0.7;
-//                    final double carriageLoadLimit = closestTrainDoor.getTrainCarriage(station).getLoadFactor();
-//
-//                    // Carriage full/overfull, don't ride
-//                    if (carriageLoadLimit >= 1.0) {
-//                        return false;
-//                    } else if (carriageLoadLimit > loadLimit) {
-//                        // Carriage almost full, ride (or don't) based on a probability
-//                        final double loadLimitLeft = 1.0 - loadLimit;
-//                        final double probability = (1 - carriageLoadLimit) / loadLimitLeft;
-//
-//                        return Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() < probability;
-//                    } else {
-//                        // A lot of room in the carriages, ride
-//                        return true;
-//                    }
-//                } else {
-//                    return true;
-//                }
-//            } else {
-//                return false;
-//            }
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    // Check whether this agent's goal as a train door is open
-//    private boolean isTrainDoorOpen(TrainDoor trainDoor) {
-//        return trainDoor.isOpen();
-//    }
-//
-//    // Check if this agent will use a portal
-//    public boolean willHeadToPortal() {
-//        return this.goalFloor != null && this.goalPortal != null;
-//    }
-//
-//    // Check if this agent's next floor is below the current floor
-//    public boolean isGoalFloorLower() {
-//        if (!willHeadToPortal()) {
-//            return false;
-//        } else {
-//            List<Floor> floorsInThisStation = this.currentFloor.getStation().getFloors();
-//
-//            // Get the index of the current and goal floors
-//            int currentFloorIndex = floorsInThisStation.indexOf(this.currentFloor);
-//            int goalFloorIndex = floorsInThisStation.indexOf(this.goalFloor);
-//
-//            assert currentFloorIndex != goalFloorIndex;
-//
-//            return goalFloorIndex < currentFloorIndex;
-//        }
-//    }
-//
-//    // Check if this agent will enter the portal
-//    public boolean willEnterPortal() {
-//        Portal closestPortal = getGoalAmenityAsPortal();
-//
-//        if (closestPortal != null) {
-//            if (closestPortal instanceof StairPortal) {
-//                StairPortal stairPortal = ((StairPortal) closestPortal);
-//
-//                if (this.isGoalFloorLower()) {
-//                    return !stairPortal.getStairShaft().isDescendingQueueAtCapacity();
-//                } else {
-//                    return !stairPortal.getStairShaft().isAscendingQueueAtCapacity();
-//                }
-//            } else if (closestPortal instanceof EscalatorPortal) {
-//                EscalatorPortal escalatorPortal = ((EscalatorPortal) closestPortal);
-//
-//                return !escalatorPortal.getEscalatorShaft().isQueueAtCapacity();
-//            } else if (closestPortal instanceof ElevatorPortal) {
-//                return false;
-//            } else {
-//                return false;
-//            }
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    // Have this agent enter its portal
-//    public void enterPortal() {
-//        // Remove the agent from its patch
-//        this.currentPatch.getAgents().remove(this.parent);
-//
-//        // Remove this agent from this floor
-//        this.currentFloor.getAgentsInFloor().remove(this.parent);
-//
-//        // Remove this agent from its current floor's patch set, if necessary
-//        SortedSet<Patch> currentPatchSet = this.currentPatch.getFloor().getAgentPatchSet();
-//
-//        if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
-//            currentPatchSet.remove(this.currentPatch);
-//        }
-//
-//        // Set the agent's patch to null
-//        this.currentPatch = null;
-//    }
-//
-//    // Have this agent try exiting its portal
-//    public boolean exitPortal() {
-//        // Move towards the other end of the portal
-//        Portal portal = (Portal) this.currentAmenity;
-//        portal = portal.getPair();
-//
-//        // Try to emit a agent
-//        Patch spawnPatch = portal.emit();
-//
-//        // Only proceed is a agent can be emitted
-//        if (spawnPatch != null) {
-//            // Get the patch of the spawner which released this agent
-//            Patch spawnerPatch = spawnPatch;
-//
-//            // Set the current patch, floor
-//            this.currentPatch = spawnerPatch;
-//
-//            this.currentFloor = portal.getFloorServed();
-//            this.currentAmenity = portal;
-//
-//            // Set the agent's position
-//            this.position.setX(spawnerPatch.getPatchCenterCoordinates().getX());
-//            this.position.setY(spawnerPatch.getPatchCenterCoordinates().getY());
-//
-//            // Set the new state and action
-//            this.state = State.WALKING;
-//
-//            if (this.isReadyToExit) {
-//                this.action = Action.EXITING_STATION;
-//            } else {
-//                this.action = Action.WILL_QUEUE;
-//            }
-//
-//            // Add the newly created agent to the list of agents in the floor
-//            this.currentFloor.getAgentsInFloor().add(this.parent);
-//
-//            // Add the agent's patch position to its current floor's patch set as well
-//            this.currentFloor.getAgentPatchSet().add(spawnerPatch);
-//
-//            return true;
-//        } else {
-//            // No agent emitted, return false
-//            return false;
-//        }
-//    }
-//
-//    // Board train
-//    public void boardTrain(TrainDoor trainDoor) {
-//        // Remove the agent from its current station
-//        trainDoor.despawnAgent(this.parent);
-//
-//        // Set the agent's new state and action
-//        this.state = State.IN_TRAIN;
-//        this.action = Action.RIDING_TRAIN;
-//
-//        // If this agent is female and has chosen a female only carriage, mark as such
-//        Agent.AgentInformation agentInformation = this.getParent().getAgentInformation();
-//
-//        if (agentInformation.getGender() == Agent.AgentInformation.Gender.FEMALE) {
-//            if (trainDoor.isFemaleOnly()) {
-//                agentInformation.setChosenFemaleOnlyCarriage(true);
-//            }
-//        }
-//
-//        // The agent is not at any patch
-//        this.currentPatch = null;
-//    }
-//
-//    // Alight train
-//    public void alightTrain(Gate.GateBlock spawner) {
-//        // Before anything else, reset the agent movement to avoid residual values from the previous station
-//        this.resetGoal(false);
-//
-//        // Get the patch of the spawner which released this agent
-//        Patch spawnerPatch = spawner.getPatch();
-//
-//        // Set the new state and action of the alighted agent
-//        this.state = State.WALKING;
-//        this.action = Action.WILL_QUEUE;
-//
-//        // Set the current patch, floor
-//        this.currentPatch = spawnerPatch;
-//
-//        this.currentFloor = spawnerPatch.getFloor();
-//        this.currentAmenity = spawner.getParent();
-//
-//        // Set the agent's position
-//        this.position.setX(spawner.getPatch().getPatchCenterCoordinates().getX());
-//        this.position.setY(spawner.getPatch().getPatchCenterCoordinates().getY());
-//
-//        // Add the newly created agent to the list of agents in the floor
-//        this.currentFloor.getAgentsInFloor().add(this.parent);
-//
-//        // Add the agent's patch position to its current floor's patch set as well
-//        this.currentFloor.getAgentPatchSet().add(spawner.getPatch());
-//    }
-//
 //    // Despawn this agent
 //    public void despawn() {
 //        if (this.currentPatch != null) {
@@ -2348,50 +1907,26 @@
 //            // If a queueing patch has not yet been set for this goal, set it
 //            if (this.goalNearestQueueingPatch == null) {
 //                // If the next floor field has not yet been set for this queueing patch, set it
-//                if (this.goalPatchFieldState == null && this.goalPatchField == null) {
+//                if (this.goalQueueingPatchFieldState == null && this.goalQueueingPatchField == null) {
 //                    Queueable queueable = this.getGoalAmenityAsQueueable();
 //
 //                    if (queueable instanceof Turnstile) {
-////                        this.goalPatchFieldState = new QueueingPatchField.PatchFieldState(
-////                                this.disposition,
-////                                State.IN_QUEUE,
-////                                this.getGoalAmenityAsQueueable()
-////                        );
-//
-//                        this.goalPatchField = queueable.retrievePatchField(
+//                        this.goalQueueingPatchField = queueable.retrievePatchField(
 //                                this.goalQueueObject,
-//                                this.goalPatchFieldState
-//                        );
-//                    } else if (queueable instanceof TrainDoor) {
-////                        this.goalPatchFieldState = new PlatformPatchField.PlatformPatchFieldState(
-////                                this.disposition,
-////                                State.IN_QUEUE,
-////                                this.getGoalAmenityAsQueueable(),
-////                                this.goalTrainDoorEntranceLocation
-////                        );
-//
-//                        this.goalPatchField = queueable.retrievePatchField(
-//                                this.goalQueueObject,
-//                                this.goalPatchFieldState
+//                                this.goalQueueingPatchFieldState
 //                        );
 //                    } else {
-////                        this.goalPatchFieldState = new QueueingPatchField.PatchFieldState(
-////                                this.disposition,
-////                                State.IN_QUEUE,
-////                                this.getGoalAmenityAsQueueable()
-////                        );
-//
-//                        this.goalPatchField = queueable.retrievePatchField(
+//                        this.goalQueueingPatchField = queueable.retrievePatchField(
 //                                queueable.getQueueObject(),
-//                                this.goalPatchFieldState
+//                                this.goalQueueingPatchFieldState
 //                        );
 //                    }
 //                }
 //
-//                if (this.goalPatchField == null) {
+//                if (this.goalQueueingPatchField == null) {
 //                    this.getGoalAmenityAsQueueable().retrievePatchField(
 //                            this.goalQueueObject,
-//                            this.goalPatchFieldState
+//                            this.goalQueueingPatchFieldState
 //                    );
 //                }
 //
@@ -2687,27 +2222,6 @@
 //            }
 //
 //            this.goalPatch = nextPatchInPath;
-//
-////            ///
-////
-////            do {
-////                goalPatchInPath = this.currentPath.getPath().pop();
-////            } while (
-////                    !this.currentPath.getPath().isEmpty()
-////                            && goalPatchInPath.getAmenityBlocksAround() == 0
-////                            && this.isOnOrCloseToPatch(goalPatchInPath)
-////                            && this.hasClearLineOfSight(
-////                            this.position,
-////                            goalPatchInPath.getPatchCenterCoordinates(),
-////                            true
-////                    )
-////            );
-////
-//////            if (goalPatchInPath == null) {
-//////                return false;
-//////            } else {
-////            this.goalPatch = goalPatchInPath;
-//////            }
 //        } else {
 //            this.goalPatch = this.currentPath.getPath().peek();
 //        }
@@ -2733,7 +2247,7 @@
 //        final double maximumPatchFieldValueThreshold = 0.8;
 //
 //        // Get the patches associated with the current goal
-//        List<Patch> associatedPatches = this.goalPatchField.getAssociatedPatches();
+//        List<Patch> associatedPatches = this.goalQueueingPatchField.getAssociatedPatches();
 //
 //        double minimumDistance = Double.MAX_VALUE;
 //        Patch nearestPatch = null;
@@ -2743,7 +2257,7 @@
 //
 //        for (Patch patch : associatedPatches) {
 //            double PatchFieldValue
-//                    = patch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable()).get(this.goalPatchFieldState);
+//                    = patch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable()).get(this.goalQueueingPatchFieldState);
 //
 ////            if (PatchFieldValue <= maximumPatchFieldValueThreshold) {
 //            // Get the distance of that patch from this agent
@@ -2775,12 +2289,12 @@
 //                            && PatchFieldStateDoubleMap != null
 //                            && !PatchFieldStateDoubleMap.isEmpty()
 //                            && PatchFieldStateDoubleMap.get(
-//                            this.goalPatchFieldState
+//                            this.goalQueueingPatchFieldState
 //                    ) != null
 //            ) {
 //                double futurePatchFieldValue = patch.getPatchFieldValues()
 //                        .get(this.getGoalAmenityAsQueueable())
-//                        .get(this.goalPatchFieldState);
+//                        .get(this.goalQueueingPatchFieldState);
 //
 ////                if (currentPatchFieldValue == null) {
 //                valueSum += futurePatchFieldValue;
@@ -2793,10 +2307,6 @@
 //
 //        // If it gets to this point without finding a floor field value greater than zero, return early
 //        if (PatchFieldCandidates.isEmpty()) {
-////            if (this.getGoalAmenityAsTrainDoor() != null) {
-////                this.computeBestQueueingPatchWeighted(PatchFieldList);
-////            }
-//
 //            return null;
 //        }
 //
@@ -2835,12 +2345,12 @@
 //                            && PatchFieldStateDoubleMap != null
 //                            && !PatchFieldStateDoubleMap.isEmpty()
 //                            && PatchFieldStateDoubleMap.get(
-//                            this.goalPatchFieldState
+//                            this.goalQueueingPatchFieldState
 //                    ) != null
 //            ) {
 //                double PatchFieldValue = patch.getPatchFieldValues()
 //                        .get(this.getGoalAmenityAsQueueable())
-//                        .get(this.goalPatchFieldState);
+//                        .get(this.goalQueueingPatchFieldState);
 //
 //                if (PatchFieldValue >= maximumPatchFieldValue) {
 //                    if (PatchFieldValue > maximumPatchFieldValue) {
@@ -2898,23 +2408,7 @@
 //    }
 //
 //    private Patch getBestQueueingPatch() {
-//        // Get the patches to explore
-////        List<Patch> patchesToExplore
-////                = Floor.get7x7Field(
-////                this.currentFloor,
-////                this.currentPatch,
-////                this.proposedHeading,
-////                false,
-////                this.fieldOfViewAngle
-////        );
-//
-//        List<Patch> patchesToExplore = this.get7x7Field(
-//                this.proposedHeading,
-//                false,
-//                this.fieldOfViewAngle
-//        );
-//
-////        this.toExplore = patchesToExplore;
+//        List<Patch> patchesToExplore = this.get7x7Field(this.proposedHeading, false, this.fieldOfViewAngle);
 //
 //        return this.computeBestQueueingPatch(patchesToExplore);
 //    }
@@ -3013,11 +2507,7 @@
 //    }
 //
 //    // Check if there is a clear line of sight from one point to another
-//    private boolean hasClearLineOfSight(
-//            Coordinates sourceCoordinates,
-//            Coordinates targetCoordinates,
-//            boolean includeStartingPatch
-//    ) {
+//    private boolean hasClearLineOfSight(Coordinates sourceCoordinates, Coordinates targetCoordinates, boolean includeStartingPatch) {
 //        // First of all, check if the target has an obstacle
 //        // If it does, then no need to check what is between the two points
 //        if (hasObstacle(this.currentFloor.getPatch(targetCoordinates))) {
@@ -3059,8 +2549,7 @@
 //        return true;
 //    }
 //
-//    // Check if this agent comes before the given agent
-//    private boolean comesBefore(Agent agent) {
+//    private boolean comesBefore(Agent agent) { // Check if this agent comes before the given agent
 //        if (this.goalQueueObject != null) {
 //            List<Agent> goalQueue = this.goalQueueObject.getAgentsQueueing();
 //
@@ -3113,7 +2602,7 @@
 //    }
 //
 //    public enum State {
-//        WALKING, IN_QUEUEABLE, IN_QUEUE, IN_NONQUEUEABLE, IN_CLASS, IN_BATHROOM
+//        STANDING, WALKING, IN_QUEUEABLE, IN_QUEUE, IN_NONQUEUEABLE, IN_CLASS, IN_BATHROOM
 //    }
 //
 //    public enum Action {
@@ -3122,7 +2611,9 @@
 //        /* In queue actions */
 //        ASSEMBLING, QUEUEING, HEADING_TO_QUEUEABLE,
 //        /* In queueable actions */
-//        SECURITY_CHECKING, FOUNTAIN_DRINKING
+//        SECURITY_CHECKING, FOUNTAIN_DRINKING,
+//        /* Standing actions */
+//        STANDING
 //    }
 //
 //}
