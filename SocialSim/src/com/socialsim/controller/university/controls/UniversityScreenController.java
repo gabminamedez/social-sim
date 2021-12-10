@@ -46,7 +46,7 @@ public class UniversityScreenController extends ScreenController {
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
 
-    private final double CANVAS_SCALE = 0.5;
+    private final double CANVAS_SCALE = 0.3;
 
     public UniversityScreenController() {
     }
@@ -59,8 +59,8 @@ public class UniversityScreenController extends ScreenController {
     public void initializeAction() {
         int width = 60; // Value may be from 25-100
         int length = 120; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS);
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS);
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 120 columns
         University university = University.UniversityFactory.create(rows, columns);
         initializeUniversity(university);
         setElements();

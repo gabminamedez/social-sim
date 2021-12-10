@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     public static UniversitySimulator universitySimulator = null;
+
     public static boolean hasMadeChoice = false;
     public static FXMLLoader mainScreenLoader;
     public static Parent mainRoot;
