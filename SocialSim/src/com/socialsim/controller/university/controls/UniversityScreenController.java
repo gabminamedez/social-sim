@@ -10,6 +10,7 @@ import com.socialsim.model.core.environment.university.patchfield.Bathroom;
 import com.socialsim.model.core.environment.university.patchfield.Classroom;
 import com.socialsim.model.core.environment.university.patchfield.Laboratory;
 import com.socialsim.model.core.environment.university.patchfield.Wall;
+import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -90,7 +91,7 @@ public class UniversityScreenController extends ScreenController {
                 }
             }
         }
-        Wall.wallFactory.create(wallPatches, 1);
+        Main.universitySimulator.getUniversity().getWalls().add(Wall.wallFactory.create(wallPatches, 1));
 
         List<Patch> fBathroomPatches = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
@@ -98,7 +99,7 @@ public class UniversityScreenController extends ScreenController {
                 fBathroomPatches.add(university.getPatch(i, j));
             }
         }
-        Bathroom.bathroomFactory.create(fBathroomPatches, 1);
+        Main.universitySimulator.getUniversity().getBathrooms().add(Bathroom.bathroomFactory.create(fBathroomPatches, 1));
 
         List<Patch> mBathroomPatches = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
@@ -106,15 +107,15 @@ public class UniversityScreenController extends ScreenController {
                 mBathroomPatches.add(university.getPatch(i, j));
             }
         }
-        Bathroom.bathroomFactory.create(mBathroomPatches, 2);
+        Main.universitySimulator.getUniversity().getBathrooms().add(Bathroom.bathroomFactory.create(mBathroomPatches, 2));
 
         List<Patch> classroom1Patches = new ArrayList<>();
         for (int i = 4; i < 24; i++) {
             for (int j = 5; j < 20; j++) {
                 classroom1Patches.add(university.getPatch(i, j));
             }
-        }
-        Classroom.classroomFactory.create(classroom1Patches, 1);
+        };
+        Main.universitySimulator.getUniversity().getClassrooms().add(Classroom.classroomFactory.create(classroom1Patches, 1));
 
         List<Patch> classroom2Patches = new ArrayList<>();
         for (int i = 4; i < 24; i++) {
@@ -122,7 +123,7 @@ public class UniversityScreenController extends ScreenController {
                 classroom2Patches.add(university.getPatch(i, j));
             }
         }
-        Classroom.classroomFactory.create(classroom2Patches, 2);
+        Main.universitySimulator.getUniversity().getClassrooms().add(Classroom.classroomFactory.create(classroom2Patches, 2));
 
         List<Patch> classroom3Patches = new ArrayList<>();
         for (int i = 9; i < 24; i++) {
@@ -130,7 +131,7 @@ public class UniversityScreenController extends ScreenController {
                 classroom3Patches.add(university.getPatch(i, j));
             }
         }
-        Classroom.classroomFactory.create(classroom3Patches, 3);
+        Main.universitySimulator.getUniversity().getClassrooms().add(Classroom.classroomFactory.create(classroom3Patches, 3));
 
         List<Patch> classroom4Patches = new ArrayList<>();
         for (int i = 36; i < 56; i++) {
@@ -138,7 +139,7 @@ public class UniversityScreenController extends ScreenController {
                 classroom4Patches.add(university.getPatch(i, j));
             }
         }
-        Classroom.classroomFactory.create(classroom4Patches, 4);
+        Main.universitySimulator.getUniversity().getClassrooms().add(Classroom.classroomFactory.create(classroom4Patches, 4));
 
         List<Patch> classroom5Patches = new ArrayList<>();
         for (int i = 36; i < 56; i++) {
@@ -146,7 +147,7 @@ public class UniversityScreenController extends ScreenController {
                 classroom5Patches.add(university.getPatch(i, j));
             }
         }
-        Classroom.classroomFactory.create(classroom5Patches, 5);
+        Main.universitySimulator.getUniversity().getClassrooms().add(Classroom.classroomFactory.create(classroom5Patches, 5));
 
         List<Patch> laboratoryPatches = new ArrayList<>();
         for (int i = 36; i < 56; i++) {
@@ -154,7 +155,7 @@ public class UniversityScreenController extends ScreenController {
                 laboratoryPatches.add(university.getPatch(i, j));
             }
         }
-        Laboratory.laboratoryFactory.create(laboratoryPatches, 1);
+        Main.universitySimulator.getUniversity().getLaboratories().add(Laboratory.laboratoryFactory.create(laboratoryPatches, 1));
 
         List<Patch> benchRightPatches = new ArrayList<>();
         benchRightPatches.add(university.getPatch(43,0));
@@ -265,23 +266,23 @@ public class UniversityScreenController extends ScreenController {
         ChairMapper.draw(chairPatches);
 
         List<Patch> doorDownPatches = new ArrayList<>();
-        doorDownPatches.add(university.getPatch(24,5)); // Classroom 1
-        doorDownPatches.add(university.getPatch(24,18)); // Classroom 1
-        doorDownPatches.add(university.getPatch(24,30)); // Classroom 2
-        doorDownPatches.add(university.getPatch(24,43)); // Classroom 2
+        doorDownPatches.add(university.getPatch(23,5)); // Classroom 1
+        doorDownPatches.add(university.getPatch(23,18)); // Classroom 1
+        doorDownPatches.add(university.getPatch(23,30)); // Classroom 2
+        doorDownPatches.add(university.getPatch(23,43)); // Classroom 2
         DoorMapper.draw(doorDownPatches, "DOWN");
 
         List<Patch> doorLeftPatches = new ArrayList<>();
-        doorLeftPatches.add(university.getPatch(9,71)); // Classroom 3
-        doorLeftPatches.add(university.getPatch(22,71)); // Classroom 3
+        doorLeftPatches.add(university.getPatch(9,72)); // Classroom 3
+        doorLeftPatches.add(university.getPatch(22,72)); // Classroom 3
         DoorMapper.draw(doorLeftPatches, "LEFT");
 
         List<Patch> doorUpPatches = new ArrayList<>();
-        doorUpPatches.add(university.getPatch(35,40)); // Classroom 4
-        doorUpPatches.add(university.getPatch(35,53)); // Classroom 4
-        doorUpPatches.add(university.getPatch(35,65)); // Classroom 5
-        doorUpPatches.add(university.getPatch(35,78)); // Classroom 5
-        doorUpPatches.add(university.getPatch(35,99)); // Laboratory
+        doorUpPatches.add(university.getPatch(36,40)); // Classroom 4
+        doorUpPatches.add(university.getPatch(36,53)); // Classroom 4
+        doorUpPatches.add(university.getPatch(36,65)); // Classroom 5
+        doorUpPatches.add(university.getPatch(36,78)); // Classroom 5
+        doorUpPatches.add(university.getPatch(36,99)); // Laboratory
         DoorMapper.draw(doorUpPatches, "UP");
 
         List<Patch> fountainPatches = new ArrayList<>();
@@ -337,10 +338,13 @@ public class UniversityScreenController extends ScreenController {
         trashPatches.add(university.getPatch(24,110));
         TrashMapper.draw(trashPatches);
 
-        List<Patch> universityGatePatches = new ArrayList<>();
-        universityGatePatches.add(university.getPatch(59,9));
-        universityGatePatches.add(university.getPatch(59,17));
-        UniversityGateMapper.draw(universityGatePatches);
+        List<Patch> universityGateExitPatches = new ArrayList<>();
+        universityGateExitPatches.add(university.getPatch(59,9));
+        UniversityGateMapper.draw(universityGateExitPatches, UniversityGate.UniversityGateMode.EXIT);
+
+        List<Patch> universityGateEntrancePatches = new ArrayList<>();
+        universityGateEntrancePatches.add(university.getPatch(59,17));
+        UniversityGateMapper.draw(universityGateEntrancePatches, UniversityGate.UniversityGateMode.ENTRANCE);
     }
 
     private void drawInterface() {
