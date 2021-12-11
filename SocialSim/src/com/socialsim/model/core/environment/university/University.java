@@ -27,11 +27,14 @@ public class University extends Environment {
     private final List<Bulletin> bulletins;
     private final List<Chair> chairs;
     private final List<Door> doors;
+    private final List<EatTable> eatTables;
     private final List<Fountain> fountains;
     private final List<LabTable> labTables;
     private final List<ProfTable> profTables;
     private final List<Security> securities;
     private final List<Staircase> staircases;
+    private final List<Stall> stalls;
+    private final List<StudyTable> studyTables;
     private final List<Trash> trashes;
 
     private final List<Bathroom> bathrooms;
@@ -61,11 +64,14 @@ public class University extends Environment {
         this.bulletins = Collections.synchronizedList(new ArrayList<>());
         this.chairs = Collections.synchronizedList(new ArrayList<>());
         this.doors = Collections.synchronizedList(new ArrayList<>());
+        this.eatTables = Collections.synchronizedList(new ArrayList<>());
         this.fountains = Collections.synchronizedList(new ArrayList<>());
         this.labTables = Collections.synchronizedList(new ArrayList<>());
         this.profTables = Collections.synchronizedList(new ArrayList<>());
         this.securities = Collections.synchronizedList(new ArrayList<>());
         this.staircases = Collections.synchronizedList(new ArrayList<>());
+        this.stalls = Collections.synchronizedList(new ArrayList<>());
+        this.studyTables = Collections.synchronizedList(new ArrayList<>());
         this.trashes = Collections.synchronizedList(new ArrayList<>());
 
         this.bathrooms = Collections.synchronizedList(new ArrayList<>());
@@ -114,6 +120,10 @@ public class University extends Environment {
         return doors;
     }
 
+    public List<EatTable> getEatTables() {
+        return eatTables;
+    }
+
     public List<Fountain> getFountains() {
         return fountains;
     }
@@ -132,6 +142,14 @@ public class University extends Environment {
 
     public List<Staircase> getStaircases() {
         return staircases;
+    }
+
+    public List<Stall> getStalls() {
+        return stalls;
+    }
+
+    public List<StudyTable> getStudyTables() {
+        return studyTables;
     }
 
     public List<Trash> getTrashes() {
@@ -177,6 +195,9 @@ public class University extends Environment {
         else if (amenityClass == Door.class) {
             return this.getDoors();
         }
+        else if (amenityClass == EatTable.class) {
+            return this.getEatTables();
+        }
         else if (amenityClass == Fountain.class) {
             return this.getFountains();
         }
@@ -191,6 +212,12 @@ public class University extends Environment {
         }
         else if (amenityClass == Staircase.class) {
             return this.getStaircases();
+        }
+        else if (amenityClass == Stall.class) {
+            return this.getStalls();
+        }
+        else if (amenityClass == StudyTable.class) {
+            return this.getStudyTables();
         }
         else if (amenityClass == Trash.class) {
             return this.getTrashes();
