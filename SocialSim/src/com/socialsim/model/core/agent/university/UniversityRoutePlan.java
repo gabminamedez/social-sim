@@ -37,6 +37,69 @@ public class UniversityRoutePlan {
 
         this.currentRoutePlan = routePlan.iterator();
 
+        if (agent.getPersona() == UniversityAgent.Persona.GUARD){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.JANITOR){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.OFFICER){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.INT_Y1_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.INT_Y2_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.INT_Y3_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.INT_Y4_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.INT_Y1_ORG_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.INT_Y2_ORG_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.INT_Y3_ORG_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.INT_Y4_ORG_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y2_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y3_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y4_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_ORG_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y2_ORG_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y3_ORG_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y4_ORG_STUDENT){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.STRICT_PROFESSOR){
+
+        }
+        else if (agent.getPersona() == UniversityAgent.Persona.APPROACHABLE_PROFESSOR){
+
+        }
         // Burn off the first class in the route plan, as the agent will have already spawned there
         setNextClass();
         setNextClass();
