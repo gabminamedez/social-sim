@@ -48,6 +48,10 @@ public abstract class UniversityAmenityGraphic extends Graphic {
         doorGraphic.add(new AmenityGraphicLocation(14, 0)); // Vertical
         AMENITY_GRAPHICS.put(Door.class, doorGraphic);
 
+        final List<AmenityGraphicLocation> eatTableGraphic = new ArrayList<>();
+        eatTableGraphic.add(new AmenityGraphicLocation(14, 2));
+        AMENITY_GRAPHICS.put(EatTable.class, eatTableGraphic);
+
         final List<AmenityGraphicLocation> fountainGraphic = new ArrayList<>();
         fountainGraphic.add(new AmenityGraphicLocation(1, 0));
         AMENITY_GRAPHICS.put(Fountain.class, fountainGraphic);
@@ -68,6 +72,14 @@ public abstract class UniversityAmenityGraphic extends Graphic {
         final List<AmenityGraphicLocation> staircaseGraphic = new ArrayList<>();
         staircaseGraphic.add(new AmenityGraphicLocation(2, 3));
         AMENITY_GRAPHICS.put(Staircase.class, staircaseGraphic);
+
+        final List<AmenityGraphicLocation> stallGraphic = new ArrayList<>();
+        stallGraphic.add(new AmenityGraphicLocation(15, 2));
+        AMENITY_GRAPHICS.put(Stall.class, stallGraphic);
+
+        final List<AmenityGraphicLocation> studyTableGraphic = new ArrayList<>();
+        studyTableGraphic.add(new AmenityGraphicLocation(0, 2)); // Horizontal
+        AMENITY_GRAPHICS.put(StudyTable.class, studyTableGraphic);
 
         final List<AmenityGraphicLocation> trashGraphic = new ArrayList<>();
         trashGraphic.add(new AmenityGraphicLocation(1, 1));

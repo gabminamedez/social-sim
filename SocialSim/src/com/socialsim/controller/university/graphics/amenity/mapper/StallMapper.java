@@ -11,7 +11,7 @@ import java.util.List;
 
 public class StallMapper extends AmenityMapper {
 
-    public static void draw(List<Patch> patches, String facing) {
+    public static void draw(List<Patch> patches) {
         List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
 
         for (Patch patch : patches) {

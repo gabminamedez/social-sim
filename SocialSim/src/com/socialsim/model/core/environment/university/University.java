@@ -5,10 +5,7 @@ import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
-import com.socialsim.model.core.environment.university.patchfield.Bathroom;
-import com.socialsim.model.core.environment.university.patchfield.Classroom;
-import com.socialsim.model.core.environment.university.patchfield.Laboratory;
-import com.socialsim.model.core.environment.university.patchfield.Wall;
+import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 
@@ -38,8 +35,10 @@ public class University extends Environment {
     private final List<Trash> trashes;
 
     private final List<Bathroom> bathrooms;
+    private final List<Cafeteria> cafeterias;
     private final List<Classroom> classrooms;
     private final List<Laboratory> laboratories;
+    private final List<StudyArea> studyAreas;
     private final List<Wall> walls;
 
     List<UniversityAgent> agentBacklogs;
@@ -75,8 +74,10 @@ public class University extends Environment {
         this.trashes = Collections.synchronizedList(new ArrayList<>());
 
         this.bathrooms = Collections.synchronizedList(new ArrayList<>());
+        this.cafeterias = Collections.synchronizedList(new ArrayList<>());
         this.classrooms = Collections.synchronizedList(new ArrayList<>());
         this.laboratories = Collections.synchronizedList(new ArrayList<>());
+        this.studyAreas = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
 
         this.agentBacklogs = Collections.synchronizedList(new ArrayList<>());
@@ -160,12 +161,20 @@ public class University extends Environment {
         return bathrooms;
     }
 
+    public List<Cafeteria> getCafeterias() {
+        return cafeterias;
+    }
+
     public List<Classroom> getClassrooms() {
         return classrooms;
     }
 
     public List<Laboratory> getLaboratories() {
         return laboratories;
+    }
+
+    public List<StudyArea> getStudyAreas() {
+        return studyAreas;
     }
 
     public List<Wall> getWalls() {

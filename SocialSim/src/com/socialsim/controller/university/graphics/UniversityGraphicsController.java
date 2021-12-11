@@ -14,10 +14,7 @@ import com.socialsim.model.core.environment.generic.position.Location;
 import com.socialsim.model.core.environment.generic.position.MatrixPosition;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.generic.Patch;
-import com.socialsim.model.core.environment.university.patchfield.Bathroom;
-import com.socialsim.model.core.environment.university.patchfield.Classroom;
-import com.socialsim.model.core.environment.university.patchfield.Laboratory;
-import com.socialsim.model.core.environment.university.patchfield.Wall;
+import com.socialsim.model.core.environment.university.patchfield.*;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -181,6 +178,11 @@ public class UniversityGraphicsController extends Controller {
                     backgroundGraphicsContext.setFill(patchColor);
                     backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }
+                else if(patchPatchField.getClass() == Cafeteria.class) {
+                    patchColor = Color.rgb(229, 126, 126);
+                    backgroundGraphicsContext.setFill(patchColor);
+                    backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+                }
                 else if(patchPatchField.getClass() == Classroom.class) {
                     patchColor = Color.rgb(243, 222, 206);
                     backgroundGraphicsContext.setFill(patchColor);
@@ -188,6 +190,12 @@ public class UniversityGraphicsController extends Controller {
                 }
                 else if(patchPatchField.getClass() == Laboratory.class) {
                     patchColor = Color.rgb(225, 220, 218);
+                    backgroundGraphicsContext.setFill(patchColor);
+                    backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+                }
+
+                else if(patchPatchField.getClass() == StudyArea.class) {
+                    patchColor = Color.rgb(153, 222, 142);
                     backgroundGraphicsContext.setFill(patchColor);
                     backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }
