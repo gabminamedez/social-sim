@@ -19,7 +19,7 @@ public class StallMapper extends AmenityMapper {
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
             Amenity.AmenityBlock.AmenityBlockFactory amenityBlockFactory = Stall.StallBlock.stallBlockFactory;
-            Amenity.AmenityBlock amenityBlock = amenityBlockFactory.create(patch, true, true);
+            Amenity.AmenityBlock amenityBlock = amenityBlockFactory.create(patch, false, true);
             amenityBlocks.add(amenityBlock);
             patch.setAmenityBlock(amenityBlock);
 
