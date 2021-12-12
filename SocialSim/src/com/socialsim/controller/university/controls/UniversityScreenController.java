@@ -4,6 +4,7 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.university.graphics.UniversityGraphicsController;
 import com.socialsim.controller.university.graphics.amenity.mapper.*;
+import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.patchfield.*;
@@ -490,7 +491,7 @@ public class UniversityScreenController extends ScreenController {
     public void resetAction() {
         Main.universitySimulator.reset();
 
-        // Clear all passengers
+        // Clear all agents
 //        clearUniversity(Main.simulator.getUniversity());
 
         drawUniversityViewForeground(Main.universitySimulator.getUniversity(), false); // Redraw the canvas

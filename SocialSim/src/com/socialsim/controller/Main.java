@@ -1,8 +1,10 @@
 package com.socialsim.controller;
 
+import com.socialsim.controller.grocery.controls.GroceryScreenController;
 import com.socialsim.controller.university.controls.UniversityScreenController;
 import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.generic.controls.WelcomeScreenController;
+import com.socialsim.model.simulator.grocery.GrocerySimulator;
 import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,12 +13,14 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    public static GrocerySimulator grocerySimulator = null;
     public static UniversitySimulator universitySimulator = null;
 
     public static boolean hasMadeChoice = false;
     public static FXMLLoader mainScreenLoader;
     public static Parent mainRoot;
     public static ScreenController mainScreenController;
+    public static String mainTitle;
 
     public static void main(String[] args) {
         launch(args);
@@ -41,7 +45,10 @@ public class Main extends Application {
                 Main.hasMadeChoice = true;
 
                 if (WelcomeScreenController.environment.equals("Grocery")) {
-                    break;
+                    mainScreenLoader = ScreenController.getLoader(getClass(), "/com/socialsim/view/GroceryScreen.fxml");
+                    mainRoot = mainScreenLoader.load();
+                    mainScreenController = (GroceryScreenController) mainScreenLoader.getController();
+                    mainTitle = "Grocery SocialSim";
                 }
                 else if (WelcomeScreenController.environment.equals("Mall")) {
                     break;
@@ -53,6 +60,7 @@ public class Main extends Application {
                     mainScreenLoader = ScreenController.getLoader(getClass(), "/com/socialsim/view/UniversityScreen.fxml");
                     mainRoot = mainScreenLoader.load();
                     mainScreenController = (UniversityScreenController) mainScreenLoader.getController();
+                    mainTitle = "University SocialSim";
                 }
             }
             else if (!welcomeScreenController.isClosedWithAction()) {
@@ -63,11 +71,12 @@ public class Main extends Application {
                 break;
             }
 
-            mainScreenController.showWindow(mainRoot, "University SocialSim", true, false);
+            mainScreenController.showWindow(mainRoot, mainTitle, true, false);
         }
     }
 
     private void initializeSimulator() {
+        grocerySimulator = new GrocerySimulator();
         universitySimulator = new UniversitySimulator();
     }
 

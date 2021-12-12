@@ -1,6 +1,6 @@
 package com.socialsim.controller.university.graphics.amenity.graphic;
 
-import com.socialsim.controller.university.graphics.UniversityAmenityGraphic;
+import com.socialsim.controller.university.graphics.amenity.UniversityAmenityGraphic;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.StudyTable;
 
 public class StudyTableGraphic extends UniversityAmenityGraphic {
