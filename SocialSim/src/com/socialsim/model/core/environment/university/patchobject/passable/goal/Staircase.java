@@ -1,6 +1,6 @@
 package com.socialsim.model.core.environment.university.patchobject.passable.goal;
 
-import com.socialsim.controller.university.graphics.UniversityAmenityGraphic;
+import com.socialsim.controller.university.graphics.amenity.UniversityAmenityGraphic;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.university.graphics.amenity.graphic.StaircaseGraphic;
 import com.socialsim.model.core.environment.generic.Patch;

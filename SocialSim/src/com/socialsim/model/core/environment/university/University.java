@@ -4,6 +4,7 @@ import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;

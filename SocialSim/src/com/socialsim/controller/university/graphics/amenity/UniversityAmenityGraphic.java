@@ -1,4 +1,4 @@
-package com.socialsim.controller.university.graphics;
+package com.socialsim.controller.university.graphics.amenity;
 
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;

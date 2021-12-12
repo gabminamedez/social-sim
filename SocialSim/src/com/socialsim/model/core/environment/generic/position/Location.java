@@ -1,16 +1,13 @@
 package com.socialsim.model.core.environment.generic.position;
 
+import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.university.University;
 
 public class Location extends BaseObject /*implements Environment*/ {
 
-    public static MatrixPosition screenCoordinatesToMatrixPosition( // Convert the given continuous screen coordinates to a discrete row and column
-            University university,
-            double x,
-            double y,
-            double tileSize
-    ) {
+    // Convert the given continuous screen coordinates to a discrete row and column
+    public static MatrixPosition screenCoordinatesToMatrixPosition(Environment environment, double x, double y, double tileSize) {
         double rawX = x;
         double rawY = y;
 
@@ -22,7 +19,7 @@ public class Location extends BaseObject /*implements Environment*/ {
 
         MatrixPosition matrixPosition = new MatrixPosition(truncatedY, truncatedX);
 
-        if (MatrixPosition.inBounds(matrixPosition, university)) {
+        if (MatrixPosition.inBounds(matrixPosition, environment)) {
             return matrixPosition;
         }
         else {

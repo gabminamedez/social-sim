@@ -1,5 +1,6 @@
 package com.socialsim.model.core.environment.generic.position;
 
+import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.university.University;
 
 import java.util.Objects;
@@ -22,8 +23,8 @@ public class MatrixPosition extends Location {
         return column;
     }
 
-    public static boolean inBounds(MatrixPosition matrixPosition, University university) {
-        return matrixPosition.getRow() >= 0 && matrixPosition.getRow() < university.getRows() && matrixPosition.getColumn() >= 0 && matrixPosition.getColumn() < university.getColumns();
+    public static boolean inBounds(MatrixPosition matrixPosition, Environment environment) {
+        return matrixPosition.getRow() >= 0 && matrixPosition.getRow() < environment.getRows() && matrixPosition.getColumn() >= 0 && matrixPosition.getColumn() < environment.getColumns();
     }
 
     @Override

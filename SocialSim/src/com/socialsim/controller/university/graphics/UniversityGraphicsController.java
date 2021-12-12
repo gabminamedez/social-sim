@@ -2,10 +2,12 @@ package com.socialsim.controller.university.graphics;
 
 import com.socialsim.controller.generic.Controller;
 import com.socialsim.controller.Main;
+import com.socialsim.controller.grocery.graphics.amenity.GroceryAmenityGraphic;
 import com.socialsim.controller.university.graphics.agent.UniversityAgentGraphic;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.model.core.agent.Agent;
+import com.socialsim.controller.university.graphics.amenity.UniversityAmenityGraphic;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
+import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.generic.patchobject.Drawable;
 import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
@@ -154,10 +156,10 @@ public class UniversityGraphicsController extends Controller {
                             AMENITY_SPRITES,
                             amenityGraphicLocation.getSourceX(), amenityGraphicLocation.getSourceY(),
                             amenityGraphicLocation.getSourceWidth(), amenityGraphicLocation.getSourceHeight(),
-                            column * tileSize + drawablePatchAmenity.getGraphicObject().getAmenityGraphicOffset().getColumnOffset() * tileSize,
-                            row * tileSize + drawablePatchAmenity.getGraphicObject().getAmenityGraphicOffset().getRowOffset() * tileSize,
-                            tileSize * drawablePatchAmenity.getGraphicObject().getAmenityGraphicScale().getColumnSpan(),
-                            tileSize * drawablePatchAmenity.getGraphicObject().getAmenityGraphicScale().getRowSpan());
+                            column * tileSize + ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getColumnOffset() * tileSize,
+                            row * tileSize + ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getRowOffset() * tileSize,
+                            tileSize * ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getColumnSpan(),
+                            tileSize * ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
 
                     if (drawGraphicTransparently) { // Reset transparency if previously added
                         foregroundGraphicsContext.setGlobalAlpha(1.0);

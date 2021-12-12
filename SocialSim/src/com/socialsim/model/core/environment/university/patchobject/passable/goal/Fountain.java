@@ -1,9 +1,9 @@
 package com.socialsim.model.core.environment.university.patchobject.passable.goal;
 
-import com.socialsim.controller.university.graphics.UniversityAmenityGraphic;
+import com.socialsim.controller.university.graphics.amenity.UniversityAmenityGraphic;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.university.graphics.amenity.graphic.FountainGraphic;
-import com.socialsim.model.core.agent.Agent;
+import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.headful.QueueObject;
 import com.socialsim.model.core.environment.generic.patchfield.headful.QueueingPatchField;
@@ -16,7 +16,7 @@ import java.util.List;
 public class Fountain extends QueueableGoal {
 
     public static final long serialVersionUID = -4576236425454267953L;
-    private Agent agentActing; // Takes note of the agent currently acting in the fountain
+    private UniversityAgent agentActing; // Takes note of the agent currently acting in the fountain
     private final QueueObject queueObject;
     public static final FountainFactory fountainFactory;
     private final QueueingPatchField.PatchFieldState fountainPatchFieldState;
@@ -31,7 +31,7 @@ public class Fountain extends QueueableGoal {
 
         this.queueObject = new QueueObject(this, this.getAttractors().get(0).getPatch());
         this.agentActing = null;
-        // this.fountainPatchFieldState = new QueueingPatchField.PatchFieldState(AgentMovement.Disposition.BOARDING, AgentMovement.State.IN_QUEUE, this);
+        // this.fountainPatchFieldState = new QueueingPatchField.PatchFieldState(UniversityAgentMovement.Disposition.BOARDING, UniversityAgentMovement.State.IN_QUEUE, this);
         QueueingPatchField queueingPatchField = QueueingPatchField.queueingPatchFieldFactory.create(this); // Add a blank patch field
         this.fountainPatchFieldState = null;
         this.getQueueObject().getPatchFields().put(this.fountainPatchFieldState, queueingPatchField); // Using the patch field state defined earlier, create the patch field
@@ -39,11 +39,11 @@ public class Fountain extends QueueableGoal {
         this.fountainGraphic = new FountainGraphic(this);
     }
 
-    public Agent getAgentActing() {
+    public UniversityAgent getUniversityAgentActing() {
         return agentActing;
     }
 
-    public void setAgentActing(Agent agentActing) {
+    public void setUniversityAgentActing(UniversityAgent agentActing) {
         this.agentActing = agentActing;
     }
 
