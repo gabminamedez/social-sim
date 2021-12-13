@@ -1,37 +1,37 @@
-package com.socialsim.model.simulator.grocery;
+package com.socialsim.model.simulator.office;
 
 import com.socialsim.controller.Main;
-import com.socialsim.controller.grocery.controls.GroceryScreenController;
-import com.socialsim.model.core.environment.grocery.Grocery;
+import com.socialsim.controller.office.controls.OfficeScreenController;
+import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class GrocerySimulator extends Simulator {
+public class OfficeSimulator extends Simulator {
 
-    private Grocery grocery;
+    private Office office;
 
     // Simulator variables
     private final AtomicBoolean running;
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
 
-    public GrocerySimulator() {
-        this.grocery = null;
+    public OfficeSimulator() {
+        this.office = null;
         this.running = new AtomicBoolean(false);
         this.time = new SimulationTime(0, 0, 0);
         this.playSemaphore = new Semaphore(0);
         this.start(); // Start the simulation thread, but in reality it would be activated much later
     }
 
-    public Grocery getGrocery() {
-        return grocery;
+    public Office getOffice() {
+        return office;
     }
 
-    public void setGrocery(Grocery grocery) {
-        this.grocery = grocery;
+    public void setOffice(Office office) {
+        this.office = office;
     }
 
     public AtomicBoolean getRunning() {
@@ -54,8 +54,8 @@ public class GrocerySimulator extends Simulator {
         return playSemaphore;
     }
 
-    public void resetToDefaultConfiguration(Grocery grocery) {
-        this.grocery = grocery;
+    public void resetToDefaultConfiguration(Office office) {
+        this.office = office;
         this.time.reset();
         this.running.set(false);
     }
@@ -83,7 +83,7 @@ public class GrocerySimulator extends Simulator {
 
                         // Redraw the visualization
                         // If the refreshes are frequent enough, update the visualization in a speed-aware manner
-                        ((GroceryScreenController) Main.mainScreenController).drawGroceryViewForeground(Main.grocerySimulator.getGrocery(), SimulationTime.SLEEP_TIME_MILLISECONDS.get() < speedAwarenessLimitMilliseconds);
+                        ((OfficeScreenController) Main.mainScreenController).drawOfficeViewForeground(Main.officeSimulator.getOffice(), SimulationTime.SLEEP_TIME_MILLISECONDS.get() < speedAwarenessLimitMilliseconds);
 
                         this.time.tick();
                         Thread.sleep(SimulationTime.SLEEP_TIME_MILLISECONDS.get());
@@ -1274,30 +1274,30 @@ public class GrocerySimulator extends Simulator {
 //        }
 //    }
 
-//    private static void spawnAgent(Gate gate, Grocery grocery) {
+//    private static void spawnAgent(Gate gate, Office office) {
 //        Agent agent = gate.spawnAgent();
 //
-//        if (gate instanceof GroceryGate) {
+//        if (gate instanceof OfficeGate) {
 //            if (agent != null) {
 //                if (agent.getAgentMovement() != null) {
-//                    grocery.getAgents().add(agent);
-//                    grocery.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch()); // Add the agent's patch position to its current floor's patch set as well
+//                    office.getAgents().add(agent);
+//                    office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch()); // Add the agent's patch position to its current floor's patch set as well
 //                }
 //                else { // The agent was spawned, but outside, so insert agent into the queue
-//                    grocery.getAgentBacklogs().add(agent);
+//                    office.getAgentBacklogs().add(agent);
 //                }
 //            }
 //        }
 //        else {
 //            if (agent != null) {
-//                grocery.getAgents().add(agent);
-//                grocery.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+//                office.getAgents().add(agent);
+//                office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
 //            }
 //        }
 //    }
 
-    // Spawn agents from the backlogs of the grocery gate
-//    public static void spawnAgentFromGroceryGateBacklog(GroceryGate stationGate, Grocery grocery) {
+    // Spawn agents from the backlogs of the office gate
+//    public static void spawnAgentFromOfficeGateBacklog(OfficeGate stationGate, Office office) {
 //        List<Agent> agentsToSpawn = new ArrayList<>();
 //        final int additionalAgentsToSpawnPerTick = 2;
 //        Agent agent = stationGate.spawnAgentFromBacklogs(false); // Spawn two more after the first one has already been spawned
@@ -1318,8 +1318,8 @@ public class GrocerySimulator extends Simulator {
 //        }
 //
 //        for (Agent agentToSpawn : agentsToSpawn) {
-//            grocery.getAgents().add(agentToSpawn);
-//            grocery.getAgentPatchSet().add(agentToSpawn.getAgentMovement().getCurrentPatch());
+//            office.getAgents().add(agentToSpawn);
+//            office.getAgentPatchSet().add(agentToSpawn.getAgentMovement().getCurrentPatch());
 //        }
 //    }
 
