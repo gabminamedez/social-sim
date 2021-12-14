@@ -36,7 +36,7 @@ public class ProductShelfMapper extends AmenityMapper {
                 patchBack.setAmenityBlock(amenityBlockBack);
             }
 
-            for (int i = 1; i < 4; i++) {
+            for (int i = 0; i < 4; i++) {
                 Patch patchFront = Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 1, origPatchCol + i);
                 Amenity.AmenityBlock amenityBlockFront = amenityBlockFactory.create(patchFront, true, false);
                 amenityBlocks.add(amenityBlockFront);

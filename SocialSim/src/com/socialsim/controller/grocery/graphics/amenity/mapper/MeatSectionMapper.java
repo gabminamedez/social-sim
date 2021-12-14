@@ -36,7 +36,7 @@ public class MeatSectionMapper extends AmenityMapper {
                 patchBack.setAmenityBlock(amenityBlockBack);
             }
 
-            for (int i = 1; i < 8; i++) {
+            for (int i = 0; i < 8; i++) {
                 Patch patchFront = Main.grocerySimulator.getGrocery().getPatch(origPatchRow + i, origPatchCol + 1);
                 Amenity.AmenityBlock amenityBlockFront = amenityBlockFactory.create(patchFront, true, false);
                 amenityBlocks.add(amenityBlockFront);
