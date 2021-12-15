@@ -17,11 +17,6 @@ public class GrocerySimulator extends Simulator {
     private final AtomicBoolean running;
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
-    // public static final Random RANDOM_NUMBER_GENERATOR; // Random number generator for all purposes in the simulation
-
-//    static {
-//        RANDOM_NUMBER_GENERATOR = new Random();
-//    }
 
     public GrocerySimulator() {
         this.grocery = null;

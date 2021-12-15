@@ -28,7 +28,7 @@ public class StallMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock2);
             rightPatch.setAmenityBlock(amenityBlock2);
 
-            Stall stallToAdd = Stall.StallFactory.create(amenityBlocks, true);
+            Stall stallToAdd = Stall.StallFactory.create(amenityBlocks, true, 20);
             Main.universitySimulator.getUniversity().getStalls().add(stallToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
             amenityBlocks.clear();

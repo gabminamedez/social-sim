@@ -41,7 +41,7 @@ public class CartRepoMapper extends AmenityMapper {
                 patchBack.setAmenityBlock(amenityBlockBack);
             }
 
-            for (int i = 1; i < 4; i++) {
+            for (int i = 0; i < 4; i++) {
                 Patch patchFront = Main.grocerySimulator.getGrocery().getPatch(origPatchRow + i, origPatchCol + 1);
                 Amenity.AmenityBlock amenityBlockFront = null;
                 if (i == 3) {
