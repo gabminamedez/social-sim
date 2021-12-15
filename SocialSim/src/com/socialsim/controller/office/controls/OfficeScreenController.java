@@ -24,8 +24,7 @@ import java.util.List;
 
 public class OfficeScreenController extends ScreenController {
 
-    @FXML
-    private ScrollPane scrollPane;
+    @FXML private ScrollPane scrollPane;
     @FXML private Group canvasGroup;
     @FXML private StackPane stackPane;
     @FXML private Canvas backgroundCanvas;
