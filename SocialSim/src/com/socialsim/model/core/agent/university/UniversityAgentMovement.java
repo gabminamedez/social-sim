@@ -1,167 +1,171 @@
-//package com.socialsim.model.core.agent.university;
-//
-//import com.socialsim.model.core.agent.Agent;
-//import com.socialsim.model.core.agent.generic.pathfinding.AgentMovement;
-//import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
-//import com.socialsim.model.core.environment.generic.BaseObject;
-//import com.socialsim.model.core.environment.generic.Patch;
-//import com.socialsim.model.core.environment.generic.patchfield.PatchField;
-//import com.socialsim.model.core.environment.generic.patchfield.headful.QueueObject;
-//import com.socialsim.model.core.environment.generic.patchfield.headful.QueueingPatchField;
-//import com.socialsim.model.core.environment.generic.patchobject.Amenity;
-//import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
-//import com.socialsim.model.core.environment.generic.patchobject.passable.Queueable;
-//import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
-//import com.socialsim.model.core.environment.generic.patchobject.passable.goal.BlockableAmenity;
-//import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Goal;
-//import com.socialsim.model.core.environment.generic.patchobject.passable.goal.QueueableGoal;
-//import com.socialsim.model.core.environment.generic.position.Coordinates;
-//import com.socialsim.model.core.environment.generic.position.Vector;
-//import com.socialsim.model.core.environment.university.University;
-//import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
-//import com.socialsim.model.core.environment.university.patchobject.passable.goal.Security;
-//import com.socialsim.model.simulator.Simulator;
-//
-//import java.util.*;
-//import java.util.concurrent.ConcurrentHashMap;
-//
-//public class UniversityAgentMovement extends AgentMovement {
-//
-//    private final Agent parent;
-//    private final Coordinates position; // Denotes the position of the agent
-//    private final University university;
-//    private final double baseWalkingDistance; // Denotes the distance (m) the agent walks in one second
-//    private double preferredWalkingDistance;
-//    private double currentWalkingDistance;
-//    private double proposedHeading;// Denotes the proposed heading of the agent in degrees where E = 0 degrees, N = 90 degrees, W = 180 degrees, S = 270 degrees
-//    private double heading;
-//    private double previousHeading;
-//
-//    private Patch currentPatch;
-//    private Amenity currentAmenity;
-//    private PatchField currentPatchField;
-//    private Patch goalPatch;
-//    private Amenity goalAmenity;
-//    private QueueObject goalQueueObject;
-//    private Amenity.AmenityBlock goalAttractor;
-//    private PatchField goalPatchField;
-//    private QueueingPatchField.PatchFieldState goalQueueingPatchFieldState; // Denotes the state of this agent's floor field
-//    private QueueingPatchField goalQueueingPatchField; // Denotes the patch field of the agent goal
-//    private Patch goalNearestQueueingPatch; // Denotes the patch with the nearest queueing patch
-//
-//    private UniversityRoutePlan routePlan;
-//    private AgentPath currentPath; // Denotes the current path followed by this agent, if any
-//    private State state;
-//    private Action action; // Low-level description of what the agent is doing
-//
-//    private boolean isWaitingOnAmenity; // Denotes whether the agent is temporarily waiting on an amenity to be vacant
-//    private boolean hasEncounteredAgentToFollow; // Denotes whether this agent has encountered the agent to be followed in the queue
-//    private Agent agentFollowedWhenAssembling; // Denotes the agent this agent is currently following while assembling
-//    private double distanceMovedInTick; // Denotes the distance moved by this agent in the previous tick
-//    private int noMovementCounter; // Counts the ticks this agent moved a distance under a certain threshold
-//    private int movementCounter; // Counts the ticks this agent has spent moving - this will reset when stopping
-//    private int noNewPatchesSeenCounter; // Counts the ticks this agent has seen less than the defined number of patches
-//    private int newPatchesSeenCounter; // Counts the ticks this agent has spent seeing new patches - this will reset otherwise
-//    private boolean isStuck; // Denotes whether the agent is stuck
-//    private int stuckCounter; // Counts the ticks this agent has spent being stuck - this will reset when a condition is reached
-//    private int timeSinceLeftPreviousGoal; // Denotes the time since the agent left its previous goal
-//    private final int ticksUntilFullyAccelerated; // Denotes the time until the agent accelerates fully from non-movement
-//    private int ticksAcceleratedOrMaintainedSpeed; // Denotes the time the agent has spent accelerating or moving at a constant speed so far without slowing down or stopping
-//    private final double fieldOfViewAngle; // Denotes the field of view angle of the agent
-//    private boolean isReadyToFree; // Denotes whether the agent is ready to be freed from being stuck
-//    private boolean willPathfind; // Denotes whether the agent is ready to pathfind
-//    private boolean hasPathfound; // Denotes whether this agent has already pathfound
-//    private boolean shouldStepForward; // Denotes whether this agent should take a step forward after it left its goal
-//    private boolean isReadyToExit; // Denotes whether this agent is ready to exit the environment immediately
-//    private final ConcurrentHashMap<Patch, Integer> recentPatches; // Denotes the recent patches this agent has been in
-//
-//    // The vectors of this agent
-//    private final List<Vector> repulsiveForceFromAgents;
-//    private final List<Vector> repulsiveForcesFromObstacles;
-//    private Vector attractiveForce;
-//    private Vector motivationForce;
-//
-//    public UniversityAgentMovement(Gate gate, Agent parent, double baseWalkingDistance, Coordinates coordinates) { // For !inOnStart agents
-//        this.parent = parent;
-//        this.position = new Coordinates(coordinates.getX(), coordinates.getY());
-//
-//        final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
-//        this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
-//        this.preferredWalkingDistance = this.baseWalkingDistance;
-//        this.currentWalkingDistance = preferredWalkingDistance;
-//
-//        // All newly generated agents will face the north by default
-//        this.proposedHeading = Math.toRadians(90.0);
-//        this.heading = Math.toRadians(90.0);
-//        this.previousHeading = Math.toRadians(90.0);
-//        this.fieldOfViewAngle = Math.toRadians(90.0);
-//
-//        // Add this agent to the start patch
-//        this.currentPatch = gate.getAmenityBlocks().get(0).getPatch();
-//        this.currentPatch.getAgents().add(parent);
-//        this.university = (University) currentPatch.getEnvironment();
-//
-//        // Set the agent's time until it fully accelerates
-//        this.ticksUntilFullyAccelerated = 10;
-//        this.ticksAcceleratedOrMaintainedSpeed = 0;
-//
-//        this.currentAmenity = gate; // Take note of the amenity where this agent was spawned
-//
-//        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent);
-//        this.state = State.WALKING;
-//        this.action = Action.WILL_QUEUE;
-//
-//        this.recentPatches = new ConcurrentHashMap<>();
-//        repulsiveForceFromAgents = new ArrayList<>();
-//        repulsiveForcesFromObstacles = new ArrayList<>();
-//        this.isReadyToExit = false; // This agent will not exit yet
-//        resetGoal(false); // Set the agent goal
-//    }
-//
-//    public UniversityAgentMovement(Patch spawnPatch, Agent parent, double baseWalkingDistance, Coordinates coordinates) { // For inOnStart agents
-//        this.parent = parent;
-//        this.position = new Coordinates(coordinates.getX(), coordinates.getY());
-//
-//        final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
-//        this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
-//        this.preferredWalkingDistance = this.baseWalkingDistance;
-//        this.currentWalkingDistance = preferredWalkingDistance;
-//
-//        // All inOnStart agents will face the south by default
-//        this.proposedHeading = Math.toRadians(270.0);
-//        this.heading = Math.toRadians(270.0);
-//        this.previousHeading = Math.toRadians(270.0);
-//        this.fieldOfViewAngle = Math.toRadians(270.0);
-//
-//        // Add this agent to the spawn patch
-//        this.currentPatch = spawnPatch;
-//        this.currentPatch.getAgents().add(parent);
-//        this.university = (University) currentPatch.getEnvironment();
-//
-//        // Set the agent's time until it fully accelerates
-//        this.ticksUntilFullyAccelerated = 10;
-//        this.ticksAcceleratedOrMaintainedSpeed = 0;
-//
-//        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent);
-//        this.state = State.STANDING;
-//        this.action = Action.STANDING;
-//
-//        this.recentPatches = new ConcurrentHashMap<>();
-//
-//        repulsiveForceFromAgents = new ArrayList<>();
-//        repulsiveForcesFromObstacles = new ArrayList<>();
-//        this.isReadyToExit = false; // This agent will not exit yet
-//        resetGoal(false); // Set the agent goal
-//    }
-//
-//    public Agent getParent() {
-//        return parent;
-//    }
-//
-//    public Coordinates getPosition() {
-//        return position;
-//    }
-//
+package com.socialsim.model.core.agent.university;
+
+import com.socialsim.model.core.agent.Agent;
+import com.socialsim.model.core.agent.generic.pathfinding.AgentMovement;
+import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
+import com.socialsim.model.core.environment.generic.BaseObject;
+import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.generic.patchfield.PatchField;
+import com.socialsim.model.core.environment.generic.patchfield.headful.QueueObject;
+import com.socialsim.model.core.environment.generic.patchfield.headful.QueueingPatchField;
+import com.socialsim.model.core.environment.generic.patchobject.Amenity;
+import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
+import com.socialsim.model.core.environment.generic.patchobject.passable.Queueable;
+import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
+import com.socialsim.model.core.environment.generic.patchobject.passable.goal.BlockableAmenity;
+import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Goal;
+import com.socialsim.model.core.environment.generic.patchobject.passable.goal.QueueableGoal;
+import com.socialsim.model.core.environment.generic.position.Coordinates;
+import com.socialsim.model.core.environment.generic.position.Vector;
+import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.Security;
+import com.socialsim.model.simulator.Simulator;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class UniversityAgentMovement extends AgentMovement {
+
+    private final Agent parent;
+    private final Coordinates position; // Denotes the position of the agent
+    private final University university;
+    private final double baseWalkingDistance; // Denotes the distance (m) the agent walks in one second
+    private double preferredWalkingDistance;
+    private double currentWalkingDistance;
+    private double proposedHeading;// Denotes the proposed heading of the agent in degrees where E = 0 degrees, N = 90 degrees, W = 180 degrees, S = 270 degrees
+    private double heading;
+    private double previousHeading;
+
+    private Patch currentPatch;
+    private Amenity currentAmenity;
+    private PatchField currentPatchField;
+    private Patch goalPatch;
+    private Amenity goalAmenity;
+    private QueueObject goalQueueObject;
+    private Amenity.AmenityBlock goalAttractor;
+    private PatchField goalPatchField;
+    private QueueingPatchField.PatchFieldState goalQueueingPatchFieldState; // Denotes the state of this agent's floor field
+    private QueueingPatchField goalQueueingPatchField; // Denotes the patch field of the agent goal
+    private Patch goalNearestQueueingPatch; // Denotes the patch with the nearest queueing patch
+
+    private UniversityRoutePlan routePlan;
+    private AgentPath currentPath; // Denotes the current path followed by this agent, if any
+    private int stateIndex;
+    private State state;
+    private Action action; // Low-level description of what the agent is doing
+
+    private boolean isWaitingOnAmenity; // Denotes whether the agent is temporarily waiting on an amenity to be vacant
+    private boolean hasEncounteredAgentToFollow; // Denotes whether this agent has encountered the agent to be followed in the queue
+    private Agent agentFollowedWhenAssembling; // Denotes the agent this agent is currently following while assembling
+    private double distanceMovedInTick; // Denotes the distance moved by this agent in the previous tick
+    private int tickEntered;
+    private int noMovementCounter; // Counts the ticks this agent moved a distance under a certain threshold
+    private int movementCounter; // Counts the ticks this agent has spent moving - this will reset when stopping
+    private int noNewPatchesSeenCounter; // Counts the ticks this agent has seen less than the defined number of patches
+    private int newPatchesSeenCounter; // Counts the ticks this agent has spent seeing new patches - this will reset otherwise
+    private boolean isStuck; // Denotes whether the agent is stuck
+    private int stuckCounter; // Counts the ticks this agent has spent being stuck - this will reset when a condition is reached
+    private int timeSinceLeftPreviousGoal; // Denotes the time since the agent left its previous goal
+    private final int ticksUntilFullyAccelerated; // Denotes the time until the agent accelerates fully from non-movement
+    private int ticksAcceleratedOrMaintainedSpeed; // Denotes the time the agent has spent accelerating or moving at a constant speed so far without slowing down or stopping
+    private final double fieldOfViewAngle; // Denotes the field of view angle of the agent
+    private boolean isReadyToFree; // Denotes whether the agent is ready to be freed from being stuck
+    private boolean willPathfind; // Denotes whether the agent is ready to pathfind
+    private boolean hasPathfound; // Denotes whether this agent has already pathfound
+    private boolean shouldStepForward; // Denotes whether this agent should take a step forward after it left its goal
+    private boolean isReadyToExit; // Denotes whether this agent is ready to exit the environment immediately
+    private final ConcurrentHashMap<Patch, Integer> recentPatches; // Denotes the recent patches this agent has been in
+
+    // The vectors of this agent
+    private final List<Vector> repulsiveForceFromAgents;
+    private final List<Vector> repulsiveForcesFromObstacles;
+    private Vector attractiveForce;
+    private Vector motivationForce;
+
+    public UniversityAgentMovement(Gate gate, Agent parent, double baseWalkingDistance, Coordinates coordinates) { // For !inOnStart agents
+        this.parent = parent;
+        this.position = new Coordinates(coordinates.getX(), coordinates.getY());
+
+        final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
+        this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
+        this.preferredWalkingDistance = this.baseWalkingDistance;
+        this.currentWalkingDistance = preferredWalkingDistance;
+
+        // All newly generated agents will face the north by default
+        this.proposedHeading = Math.toRadians(90.0);
+        this.heading = Math.toRadians(90.0);
+        this.previousHeading = Math.toRadians(90.0);
+        this.fieldOfViewAngle = Math.toRadians(90.0);
+
+        // Add this agent to the start patch
+        this.currentPatch = gate.getAmenityBlocks().get(0).getPatch();
+        this.currentPatch.getAgents().add(parent);
+        this.university = (University) currentPatch.getEnvironment();
+
+        // Set the agent's time until it fully accelerates
+        this.ticksUntilFullyAccelerated = 10;
+        this.ticksAcceleratedOrMaintainedSpeed = 0;
+
+        this.currentAmenity = gate; // Take note of the amenity where this agent was spawned
+
+        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent);
+        this.state = State.GOING_TO_SECURITY;
+        this.stateIndex = 0;
+        this.action = Action.WILL_QUEUE;
+        //TODO: Add tick when agent entered (tickEntered)
+
+        this.recentPatches = new ConcurrentHashMap<>();
+        repulsiveForceFromAgents = new ArrayList<>();
+        repulsiveForcesFromObstacles = new ArrayList<>();
+        this.isReadyToExit = false; // This agent will not exit yet
+        resetGoal(false); // Set the agent goal
+    }
+
+    public UniversityAgentMovement(Patch spawnPatch, Agent parent, double baseWalkingDistance, Coordinates coordinates) { // For inOnStart agents
+        this.parent = parent;
+        this.position = new Coordinates(coordinates.getX(), coordinates.getY());
+
+        final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
+        this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
+        this.preferredWalkingDistance = this.baseWalkingDistance;
+        this.currentWalkingDistance = preferredWalkingDistance;
+
+        // All inOnStart agents will face the south by default
+        this.proposedHeading = Math.toRadians(270.0);
+        this.heading = Math.toRadians(270.0);
+        this.previousHeading = Math.toRadians(270.0);
+        this.fieldOfViewAngle = Math.toRadians(270.0);
+
+        // Add this agent to the spawn patch
+        this.currentPatch = spawnPatch;
+        this.currentPatch.getAgents().add(parent);
+        this.university = (University) currentPatch.getEnvironment();
+
+        // Set the agent's time until it fully accelerates
+        this.ticksUntilFullyAccelerated = 10;
+        this.ticksAcceleratedOrMaintainedSpeed = 0;
+
+        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent);
+        this.state = State.GOING_TO_SECURITY;
+        this.action = Action.STANDING;
+
+        this.recentPatches = new ConcurrentHashMap<>();
+
+        repulsiveForceFromAgents = new ArrayList<>();
+        repulsiveForcesFromObstacles = new ArrayList<>();
+        this.isReadyToExit = false; // This agent will not exit yet
+        resetGoal(false); // Set the agent goal
+    }
+
+    public Agent getParent() {
+        return parent;
+    }
+
+    public Coordinates getPosition() {
+        return position;
+    }
+
 //    public void setPosition(Coordinates coordinates) {
 //        final int timeElapsedExpiration = 10;
 //        Patch previousPatch = this.currentPatch;
@@ -189,307 +193,307 @@
 //            updateRecentPatches(null, timeElapsedExpiration); // Update the recent patch list
 //        }
 //    }
-//
-//    public University getUniversity() {
-//        return university;
-//    }
-//
-//    public double getCurrentWalkingDistance() {
-//        return currentWalkingDistance;
-//    }
-//
-//    public double getProposedHeading() {
-//        return proposedHeading;
-//    }
-//
-//    public double getHeading() {
-//        return heading;
-//    }
-//
-//    public Patch getCurrentPatch() {
-//        return currentPatch;
-//    }
-//
-//    public void setCurrentPatch(Patch currentPatch) {
-//        this.currentPatch = currentPatch;
-//    }
-//
-//    public Amenity getCurrentAmenity() {
-//        return currentAmenity;
-//    }
-//
-//    public PatchField getCurrentPatchField() {
-//        return currentPatchField;
-//    }
-//
-//    public Amenity.AmenityBlock getGoalAttractor() {
-//        return goalAttractor;
-//    }
-//
-//    public Patch getGoalPatch() {
-//        return goalPatch;
-//    }
-//
-//    public Amenity getGoalAmenity() {
-//        return goalAmenity;
-//    }
-//
-//    public PatchField getGoalPatchField() {
-//        return goalPatchField;
-//    }
-//
-//    public QueueingPatchField.PatchFieldState getGoalQueueingPatchFieldState() {
-//        return goalQueueingPatchFieldState;
-//    }
-//
-//    public QueueingPatchField getGoalQueueingPatchField() {
-//        return goalQueueingPatchField;
-//    }
-//
-//    public Patch getGoalNearestQueueingPatch() {
-//        return goalNearestQueueingPatch;
-//    }
-//
-//    public UniversityRoutePlan getRoutePlan() {
-//        return routePlan;
-//    }
-//
-//    public void setRoutePlan(UniversityRoutePlan routePlan) {
-//        this.routePlan = routePlan;
-//    }
-//
-//    public AgentPath getCurrentPath() {
-//        return currentPath;
-//    }
-//
-//    public State getState() {
-//        return state;
-//    }
-//
-//    public void setState(State state) {
-//        this.state = state;
-//    }
-//
-//    public Action getAction() {
-//        return action;
-//    }
-//
-//    public void setAction(Action action) {
-//        this.action = action;
-//    }
-//
-//    public boolean isWaitingOnAmenity() {
-//        return isWaitingOnAmenity;
-//    }
-//
-//    public Agent getAgentFollowedWhenAssembling() {
-//        return agentFollowedWhenAssembling;
-//    }
-//
-//    public boolean hasEncounteredAgentToFollow() {
-//        return hasEncounteredAgentToFollow;
-//    }
-//
-//    public ConcurrentHashMap<Patch, Integer> getRecentPatches() {
-//        return recentPatches;
-//    }
-//
-//    public double getDistanceMovedInTick() {
-//        return distanceMovedInTick;
-//    }
-//
-//    public int getNoMovementCounter() {
-//        return noMovementCounter;
-//    }
-//
-//    public int getMovementCounter() {
-//        return movementCounter;
-//    }
-//
-//    public int getNoNewPatchesSeenCounter() {
-//        return noNewPatchesSeenCounter;
-//    }
-//
-//    public int getNewPatchesSeenCounter() {
-//        return newPatchesSeenCounter;
-//    }
-//
-//    public int getStuckCounter() {
-//        return stuckCounter;
-//    }
-//
-//    public int getTimeSinceLeftPreviousGoal() {
-//        return timeSinceLeftPreviousGoal;
-//    }
-//
-//    public boolean isStuck() {
-//        return isStuck;
-//    }
-//
-//    public boolean isReadyToFree() {
-//        return isReadyToFree;
-//    }
-//
-//    public boolean willPathFind() {
-//        return willPathfind;
-//    }
-//
-//    public boolean isReadyToExit() {
-//        return isReadyToExit;
-//    }
-//
-//    public List<Vector> getRepulsiveForceFromAgents() {
-//        return repulsiveForceFromAgents;
-//    }
-//
-//    public List<Vector> getRepulsiveForcesFromObstacles() {
-//        return repulsiveForcesFromObstacles;
-//    }
-//
-//    public Vector getAttractiveForce() {
-//        return attractiveForce;
-//    }
-//
-//    public Vector getMotivationForce() {
-//        return motivationForce;
-//    }
-//
-//    public Queueable getGoalAmenityAsQueueable() {
-//        return Queueable.toQueueable(this.goalAmenity);
-//    }
-//
-//    public Goal getGoalAmenityAsGoal() {
-//        return Goal.toGoal(this.goalAmenity);
-//    }
-//
-//    public QueueableGoal getGoalAmenityAsQueueableGoal() {
-//        return QueueableGoal.toQueueableGoal(this.goalAmenity);
-//    }
-//
-//    public BlockableAmenity getGoalAmenityAsBlockable() {
-//        return BlockableAmenity.asBlockable(this.goalAmenity);
-//    }
-//
-//    // Use the A* algorithm (with Euclidean distance to compute the f-score) to find the shortest path to the given goal patch
-//    public static AgentPath computePathWithinFloor(Patch startingPatch, Patch goalPatch, boolean includeStartingPatch, boolean includeGoalPatch, boolean passThroughBlockables) {
-//        HashSet<Patch> openSet = new HashSet<>();
-//        HashMap<Patch, Double> gScores = new HashMap<>();
-//        HashMap<Patch, Double> fScores = new HashMap<>();
-//        HashMap<Patch, Patch> cameFrom = new HashMap<>();
-//
-//        for (Patch[] patchRow : startingPatch.getEnvironment().getPatches()) {
-//            for (Patch patch : patchRow) {
-//                gScores.put(patch, Double.MAX_VALUE);
-//                fScores.put(patch, Double.MAX_VALUE);
-//            }
-//        }
-//
-//        gScores.put(startingPatch, 0.0);
-//        fScores.put(startingPatch, Coordinates.distance(startingPatch, goalPatch));
-//
-//        openSet.add(startingPatch);
-//        while (!openSet.isEmpty()) {
-//            Patch patchToExplore;
-//
-//            double minimumDistance = Double.MAX_VALUE;
-//            Patch patchWithMinimumDistance = null;
-//
-//            for (Patch patchInQueue : openSet) {
-//                double fScore = fScores.get(patchInQueue);
-//                if (fScore < minimumDistance) {
-//                    minimumDistance = fScore;
-//                    patchWithMinimumDistance = patchInQueue;
-//                }
-//            }
-//
-//            patchToExplore = patchWithMinimumDistance;
-//            if (patchToExplore.equals(goalPatch)) {
-//                Stack<Patch> path = new Stack<>();
-//                double length = 0.0;
-//
-//                Patch currentPatch = goalPatch;
-//
-//                while (cameFrom.containsKey(currentPatch)) {
-//                    Patch previousPatch = cameFrom.get(currentPatch);
-//                    length += Coordinates.distance(previousPatch.getPatchCenterCoordinates(), currentPatch.getPatchCenterCoordinates());
-//                    currentPatch = previousPatch;
-//                    path.push(currentPatch);
-//                }
-//
-//                AgentPath agentPath = new AgentPath(length, path);
-//
-//                return agentPath;
-//            }
-//
-//            openSet.remove(patchToExplore);
-//
-//            List<Patch> patchToExploreNeighbors = patchToExplore.getNeighbors();
-//
-//            for (Patch patchToExploreNeighbor : patchToExploreNeighbors) {
-//                if (patchToExploreNeighbor.getAmenityBlock() == null  || patchToExploreNeighbor.getAmenityBlock() != null
-//                        && ((passThroughBlockables && patchToExploreNeighbor.getAmenityBlock().getParent() instanceof BlockableAmenity)
-//                        || (!includeStartingPatch && patchToExplore.equals(startingPatch) || !includeGoalPatch && patchToExploreNeighbor.equals(goalPatch)))) {
-//                    // Avoid patches that are close to amenity blocks, unless absolutely necessary
-//                    double obstacleClosenessPenalty = patchToExploreNeighbor.getAmenityBlocksAround() * 2.0;
-//                    double tentativeGScore = gScores.get(patchToExplore) + Coordinates.distance(patchToExplore, patchToExploreNeighbor) + obstacleClosenessPenalty;
-//
-//                    if (tentativeGScore < gScores.get(patchToExploreNeighbor)) {
-//                        cameFrom.put(patchToExploreNeighbor, patchToExplore);
-//                        gScores.put(patchToExploreNeighbor, tentativeGScore);
-//                        fScores.put(patchToExploreNeighbor, gScores.get(patchToExploreNeighbor) + Coordinates.distance(patchToExploreNeighbor, goalPatch);
-//                        openSet.add(patchToExploreNeighbor);
-//                    }
-//                }
-//            }
-//        }
-//
-//        return null;
-//    }
-//
-//    public boolean isNextAmenityQueueable() { // Check whether the current goal amenity is a queueable or not
-//        return Queueable.isQueueable(this.goalAmenity);
-//    }
-//
-//    public boolean isNextAmenityGoal() { // Check whether the current goal amenity is a goal or not
-//        return Goal.isGoal(this.goalAmenity);
-//    }
-//
-//    public boolean hasJustLeftGoal() { // Check whether the agent has just left the goal (if the agent is at a certain number of ticks since leaving the goal)
-//        final int hasJustLeftGoalThreshold = 3;
-//
-//        return this.timeSinceLeftPreviousGoal <= hasJustLeftGoalThreshold;
-//    }
-//
-//    public void resetGoal(boolean shouldStepForwardFirst) { // Reset the agent's goal
-//        this.goalPatch = null;
-//        this.goalAmenity = null;
-//        this.goalQueueObject = null;
-//        this.goalAttractor = null;
-//        this.goalPatchField = null;
-//        this.goalQueueingPatchFieldState = null; // Take note of the patch field state of this agent
-//        this.goalQueueingPatchField = null; // Take note of the patch field of the agent's goal
-//        this.goalNearestQueueingPatch = null; // Take note of the agent's nearest queueing patch
-//
-//        this.hasEncounteredAgentToFollow = false; // No agents have been encountered yet
-//        this.isWaitingOnAmenity = false; // This agent is not yet waiting
-//        this.shouldStepForward = shouldStepForwardFirst;
-//        this.agentFollowedWhenAssembling = null; // This agent is not following anyone yet
-//
-//        this.distanceMovedInTick = 0.0; // This agent hasn't moved yet
-//        this.noMovementCounter = 0;
-//        this.movementCounter = 0;
-//        this.noNewPatchesSeenCounter = 0;
-//        this.newPatchesSeenCounter = 0;
-//        this.timeSinceLeftPreviousGoal = 0;
-//
-//        this.willPathfind = false;
-//        this.hasPathfound = false;
-//        this.recentPatches.clear(); // This agent has no recent patches yet
-//        this.free(); // This agent is not yet stuck
-//    }
-//
+
+    public University getUniversity() {
+        return university;
+    }
+
+    public double getCurrentWalkingDistance() {
+        return currentWalkingDistance;
+    }
+
+    public double getProposedHeading() {
+        return proposedHeading;
+    }
+
+    public double getHeading() {
+        return heading;
+    }
+
+    public Patch getCurrentPatch() {
+        return currentPatch;
+    }
+
+    public void setCurrentPatch(Patch currentPatch) {
+        this.currentPatch = currentPatch;
+    }
+
+    public Amenity getCurrentAmenity() {
+        return currentAmenity;
+    }
+
+    public PatchField getCurrentPatchField() {
+        return currentPatchField;
+    }
+
+    public Amenity.AmenityBlock getGoalAttractor() {
+        return goalAttractor;
+    }
+
+    public Patch getGoalPatch() {
+        return goalPatch;
+    }
+
+    public Amenity getGoalAmenity() {
+        return goalAmenity;
+    }
+
+    public PatchField getGoalPatchField() {
+        return goalPatchField;
+    }
+
+    public QueueingPatchField.PatchFieldState getGoalQueueingPatchFieldState() {
+        return goalQueueingPatchFieldState;
+    }
+
+    public QueueingPatchField getGoalQueueingPatchField() {
+        return goalQueueingPatchField;
+    }
+
+    public Patch getGoalNearestQueueingPatch() {
+        return goalNearestQueueingPatch;
+    }
+
+    public UniversityRoutePlan getRoutePlan() {
+        return routePlan;
+    }
+
+    public void setRoutePlan(UniversityRoutePlan routePlan) {
+        this.routePlan = routePlan;
+    }
+
+    public AgentPath getCurrentPath() {
+        return currentPath;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public void setAction(Action action) {
+        this.action = action;
+    }
+
+    public boolean isWaitingOnAmenity() {
+        return isWaitingOnAmenity;
+    }
+
+    public Agent getAgentFollowedWhenAssembling() {
+        return agentFollowedWhenAssembling;
+    }
+
+    public boolean hasEncounteredAgentToFollow() {
+        return hasEncounteredAgentToFollow;
+    }
+
+    public ConcurrentHashMap<Patch, Integer> getRecentPatches() {
+        return recentPatches;
+    }
+
+    public double getDistanceMovedInTick() {
+        return distanceMovedInTick;
+    }
+
+    public int getNoMovementCounter() {
+        return noMovementCounter;
+    }
+
+    public int getMovementCounter() {
+        return movementCounter;
+    }
+
+    public int getNoNewPatchesSeenCounter() {
+        return noNewPatchesSeenCounter;
+    }
+
+    public int getNewPatchesSeenCounter() {
+        return newPatchesSeenCounter;
+    }
+
+    public int getStuckCounter() {
+        return stuckCounter;
+    }
+
+    public int getTimeSinceLeftPreviousGoal() {
+        return timeSinceLeftPreviousGoal;
+    }
+
+    public boolean isStuck() {
+        return isStuck;
+    }
+
+    public boolean isReadyToFree() {
+        return isReadyToFree;
+    }
+
+    public boolean willPathFind() {
+        return willPathfind;
+    }
+
+    public boolean isReadyToExit() {
+        return isReadyToExit;
+    }
+
+    public List<Vector> getRepulsiveForceFromAgents() {
+        return repulsiveForceFromAgents;
+    }
+
+    public List<Vector> getRepulsiveForcesFromObstacles() {
+        return repulsiveForcesFromObstacles;
+    }
+
+    public Vector getAttractiveForce() {
+        return attractiveForce;
+    }
+
+    public Vector getMotivationForce() {
+        return motivationForce;
+    }
+
+    public Queueable getGoalAmenityAsQueueable() {
+        return Queueable.toQueueable(this.goalAmenity);
+    }
+
+    public Goal getGoalAmenityAsGoal() {
+        return Goal.toGoal(this.goalAmenity);
+    }
+
+    public QueueableGoal getGoalAmenityAsQueueableGoal() {
+        return QueueableGoal.toQueueableGoal(this.goalAmenity);
+    }
+
+    public BlockableAmenity getGoalAmenityAsBlockable() {
+        return BlockableAmenity.asBlockable(this.goalAmenity);
+    }
+
+    // Use the A* algorithm (with Euclidean distance to compute the f-score) to find the shortest path to the given goal patch
+    public static AgentPath computePathWithinFloor(Patch startingPatch, Patch goalPatch, boolean includeStartingPatch, boolean includeGoalPatch, boolean passThroughBlockables) {
+        HashSet<Patch> openSet = new HashSet<>();
+        HashMap<Patch, Double> gScores = new HashMap<>();
+        HashMap<Patch, Double> fScores = new HashMap<>();
+        HashMap<Patch, Patch> cameFrom = new HashMap<>();
+
+        for (Patch[] patchRow : startingPatch.getEnvironment().getPatches()) {
+            for (Patch patch : patchRow) {
+                gScores.put(patch, Double.MAX_VALUE);
+                fScores.put(patch, Double.MAX_VALUE);
+            }
+        }
+
+        gScores.put(startingPatch, 0.0);
+        fScores.put(startingPatch, Coordinates.distance(startingPatch, goalPatch));
+
+        openSet.add(startingPatch);
+        while (!openSet.isEmpty()) {
+            Patch patchToExplore;
+
+            double minimumDistance = Double.MAX_VALUE;
+            Patch patchWithMinimumDistance = null;
+
+            for (Patch patchInQueue : openSet) {
+                double fScore = fScores.get(patchInQueue);
+                if (fScore < minimumDistance) {
+                    minimumDistance = fScore;
+                    patchWithMinimumDistance = patchInQueue;
+                }
+            }
+
+            patchToExplore = patchWithMinimumDistance;
+            if (patchToExplore.equals(goalPatch)) {
+                Stack<Patch> path = new Stack<>();
+                double length = 0.0;
+
+                Patch currentPatch = goalPatch;
+
+                while (cameFrom.containsKey(currentPatch)) {
+                    Patch previousPatch = cameFrom.get(currentPatch);
+                    length += Coordinates.distance(previousPatch.getPatchCenterCoordinates(), currentPatch.getPatchCenterCoordinates());
+                    currentPatch = previousPatch;
+                    path.push(currentPatch);
+                }
+
+                AgentPath agentPath = new AgentPath(length, path);
+
+                return agentPath;
+            }
+
+            openSet.remove(patchToExplore);
+
+            List<Patch> patchToExploreNeighbors = patchToExplore.getNeighbors();
+
+            for (Patch patchToExploreNeighbor : patchToExploreNeighbors) {
+                if (patchToExploreNeighbor.getAmenityBlock() == null  || patchToExploreNeighbor.getAmenityBlock() != null
+                        && ((passThroughBlockables && patchToExploreNeighbor.getAmenityBlock().getParent() instanceof BlockableAmenity)
+                        || (!includeStartingPatch && patchToExplore.equals(startingPatch) || !includeGoalPatch && patchToExploreNeighbor.equals(goalPatch)))) {
+                    // Avoid patches that are close to amenity blocks, unless absolutely necessary
+                    double obstacleClosenessPenalty = patchToExploreNeighbor.getAmenityBlocksAround() * 2.0;
+                    double tentativeGScore = gScores.get(patchToExplore) + Coordinates.distance(patchToExplore, patchToExploreNeighbor) + obstacleClosenessPenalty;
+
+                    if (tentativeGScore < gScores.get(patchToExploreNeighbor)) {
+                        cameFrom.put(patchToExploreNeighbor, patchToExplore);
+                        gScores.put(patchToExploreNeighbor, tentativeGScore);
+                        fScores.put(patchToExploreNeighbor, gScores.get(patchToExploreNeighbor) + Coordinates.distance(patchToExploreNeighbor, goalPatch));
+                        openSet.add(patchToExploreNeighbor);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public boolean isNextAmenityQueueable() { // Check whether the current goal amenity is a queueable or not
+        return Queueable.isQueueable(this.goalAmenity);
+    }
+
+    public boolean isNextAmenityGoal() { // Check whether the current goal amenity is a goal or not
+        return Goal.isGoal(this.goalAmenity);
+    }
+
+    public boolean hasJustLeftGoal() { // Check whether the agent has just left the goal (if the agent is at a certain number of ticks since leaving the goal)
+        final int hasJustLeftGoalThreshold = 3;
+
+        return this.timeSinceLeftPreviousGoal <= hasJustLeftGoalThreshold;
+    }
+
+    public void resetGoal(boolean shouldStepForwardFirst) { // Reset the agent's goal
+        this.goalPatch = null;
+        this.goalAmenity = null;
+        this.goalQueueObject = null;
+        this.goalAttractor = null;
+        this.goalPatchField = null;
+        this.goalQueueingPatchFieldState = null; // Take note of the patch field state of this agent
+        this.goalQueueingPatchField = null; // Take note of the patch field of the agent's goal
+        this.goalNearestQueueingPatch = null; // Take note of the agent's nearest queueing patch
+
+        this.hasEncounteredAgentToFollow = false; // No agents have been encountered yet
+        this.isWaitingOnAmenity = false; // This agent is not yet waiting
+        this.shouldStepForward = shouldStepForwardFirst;
+        this.agentFollowedWhenAssembling = null; // This agent is not following anyone yet
+
+        this.distanceMovedInTick = 0.0; // This agent hasn't moved yet
+        this.noMovementCounter = 0;
+        this.movementCounter = 0;
+        this.noNewPatchesSeenCounter = 0;
+        this.newPatchesSeenCounter = 0;
+        this.timeSinceLeftPreviousGoal = 0;
+
+        this.willPathfind = false;
+        this.hasPathfound = false;
+        this.recentPatches.clear(); // This agent has no recent patches yet
+        this.free(); // This agent is not yet stuck
+    }
+
 //    public void nextPlanItem () { // Parent function to extract the next item in this agent's route plan
-//        Class<? extends BaseObject> nextItem = this.routePlan.getCurrentClass();
+//        State nextItem = this.routePlan.getCurrentClass();
 //
 //        if (PatchField.class.isAssignableFrom(nextItem)) {
 //            goToRoom(nextItem);
@@ -498,99 +502,99 @@
 //            chooseGoal(nextItem);
 //        }
 //    }
-//
-//    public void goToRoom(Class<? extends BaseObject> nextRoomClass) {
-//        // TODO: go to room mechanisms
-//    }
-//
-//    // Set the nearest goal to this agent; That goal should also have the fewer agents queueing for it
-//    // To determine this, for each two agents in the queue (or fraction thereof), a penalty of one tile is added to the distance to this goal
-//    public void chooseGoal(Class<? extends BaseObject> nextAmenityClass) {
-//        if (this.goalAmenity == null) { // Only set the goal if one hasn't been set yet
-//            // Get the amenity list in this university
-//            List<? extends Amenity> amenityListInFloor = this.university.getAmenityList((Class<? extends Amenity>) nextAmenityClass);
-//
-//            Amenity chosenAmenity = null;
-//            QueueObject chosenQueueObject = null;
-//            Amenity.AmenityBlock chosenAttractor = null;
-//
-//            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>(); // Compile all attractors from each amenity in the amenity list
-//
-//            for (Amenity amenity : amenityListInFloor) {
-//                NonObstacle nonObstacle = ((NonObstacle) amenity);
-//
-//                if (!nonObstacle.isEnabled()) { // Only consider enabled amenities
-//                    continue;
-//                }
-//
-//                // Filter the amenity search space only to what is compatible with this agent
-//                if (amenity instanceof UniversityGate) {
-//                    // If the goal of the agent is a station gate, this means the agent is leaving; So only consider station gates which allow exits and accepts the agent's direction
-//                    UniversityGate universityGateExit = ((UniversityGate) amenity);
-//
-//                    if (universityGateExit.getUniversityGateMode() == UniversityGate.UniversityGateMode.ENTRANCE) {
-//                        continue;
-//                    }
-//                }
-//
-//                for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
-//                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-//                    distancesToAttractors.put(attractor, distanceToAttractor);
-//                }
-//            }
-//
-//            double minimumAttractorScore = Double.MAX_VALUE;
-//
-//            // Then for each compiled amenity and their distance from this agent, see which has the smallest distance while taking into account the agents queueing for that amenity, if any
-//            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
-//                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-//                Double candidateDistance = distancesToAttractorEntry.getValue();
-//
-//                Amenity currentAmenity;
-//                QueueObject currentQueueObject;
-//
-//                currentAmenity = candidateAttractor.getParent();
-//
-//                if (currentAmenity instanceof Queueable) { // Only collect queue objects from queueables
-//                    Queueable queueable = ((Queueable) currentAmenity);
-//                    currentQueueObject = queueable.getQueueObject();
-//                }
-//                else {
-//                    currentQueueObject = null;
-//                }
-//
-//                // If this is a queueable, take into account the agents queueing (except if it is a security gate)
-//                // If this is not a queueable (or if it's a security gate), the distance will suffice
-//                double attractorScore;
-//
-//                if (currentQueueObject != null) {
-//                    if (!(currentAmenity instanceof Security)) {
-//                        double agentPenalty = 25.0; // Avoid queueing to long lines
-//                        attractorScore = candidateDistance + currentQueueObject.getAgentsQueueing().size() * agentPenalty;
-//                    }
-//                    else {
-//                        attractorScore = candidateDistance;
-//                    }
-//                }
-//                else {
-//                    attractorScore = candidateDistance;
-//                }
-//
-//                if (attractorScore < minimumAttractorScore) {
-//                    minimumAttractorScore = attractorScore;
-//                    chosenAmenity = currentAmenity;
-//                    chosenQueueObject = currentQueueObject;
-//                    chosenAttractor = candidateAttractor;
-//                }
-//            }
-//
-//            this.goalAmenity = chosenAmenity;
-//            this.goalQueueObject = chosenQueueObject;
-//            this.goalAttractor = chosenAttractor;
-//            this.goalPatch = chosenAttractor.getPatch();
-//        }
-//    }
-//
+
+    public void goToRoom(Class<? extends BaseObject> nextRoomClass) {
+        // TODO: go to room mechanisms
+    }
+
+    // Set the nearest goal to this agent; That goal should also have the fewer agents queueing for it
+    // To determine this, for each two agents in the queue (or fraction thereof), a penalty of one tile is added to the distance to this goal
+    public void chooseGoal(Class<? extends BaseObject> nextAmenityClass) {
+        if (this.goalAmenity == null) { // Only set the goal if one hasn't been set yet
+            // Get the amenity list in this university
+            List<? extends Amenity> amenityListInFloor = this.university.getAmenityList((Class<? extends Amenity>) nextAmenityClass);
+
+            Amenity chosenAmenity = null;
+            QueueObject chosenQueueObject = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>(); // Compile all attractors from each amenity in the amenity list
+
+            for (Amenity amenity : amenityListInFloor) {
+                NonObstacle nonObstacle = ((NonObstacle) amenity);
+
+                if (!nonObstacle.isEnabled()) { // Only consider enabled amenities
+                    continue;
+                }
+
+                // Filter the amenity search space only to what is compatible with this agent
+                if (amenity instanceof UniversityGate) {
+                    // If the goal of the agent is a station gate, this means the agent is leaving; So only consider station gates which allow exits and accepts the agent's direction
+                    UniversityGate universityGateExit = ((UniversityGate) amenity);
+
+                    if (universityGateExit.getUniversityGateMode() == UniversityGate.UniversityGateMode.ENTRANCE) {
+                        continue;
+                    }
+                }
+
+                for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                    distancesToAttractors.put(attractor, distanceToAttractor);
+                }
+            }
+
+            double minimumAttractorScore = Double.MAX_VALUE;
+
+            // Then for each compiled amenity and their distance from this agent, see which has the smallest distance while taking into account the agents queueing for that amenity, if any
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
+                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                Double candidateDistance = distancesToAttractorEntry.getValue();
+
+                Amenity currentAmenity;
+                QueueObject currentQueueObject;
+
+                currentAmenity = candidateAttractor.getParent();
+
+                if (currentAmenity instanceof Queueable) { // Only collect queue objects from queueables
+                    Queueable queueable = ((Queueable) currentAmenity);
+                    currentQueueObject = queueable.getQueueObject();
+                }
+                else {
+                    currentQueueObject = null;
+                }
+
+                // If this is a queueable, take into account the agents queueing (except if it is a security gate)
+                // If this is not a queueable (or if it's a security gate), the distance will suffice
+                double attractorScore;
+
+                if (currentQueueObject != null) {
+                    if (!(currentAmenity instanceof Security)) {
+                        double agentPenalty = 25.0; // Avoid queueing to long lines
+                        attractorScore = candidateDistance + currentQueueObject.getAgentsQueueing().size() * agentPenalty;
+                    }
+                    else {
+                        attractorScore = candidateDistance;
+                    }
+                }
+                else {
+                    attractorScore = candidateDistance;
+                }
+
+                if (attractorScore < minimumAttractorScore) {
+                    minimumAttractorScore = attractorScore;
+                    chosenAmenity = currentAmenity;
+                    chosenQueueObject = currentQueueObject;
+                    chosenAttractor = candidateAttractor;
+                }
+            }
+
+            this.goalAmenity = chosenAmenity;
+            this.goalQueueObject = chosenQueueObject;
+            this.goalAttractor = chosenAttractor;
+            this.goalPatch = chosenAttractor.getPatch();
+        }
+    }
+
 //    private Coordinates getFuturePosition() {
 //        return getFuturePosition(this.goalAmenity, this.proposedHeading, this.preferredWalkingDistance);
 //    }
@@ -598,11 +602,11 @@
 //    private Coordinates getFuturePosition(double walkingDistance) {
 //        return getFuturePosition(this.goalAmenity, this.proposedHeading, walkingDistance);
 //    }
-//
-//    public Coordinates getFuturePosition(Coordinates startingPosition, double heading, double magnitude) {
-//        return Coordinates.computeFuturePosition(startingPosition, heading, magnitude);
-//    }
-//
+
+    public Coordinates getFuturePosition(Coordinates startingPosition, double heading, double magnitude) {
+        return Coordinates.computeFuturePosition(startingPosition, heading, magnitude);
+    }
+
 //    public Coordinates getFuturePosition(Amenity goal, double heading, double walkingDistance) {
 //        double minimumDistance = Double.MAX_VALUE; // Get the nearest attractor to this agent
 //        double distance;
@@ -1387,7 +1391,7 @@
 //
 //        return false;
 //    }
-//
+
 //    private boolean allowRepulsionFrom(Agent otherAgent) { // Checks if another agent should apply a repulsive force on this agent, taking into account parameters other than this agent
 //        boolean isNotHeadingToQueueable = this.action != Action.HEADING_TO_QUEUEABLE;
 //        boolean isNotInOppositeStatesWithOtherAgent
@@ -1431,129 +1435,129 @@
 //                        && otherAgentComesBefore
 //                        && otherAgentInSameGoal;
 //    }
-//
-//    private double computeSecurityFirstStepHeading() {
-//        Security security = (Security) this.currentPatch.getAmenityBlock().getParent(); // First, get the apex of the floor field with the state of the agent
-//
-//        return computeHeadingFromApexToAttractor(security.getSecurityPatchFieldState(), security.getQueueObject(), security.getAttractors());
-//    }
-//
-//    private double computeHeadingFromApexToAttractor(QueueingPatchField.PatchFieldState PatchFieldState, QueueObject queueObject, List<Amenity.AmenityBlock> attractors) {
-//        Patch apexLocation;
-//        double newHeading;
-//
-//        apexLocation = queueObject.getPatchFields().get(PatchFieldState).getApices().get(0);
-//        // Then compute the heading from the apex to the turnstile attractor
-//        newHeading = Coordinates.headingTowards(apexLocation.getPatchCenterCoordinates(), attractors.get(0).getPatch().getPatchCenterCoordinates());
-//
-//        return newHeading;
-//    }
-//
-//    private double computeFirstStepHeading() {
-//        double newHeading;
-//
-//        if (this.currentPatch.getAmenityBlock() != null && this.currentPatch.getAmenityBlock().getParent() instanceof Security) {
-//            newHeading = computeSecurityFirstStepHeading();
-//        }
-//        else {
-//            newHeading = this.previousHeading;
-//        }
-//
-//        return newHeading;
-//    }
-//
-//    private Coordinates computeFirstStepPosition() {
-//        double newHeading = computeFirstStepHeading();
-//
-//        return this.getFuturePosition(this.position, newHeading, this.preferredWalkingDistance); // Compute for the proposed future position
-//    }
-//
-//    public Agent getNearestAgentOnFirstStepPosition() {
-//        Patch firstStepPosition = this.university.getPatch(this.computeFirstStepPosition());
-//
-//        Agent nearestAgent = null;
-//        double nearestDistance = Double.MAX_VALUE;
-//
-//        for (Agent agent : firstStepPosition.getAgents()) {
-//            UniversityAgent universityAgent = (UniversityAgent) agent;
-//            double distanceFromAgent = Coordinates.distance(this.position, universityAgent.getAgentMovement().getPosition());
-//
-//            if (distanceFromAgent < nearestDistance) {
-//                nearestAgent = agent;
-//                nearestDistance = distanceFromAgent;
-//            }
-//        }
-//
-//        return nearestAgent;
-//    }
-//
-//    public boolean isFirstStepPositionFree() {
-//        return hasNoAgent(this.university.getPatch(this.computeFirstStepPosition()));
-//    }
-//
-//    private boolean hasNoAgent(Patch patch) {
-//        if (patch == null) {
-//            return true;
-//        }
-//
-//        List<Agent> agentsOnPatchWithoutThisAgent = patch.getAgents();
-//        agentsOnPatchWithoutThisAgent.remove(this.parent);
-//
-//        return agentsOnPatchWithoutThisAgent.isEmpty();
-//    }
-//
-//    public List<Patch> get7x7Field(double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
-//        Patch centerPatch = this.currentPatch;
-//        List<Patch> patchesToExplore = new ArrayList<>();
-//        boolean isCenterPatch;
-//
-//        for (Patch patch : centerPatch.get7x7Neighbors(includeCenterPatch)) {
-//            // Make sure that the patch to be added is within the field of view of the agent which invoked this method
-//            isCenterPatch = patch.equals(centerPatch);
-//            if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(centerPatch.getPatchCenterCoordinates(), patch.getPatchCenterCoordinates(), heading, fieldOfViewAngle)) {
-//                patchesToExplore.add(patch);
-//            }
-//        }
-//
-//        return patchesToExplore;
-//    }
-//
-//    private Vector computeAttractiveForce(final Coordinates startingPosition, final double proposedHeading, final Coordinates proposedNewPosition, final double preferredWalkingDistance) {
-//
-//        return new Vector(startingPosition, proposedHeading, proposedNewPosition, preferredWalkingDistance);
-//    }
-//
-//    private double computeMaximumRepulsionDistance(int objectCount, final int maximumObjectCountTolerated, final int minimumObjectCount, final double maximumDistance, final int maximumObjectCount, final double minimumDistance) {
-//        if (objectCount > maximumObjectCountTolerated) {
-//            objectCount = maximumObjectCountTolerated;
-//        }
-//
-//        final double a = (maximumDistance - minimumDistance) / (minimumObjectCount - maximumDistance);
-//        final double b = minimumDistance - a * maximumObjectCount;
-//
-//        return a * objectCount + b;
-//    }
-//
-//    private double computeRepulsionMagnitudeFactor(final double distance, final double maximumDistance, final double minimumRepulsionFactor, final double minimumDistance, final double maximumRepulsionFactor) {
-//        // Formula: for the inverse square law equation y = a / x ^ 2 + b,
-//        // a = (d_max ^ 2 * (r_min * d_max ^ 2 - r_min * d_min ^ 2 + r_max ^ 2 * d_min ^ 2)) / (d_max ^ 2 - d_min ^ 2)
-//        // and
-//        // b = -((r_max ^ 2 * d_min ^ 2) / (d_max ^ 2 - d_min ^ 2))
-//        double differenceOfSquaredDistances = Math.pow(maximumDistance, 2.0) - Math.pow(minimumDistance, 2.0);
-//        double productOfMaximumRepulsionAndMinimumDistance = Math.pow(maximumRepulsionFactor, 2.0) * Math.pow(minimumDistance, 2.0);
-//
-//        double a = (Math.pow(maximumDistance, 2.0) * (minimumRepulsionFactor * Math.pow(maximumDistance, 2.0) - minimumRepulsionFactor * Math.pow(minimumDistance, 2.0) + productOfMaximumRepulsionAndMinimumDistance)) / differenceOfSquaredDistances;
-//        double b = -(productOfMaximumRepulsionAndMinimumDistance / differenceOfSquaredDistances);
-//
-//        double repulsion = a / Math.pow(distance, 2.0) + b;
-//
-//        if (repulsion <= 0.0) { // The repulsion value should always be greater or equal to zero
-//            repulsion = 0.0;
-//        }
-//
-//        return repulsion;
-//    }
-//
+
+    private double computeSecurityFirstStepHeading() {
+        Security security = (Security) this.currentPatch.getAmenityBlock().getParent(); // First, get the apex of the floor field with the state of the agent
+
+        return computeHeadingFromApexToAttractor(security.getSecurityPatchFieldState(), security.getQueueObject(), security.getAttractors());
+    }
+
+    private double computeHeadingFromApexToAttractor(QueueingPatchField.PatchFieldState PatchFieldState, QueueObject queueObject, List<Amenity.AmenityBlock> attractors) {
+        Patch apexLocation;
+        double newHeading;
+
+        apexLocation = queueObject.getPatchFields().get(PatchFieldState).getApices().get(0);
+        // Then compute the heading from the apex to the turnstile attractor
+        newHeading = Coordinates.headingTowards(apexLocation.getPatchCenterCoordinates(), attractors.get(0).getPatch().getPatchCenterCoordinates());
+
+        return newHeading;
+    }
+
+    private double computeFirstStepHeading() {
+        double newHeading;
+
+        if (this.currentPatch.getAmenityBlock() != null && this.currentPatch.getAmenityBlock().getParent() instanceof Security) {
+            newHeading = computeSecurityFirstStepHeading();
+        }
+        else {
+            newHeading = this.previousHeading;
+        }
+
+        return newHeading;
+    }
+
+    private Coordinates computeFirstStepPosition() {
+        double newHeading = computeFirstStepHeading();
+
+        return this.getFuturePosition(this.position, newHeading, this.preferredWalkingDistance); // Compute for the proposed future position
+    }
+
+    public Agent getNearestAgentOnFirstStepPosition() {
+        Patch firstStepPosition = this.university.getPatch(this.computeFirstStepPosition());
+
+        Agent nearestAgent = null;
+        double nearestDistance = Double.MAX_VALUE;
+
+        for (Agent agent : firstStepPosition.getAgents()) {
+            UniversityAgent universityAgent = (UniversityAgent) agent;
+            double distanceFromAgent = Coordinates.distance(this.position, universityAgent.getAgentMovement().getPosition());
+
+            if (distanceFromAgent < nearestDistance) {
+                nearestAgent = agent;
+                nearestDistance = distanceFromAgent;
+            }
+        }
+
+        return nearestAgent;
+    }
+
+    public boolean isFirstStepPositionFree() {
+        return hasNoAgent(this.university.getPatch(this.computeFirstStepPosition()));
+    }
+
+    private boolean hasNoAgent(Patch patch) {
+        if (patch == null) {
+            return true;
+        }
+
+        List<Agent> agentsOnPatchWithoutThisAgent = patch.getAgents();
+        agentsOnPatchWithoutThisAgent.remove(this.parent);
+
+        return agentsOnPatchWithoutThisAgent.isEmpty();
+    }
+
+    public List<Patch> get7x7Field(double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
+        Patch centerPatch = this.currentPatch;
+        List<Patch> patchesToExplore = new ArrayList<>();
+        boolean isCenterPatch;
+
+        for (Patch patch : centerPatch.get7x7Neighbors(includeCenterPatch)) {
+            // Make sure that the patch to be added is within the field of view of the agent which invoked this method
+            isCenterPatch = patch.equals(centerPatch);
+            if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(centerPatch.getPatchCenterCoordinates(), patch.getPatchCenterCoordinates(), heading, fieldOfViewAngle)) {
+                patchesToExplore.add(patch);
+            }
+        }
+
+        return patchesToExplore;
+    }
+
+    private Vector computeAttractiveForce(final Coordinates startingPosition, final double proposedHeading, final Coordinates proposedNewPosition, final double preferredWalkingDistance) {
+
+        return new Vector(startingPosition, proposedHeading, proposedNewPosition, preferredWalkingDistance);
+    }
+
+    private double computeMaximumRepulsionDistance(int objectCount, final int maximumObjectCountTolerated, final int minimumObjectCount, final double maximumDistance, final int maximumObjectCount, final double minimumDistance) {
+        if (objectCount > maximumObjectCountTolerated) {
+            objectCount = maximumObjectCountTolerated;
+        }
+
+        final double a = (maximumDistance - minimumDistance) / (minimumObjectCount - maximumDistance);
+        final double b = minimumDistance - a * maximumObjectCount;
+
+        return a * objectCount + b;
+    }
+
+    private double computeRepulsionMagnitudeFactor(final double distance, final double maximumDistance, final double minimumRepulsionFactor, final double minimumDistance, final double maximumRepulsionFactor) {
+        // Formula: for the inverse square law equation y = a / x ^ 2 + b,
+        // a = (d_max ^ 2 * (r_min * d_max ^ 2 - r_min * d_min ^ 2 + r_max ^ 2 * d_min ^ 2)) / (d_max ^ 2 - d_min ^ 2)
+        // and
+        // b = -((r_max ^ 2 * d_min ^ 2) / (d_max ^ 2 - d_min ^ 2))
+        double differenceOfSquaredDistances = Math.pow(maximumDistance, 2.0) - Math.pow(minimumDistance, 2.0);
+        double productOfMaximumRepulsionAndMinimumDistance = Math.pow(maximumRepulsionFactor, 2.0) * Math.pow(minimumDistance, 2.0);
+
+        double a = (Math.pow(maximumDistance, 2.0) * (minimumRepulsionFactor * Math.pow(maximumDistance, 2.0) - minimumRepulsionFactor * Math.pow(minimumDistance, 2.0) + productOfMaximumRepulsionAndMinimumDistance)) / differenceOfSquaredDistances;
+        double b = -(productOfMaximumRepulsionAndMinimumDistance / differenceOfSquaredDistances);
+
+        double repulsion = a / Math.pow(distance, 2.0) + b;
+
+        if (repulsion <= 0.0) { // The repulsion value should always be greater or equal to zero
+            repulsion = 0.0;
+        }
+
+        return repulsion;
+    }
+
 //    private Vector computeSocialForceFromAgent(UniversityAgent agent, final double distanceToOtherAgent, final double maximumDistance, final double minimumDistance, final double maximumMagnitude) {
 //        final double maximumRepulsionFactor = 1.0;
 //        final double minimumRepulsionFactor = 0.0;
@@ -1587,7 +1591,7 @@
 //        // Finally, given the current position, heading, and future position, create the vector from the other agent to the current agent
 //        return new Vector(agentPosition, headingFromOtherAgent, agentRepulsionVectorFuturePosition, repulsionMagnitude);
 //    }
-//
+
 //    private Vector computeSocialForceFromObstacle(Amenity.AmenityBlock amenityBlock, final double distanceToObstacle, final double maximumDistance, double minimumDistance, final double maximumMagnitude) {
 //        final double maximumRepulsionFactor = 1.0;
 //        final double minimumRepulsionFactor = 0.0;
@@ -2131,16 +2135,16 @@
 //        return true;
 //    }
 //
-//    public void free() { // Make this agent free from being stuck
-//        this.isStuck = false;
-//
-//        this.stuckCounter = 0;
-//        this.noMovementCounter = 0;
-//        this.noNewPatchesSeenCounter = 0;
-//
-//        this.currentPath = null;
-//        this.isReadyToFree = false;
-//    }
+    public void free() { // Make this agent free from being stuck
+        this.isStuck = false;
+
+        this.stuckCounter = 0;
+        this.noMovementCounter = 0;
+        this.noNewPatchesSeenCounter = 0;
+
+        this.currentPath = null;
+        this.isReadyToFree = false;
+    }
 //
 //    // From a set of patches associated with a goal's floor field, get the nearest patch below a threshold
 //    public Patch getPatchWithNearestPatchFieldValue() {
@@ -2500,20 +2504,26 @@
 //    public void prepareForExit() {
 //        this.isReadyToExit = true;
 //    }
-//
-//    public enum State {
-//        STANDING, WALKING, IN_QUEUEABLE, IN_QUEUE, IN_NONQUEUEABLE, IN_CLASS, IN_BATHROOM
-//    }
-//
-//    public enum Action {
-//        /* Walking actions */
-//        WILL_QUEUE, REROUTING, EXITING,
-//        /* In queue actions */
-//        ASSEMBLING, QUEUEING, HEADING_TO_QUEUEABLE,
-//        /* In queueable actions */
-//        SECURITY_CHECKING, FOUNTAIN_DRINKING,
-//        /* Standing actions */
-//        STANDING
-//    }
-//
-//}
+    public int getTickEntered(){
+        return tickEntered;
+    }
+
+    public enum State {
+        GOING_TO_SECURITY, WANDERING_AROUND, NEEDS_BATHROOM, NEEDS_DRINK,
+        GOING_TO_STUDY, STUDYING, GOING_TO_CLASS_STUDENT, GOING_TO_CLASS_PROFESSOR,
+        IN_CLASS_STUDENT, IN_CLASS_PROFESSOR, GOING_TO_LUNCH, EATING_LUNCH,
+        GOING_HOME, GUARD, MAINTENANCE_BATHROOM, MAINTENANCE_FOUNTAIN
+    }
+
+    public enum Action {
+        /* Walking actions */
+        WILL_QUEUE, REROUTING, EXITING,
+        /* In queue actions */
+        ASSEMBLING, QUEUEING, HEADING_TO_QUEUEABLE,
+        /* In queueable actions */
+        SECURITY_CHECKING, FOUNTAIN_DRINKING,
+        /* Standing actions */
+        STANDING
+    }
+
+}
