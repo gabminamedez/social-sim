@@ -7,6 +7,7 @@ public class State {
     public enum Name{
         GOING_TO_SECURITY, WANDERING_AROUND, NEEDS_BATHROOM, NEEDS_DRINK,
         GOING_TO_STUDY, STUDYING, GOING_TO_CLASS_STUDENT, GOING_TO_CLASS_PROFESSOR,
+        WAIT_FOR_CLASS_STUDENT, WAIT_FOR_CLASS_PROFESSOR,
         IN_CLASS_STUDENT, IN_CLASS_PROFESSOR, GOING_TO_LUNCH, EATING_LUNCH,
         GOING_HOME, GUARD, MAINTENANCE_BATHROOM, MAINTENANCE_FOUNTAIN;
     }
@@ -24,6 +25,13 @@ public class State {
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
+        this.actions = new ArrayList<>();
+    }
+    public State(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, ArrayList<Action> actions){
+        this.name = a;
+        this.routePlan = routePlan;
+        this.agent = agent;
+        this.actions = new ArrayList<>();
     }
 
     public State(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, int tickClassStart, int classroomID){ // Class state
@@ -32,6 +40,7 @@ public class State {
         this.agent = agent;
         this.tickClassStart = tickClassStart;
         this.classroomID = classroomID;
+        this.actions = new ArrayList<>();
     }
 
     public Name getName() {
@@ -64,5 +73,9 @@ public class State {
 
     public void setAgent(UniversityAgent agent) {
         this.agent = agent;
+    }
+
+    public void addAction(Action a){
+        actions.add(a);
     }
 }
