@@ -131,11 +131,20 @@ public class UniversityAgentMovement extends AgentMovement {
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
-        // All inOnStart agents will face the south by default
-        this.proposedHeading = Math.toRadians(270.0);
-        this.heading = Math.toRadians(270.0);
-        this.previousHeading = Math.toRadians(270.0);
-        this.fieldOfViewAngle = Math.toRadians(270.0);
+        if (((UniversityAgent) parent).getInOnStart()) {
+            // All inOnStart agents will face the south by default
+            this.proposedHeading = Math.toRadians(270.0);
+            this.heading = Math.toRadians(270.0);
+            this.previousHeading = Math.toRadians(270.0);
+            this.fieldOfViewAngle = Math.toRadians(270.0);
+        }
+        else {
+            // All newly generated agents will face the north by default
+            this.proposedHeading = Math.toRadians(90.0);
+            this.heading = Math.toRadians(90.0);
+            this.previousHeading = Math.toRadians(90.0);
+            this.fieldOfViewAngle = Math.toRadians(90.0);
+        }
 
         // Add this agent to the spawn patch
         this.currentPatch = spawnPatch;
@@ -147,8 +156,16 @@ public class UniversityAgentMovement extends AgentMovement {
         this.ticksAcceleratedOrMaintainedSpeed = 0;
 
         this.routePlan = new UniversityRoutePlan((UniversityAgent) parent, university, currentPatch);
-        this.state = State.GOING_TO_SECURITY;
-        this.action = Action.STANDING;
+        if (((UniversityAgent) parent).getInOnStart()) {
+            this.state = State.GOING_TO_SECURITY;
+            this.stateIndex = 0;
+            this.action = Action.STANDING;
+        }
+        else {
+            this.state = State.GOING_TO_SECURITY;
+            this.stateIndex = 0;
+            this.action = Action.WILL_QUEUE;
+        }
 
         this.recentPatches = new ConcurrentHashMap<>();
 
