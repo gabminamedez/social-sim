@@ -27,6 +27,8 @@ public class University extends Environment {
     private final List<Door> doors;
     private final List<EatTable> eatTables;
     private final List<Fountain> fountains;
+    private final List<Toilet> toilets;
+    private final List<Sink> sinks;
     private final List<LabTable> labTables;
     private final List<ProfTable> profTables;
     private final List<Security> securities;
@@ -67,6 +69,8 @@ public class University extends Environment {
         this.doors = Collections.synchronizedList(new ArrayList<>());
         this.eatTables = Collections.synchronizedList(new ArrayList<>());
         this.fountains = Collections.synchronizedList(new ArrayList<>());
+        this.toilets = Collections.synchronizedList(new ArrayList<>());
+        this.sinks = Collections.synchronizedList(new ArrayList<>());
         this.labTables = Collections.synchronizedList(new ArrayList<>());
         this.profTables = Collections.synchronizedList(new ArrayList<>());
         this.securities = Collections.synchronizedList(new ArrayList<>());
@@ -130,6 +134,14 @@ public class University extends Environment {
 
     public List<Fountain> getFountains() {
         return fountains;
+    }
+
+    public List<Toilet> getToilets() {
+        return toilets;
+    }
+
+    public List<Sink> getSinks() {
+        return sinks;
     }
 
     public List<LabTable> getLabTables() {
@@ -220,6 +232,12 @@ public class University extends Environment {
         }
         else if (amenityClass == Fountain.class) {
             return this.getFountains();
+        }
+        else if (amenityClass == Toilet.class) {
+            return this.getToilets();
+        }
+        else if (amenityClass == Sink.class) {
+            return this.getSinks();
         }
         else if (amenityClass == LabTable.class) {
             return this.getLabTables();
