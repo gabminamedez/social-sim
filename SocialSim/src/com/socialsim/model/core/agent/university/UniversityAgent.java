@@ -24,7 +24,7 @@ public class UniversityAgent extends Agent {
     private UniversityAgent.Persona persona = null;
 
     private final UniversityAgentGraphic agentGraphic;
-//    private final UniversityAgentMovement agentMovement;
+    private final UniversityAgentMovement agentMovement;
 
     public static final UniversityAgent.UniversityAgentFactory agentFactory;
 
@@ -137,11 +137,11 @@ public class UniversityAgent extends Agent {
 
         this.agentGraphic = new UniversityAgentGraphic(this);
         if (inOnStart) { // If the agent is already inside the environment on initialization
-            // this.agentMovement = new UniversityAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates());
+             this.agentMovement = new UniversityAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates());
         }
         else {
             UniversityGate universityGate = (UniversityGate) spawnPatch.getAmenityBlock().getParent();
-            // this.agentMovement = new UniversityAgentMovement(universityGate, this, 1.27, spawnPatch.getPatchCenterCoordinates());
+             this.agentMovement = new UniversityAgentMovement(universityGate, this, 1.27, spawnPatch.getPatchCenterCoordinates());
         }
     }
 
@@ -169,9 +169,9 @@ public class UniversityAgent extends Agent {
         return agentGraphic;
     }
 
-//    public UniversityAgentMovement getAgentMovement() {
-//        return agentMovement;
-//    }
+    public UniversityAgentMovement getAgentMovement() {
+        return agentMovement;
+    }
 
     public static class UniversityAgentFactory extends Agent.AgentFactory {
         public static UniversityAgent create(UniversityAgent.Type type, Patch spawnPatch, boolean inOnStart) {
