@@ -9,10 +9,10 @@ import java.util.List;
 
 public class UniversityAgentGraphic extends Graphic {
 
-    public static final String AGENTS_URL_1 = "com/socialsim/view/image/University/male_students.png";
-    public static final String AGENTS_URL_2 = "com/socialsim/view/image/University/female_students.png";
-    public static final String AGENTS_URL_3 = "com/socialsim/view/image/University/professors.png";
-    public static final String AGENTS_URL_4 = "com/socialsim/view/image/University/guard_janitor_officer.png";
+    public static final String AGENTS_URL_1 = "com/socialsim/view/image/University/male_students2.png";
+    public static final String AGENTS_URL_2 = "com/socialsim/view/image/University/female_students2.png";
+    public static final String AGENTS_URL_3 = "com/socialsim/view/image/University/professors2.png";
+    public static final String AGENTS_URL_4 = "com/socialsim/view/image/University/guard_janitor_officer2.png";
 
     public static final List<AgentGraphicLocation> intY1MaleStudents;
     public static final List<AgentGraphicLocation> extY1MaleStudents;
@@ -93,13 +93,13 @@ public class UniversityAgentGraphic extends Graphic {
         femaleGuardGraphics = new ArrayList<>();
         for (int i = 0; i < 4; i++) { femaleGuardGraphics.add(new AgentGraphicLocation(1, i)); }
         maleJanitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleGuardGraphics.add(new AgentGraphicLocation(2, i)); }
+        for (int i = 0; i < 4; i++) { maleJanitorGraphics.add(new AgentGraphicLocation(2, i)); }
         femaleJanitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleGuardGraphics.add(new AgentGraphicLocation(3, i)); }
+        for (int i = 0; i < 4; i++) { femaleJanitorGraphics.add(new AgentGraphicLocation(3, i)); }
         maleOfficerGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleGuardGraphics.add(new AgentGraphicLocation(4, i)); }
+        for (int i = 0; i < 4; i++) { maleOfficerGraphics.add(new AgentGraphicLocation(4, i)); }
         femaleOfficerGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleGuardGraphics.add(new AgentGraphicLocation(5, i)); }
+        for (int i = 0; i < 4; i++) { femaleOfficerGraphics.add(new AgentGraphicLocation(5, i)); }
     }
 
     private final UniversityAgent agent;
@@ -213,21 +213,21 @@ public class UniversityAgentGraphic extends Graphic {
     public void change() {
         UniversityAgent agent = this.agent;
 
-//        double agentHeading = agent.getAgentMovement().getHeading();
-//        double agentHeadingDegrees = Math.toDegrees(agentHeading);
-//
-//        if (agentHeadingDegrees >= 315 && agentHeadingDegrees < 360 || agentHeadingDegrees >= 0 && agentHeadingDegrees < 45) {
-//            this.graphicIndex = 1;
-//        }
-//        else if (agentHeadingDegrees >= 45 && agentHeadingDegrees < 135) {
-//            this.graphicIndex = 0;
-//        }
-//        else if (agentHeadingDegrees >= 135 && agentHeadingDegrees < 225) {
-//            this.graphicIndex = 3;
-//        }
-//        else if (agentHeadingDegrees >= 225 && agentHeadingDegrees < 315) {
-//            this.graphicIndex = 2;
-//        }
+        double agentHeading = agent.getAgentMovement().getHeading();
+        double agentHeadingDegrees = Math.toDegrees(agentHeading);
+
+        if (agentHeadingDegrees >= 315 && agentHeadingDegrees < 360 || agentHeadingDegrees >= 0 && agentHeadingDegrees < 45) {
+            this.graphicIndex = 1;
+        }
+        else if (agentHeadingDegrees >= 45 && agentHeadingDegrees < 135) {
+            this.graphicIndex = 0;
+        }
+        else if (agentHeadingDegrees >= 135 && agentHeadingDegrees < 225) {
+            this.graphicIndex = 3;
+        }
+        else if (agentHeadingDegrees >= 225 && agentHeadingDegrees < 315) {
+            this.graphicIndex = 2;
+        }
     }
 
     public static class AmenityGraphicScale {

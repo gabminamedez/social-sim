@@ -4,6 +4,7 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.university.graphics.UniversityGraphicsController;
 import com.socialsim.controller.university.graphics.amenity.mapper.*;
+import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.generic.Patch;
@@ -45,7 +46,7 @@ public class UniversityScreenController extends ScreenController {
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
 
-    private final double CANVAS_SCALE = 0.3;
+    private final double CANVAS_SCALE = 0.5;
 
     public UniversityScreenController() {
     }
@@ -352,11 +353,7 @@ public class UniversityScreenController extends ScreenController {
                 }
             }
         }
-        EatTableMapper.draw(eatTablePatches);
-
-        List<Patch> fountainPatches = new ArrayList<>();
-        fountainPatches.add(university.getPatch(20,60));
-        FountainMapper.draw(fountainPatches);
+        EatTableMapper.draw(eatTablePatches);    
 
         List<Patch> toiletPatches = new ArrayList<>(); //TODO: Change locations
         toiletPatches.add(university.getPatch(0,50));
@@ -372,6 +369,7 @@ public class UniversityScreenController extends ScreenController {
         toiletPatches.add(university.getPatch(16,52));
         toiletPatches.add(university.getPatch(16,54));
         ToiletMapper.draw(toiletPatches);
+      
         List<Patch> sinkPatches = new ArrayList<>();
         sinkPatches.add(university.getPatch(0,56));
         sinkPatches.add(university.getPatch(0,57));
@@ -410,22 +408,10 @@ public class UniversityScreenController extends ScreenController {
         profTableUpPatches.add(university.getPatch(52,108)); // Laboratory
         ProfTableMapper.draw(profTableUpPatches, "UP");
 
-        List<Patch> securityPatches = new ArrayList<>();
-        securityPatches.add(university.getPatch(56,13));
-        SecurityMapper.draw(securityPatches);
-
         List<Patch> staircasePatches = new ArrayList<>();
         staircasePatches.add(university.getPatch(55,129));
         staircasePatches.add(university.getPatch(58,129));
         StaircaseMapper.draw(staircasePatches);
-
-        List<Patch> stallPatches = new ArrayList<>();
-        stallPatches.add(university.getPatch(3,102));
-        stallPatches.add(university.getPatch(3,108));
-        stallPatches.add(university.getPatch(3,114));
-        stallPatches.add(university.getPatch(3,120));
-        stallPatches.add(university.getPatch(3,126));
-        StallMapper.draw(stallPatches);
 
         List<Patch> studyTablePatches = new ArrayList<>();
         for (int i = 5; i < 17; i++) {
@@ -493,6 +479,34 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> universityGateEntrancePatches = new ArrayList<>();
         universityGateEntrancePatches.add(university.getPatch(59,12));
         UniversityGateMapper.draw(universityGateEntrancePatches, UniversityGate.UniversityGateMode.ENTRANCE);
+
+        List<Patch> fountainPatches = new ArrayList<>();
+        fountainPatches.add(university.getPatch(20,60));
+        FountainMapper.draw(fountainPatches);
+
+        List<Patch> securityPatches = new ArrayList<>();
+        securityPatches.add(university.getPatch(56,13));
+        SecurityMapper.draw(securityPatches);
+
+        List<Patch> stallPatches = new ArrayList<>();
+        stallPatches.add(university.getPatch(3,102));
+        stallPatches.add(university.getPatch(3,108));
+        stallPatches.add(university.getPatch(3,114));
+        stallPatches.add(university.getPatch(3,120));
+        stallPatches.add(university.getPatch(3,126));
+        StallMapper.draw(stallPatches);
+
+        UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, university.getPatch(57,12), true);
+        university.getAgents().add(guard);
+        university.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
+
+        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(5,65), true);
+        university.getAgents().add(janitor1);
+        university.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
+
+        UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(7,66), true);
+        university.getAgents().add(janitor2);
+        university.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
     }
 
     private void drawInterface() {

@@ -4,7 +4,7 @@ import com.socialsim.controller.generic.graphics.GraphicLocation;
 
 public class AgentGraphicLocation extends GraphicLocation {
 
-    public static final int BASE_IMAGE_UNIT = 64;
+    public static final int BASE_IMAGE_UNIT = 200;
 
     public AgentGraphicLocation(int graphicRow, int graphicColumn) {
         super(graphicRow, graphicColumn);

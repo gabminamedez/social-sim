@@ -4,6 +4,8 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.graphics.amenity.AmenityMapper;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
+import com.socialsim.model.core.environment.university.patchfield.SecurityField;
+import com.socialsim.model.core.environment.university.patchfield.StallField;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Stall;
 
 import java.util.ArrayList;
@@ -31,6 +33,16 @@ public class StallMapper extends AmenityMapper {
             Stall stallToAdd = Stall.StallFactory.create(amenityBlocks, true, 20);
             Main.universitySimulator.getUniversity().getStalls().add(stallToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
+
+            List<Patch> stallFieldPatches = new ArrayList<>();
+            stallFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 1));
+            stallFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol + 1));
+            stallFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol + 2));
+            for (int i = 1; i < 21; i++) {
+                stallFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + i, origPatchCol + 3));
+            }
+            Main.universitySimulator.getUniversity().getStallFields().add(StallField.stallFieldFactory.create(stallFieldPatches, stallToAdd, 1));
+
             amenityBlocks.clear();
         }
     }

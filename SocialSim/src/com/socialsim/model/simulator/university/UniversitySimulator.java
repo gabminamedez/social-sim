@@ -2,7 +2,10 @@ package com.socialsim.model.simulator.university;
 
 import com.socialsim.controller.Main;
 import com.socialsim.controller.university.controls.UniversityScreenController;
+import com.socialsim.model.core.agent.university.UniversityAgent;
+import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
@@ -17,11 +20,6 @@ public class UniversitySimulator extends Simulator {
     private final AtomicBoolean running;
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
-    // public static final Random RANDOM_NUMBER_GENERATOR; // Random number generator for all purposes in the simulation
-
-//    static {
-//        RANDOM_NUMBER_GENERATOR = new Random();
-//    }
 
     public UniversitySimulator() {
         this.university = null;
@@ -82,12 +80,12 @@ public class UniversitySimulator extends Simulator {
 //                                    null,
 //                                    false
 //                            );
+                            spawnAgent(university);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
 
-                        // Redraw the visualization
-                        // If the refreshes are frequent enough, update the visualization in a speed-aware manner
+                        // Redraw the visualization; If the refreshes are frequent enough, update the visualization in a speed-aware manner
                         ((UniversityScreenController) Main.mainScreenController).drawUniversityViewForeground(Main.universitySimulator.getUniversity(), SimulationTime.SLEEP_TIME_MILLISECONDS.get() < speedAwarenessLimitMilliseconds);
 
                         this.time.tick();
@@ -1279,53 +1277,18 @@ public class UniversitySimulator extends Simulator {
 //        }
 //    }
 
-//    private static void spawnAgent(Gate gate, University university) {
-//        Agent agent = gate.spawnAgent();
-//
-//        if (gate instanceof UniversityGate) {
-//            if (agent != null) {
-//                if (agent.getAgentMovement() != null) {
-//                    university.getAgents().add(agent);
-//                    university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch()); // Add the agent's patch position to its current floor's patch set as well
-//                }
-//                else { // The agent was spawned, but outside, so insert agent into the queue
-//                    university.getAgentBacklogs().add(agent);
-//                }
-//            }
-//        }
-//        else {
-//            if (agent != null) {
-//                university.getAgents().add(agent);
-//                university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-//            }
-//        }
-//    }
-
-    // Spawn agents from the backlogs of the university gate
-//    public static void spawnAgentFromUniversityGateBacklog(UniversityGate stationGate, University university) {
-//        List<Agent> agentsToSpawn = new ArrayList<>();
-//        final int additionalAgentsToSpawnPerTick = 2;
-//        Agent agent = stationGate.spawnAgentFromBacklogs(false); // Spawn two more after the first one has already been spawned
-//
-//        if (agent != null) {
-//            agentsToSpawn.add(agent);
-//
-//            for (int spawnTimes = 0; spawnTimes < additionalAgentsToSpawnPerTick; spawnTimes++) {
-//                agent = stationGate.spawnAgentFromBacklogs(true); // Force the spawning of more agents, to avoid long backlogs
-//
-//                if (agent == null) { // No more to spawn, stop iterating
-//                    break;
-//                }
-//                else {
-//                    agentsToSpawn.add(agent);
-//                }
-//            }
-//        }
-//
-//        for (Agent agentToSpawn : agentsToSpawn) {
-//            university.getAgents().add(agentToSpawn);
-//            university.getAgentPatchSet().add(agentToSpawn.getAgentMovement().getCurrentPatch());
-//        }
-//    }
+    private static void spawnAgent(University university) {
+        UniversityGate gate = university.getUniversityGates().get(1);
+        Gate.GateBlock spawner = gate.getSpawners().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4));
+        UniversityAgent agent = null;
+        
+        int spawnChance = gate.getChancePerTick();
+        int CHANCE_SPAWN = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+        if (spawnChance < CHANCE_SPAWN) {
+            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner.getPatch(), false);
+            university.getAgents().add(agent);
+            university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+        }
+    }
 
 }

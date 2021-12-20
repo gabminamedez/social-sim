@@ -6,20 +6,16 @@ import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
 import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
-import com.socialsim.model.core.environment.generic.patchfield.headful.QueueObject;
-import com.socialsim.model.core.environment.generic.patchfield.headful.QueueingPatchField;
+import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
-import com.socialsim.model.core.environment.generic.patchobject.passable.Queueable;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
-import com.socialsim.model.core.environment.generic.patchobject.passable.goal.BlockableAmenity;
 import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Goal;
 import com.socialsim.model.core.environment.generic.patchobject.passable.goal.QueueableGoal;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.Vector;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Security;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.*;
@@ -42,10 +38,9 @@ public class UniversityAgentMovement extends AgentMovement {
     private PatchField currentPatchField;
     private Patch goalPatch;
     private Amenity goalAmenity;
-    private QueueObject goalQueueObject;
     private Amenity.AmenityBlock goalAttractor;
     private PatchField goalPatchField;
-    private QueueingPatchField.PatchFieldState goalQueueingPatchFieldState; // Denotes the state of this agent's floor field
+    //private QueueingPatchField.PatchFieldState goalQueueingPatchFieldState; // Denotes the state of this agent's floor field
     private QueueingPatchField goalQueueingPatchField; // Denotes the patch field of the agent goal
     private Patch goalNearestQueueingPatch; // Denotes the patch with the nearest queueing patch
 
@@ -109,7 +104,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
         this.currentAmenity = gate; // Take note of the amenity where this agent was spawned
 
-        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent, university);
+        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent, university, currentPatch);
         this.state = State.GOING_TO_SECURITY;
         this.stateIndex = 0;
         this.action = Action.WILL_QUEUE;
@@ -131,11 +126,20 @@ public class UniversityAgentMovement extends AgentMovement {
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
-        // All inOnStart agents will face the south by default
-        this.proposedHeading = Math.toRadians(270.0);
-        this.heading = Math.toRadians(270.0);
-        this.previousHeading = Math.toRadians(270.0);
-        this.fieldOfViewAngle = Math.toRadians(270.0);
+        if (((UniversityAgent) parent).getInOnStart()) {
+            // All inOnStart agents will face the south by default
+            this.proposedHeading = Math.toRadians(270.0);
+            this.heading = Math.toRadians(270.0);
+            this.previousHeading = Math.toRadians(270.0);
+            this.fieldOfViewAngle = Math.toRadians(270.0);
+        }
+        else {
+            // All newly generated agents will face the north by default
+            this.proposedHeading = Math.toRadians(90.0);
+            this.heading = Math.toRadians(90.0);
+            this.previousHeading = Math.toRadians(90.0);
+            this.fieldOfViewAngle = Math.toRadians(90.0);
+        }
 
         // Add this agent to the spawn patch
         this.currentPatch = spawnPatch;
@@ -146,9 +150,17 @@ public class UniversityAgentMovement extends AgentMovement {
         this.ticksUntilFullyAccelerated = 10;
         this.ticksAcceleratedOrMaintainedSpeed = 0;
 
-        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent, university);
-        this.state = State.GOING_TO_SECURITY;
-        this.action = Action.STANDING;
+        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent, university, currentPatch);
+        if (((UniversityAgent) parent).getInOnStart()) {
+            this.state = State.GOING_TO_SECURITY;
+            this.stateIndex = 0;
+            this.action = Action.STANDING;
+        }
+        else {
+            this.state = State.GOING_TO_SECURITY;
+            this.stateIndex = 0;
+            this.action = Action.WILL_QUEUE;
+        }
 
         this.recentPatches = new ConcurrentHashMap<>();
 
@@ -242,9 +254,9 @@ public class UniversityAgentMovement extends AgentMovement {
         return goalPatchField;
     }
 
-    public QueueingPatchField.PatchFieldState getGoalQueueingPatchFieldState() {
-        return goalQueueingPatchFieldState;
-    }
+//    public QueueingPatchField.PatchFieldState getGoalQueueingPatchFieldState() {
+//        return goalQueueingPatchFieldState;
+//    }
 
     public QueueingPatchField getGoalQueueingPatchField() {
         return goalQueueingPatchField;
@@ -358,9 +370,9 @@ public class UniversityAgentMovement extends AgentMovement {
         return motivationForce;
     }
 
-    public Queueable getGoalAmenityAsQueueable() {
-        return Queueable.toQueueable(this.goalAmenity);
-    }
+//    public Queueable getGoalAmenityAsQueueable() {
+//        return Queueable.toQueueable(this.goalAmenity);
+//    }
 
     public Goal getGoalAmenityAsGoal() {
         return Goal.toGoal(this.goalAmenity);
@@ -370,9 +382,9 @@ public class UniversityAgentMovement extends AgentMovement {
         return QueueableGoal.toQueueableGoal(this.goalAmenity);
     }
 
-    public BlockableAmenity getGoalAmenityAsBlockable() {
-        return BlockableAmenity.asBlockable(this.goalAmenity);
-    }
+//    public BlockableAmenity getGoalAmenityAsBlockable() {
+//        return BlockableAmenity.asBlockable(this.goalAmenity);
+//    }
 
     // Use the A* algorithm (with Euclidean distance to compute the f-score) to find the shortest path to the given goal patch
     public static AgentPath computePathWithinFloor(Patch startingPatch, Patch goalPatch, boolean includeStartingPatch, boolean includeGoalPatch, boolean passThroughBlockables) {
@@ -430,9 +442,7 @@ public class UniversityAgentMovement extends AgentMovement {
             List<Patch> patchToExploreNeighbors = patchToExplore.getNeighbors();
 
             for (Patch patchToExploreNeighbor : patchToExploreNeighbors) {
-                if (patchToExploreNeighbor.getAmenityBlock() == null  || patchToExploreNeighbor.getAmenityBlock() != null
-                        && ((passThroughBlockables && patchToExploreNeighbor.getAmenityBlock().getParent() instanceof BlockableAmenity)
-                        || (!includeStartingPatch && patchToExplore.equals(startingPatch) || !includeGoalPatch && patchToExploreNeighbor.equals(goalPatch)))) {
+                if (patchToExploreNeighbor.getAmenityBlock() == null  || patchToExploreNeighbor.getAmenityBlock() != null || (!includeStartingPatch && patchToExplore.equals(startingPatch) || !includeGoalPatch && patchToExploreNeighbor.equals(goalPatch))) {
                     // Avoid patches that are close to amenity blocks, unless absolutely necessary
                     double obstacleClosenessPenalty = patchToExploreNeighbor.getAmenityBlocksAround() * 2.0;
                     double tentativeGScore = gScores.get(patchToExplore) + Coordinates.distance(patchToExplore, patchToExploreNeighbor) + obstacleClosenessPenalty;
@@ -450,9 +460,9 @@ public class UniversityAgentMovement extends AgentMovement {
         return null;
     }
 
-    public boolean isNextAmenityQueueable() { // Check whether the current goal amenity is a queueable or not
-        return Queueable.isQueueable(this.goalAmenity);
-    }
+//    public boolean isNextAmenityQueueable() { // Check whether the current goal amenity is a queueable or not
+//        return Queueable.isQueueable(this.goalAmenity);
+//    }
 
     public boolean isNextAmenityGoal() { // Check whether the current goal amenity is a goal or not
         return Goal.isGoal(this.goalAmenity);
@@ -467,10 +477,9 @@ public class UniversityAgentMovement extends AgentMovement {
     public void resetGoal(boolean shouldStepForwardFirst) { // Reset the agent's goal
         this.goalPatch = null;
         this.goalAmenity = null;
-        this.goalQueueObject = null;
         this.goalAttractor = null;
         this.goalPatchField = null;
-        this.goalQueueingPatchFieldState = null; // Take note of the patch field state of this agent
+        //this.goalQueueingPatchFieldState = null; // Take note of the patch field state of this agent
         this.goalQueueingPatchField = null; // Take note of the patch field of the agent's goal
         this.goalNearestQueueingPatch = null; // Take note of the agent's nearest queueing patch
 
@@ -515,7 +524,6 @@ public class UniversityAgentMovement extends AgentMovement {
             List<? extends Amenity> amenityListInFloor = this.university.getAmenityList((Class<? extends Amenity>) nextAmenityClass);
 
             Amenity chosenAmenity = null;
-            QueueObject chosenQueueObject = null;
             Amenity.AmenityBlock chosenAttractor = null;
 
             HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>(); // Compile all attractors from each amenity in the amenity list
@@ -551,45 +559,43 @@ public class UniversityAgentMovement extends AgentMovement {
                 Double candidateDistance = distancesToAttractorEntry.getValue();
 
                 Amenity currentAmenity;
-                QueueObject currentQueueObject;
 
                 currentAmenity = candidateAttractor.getParent();
 
-                if (currentAmenity instanceof Queueable) { // Only collect queue objects from queueables
-                    Queueable queueable = ((Queueable) currentAmenity);
-                    currentQueueObject = queueable.getQueueObject();
-                }
-                else {
-                    currentQueueObject = null;
-                }
+//                if (currentAmenity instanceof Queueable) { // Only collect queue objects from queueables
+//                    Queueable queueable = ((Queueable) currentAmenity);
+//                    currentQueueObject = queueable.getQueueObject();
+//                }
+//                else {
+//                    currentQueueObject = null;
+//                }
 
                 // If this is a queueable, take into account the agents queueing (except if it is a security gate)
                 // If this is not a queueable (or if it's a security gate), the distance will suffice
                 double attractorScore;
 
-                if (currentQueueObject != null) {
-                    if (!(currentAmenity instanceof Security)) {
-                        double agentPenalty = 25.0; // Avoid queueing to long lines
-                        attractorScore = candidateDistance + currentQueueObject.getAgentsQueueing().size() * agentPenalty;
-                    }
-                    else {
-                        attractorScore = candidateDistance;
-                    }
-                }
-                else {
-                    attractorScore = candidateDistance;
-                }
+//                if (currentQueueObject != null) {
+//                    if (!(currentAmenity instanceof Security)) {
+//                        double agentPenalty = 25.0; // Avoid queueing to long lines
+//                        attractorScore = candidateDistance + currentQueueObject.getAgentsQueueing().size() * agentPenalty;
+//                    }
+//                    else {
+//                        attractorScore = candidateDistance;
+//                    }
+//                }
+//                else {
+//                    attractorScore = candidateDistance;
+//                }
 
-                if (attractorScore < minimumAttractorScore) {
-                    minimumAttractorScore = attractorScore;
-                    chosenAmenity = currentAmenity;
-                    chosenQueueObject = currentQueueObject;
-                    chosenAttractor = candidateAttractor;
-                }
+//                if (attractorScore < minimumAttractorScore) {
+//                    minimumAttractorScore = attractorScore;
+//                    chosenAmenity = currentAmenity;
+//                    chosenQueueObject = currentQueueObject;
+//                    chosenAttractor = candidateAttractor;
+//                }
             }
 
             this.goalAmenity = chosenAmenity;
-            this.goalQueueObject = chosenQueueObject;
             this.goalAttractor = chosenAttractor;
             this.goalPatch = chosenAttractor.getPatch();
         }
@@ -1436,75 +1442,75 @@ public class UniversityAgentMovement extends AgentMovement {
 //                        && otherAgentInSameGoal;
 //    }
 
-    private double computeSecurityFirstStepHeading() {
-        Security security = (Security) this.currentPatch.getAmenityBlock().getParent(); // First, get the apex of the floor field with the state of the agent
+//    private double computeSecurityFirstStepHeading() {
+//        Security security = (Security) this.currentPatch.getAmenityBlock().getParent(); // First, get the apex of the floor field with the state of the agent
+//
+//        return computeHeadingFromApexToAttractor(security.getSecurityPatchFieldState(), security.getQueueObject(), security.getAttractors());
+//    }
 
-        return computeHeadingFromApexToAttractor(security.getSecurityPatchFieldState(), security.getQueueObject(), security.getAttractors());
-    }
+//    private double computeHeadingFromApexToAttractor(QueueingPatchField.PatchFieldState PatchFieldState, QueueObject queueObject, List<Amenity.AmenityBlock> attractors) {
+//        Patch apexLocation;
+//        double newHeading;
+//
+//        apexLocation = queueObject.getPatchFields().get(PatchFieldState).getApices().get(0);
+//        // Then compute the heading from the apex to the turnstile attractor
+//        newHeading = Coordinates.headingTowards(apexLocation.getPatchCenterCoordinates(), attractors.get(0).getPatch().getPatchCenterCoordinates());
+//
+//        return newHeading;
+//    }
 
-    private double computeHeadingFromApexToAttractor(QueueingPatchField.PatchFieldState PatchFieldState, QueueObject queueObject, List<Amenity.AmenityBlock> attractors) {
-        Patch apexLocation;
-        double newHeading;
+//    private double computeFirstStepHeading() {
+//        double newHeading;
+//
+//        if (this.currentPatch.getAmenityBlock() != null && this.currentPatch.getAmenityBlock().getParent() instanceof Security) {
+//            newHeading = computeSecurityFirstStepHeading();
+//        }
+//        else {
+//            newHeading = this.previousHeading;
+//        }
+//
+//        return newHeading;
+//    }
+//
+//    private Coordinates computeFirstStepPosition() {
+//        double newHeading = computeFirstStepHeading();
+//
+//        return this.getFuturePosition(this.position, newHeading, this.preferredWalkingDistance); // Compute for the proposed future position
+//    }
+//
+//    public Agent getNearestAgentOnFirstStepPosition() {
+//        Patch firstStepPosition = this.university.getPatch(this.computeFirstStepPosition());
+//
+//        Agent nearestAgent = null;
+//        double nearestDistance = Double.MAX_VALUE;
+//
+//        for (Agent agent : firstStepPosition.getAgents()) {
+//            UniversityAgent universityAgent = (UniversityAgent) agent;
+//            double distanceFromAgent = Coordinates.distance(this.position, universityAgent.getAgentMovement().getPosition());
+//
+//            if (distanceFromAgent < nearestDistance) {
+//                nearestAgent = agent;
+//                nearestDistance = distanceFromAgent;
+//            }
+//        }
+//
+//        return nearestAgent;
+//    }
 
-        apexLocation = queueObject.getPatchFields().get(PatchFieldState).getApices().get(0);
-        // Then compute the heading from the apex to the turnstile attractor
-        newHeading = Coordinates.headingTowards(apexLocation.getPatchCenterCoordinates(), attractors.get(0).getPatch().getPatchCenterCoordinates());
-
-        return newHeading;
-    }
-
-    private double computeFirstStepHeading() {
-        double newHeading;
-
-        if (this.currentPatch.getAmenityBlock() != null && this.currentPatch.getAmenityBlock().getParent() instanceof Security) {
-            newHeading = computeSecurityFirstStepHeading();
-        }
-        else {
-            newHeading = this.previousHeading;
-        }
-
-        return newHeading;
-    }
-
-    private Coordinates computeFirstStepPosition() {
-        double newHeading = computeFirstStepHeading();
-
-        return this.getFuturePosition(this.position, newHeading, this.preferredWalkingDistance); // Compute for the proposed future position
-    }
-
-    public Agent getNearestAgentOnFirstStepPosition() {
-        Patch firstStepPosition = this.university.getPatch(this.computeFirstStepPosition());
-
-        Agent nearestAgent = null;
-        double nearestDistance = Double.MAX_VALUE;
-
-        for (Agent agent : firstStepPosition.getAgents()) {
-            UniversityAgent universityAgent = (UniversityAgent) agent;
-            double distanceFromAgent = Coordinates.distance(this.position, universityAgent.getAgentMovement().getPosition());
-
-            if (distanceFromAgent < nearestDistance) {
-                nearestAgent = agent;
-                nearestDistance = distanceFromAgent;
-            }
-        }
-
-        return nearestAgent;
-    }
-
-    public boolean isFirstStepPositionFree() {
-        return hasNoAgent(this.university.getPatch(this.computeFirstStepPosition()));
-    }
-
-    private boolean hasNoAgent(Patch patch) {
-        if (patch == null) {
-            return true;
-        }
-
-        List<Agent> agentsOnPatchWithoutThisAgent = patch.getAgents();
-        agentsOnPatchWithoutThisAgent.remove(this.parent);
-
-        return agentsOnPatchWithoutThisAgent.isEmpty();
-    }
+//    public boolean isFirstStepPositionFree() {
+//        return hasNoAgent(this.university.getPatch(this.computeFirstStepPosition()));
+//    }
+//
+//    private boolean hasNoAgent(Patch patch) {
+//        if (patch == null) {
+//            return true;
+//        }
+//
+//        List<Agent> agentsOnPatchWithoutThisAgent = patch.getAgents();
+//        agentsOnPatchWithoutThisAgent.remove(this.parent);
+//
+//        return agentsOnPatchWithoutThisAgent.isEmpty();
+//    }
 
     public List<Patch> get7x7Field(double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
         Patch centerPatch = this.currentPatch;

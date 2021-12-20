@@ -28,7 +28,7 @@ public class SecurityMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock2);
             patch2.setAmenityBlock(amenityBlock2);
 
-            Security securityToAdd = Security.SecurityFactory.create(amenityBlocks, true, 5, false);
+            Security securityToAdd = Security.SecurityFactory.create(amenityBlocks, true, 5);
             Main.mallSimulator.getMall().getSecurities().add(securityToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
             amenityBlocks.clear();

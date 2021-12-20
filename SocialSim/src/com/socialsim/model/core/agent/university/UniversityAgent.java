@@ -22,6 +22,7 @@ public class UniversityAgent extends Agent {
     private final UniversityAgent.Gender gender;
     private UniversityAgent.AgeGroup ageGroup = null;
     private UniversityAgent.Persona persona = null;
+    private final boolean inOnStart;
 
     private final UniversityAgentGraphic agentGraphic;
     private final UniversityAgentMovement agentMovement;
@@ -35,6 +36,7 @@ public class UniversityAgent extends Agent {
     private UniversityAgent(UniversityAgent.Type type, Patch spawnPatch, boolean inOnStart) {
         this.id = agentCount;
         this.type = type;
+        this.inOnStart = inOnStart;
 
         if (type == UniversityAgent.Type.GUARD) {
             UniversityAgent.guardCount++;
@@ -136,13 +138,7 @@ public class UniversityAgent extends Agent {
         }
 
         this.agentGraphic = new UniversityAgentGraphic(this);
-        if (inOnStart) { // If the agent is already inside the environment on initialization
-             this.agentMovement = new UniversityAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates());
-        }
-        else {
-            UniversityGate universityGate = (UniversityGate) spawnPatch.getAmenityBlock().getParent();
-             this.agentMovement = new UniversityAgentMovement(universityGate, this, 1.27, spawnPatch.getPatchCenterCoordinates());
-        }
+        this.agentMovement = new UniversityAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates());
     }
 
     public int getId() {
@@ -163,6 +159,10 @@ public class UniversityAgent extends Agent {
 
     public UniversityAgent.Persona getPersona() {
         return persona;
+    }
+
+    public boolean getInOnStart() {
+        return inOnStart;
     }
 
     public UniversityAgentGraphic getAgentGraphic() {
