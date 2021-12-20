@@ -38,7 +38,10 @@ public class University extends Environment {
     private final List<Bathroom> bathrooms;
     private final List<Cafeteria> cafeterias;
     private final List<Classroom> classrooms;
+    private final List<FountainField> fountainFields;
     private final List<Laboratory> laboratories;
+    private final List<SecurityField> securityFields;
+    private final List<StallField> stallFields;
     private final List<StudyArea> studyAreas;
     private final List<Wall> walls;
 
@@ -75,7 +78,10 @@ public class University extends Environment {
         this.bathrooms = Collections.synchronizedList(new ArrayList<>());
         this.cafeterias = Collections.synchronizedList(new ArrayList<>());
         this.classrooms = Collections.synchronizedList(new ArrayList<>());
+        this.fountainFields = Collections.synchronizedList(new ArrayList<>());
         this.laboratories = Collections.synchronizedList(new ArrayList<>());
+        this.securityFields = Collections.synchronizedList(new ArrayList<>());
+        this.stallFields = Collections.synchronizedList(new ArrayList<>());
         this.studyAreas = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
     }
@@ -166,8 +172,20 @@ public class University extends Environment {
         return classrooms;
     }
 
+    public List<FountainField> getFountainFields() {
+        return fountainFields;
+    }
+
     public List<Laboratory> getLaboratories() {
         return laboratories;
+    }
+
+    public List<SecurityField> getSecurityFields() {
+        return securityFields;
+    }
+
+    public List<StallField> getStallFields() {
+        return stallFields;
     }
 
     public List<StudyArea> getStudyAreas() {

@@ -3,11 +3,10 @@ package com.socialsim.model.core.environment.generic;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
-import com.socialsim.model.core.environment.generic.patchobject.passable.Queueable;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.MatrixPosition;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.generic.patchfield.headful.QueueingPatchField;
+import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -21,11 +20,11 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     private final CopyOnWriteArrayList<Agent> agents;
     private Amenity.AmenityBlock amenityBlock; // Denotes the amenity block present on this patch
     private Pair<PatchField, Integer> patchField;
+    private Pair<QueueingPatchField, Integer> queueingPatchField;
     private final Environment environment;
     private final List<MatrixPosition> neighborIndices;
     private final List<MatrixPosition> neighbor7x7Indices; // Denotes the positions of the neighbors of this patch within a 7x7 range
     private int amenityBlocksAround; // Denotes the number of amenity blocks around this patch
-    private final Map<Queueable, Map<QueueingPatchField.PatchFieldState, Double>> floorFieldValues; // Denotes the individual floor field value of this patch, given the queueable goal patch and the desired state
 
     public Patch(Environment environment, MatrixPosition matrixPosition) {
         super();
@@ -35,11 +34,11 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         this.agents = new CopyOnWriteArrayList<>();
         this.amenityBlock = null;
         this.patchField = null;
+        this.queueingPatchField = null;
         this.environment = environment;
         this.neighborIndices = this.computeNeighboringPatches();
         this.neighbor7x7Indices = this.compute7x7Neighbors();
         this.amenityBlocksAround = 0;
-        this.floorFieldValues = new HashMap<>();
     }
 
     public MatrixPosition getMatrixPosition() {
@@ -52,10 +51,6 @@ public class Patch extends BaseObject implements Comparable<Patch> {
 
     public CopyOnWriteArrayList<Agent> getAgents() {
         return agents;
-    }
-
-    public Map<Queueable, Map<QueueingPatchField.PatchFieldState, Double>> getFloorFieldValues() {
-        return floorFieldValues;
     }
 
     public Amenity.AmenityBlock getAmenityBlock() {
@@ -72,6 +67,14 @@ public class Patch extends BaseObject implements Comparable<Patch> {
 
     public void setPatchField(Pair<PatchField, Integer> patchField) {
         this.patchField = patchField;
+    }
+
+    public Pair<QueueingPatchField, Integer> getQueueingPatchField() {
+        return queueingPatchField;
+    }
+
+    public void setQueueingPatchField(Pair<QueueingPatchField, Integer> queueingPatchField) {
+        this.queueingPatchField = queueingPatchField;
     }
 
     public int getAmenityBlocksAround() {
