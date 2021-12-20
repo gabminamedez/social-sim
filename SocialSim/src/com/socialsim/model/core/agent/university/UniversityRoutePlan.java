@@ -1,6 +1,7 @@
 package com.socialsim.model.core.agent.university;
 
 import com.socialsim.model.core.environment.generic.BaseObject;
+import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.university.patchfield.Bathroom;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Fountain;
@@ -21,13 +22,13 @@ public class UniversityRoutePlan {
     private static final int MAX_CLASSROOMS = 6;
     private static final int MAX_JANITOR_ROUNDS = 6;
 
-    public UniversityRoutePlan(UniversityAgent agent, University university) {
+    public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch) {
         List<State> routePlan = new ArrayList<>();
         ArrayList<Action> actions;
 
         if (agent.getPersona() == UniversityAgent.Persona.GUARD){
             actions = new ArrayList<>();
-            actions.add(new Action(Action.Name.GUARD_STAY_PUT, agent.getAgentMovement().getCurrentPatch(), 0)); //TODO: Change patch destination and duration
+            actions.add(new Action(Action.Name.GUARD_STAY_PUT, spawnPatch, 0)); //TODO: Change patch destination and duration
             routePlan.add(new State(State.Name.GUARD, this, agent, actions));
         }
         else if (agent.getPersona() == UniversityAgent.Persona.JANITOR){

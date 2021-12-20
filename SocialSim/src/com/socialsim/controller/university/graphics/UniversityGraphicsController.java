@@ -2,9 +2,12 @@ package com.socialsim.controller.university.graphics;
 
 import com.socialsim.controller.generic.Controller;
 import com.socialsim.controller.Main;
+import com.socialsim.controller.generic.graphics.agent.AgentGraphicLocation;
 import com.socialsim.controller.university.graphics.agent.UniversityAgentGraphic;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.university.graphics.amenity.UniversityAmenityGraphic;
+import com.socialsim.model.core.agent.Agent;
+import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
@@ -208,32 +211,30 @@ public class UniversityGraphicsController extends Controller {
             }
 
             if (!background) { // Draw each agent in this patch, if the foreground is to be drawn
-//                for (Agent agent : patch.getAgents()) {
-//                    UniversityAgent universityAgent = (UniversityAgent) agent;
-//                    AgentGraphicLocation agentGraphicLocation = universityAgent.getAgentGraphic().getGraphicLocation();
-//
-//                    Image CURRENT_URL = null;
-//                    if (universityAgent.getType() == UniversityAgent.Type.GUARD || universityAgent.getType() == UniversityAgent.Type.JANITOR || universityAgent.getType() == UniversityAgent.Type.OFFICER) {
-//                        CURRENT_URL = AGENT_SPRITES_4;
-//                    }
-//                    else if (universityAgent.getType() == UniversityAgent.Type.PROFESSOR) {
-//                        CURRENT_URL = AGENT_SPRITES_3;
-//                    }
-//                    else if (universityAgent.getType() == UniversityAgent.Type.STUDENT && universityAgent.getGender() == UniversityAgent.Gender.MALE) {
-//                        CURRENT_URL = AGENT_SPRITES_1;
-//                    }
-//                    else if (universityAgent.getType() == UniversityAgent.Type.STUDENT && universityAgent.getGender() == UniversityAgent.Gender.FEMALE) {
-//                        CURRENT_URL = AGENT_SPRITES_2;
-//                    }
-//
-//                    foregroundGraphicsContext.drawImage(
-//                            CURRENT_URL,
-//                            agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
-//                            agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
-//                            UniversityGraphicsController.getScaledAgentCoordinates(universityAgent).getX() * tileSize - tileSize,
-//                            UniversityGraphicsController.getScaledAgentCoordinates(universityAgent).getY() * tileSize - tileSize * 2,
-//                            tileSize * 2, tileSize * 2 + tileSize * 0.25);
-//                }
+                for (Agent agent : patch.getAgents()) {
+                    UniversityAgent universityAgent = (UniversityAgent) agent;
+                    AgentGraphicLocation agentGraphicLocation = universityAgent.getAgentGraphic().getGraphicLocation();
+
+                    Image CURRENT_URL = null;
+                    if (universityAgent.getType() == UniversityAgent.Type.GUARD || universityAgent.getType() == UniversityAgent.Type.JANITOR || universityAgent.getType() == UniversityAgent.Type.OFFICER) {
+                        CURRENT_URL = AGENT_SPRITES_4;
+                    }
+                    else if (universityAgent.getType() == UniversityAgent.Type.PROFESSOR) {
+                        CURRENT_URL = AGENT_SPRITES_3;
+                    }
+                    else if (universityAgent.getType() == UniversityAgent.Type.STUDENT && universityAgent.getGender() == UniversityAgent.Gender.MALE) {
+                        CURRENT_URL = AGENT_SPRITES_1;
+                    }
+                    else if (universityAgent.getType() == UniversityAgent.Type.STUDENT && universityAgent.getGender() == UniversityAgent.Gender.FEMALE) {
+                        CURRENT_URL = AGENT_SPRITES_2;
+                    }
+
+                    foregroundGraphicsContext.drawImage(
+                            CURRENT_URL,
+                            agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
+                            agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
+                            column * tileSize, row * tileSize, tileSize * 1, tileSize * 1);
+                }
             }
         }
     }
@@ -276,11 +277,11 @@ public class UniversityGraphicsController extends Controller {
         }
     }
 
-//    public static Coordinates getScaledAgentCoordinates(Agent agent) {
-//        Coordinates agentPosition = agent.getAgentMovement().getPosition();
-//
-//        return UniversityGraphicsController.getScaledCoordinates(agentPosition);
-//    }
+    public static Coordinates getScaledAgentCoordinates(UniversityAgent agent) {
+        Coordinates agentPosition = agent.getAgentMovement().getPosition();
+
+        return UniversityGraphicsController.getScaledCoordinates(agentPosition);
+    }
 
     public static Coordinates getScaledCoordinates(Coordinates coordinates) {
         return new Coordinates(coordinates.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS, coordinates.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);

@@ -42,8 +42,6 @@ public class University extends Environment {
     private final List<StudyArea> studyAreas;
     private final List<Wall> walls;
 
-    List<UniversityAgent> agentBacklogs;
-
     private static final University.UniversityFactory universityFactory;
 
     static {
@@ -80,8 +78,6 @@ public class University extends Environment {
         this.laboratories = Collections.synchronizedList(new ArrayList<>());
         this.studyAreas = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
-
-        this.agentBacklogs = Collections.synchronizedList(new ArrayList<>());
     }
 
     public CopyOnWriteArrayList<UniversityAgent> getAgents() {
@@ -180,10 +176,6 @@ public class University extends Environment {
 
     public List<Wall> getWalls() {
         return walls;
-    }
-
-    public List<UniversityAgent> getAgentBacklogs() {
-        return agentBacklogs;
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {

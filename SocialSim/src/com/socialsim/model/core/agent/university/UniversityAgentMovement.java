@@ -109,7 +109,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
         this.currentAmenity = gate; // Take note of the amenity where this agent was spawned
 
-        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent, university);
+        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent, university, currentPatch);
         this.state = State.GOING_TO_SECURITY;
         this.stateIndex = 0;
         this.action = Action.WILL_QUEUE;
@@ -146,7 +146,7 @@ public class UniversityAgentMovement extends AgentMovement {
         this.ticksUntilFullyAccelerated = 10;
         this.ticksAcceleratedOrMaintainedSpeed = 0;
 
-        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent, university);
+        this.routePlan = new UniversityRoutePlan((UniversityAgent) parent, university, currentPatch);
         this.state = State.GOING_TO_SECURITY;
         this.action = Action.STANDING;
 
