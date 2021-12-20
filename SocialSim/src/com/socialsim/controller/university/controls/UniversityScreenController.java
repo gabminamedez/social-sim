@@ -9,6 +9,7 @@ import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -94,7 +95,8 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> fBathroomPatches = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 50; j < 60; j++) {
-                fBathroomPatches.add(university.getPatch(i, j));
+                if (j != 59 || i >= 3  && i <= 4)
+                    fBathroomPatches.add(university.getPatch(i, j));
             }
         }
         Main.universitySimulator.getUniversity().getBathrooms().add(Bathroom.bathroomFactory.create(fBathroomPatches, 1));
@@ -102,7 +104,8 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> mBathroomPatches = new ArrayList<>();
         for (int i = 9; i < 17; i++) {
             for (int j = 50; j < 60; j++) {
-                mBathroomPatches.add(university.getPatch(i, j));
+                if (j != 59 || i >= 12  && i <= 13)
+                    mBathroomPatches.add(university.getPatch(i, j));
             }
         }
         Main.universitySimulator.getUniversity().getBathrooms().add(Bathroom.bathroomFactory.create(mBathroomPatches, 2));
@@ -334,6 +337,11 @@ public class UniversityScreenController extends ScreenController {
         doorUpPatches.add(university.getPatch(36,108)); // Laboratory
         DoorMapper.draw(doorUpPatches, "UP");
 
+        List<Patch> doorRightPatches = new ArrayList<>();
+        doorRightPatches.add(university.getPatch(12, 59));
+        doorRightPatches.add(university.getPatch(3, 59));
+        DoorMapper.draw(doorRightPatches, "RIGHT");
+
         List<Patch> eatTablePatches = new ArrayList<>();
         for (int i = 6; i < 22; i++) {
             if (i == 6 || i == 9 || i == 12 || i == 15 || i == 18 || i == 21) {
@@ -349,6 +357,29 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> fountainPatches = new ArrayList<>();
         fountainPatches.add(university.getPatch(20,60));
         FountainMapper.draw(fountainPatches);
+
+        List<Patch> toiletPatches = new ArrayList<>(); //TODO: Change locations
+        toiletPatches.add(university.getPatch(0,50));
+        toiletPatches.add(university.getPatch(0,52));
+        toiletPatches.add(university.getPatch(0,54));
+        toiletPatches.add(university.getPatch(7,50));
+        toiletPatches.add(university.getPatch(7,52));
+        toiletPatches.add(university.getPatch(7,54));
+        toiletPatches.add(university.getPatch(9,50));
+        toiletPatches.add(university.getPatch(9,52));
+        toiletPatches.add(university.getPatch(9,54));
+        toiletPatches.add(university.getPatch(16,50));
+        toiletPatches.add(university.getPatch(16,52));
+        toiletPatches.add(university.getPatch(16,54));
+        ToiletMapper.draw(toiletPatches);
+        List<Patch> sinkPatches = new ArrayList<>();
+        sinkPatches.add(university.getPatch(0,56));
+        sinkPatches.add(university.getPatch(0,57));
+        sinkPatches.add(university.getPatch(0,58));
+        sinkPatches.add(university.getPatch(9,56));
+        sinkPatches.add(university.getPatch(9,57));
+        sinkPatches.add(university.getPatch(9,58));
+        SinkMapper.draw(sinkPatches);
 
         List<Patch> labTablePatches = new ArrayList<>();
         labTablePatches.add(university.getPatch(41,102));
@@ -397,16 +428,52 @@ public class UniversityScreenController extends ScreenController {
         StallMapper.draw(stallPatches);
 
         List<Patch> studyTablePatches = new ArrayList<>();
-        for (int i = 5; i < 21; i++) {
-            if (i == 5 || i == 8 || i == 11 || i == 14 || i == 17 || i == 20) {
-                for (int j = 78; j < 92; j++) {
-                    if (j == 78 || j == 82 || j == 86 || j == 90) {
+        for (int i = 5; i < 17; i++) {
+            if (i == 5 || i == 8 || i == 13 || i == 16) {
+                for (int j = 78; j < 82; j++) {
+                    if (j == 78 || j == 81) {
                         studyTablePatches.add(university.getPatch(i, j));
                     }
                 }
             }
         }
-        StudyTableMapper.draw(studyTablePatches);
+        for (int i = 5; i < 9; i++) {
+            if (i == 5 || i == 8) {
+                for (int j = 78; j < 82; j++) {
+                    if (j == 78 || j == 81) {
+                        studyTablePatches.add(university.getPatch(i, j));
+                    }
+                }
+            }
+        }
+        StudyTableMapper.draw(studyTablePatches, "LEFT");
+        studyTablePatches = new ArrayList<>();
+        studyTablePatches.add(university.getPatch(6, 84));
+        studyTablePatches.add(university.getPatch(7, 84));
+        studyTablePatches.add(university.getPatch(13, 87));
+        studyTablePatches.add(university.getPatch(14, 87));
+        studyTablePatches.add(university.getPatch(17, 87));
+        studyTablePatches.add(university.getPatch(18, 87));
+        studyTablePatches.add(university.getPatch(13, 91));
+        studyTablePatches.add(university.getPatch(14, 91));
+        studyTablePatches.add(university.getPatch(17, 91));
+        studyTablePatches.add(university.getPatch(18, 91));
+        for (int i = 5; i < 9; i++) {
+            if (i == 5 || i == 8) {
+                for (int j = 88; j < 92; j++) {
+                    if (j == 88 || j == 90) {
+                        studyTablePatches.add(university.getPatch(i, j));
+                    }
+                }
+            }
+        }
+
+        for (int j = 78; j < 82; j++) {
+            if (j == 78 || j == 81) {
+                studyTablePatches.add(university.getPatch(20, j));
+            }
+        }
+        StudyTableMapper.draw(studyTablePatches, "UP");
 
         List<Patch> trashPatches = new ArrayList<>();
         trashPatches.add(university.getPatch(36,19));
