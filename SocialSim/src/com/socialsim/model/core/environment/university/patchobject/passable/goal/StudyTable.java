@@ -2,6 +2,7 @@ package com.socialsim.model.core.environment.university.patchobject.passable.goa
 
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.university.graphics.amenity.UniversityAmenityGraphic;
+import com.socialsim.controller.university.graphics.amenity.graphic.ProfTableGraphic;
 import com.socialsim.controller.university.graphics.amenity.graphic.StudyTableGraphic;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
@@ -18,12 +19,11 @@ public class StudyTable extends Goal {
         studyTableFactory = new StudyTable.StudyTableFactory();
     }
 
-    protected StudyTable(List<Amenity.AmenityBlock> amenityBlocks, boolean enabled) {
+    protected StudyTable(List<Amenity.AmenityBlock> amenityBlocks, boolean enabled, String facing) {
         super(amenityBlocks, enabled);
 
-        this.studyTableGraphic = new StudyTableGraphic(this);
+        this.studyTableGraphic = new StudyTableGraphic(this, facing);
     }
-
 
     @Override
     public String toString() {
@@ -60,8 +60,8 @@ public class StudyTable extends Goal {
     }
 
     public static class StudyTableFactory extends Goal.GoalFactory {
-        public static StudyTable create(List<AmenityBlock> amenityBlocks, boolean enabled) {
-            return new StudyTable(amenityBlocks, enabled);
+        public static StudyTable create(List<AmenityBlock> amenityBlocks, boolean enabled, String facing) {
+            return new StudyTable(amenityBlocks, enabled, facing);
         }
     }
 
