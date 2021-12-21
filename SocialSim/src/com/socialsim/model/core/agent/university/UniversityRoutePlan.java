@@ -1,21 +1,15 @@
 package com.socialsim.model.core.agent.university;
 
-import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.University;
-import com.socialsim.model.core.environment.university.patchfield.Bathroom;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Fountain;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Security;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Staircase;
 import com.socialsim.model.simulator.Simulator;
-import com.socialsim.model.simulator.university.UniversitySimulator;
 
 import java.util.*;
 
 public class UniversityRoutePlan {
 
-    private ListIterator<State> currentRoutePlan; // Denotes the current route plan of the agent which owns this
-    private State currentState; // Denotes the current class of the amenity/patchfield in the route plan
+    private ListIterator<UniversityState> currentRoutePlan; // Denotes the current route plan of the agent which owns this
+    private UniversityState currentState; // Denotes the current class of the amenity/patchfield in the route plan
 
     //TODO: Maybe move this into another class that is static
     private static final int MAX_CLASSES = 6;
@@ -23,30 +17,30 @@ public class UniversityRoutePlan {
     private static final int MAX_JANITOR_ROUNDS = 6;
 
     public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch) {
-        List<State> routePlan = new ArrayList<>();
-        ArrayList<Action> actions;
+        List<UniversityState> routePlan = new ArrayList<>();
+        ArrayList<UniversityAction> actions;
 
         if (agent.getPersona() == UniversityAgent.Persona.GUARD){
             actions = new ArrayList<>();
-            actions.add(new Action(Action.Name.GUARD_STAY_PUT, spawnPatch, 0)); //TODO: Change patch destination and duration
-            routePlan.add(new State(State.Name.GUARD, this, agent, actions));
+            actions.add(new UniversityAction(UniversityAction.Name.GUARD_STAY_PUT, spawnPatch, 0)); //TODO: Change patch destination and duration
+            routePlan.add(new UniversityState(UniversityState.Name.GUARD, this, agent, actions));
         }
         else if (agent.getPersona() == UniversityAgent.Persona.JANITOR){
             for(int i = 0; i < Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_JANITOR_ROUNDS); i++){
                 actions = new ArrayList<>();
-                actions.add(new Action(Action.Name.CLEAN_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
-                actions.add(new Action(Action.Name.JANITOR_MOVE_SPOT, null, 0)); //TODO: Change patch destination and duration
-                routePlan.add(new State(State.Name.MAINTENANCE_BATHROOM, this, agent, actions));
+                actions.add(new UniversityAction(UniversityAction.Name.CLEAN_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
+                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_MOVE_SPOT, null, 0)); //TODO: Change patch destination and duration
+                routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
                 actions = new ArrayList<>();
-                actions.add(new Action(Action.Name.JANITOR_CHECK_FOUNTAIN, null, 0)); //TODO: Change patch destination and duration
-                routePlan.add(new State(State.Name.MAINTENANCE_FOUNTAIN, this, agent));
+                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, null, 0)); //TODO: Change patch destination and duration
+                routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent));
             }
         }
         else {
             actions = new ArrayList<>();
-            actions.add(new Action(Action.Name.GREET_GUARD, null, 0)); //TODO: Change patch destination and duration
-            actions.add(new Action(Action.Name.GO_THROUGH_SCANNER, null, 0)); //TODO: Change patch destination and duration
-            routePlan.add(new State(State.Name.GOING_TO_SECURITY, this, agent));
+            actions.add(new UniversityAction(UniversityAction.Name.GREET_GUARD, null, 0)); //TODO: Change patch destination and duration
+            actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, null, 0)); //TODO: Change patch destination and duration
+            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent));
             int CALCULATED_CLASSES, LUNCH_TIME;
             ArrayList<Integer> classes = new ArrayList<>();
             if (agent.getAgentMovement().getTickEntered() < 720) { // based on 1 tick = 5 seconds
@@ -136,100 +130,100 @@ public class UniversityRoutePlan {
                         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                         if (x < CHANCE_WANDERING_AROUND) {
                             //TODO: Randomize actions
-                            routePlan.add(new State(State.Name.WANDERING_AROUND, this, agent));
+                            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
                         else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_STUDY_ROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_STUDY_ROOM, null, 0));
-                            routePlan.add(new State(State.Name.GOING_TO_STUDY, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.STUDY_AREA_STAY_PUT, null, 0));
-                            routePlan.add(new State(State.Name.STUDYING, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_BATHROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_CUBICLE, null, 0));
-                            actions.add(new Action(Action.Name.RELIEVE_IN_CUBICLE, null, 0));
-                            actions.add(new Action(Action.Name.WASH_IN_SINK, null, 0));
-                            routePlan.add(new State(State.Name.NEEDS_BATHROOM, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         } else {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.STUDY_AREA_STAY_PUT, null, 0));
-                            routePlan.add(new State(State.Name.STUDYING, this, agent));
-                            routePlan.add(new State(State.Name.NEEDS_DRINK, this, agent));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent));
+                            routePlan.add(new UniversityState(UniversityState.Name.NEEDS_DRINK, this, agent));
                         }
                     }
-                    State newClass, newWaitClass, newInClass;
+                    UniversityState newClass, newWaitClass, newInClass;
                     switch (classes.get(i)) {
                         case 0 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 1 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 2 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 3 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 4 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         default -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
@@ -237,15 +231,15 @@ public class UniversityRoutePlan {
                     }
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
-                        actions.add(new Action(Action.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        routePlan.add(new State(State.Name.GOING_TO_LUNCH, this, agent, actions));
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
                         actions = new ArrayList<>();
-                        actions.add(new Action(Action.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
-                        routePlan.add(new State(State.Name.EATING_LUNCH, this, agent, actions));
+                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
+                        routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                     }
                 }
             } else if (agent.getPersona() == UniversityAgent.Persona.INT_Y1_ORG_STUDENT
@@ -262,97 +256,97 @@ public class UniversityRoutePlan {
                     for (int j = 0; j < 5; j++) {
                         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                         if (x < CHANCE_WANDERING_AROUND) {
-                            routePlan.add(new State(State.Name.WANDERING_AROUND, this, agent));
+                            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
                         else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_STUDY_ROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_STUDY_ROOM, null, 0));
-                            routePlan.add(new State(State.Name.GOING_TO_STUDY, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.STUDY_AREA_STAY_PUT, null, 0));
-                            routePlan.add(new State(State.Name.STUDYING, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_BATHROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_CUBICLE, null, 0));
-                            actions.add(new Action(Action.Name.RELIEVE_IN_CUBICLE, null, 0));
-                            actions.add(new Action(Action.Name.WASH_IN_SINK, null, 0));
-                            routePlan.add(new State(State.Name.NEEDS_BATHROOM, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         } else {
-                            routePlan.add(new State(State.Name.NEEDS_DRINK, this, agent));
+                            routePlan.add(new UniversityState(UniversityState.Name.NEEDS_DRINK, this, agent));
                         }
                     }
-                    State newClass, newWaitClass, newInClass;
+                    UniversityState newClass, newWaitClass, newInClass;
                     switch (classes.get(i)) {
                         case 0 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 1 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 2 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 3 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 4 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         default -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
@@ -360,15 +354,15 @@ public class UniversityRoutePlan {
                     }
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
-                        actions.add(new Action(Action.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        routePlan.add(new State(State.Name.GOING_TO_LUNCH, this, agent, actions));
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
                         actions = new ArrayList<>();
-                        actions.add(new Action(Action.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
-                        routePlan.add(new State(State.Name.EATING_LUNCH, this, agent, actions));
+                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
+                        routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                     }
                 }
             } else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_STUDENT
@@ -385,97 +379,97 @@ public class UniversityRoutePlan {
                     for (int j = 0; j < 5; j++) {
                         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                         if (x < CHANCE_WANDERING_AROUND) {
-                            routePlan.add(new State(State.Name.WANDERING_AROUND, this, agent));
+                            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
                         else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_STUDY_ROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_STUDY_ROOM, null, 0));
-                            routePlan.add(new State(State.Name.GOING_TO_STUDY, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.STUDY_AREA_STAY_PUT, null, 0));
-                            routePlan.add(new State(State.Name.STUDYING, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_BATHROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_CUBICLE, null, 0));
-                            actions.add(new Action(Action.Name.RELIEVE_IN_CUBICLE, null, 0));
-                            actions.add(new Action(Action.Name.WASH_IN_SINK, null, 0));
-                            routePlan.add(new State(State.Name.NEEDS_BATHROOM, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         } else {
-                            routePlan.add(new State(State.Name.NEEDS_DRINK, this, agent));
+                            routePlan.add(new UniversityState(UniversityState.Name.NEEDS_DRINK, this, agent));
                         }
                     }
-                    State newClass, newWaitClass, newInClass;
+                    UniversityState newClass, newWaitClass, newInClass;
                     switch (classes.get(i)) {
                         case 0 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 1 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 2 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 3 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 4 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         default -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
@@ -483,15 +477,15 @@ public class UniversityRoutePlan {
                     }
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
-                        actions.add(new Action(Action.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        routePlan.add(new State(State.Name.GOING_TO_LUNCH, this, agent, actions));
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
                         actions = new ArrayList<>();
-                        actions.add(new Action(Action.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
-                        routePlan.add(new State(State.Name.EATING_LUNCH, this, agent, actions));
+                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
+                        routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                     }
                 }
             } else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_ORG_STUDENT
@@ -508,97 +502,97 @@ public class UniversityRoutePlan {
                     for (int j = 0; j < 5; j++) {
                         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                         if (x < CHANCE_WANDERING_AROUND) {
-                            routePlan.add(new State(State.Name.WANDERING_AROUND, this, agent));
+                            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
                         else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_STUDY_ROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_STUDY_ROOM, null, 0));
-                            routePlan.add(new State(State.Name.GOING_TO_STUDY, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.STUDY_AREA_STAY_PUT, null, 0));
-                            routePlan.add(new State(State.Name.STUDYING, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_BATHROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_CUBICLE, null, 0));
-                            actions.add(new Action(Action.Name.RELIEVE_IN_CUBICLE, null, 0));
-                            actions.add(new Action(Action.Name.WASH_IN_SINK, null, 0));
-                            routePlan.add(new State(State.Name.NEEDS_BATHROOM, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         } else {
-                            routePlan.add(new State(State.Name.NEEDS_DRINK, this, agent));
+                            routePlan.add(new UniversityState(UniversityState.Name.NEEDS_DRINK, this, agent));
                         }
                     }
-                    State newClass, newWaitClass, newInClass;
+                    UniversityState newClass, newWaitClass, newInClass;
                     switch (classes.get(i)) {
                         case 0 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 1 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 2 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 3 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 4 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         default -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_STUDENT, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
@@ -606,15 +600,15 @@ public class UniversityRoutePlan {
                     }
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
-                        actions.add(new Action(Action.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        routePlan.add(new State(State.Name.GOING_TO_LUNCH, this, agent, actions));
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
                         actions = new ArrayList<>();
-                        actions.add(new Action(Action.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
-                        routePlan.add(new State(State.Name.EATING_LUNCH, this, agent, actions));
+                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
+                        routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                     }
                 }
             } else {
@@ -628,95 +622,95 @@ public class UniversityRoutePlan {
                     for (int j = 0; j < 5; j++) {
                         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                         if (x < CHANCE_WANDERING_AROUND) {
-                            routePlan.add(new State(State.Name.WANDERING_AROUND, this, agent));
+                            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
                         else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_STUDY_ROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_SEAT_STUDY_ROOM, null, 0));
-                            routePlan.add(new State(State.Name.GOING_TO_STUDY, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.STUDY_AREA_STAY_PUT, null, 0));
-                            routePlan.add(new State(State.Name.STUDYING, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         } else {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_BATHROOM, null, 0));
-                            actions.add(new Action(Action.Name.FIND_CUBICLE, null, 0));
-                            actions.add(new Action(Action.Name.RELIEVE_IN_CUBICLE, null, 0));
-                            actions.add(new Action(Action.Name.WASH_IN_SINK, null, 0));
-                            routePlan.add(new State(State.Name.NEEDS_BATHROOM, this, agent, actions));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, null, 0));
+                            routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         }
                     }
-                    State newClass, newWaitClass, newInClass;
+                    UniversityState newClass, newWaitClass, newInClass;
                     switch (classes.get(i)) {
                         case 0 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 1 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 2 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 3 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         case 4 -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
                         }
                         default -> {
                             actions = new ArrayList<>();
-                            actions.add(new Action(Action.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new Action(Action.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new State(State.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
                             //TODO: Randomized actions
-                            newWaitClass = new State(State.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new State(State.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
@@ -724,22 +718,22 @@ public class UniversityRoutePlan {
                     }
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
-                        actions.add(new Action(Action.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new Action(Action.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        routePlan.add(new State(State.Name.GOING_TO_LUNCH, this, agent, actions));
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
                         actions = new ArrayList<>();
-                        actions.add(new Action(Action.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
-                        routePlan.add(new State(State.Name.EATING_LUNCH, this, agent, actions));
+                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
+                        routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                     }
                 }
             }
         }
         actions = new ArrayList<>();
-        actions.add(new Action(Action.Name.LEAVE_BUILDING, null, 0)); //TODO: Change patch destination and duration
-        routePlan.add(new State(State.Name.GOING_HOME, this, agent, actions));
+        actions.add(new UniversityAction(UniversityAction.Name.LEAVE_BUILDING, null, 0)); //TODO: Change patch destination and duration
+        routePlan.add(new UniversityState(UniversityState.Name.GOING_HOME, this, agent, actions));
 
         this.currentRoutePlan = routePlan.listIterator();
     }
@@ -751,14 +745,14 @@ public class UniversityRoutePlan {
         this.currentState = this.currentRoutePlan.previous();
     }
 
-    public ListIterator<State> getCurrentRoutePlan() {
+    public ListIterator<UniversityState> getCurrentRoutePlan() {
         return currentRoutePlan;
     }
 
-    public State getCurrentClass() {
+    public UniversityState getCurrentClass() {
         return currentState;
     }
-    public void addUrgentRoute(State s){
+    public void addUrgentRoute(UniversityState s){
         this.currentState = s;
     }
 
