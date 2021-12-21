@@ -712,7 +712,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
         // Add the repulsive effects from nearby agents and obstacles
         TreeMap<Double, Amenity.AmenityBlock> obstaclesEncountered = new TreeMap<>();
-        TreeMap<Double, Class> wallsEncountered = new TreeMap<>();
+        TreeMap<Double, Patch> wallsEncountered = new TreeMap<>();
 
         // This will contain the final motivation vector
         List<Vector> vectorsToAdd = new ArrayList<>();
@@ -724,307 +724,63 @@ public class UniversityAgentMovement extends AgentMovement {
         Coordinates proposedNewPosition;
 
         // Check if the agent is set to take one initial step forward
-        if (!this.shouldStepForward) {
-            // Compute for the proposed future position
-            proposedNewPosition = this.getFuturePosition(this.preferredWalkingDistance);
+        // Compute for the proposed future position
+        proposedNewPosition = this.getFuturePosition(this.preferredWalkingDistance);
 
+        this.preferredWalkingDistance = this.baseWalkingDistance;
 
-            this.preferredWalkingDistance = this.baseWalkingDistance;
+        // slow down when near goal/obstacle
+        final double distanceSlowdownStart = 5.0;
+        final double speedDecreaseFactor = 0.5;
 
-            // slow down when near goal/obstacle
-            final double distanceSlowdownStart = 5.0;
-            final double speedDecreaseFactor = 0.5;
+        double distanceToGoal = Coordinates.distance(
+                this.currentPatch,
+                this.getGoalAmenity().getAttractors().get(0).getPatch()
+        );
 
-            double distanceToGoal = Coordinates.distance(
-                    this.currentPatch,
-                    this.getGoalAmenity().getAttractors().get(0).getPatch()
-            );
+        if (
+                distanceToGoal < distanceSlowdownStart
+                        && this.hasClearLineOfSight(
+                        this.position,
+                        this.goalAmenity.getAttractors().get(0).getPatch().getPatchCenterCoordinates(),
+                        true
+                )
+        ) {
+            this.preferredWalkingDistance *= speedDecreaseFactor;
+        }
 
-            if (
-                    distanceToGoal < distanceSlowdownStart
-                            && this.hasClearLineOfSight(
-                            this.position,
-                            this.goalAmenity.getAttractors().get(0).getPatch().getPatchCenterCoordinates(),
-                            true
-                    )
-            ) {
-                this.preferredWalkingDistance *= speedDecreaseFactor;
-            }
-
-            // If this agent is queueing, the only social forces that apply are attractive forces to agents
-            // and obstacles (if not in queueing action)
-            if (
-                    !willEnterTrain && this.state == State.IN_QUEUE || this.isWaitingOnPortal
-            ) {
-
-                if (/*Agent is not queueing*/) {
-                    // Check if agent is stuck
-                    if (
-                        this.isStuck
-                                || (
-                                /*Check if there are no people in front the agent while in a queue*/
-                        ) && this.noMovementCounter > noMovementTicksThreshold
-                    ) {
-                        this.isStuck = true;
-                        this.stuckCounter++;
-                    }
-                }
-
-                // Count agents within FOV
-                TreeMap<Double, Agent> agentsWithinFieldOfView = new TreeMap<>();
-
-                // Look around the patches that fall on the agent's field of view
-                for (Patch patch : patchesToExplore) {
-                    // If not in queue, count obstacles
-                    if (this.action != Action.GO_THROUGH_SCANNER/*queueing actions*/) {
-                        Amenity.AmenityBlock patchAmenityBlock = patch.getAmenityBlock();
-                        Class aPatchField = patch.getPatchField().getKey().getClass();
-
-                        // Get the distance between this agent and the obstacle on this patch
-                        if (hasObstacle(patch)) {
-                            // Take note of the obstacle density in this area
-                            numberOfObstacles++;
-
-                            // Compute magnitude for repulsion force
-                            if(patchAmenityBlock != null){
-                                double distanceToObstacle = Coordinates.distance(
-                                        this.position,
-                                        patchAmenityBlock.getPatch().getPatchCenterCoordinates()
-                                );
-
-                                if (distanceToObstacle <= slowdownStartDistance) {
-                                    obstaclesEncountered.put(distanceToObstacle, patchAmenityBlock);
-                                }
-                            }else{
-                                double distanceToObstacle = Coordinates.distance(
-                                        this.position,
-                                        patch.getPatchCenterCoordinates()
-                                );
-
-                                if (distanceToObstacle <= slowdownStartDistance) {
-                                    wallsEncountered.put(distanceToObstacle, aPatchField);
-                                }
-                            }
-
-                        }
-                    }
-
-                    if (!this.isStuck) {
-                        for (Agent otherAgent : patch.getAgents()) {
-                            // Make sure that the agent discovered isn't itself
-                            if (!otherAgent.equals(this.getParent())) {
-                                if (allowRepulsionFrom(otherAgent)) {
-                                    // Take note of the agent density in this area
-                                    numberOfAgents++;
-
-                                    // Check if this agent is within the field of view and within the slowdown
-                                    // distance
-                                    double distanceToAgent = Coordinates.distance(
-                                            this.position,
-                                            otherAgent.getAgentMovement().getPosition()
-                                    );
-
-                                    if (Coordinates.isWithinFieldOfView(
-                                            this.position,
-                                            otherAgent.getAgentMovement().getPosition(),
-                                            this.proposedHeading,
-                                            this.fieldOfViewAngle)
-                                            && distanceToAgent <= slowdownStartDistance) {
-                                        agentsWithinFieldOfView.put(distanceToAgent, otherAgent);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Compute the perceived density of the agents
-                // Assuming the maximum density a agent sees within its environment is 3 before it thinks the crowd
-                // is very dense, rate the perceived density of the surroundings by dividing the number of people by the
-                // maximum tolerated number of agents
-                final double maximumDensityTolerated = 3.0;
-                final double agentDensity
-                        = (numberOfAgents > maximumDensityTolerated ? maximumDensityTolerated : numberOfAgents)
-                        / maximumDensityTolerated;
-
-                // For each agent found within the slowdown distance, get the nearest one, if there is any
-                Map.Entry<Double, Agent> nearestAgentEntry = agentsWithinFieldOfView.firstEntry();
-
-                // If there are no agents within the field of view, good - move normally
-                if (nearestAgentEntry == null|| nearestAgentEntry.getValue().getAgentMovement().getGoalAmenity() != null && !nearestAgentEntry.getValue().getAgentMovement().getGoalAmenity().equals(this.goalAmenity)) {
-                    this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null;
-
-                    // Get the attractive force of this agent to the new position
-                    this.attractiveForce = this.computeAttractiveForce(
-                            new Coordinates(this.position),
-                            this.proposedHeading,
-                            proposedNewPosition,
-                            this.preferredWalkingDistance
-                    );
-
-                    vectorsToAdd.add(attractiveForce);
-                } else {
-                    // Get a random (but weighted) floor field value around the other agent
-                    Patch PatchFieldPatch = this.getBestQueueingPatchAroundAgent(
-                            nearestAgentEntry.getValue()
-                    );
-                    this.chosenQueueingPatch = PatchFieldPatch;
-
-                    // Check the distance of that nearest agent to this agent
-                    double distanceToNearestAgent = nearestAgentEntry.getKey();
-
-                    // Modify the maximum stopping distance depending on the density of the environment
-                    // That is, the denser the surroundings, the less space this agent will allow between other
-                    // agents
-                    maximumStopDistance -= (maximumStopDistance - minimumStopDistance) * agentDensity;
-
-                    this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null;
-
-                    // Else, just slow down and move towards the direction of that agent in front
-                    // The slowdown factor linearly depends on the distance between this agent and the other
-                    final double slowdownFactor
-                            = (distanceToNearestAgent - maximumStopDistance)
-                            / (slowdownStartDistance - maximumStopDistance);
-
-                    double computedWalkingDistance = slowdownFactor * this.preferredWalkingDistance;
-
-                    if (this.isNextAmenityTrainDoor() && PatchFieldPatch != null) {
-                        Double PatchFieldValue = null;
-                        Map<QueueingPatchField.PatchFieldState, Double> PatchFieldValues
-                                = PatchFieldPatch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable());
-
-                        if (PatchFieldValues != null) {
-                            PatchFieldValue = PatchFieldValues.get(this.goalQueueingPatchFieldState);
-                        }
-
-                        if (
-                                PatchFieldValue != null
-                                        && Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() < PatchFieldValue
-                        ) {
-                            this.shouldStopAtPlatform = true;
-                        } else {
-                            // Only head towards that patch if the distance from that patch to the goal is further than the
-                            // distance from this agent to the goal
-                            double distanceFromChosenPatchToGoal = Coordinates.distance(
-                                    this.currentFloor.getStation(),
-                                    PatchFieldPatch,
-                                    this.goalAttractor.getPatch()
-                            );
-
-                            double distanceFromThisAgentToGoal = Coordinates.distance(
-                                    this.currentFloor.getStation(),
-                                    this.currentPatch,
-                                    this.goalAttractor.getPatch()
-                            );
-
-                            double revisedHeading;
-                            Coordinates revisedPosition;
-
-                            if (distanceFromChosenPatchToGoal < distanceFromThisAgentToGoal) {
-                                if (!this.getGoalAmenityAsTrainDoor().isOpen()) {
-                                    // Get the heading towards that patch
-                                    revisedHeading = Coordinates.headingTowards(
-                                            this.position,
-                                            PatchFieldPatch.getPatchCenterCoordinates()
-                                    );
-                                } else {
-                                    revisedHeading = Coordinates.headingTowards(
-                                            this.position,
-                                            this.goalAttractor.getPatch().getPatchCenterCoordinates()
-                                    );
-                                }
-
-                                revisedPosition = this.getFuturePosition(
-                                        this.position,
-                                        revisedHeading,
-                                        computedWalkingDistance
-                                );
-
-                                // Get the attractive force of this agent to the new position
-                                this.attractiveForce = this.computeAttractiveForce(
-                                        new Coordinates(this.position),
-                                        revisedHeading,
-                                        revisedPosition,
-                                        computedWalkingDistance
-                                );
-
-                                vectorsToAdd.add(attractiveForce);
-
-                                for (
-                                        Map.Entry<Double, Agent> otherAgentEntry
-                                        : agentsWithinFieldOfView.entrySet()
-                                ) {
-                                    // Then compute the repulsive force from this agent
-                                    // Compute the perceived density of the agents
-                                    // Assuming the maximum density a agent sees within its environment is 5 before it thinks the crowd
-                                    // is very dense, rate the perceived density of the surroundings by dividing the number of people by the
-                                    // maximum tolerated number of agents
-                                    final int maximumAgentCountTolerated = 5;
-
-                                    // The distance by which the repulsion starts to kick in will depend on the density of the agent's
-                                    // surroundings
-                                    final int minimumAgentCount = 1;
-                                    final double maximumDistance = 2.0;
-                                    final int maximumAgentCount = 5;
-                                    final double minimumDistance = 0.7;
-
-                                    double computedMaximumDistance = computeMaximumRepulsionDistance(
-                                            numberOfObstacles,
-                                            maximumAgentCountTolerated,
-                                            minimumAgentCount,
-                                            maximumDistance,
-                                            maximumAgentCount,
-                                            minimumDistance
-                                    );
-
-                                    Vector agentRepulsiveForce = computeSocialForceFromAgent(
-                                            otherAgentEntry.getValue(),
-                                            otherAgentEntry.getKey(),
-                                            computedMaximumDistance,
-                                            minimumAgentStopDistance,
-                                            this.preferredWalkingDistance
-                                    );
-
-                                    // Add the computed vector to the list of vectors
-                                    this.repulsiveForceFromAgents.add(agentRepulsiveForce);
-                                }
-                            }
-                        }
-                    } else {
-                        Coordinates revisedPosition = this.getFuturePosition(computedWalkingDistance);
-
-                        // Get the attractive force of this agent to the new position
-                        this.attractiveForce = this.computeAttractiveForce(
-                                new Coordinates(this.position),
-                                this.proposedHeading,
-                                revisedPosition,
-                                computedWalkingDistance
-                        );
-
-                        vectorsToAdd.add(attractiveForce);
-                    }
-                }
-            } else {
-                // If the agent hasn't already been moving for a while, consider the agent stuck, and implement some
-                // measures to free this agent
+        // If this agent is queueing, the only social forces that apply are attractive forces to agents
+        // and obstacles (if not in queueing action)
+        // TODO add code to check if agent is already in queue / queueing logic
+        if (
+                this.state.getName() == State.Name.GOING_TO_SECURITY || this.state.getName() == State.Name.GOING_TO_LUNCH
+                || this.state.getName() == State.Name.NEEDS_DRINK
+        ) {
+            //Heading towards the queue, but not inside the queue yet
+            if (this.action.getName() != Action.Name.GO_THROUGH_SCANNER && this.action.getName() != Action.Name.QUEUE_VENDOR
+                    && this.action.getName() != Action.Name.QUEUE_FOUNTAIN) {
+                // Check if agent is stuck
                 if (
-                        this.isStuck || this.noNewPatchesSeenCounter > noNewPatchesSeenTicksThreshold
+                    this.isStuck
+                            || (
+                            this.isAtQueueFront() || this.isServicedByQueueableGoal()
+                    ) && this.noMovementCounter > noMovementTicksThreshold
                 ) {
                     this.isStuck = true;
                     this.stuckCounter++;
                 }
+            }
 
-                boolean hasEncounteredQueueingAgentInLoop = false;
-                boolean hasEncounteredPortalWaitingAgentInLoop = false;
+            // Count agents within FOV
+            TreeMap<Double, UniversityAgent> agentsWithinFieldOfView = new TreeMap<>();
 
-                // Only apply the social forces of a set number of agents and obstacles
-                int agentsProcessed = 0;
-                final int agentsProcessedLimit = 5;
-
-                // Look around the patches that fall on the agent's field of view
-                for (Patch patch : patchesToExplore) {
-                    // If this patch has an obstacle, take note of it to add a repulsive force from it later
+            // Look around the patches that fall on the agent's field of view
+            for (Patch patch : patchesToExplore) {
+                // If not in queue, count obstacles
+                if (this.action.getName() != Action.Name.GO_THROUGH_SCANNER && this.action.getName() != Action.Name.QUEUE_VENDOR
+                        && this.action.getName() != Action.Name.QUEUE_FOUNTAIN) {
                     Amenity.AmenityBlock patchAmenityBlock = patch.getAmenityBlock();
+                    Class aPatchField = patch.getPatchField().getKey().getClass();
 
                     // Get the distance between this agent and the obstacle on this patch
                     if (hasObstacle(patch)) {
@@ -1032,125 +788,72 @@ public class UniversityAgentMovement extends AgentMovement {
                         numberOfObstacles++;
 
                         // Compute magnitude for repulsion force
-                        double distanceToObstacle = Coordinates.distance(
-                                this.position,
-                                patchAmenityBlock.getPatch().getPatchCenterCoordinates()
-                        );
-
-                        if (distanceToObstacle <= slowdownStartDistance) {
-                            obstaclesEncountered.put(distanceToObstacle, patchAmenityBlock);
-                        }
-                    }
-
-                    // Inspect each agent in each patch in the patches in the field of view
-                    for (Agent otherAgent : patch.getAgents()) {
-                        if (agentsProcessed == agentsProcessedLimit) {
-                            break;
-                        }
-
-                        // Make sure that the agent discovered isn't itself
-                        if (!otherAgent.equals(this.getParent())) {
-                            // Take note of the agent density in this area
-                            numberOfAgents++;
-
-                            // Get the distance between this agent and the other agent
-                            double distanceToOtherAgent = Coordinates.distance(
+                        if(patchAmenityBlock != null){
+                            double distanceToObstacle = Coordinates.distance(
                                     this.position,
-                                    otherAgent.getAgentMovement().getPosition()
+                                    patchAmenityBlock.getPatch().getPatchCenterCoordinates()
                             );
 
-                            // If the distance is less than or equal to the distance when repulsion is supposed to kick in,
-                            // compute for the magnitude of that repulsion force
-                            if (distanceToOtherAgent <= slowdownStartDistance) {
-                                // Compute the perceived density of the agents
-                                // Assuming the maximum density a agent sees within its environment is 3 before it thinks the crowd
-                                // is very dense, rate the perceived density of the surroundings by dividing the number of people by the
-                                // maximum tolerated number of agents
-                                final int maximumAgentCountTolerated = 5;
+                            if (distanceToObstacle <= slowdownStartDistance) {
+                                obstaclesEncountered.put(distanceToObstacle, patchAmenityBlock);
+                            }
+                        }else{
+                            double distanceToObstacle = Coordinates.distance(
+                                    this.position,
+                                    patch.getPatchCenterCoordinates()
+                            );
 
-                                // The distance by which the repulsion starts to kick in will depend on the density of the agent's
-                                // surroundings
-                                final int minimumAgentCount = 1;
-                                final double maximumDistance = 2.0;
-                                final int maximumAgentCount = 5;
-                                final double minimumDistance = 0.7;
+                            if (distanceToObstacle <= slowdownStartDistance) {
+                                wallsEncountered.put(distanceToObstacle, patch);
+                            }
+                        }
 
-                                double computedMaximumDistance = computeMaximumRepulsionDistance(
-                                        numberOfObstacles,
-                                        maximumAgentCountTolerated,
-                                        minimumAgentCount,
-                                        maximumDistance,
-                                        maximumAgentCount,
-                                        minimumDistance
+                    }
+                }
+                // confirm other agents within FOV
+                if (!this.isStuck) { // make sure agent is not stuck
+                    for (UniversityAgent otherAgent : patch.getUniversityAgents()) {
+                        UniversityAgent universityAgent = (UniversityAgent) otherAgent;
+                        // Make sure that the agent discovered isn't itself
+                        if (!otherAgent.equals(this.getParent())) {
+                            if (allowRepulsionFrom(otherAgent)) {
+                                // Take note of the agent density in this area
+                                numberOfAgents++;
+
+                                // Check if this agent is within the field of view and within the slowdown
+                                // distance
+                                double distanceToAgent = Coordinates.distance(
+                                        this.position,
+                                        universityAgent.getAgentMovement().getPosition()
                                 );
 
-                                Vector agentRepulsiveForce = computeSocialForceFromAgent(
-                                        otherAgent,
-                                        distanceToOtherAgent,
-                                        computedMaximumDistance,
-                                        minimumAgentStopDistance,
-                                        this.preferredWalkingDistance
-                                );
-
-                                // Add the computed vector to the list of vectors
-                                this.repulsiveForceFromAgents.add(agentRepulsiveForce);
-
-                                // Also, check this agent's state
-                                // If this agent is queueing, set the relevant variable - it will stay true even if just
-                                // one nearby agent has activated it
-                                if (!hasEncounteredQueueingAgentInLoop) {
-                                    // Check if the other agent is in a queueing or assembling with the same goal as
-                                    // this agent
-                                    if (this.agentFollowedWhenAssembling == null) {
-                                        this.hasEncounteredAgentToFollow = false;
-                                    } else {
-                                        if (this.agentFollowedWhenAssembling.equals(otherAgent)) {
-                                            // If the other agent encountered is already assembling, decide whether this
-                                            // agent will assemble too depending on whether the other agent was selected
-                                            // to be followed by this one
-                                            this.hasEncounteredAgentToFollow
-                                                    = (otherAgent.getAgentMovement().getAction() == Action.ASSEMBLING
-                                                    || otherAgent.getAgentMovement().getAction() == Action.QUEUEING)
-                                                    && otherAgent.getAgentMovement().getGoalAmenity().equals(this.goalAmenity);
-                                        } else {
-                                            this.hasEncounteredAgentToFollow = false;
-                                        }
-                                    }
+                                if (Coordinates.isWithinFieldOfView(
+                                        this.position,
+                                        universityAgent.getAgentMovement().getPosition(),
+                                        this.proposedHeading,
+                                        this.fieldOfViewAngle)
+                                        && distanceToAgent <= slowdownStartDistance) {
+                                    agentsWithinFieldOfView.put(distanceToAgent, otherAgent);
                                 }
-
-                                hasEncounteredQueueingAgentInLoop
-                                        = this.hasEncounteredAgentToFollow;
-
-                                // Check if this agent has encountered a agent waiting for the same portal
-                                if (!hasEncounteredPortalWaitingAgentInLoop) {
-                                    // If the other agent encountered is already assembling, decide whether this
-                                    // agent will assemble too depending on whether the other agent was selected
-                                    // to be followed by this one
-                                    this.hasEncounteredPortalWaitingAgent
-                                            = otherAgent.getAgentMovement().isWaitingOnPortal()
-                                            && otherAgent.getAgentMovement().getGoalAmenity().equals(this.goalAmenity);
-                                }
-
-                                hasEncounteredPortalWaitingAgentInLoop
-                                        = this.hasEncounteredPortalWaitingAgent;
-
-                                this.isWaitingOnPortal
-                                        = this.isWaitingOnPortal || hasEncounteredPortalWaitingAgentInLoop;
-
-                                // If a queueing agent has been encountered, do not pathfind anymore for this
-                                // goal
-                                if (
-                                        this.parent.getTicketType() == TicketBooth.TicketType.STORED_VALUE
-                                                && this.hasEncounteredAgentToFollow
-                                ) {
-                                    this.hasPathfound = true;
-                                }
-
-                                agentsProcessed++;
                             }
                         }
                     }
                 }
+            }
+
+            // Compute the perceived density of the agents
+            final double maximumDensityTolerated = 3.0;
+            final double agentDensity
+                    = (numberOfAgents > maximumDensityTolerated ? maximumDensityTolerated : numberOfAgents)
+                    / maximumDensityTolerated;
+
+            // For each agent found within the slowdown distance, get the nearest one, if there is any
+            Map.Entry<Double, UniversityAgent> nearestAgentEntry = agentsWithinFieldOfView.firstEntry();
+
+            // If there are no agents within the field of view, good - move normally
+            if (nearestAgentEntry == null|| nearestAgentEntry.getValue().getAgentMovement().getGoalAmenity() != null
+                    && !nearestAgentEntry.getValue().getAgentMovement().getGoalAmenity().equals(this.goalAmenity)) {
+                this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null;
 
                 // Get the attractive force of this agent to the new position
                 this.attractiveForce = this.computeAttractiveForce(
@@ -1161,18 +864,252 @@ public class UniversityAgentMovement extends AgentMovement {
                 );
 
                 vectorsToAdd.add(attractiveForce);
+            } else { // If there are agents in the way
+                // Get a random (but weighted) floor field value around the other agent
+                Patch PatchFieldPatch = this.getBestQueueingPatchAroundAgent(
+                        nearestAgentEntry.getValue()
+                );
+
+                // Check the distance of that nearest agent to this agent
+                double distanceToNearestAgent = nearestAgentEntry.getKey();
+
+                // Modify the maximum stopping distance depending on the density of the environment
+                // That is, the denser the surroundings, the less space this agent will allow between other
+                // agents
+                maximumStopDistance -= (maximumStopDistance - minimumStopDistance) * agentDensity;
+
+                this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null;
+
+                // Else, just slow down and move towards the direction of that agent in front
+                // The slowdown factor linearly depends on the distance between this agent and the other
+                final double slowdownFactor
+                        = (distanceToNearestAgent - maximumStopDistance)
+                        / (slowdownStartDistance - maximumStopDistance);
+
+                double computedWalkingDistance = slowdownFactor * this.preferredWalkingDistance;
+
+                // TODO Used to calculate when queueing for train; can be used for cafeteria
+
+                // Only head towards that patch if the distance from that patch to the goal is further than the
+                // distance from this agent to the goal
+                double distanceFromChosenPatchToGoal = Coordinates.distance(
+                        this.currentFloor.getStation(),
+                        PatchFieldPatch,
+                        this.goalAttractor.getPatch()
+                );
+
+                double distanceFromThisAgentToGoal = Coordinates.distance(
+                        this.currentFloor.getStation(),
+                        this.currentPatch,
+                        this.goalAttractor.getPatch()
+                );
+
+                double revisedHeading;
+                Coordinates revisedPosition;
+
+                if (distanceFromChosenPatchToGoal < distanceFromThisAgentToGoal) {
+
+                    revisedHeading = Coordinates.headingTowards(
+                            this.position,
+                            PatchFieldPatch.getPatchCenterCoordinates()
+                    );
+
+                    revisedPosition = this.getFuturePosition(
+                            this.position,
+                            revisedHeading,
+                            computedWalkingDistance
+                    );
+
+                    // Get the attractive force of this agent to the new position
+                    this.attractiveForce = this.computeAttractiveForce(
+                            new Coordinates(this.position),
+                            revisedHeading,
+                            revisedPosition,
+                            computedWalkingDistance
+                    );
+
+                    vectorsToAdd.add(attractiveForce);
+                    // TODO fix if null pointer exception; no agents within FOV
+                    for (
+                            Map.Entry<Double, UniversityAgent> otherAgentEntry
+                            : agentsWithinFieldOfView.entrySet()
+                    ) {
+                        // Then compute the repulsive force from this agent
+                        // Compute the perceived density of the agents
+                        // Assuming the maximum density a agent sees within its environment is 5 before it thinks
+                        // the crowd
+                        // is very dense, rate the perceived density of the surroundings by dividing the number of
+                        // people by the
+                        // maximum tolerated number of agents
+                        final int maximumAgentCountTolerated = 5;
+
+                        // The distance by which the repulsion starts to kick in will depend on the density of the agent's
+                        // surroundings
+                        final int minimumAgentCount = 1;
+                        final double maximumDistance = 2.0;
+                        final int maximumAgentCount = 5;
+                        final double minimumDistance = 0.7;
+
+                        double computedMaximumDistance = computeMaximumRepulsionDistance(
+                                numberOfObstacles,
+                                maximumAgentCountTolerated,
+                                minimumAgentCount,
+                                maximumDistance,
+                                maximumAgentCount,
+                                minimumDistance
+                        );
+
+                        Vector agentRepulsiveForce = computeSocialForceFromAgent(
+                                otherAgentEntry.getValue(),
+                                otherAgentEntry.getKey(),
+                                computedMaximumDistance,
+                                minimumAgentStopDistance,
+                                this.preferredWalkingDistance
+                        );
+
+                        // Add the computed vector to the list of vectors
+                        this.repulsiveForceFromAgents.add(agentRepulsiveForce);
+                    }
+                } // end of finding a new patch closer to the goal
+                 /*else {
+                    Coordinates revisedPosition = this.getFuturePosition(computedWalkingDistance);
+
+                    // Get the attractive force of this agent to the new position
+                    this.attractiveForce = this.computeAttractiveForce(
+                            new Coordinates(this.position),
+                            this.proposedHeading,
+                            revisedPosition,
+                            computedWalkingDistance
+                    );
+
+                    vectorsToAdd.add(attractiveForce);
+                }*/
             }
-        }
-        else {
-            proposedNewPosition = this.computeFirstStepPosition();
+        } else {
+            // Check if agent is stuck
+            if (
+                    this.isStuck || this.noNewPatchesSeenCounter > noNewPatchesSeenTicksThreshold
+            ) {
+                this.isStuck = true;
+                this.stuckCounter++;
+            }
+
+            boolean hasEncounteredQueueingAgentInLoop = false;
+            boolean hasEncounteredPortalWaitingAgentInLoop = false;
+
+            // Only apply the social forces of a set number of agents and obstacles
+            int agentsProcessed = 0;
+            final int agentsProcessedLimit = 5;
+
+            // Look around the patches that fall on the agent's field of view
+            for (Patch patch : patchesToExplore) {
+                // If this patch has an obstacle, take note of it to add a repulsive force from it later
+                Amenity.AmenityBlock patchAmenityBlock = patch.getAmenityBlock();
+                Class aPatchField = patch.getPatchField().getKey().getClass();
+
+                // Get the distance between this agent and the obstacle on this patch
+                if (hasObstacle(patch)) {
+                    // Take note of the obstacle density in this area
+                    numberOfObstacles++;
+
+                    // Compute magnitude for repulsion force
+                    if(patchAmenityBlock != null){
+                        double distanceToObstacle = Coordinates.distance(
+                                this.position,
+                                patchAmenityBlock.getPatch().getPatchCenterCoordinates()
+                        );
+
+                        if (distanceToObstacle <= slowdownStartDistance) {
+                            obstaclesEncountered.put(distanceToObstacle, patchAmenityBlock);
+                        }
+                    }else{
+                        double distanceToObstacle = Coordinates.distance(
+                                this.position,
+                                patch.getPatchCenterCoordinates()
+                        );
+
+                        if (distanceToObstacle <= slowdownStartDistance) {
+                            wallsEncountered.put(distanceToObstacle, patch);
+                        }
+                    }
+                }
+                // Inspect each agent in each patch in the patches in the field of view
+                for (UniversityAgent otherAgent : patch.getUniversityAgents()) {
+                    if (agentsProcessed == agentsProcessedLimit) {
+                        break;
+                    }
+
+                    // Make sure that the agent discovered isn't itself
+                    if (!otherAgent.equals(this.getParent())) {
+                        // Take note of the agent density in this area
+                        numberOfAgents++;
+
+                        // Get the distance between this agent and the other agent
+                        double distanceToOtherAgent = Coordinates.distance(
+                                this.position,
+                                otherAgent.getAgentMovement().getPosition()
+                        );
+
+                        // If the distance is less than or equal to the distance when repulsion is supposed to kick in,
+                        // compute for the magnitude of that repulsion force
+                        if (distanceToOtherAgent <= slowdownStartDistance) {
+
+                            final int maximumAgentCountTolerated = 5;
+
+                            // The distance by which the repulsion starts to kick in will depend on the density of the agent's
+                            // surroundings
+                            final int minimumAgentCount = 1;
+                            final double maximumDistance = 2.0;
+                            final int maximumAgentCount = 5;
+                            final double minimumDistance = 0.7;
+
+                            double computedMaximumDistance = computeMaximumRepulsionDistance(
+                                    numberOfObstacles,
+                                    maximumAgentCountTolerated,
+                                    minimumAgentCount,
+                                    maximumDistance,
+                                    maximumAgentCount,
+                                    minimumDistance
+                            );
+
+                            Vector agentRepulsiveForce = computeSocialForceFromAgent(
+                                    otherAgent,
+                                    distanceToOtherAgent,
+                                    computedMaximumDistance,
+                                    minimumAgentStopDistance,
+                                    this.preferredWalkingDistance
+                            );
+
+                            // Add the computed vector to the list of vectors
+                            this.repulsiveForceFromAgents.add(agentRepulsiveForce);
+
+                            // If a queueing agent has been encountered, do not pathfind anymore for this
+                            // goal
+                            // TODO can be used if agent has found a queue
+                            /*if (
+                                    this.parent.getTicketType() == TicketBooth.TicketType.STORED_VALUE
+                                            && this.hasEncounteredAgentToFollow
+                            ) {
+                                this.hasPathfound = true;
+                            }*/
+
+                            agentsProcessed++;
+                        }
+                    }
+                }
+            }
 
             // Get the attractive force of this agent to the new position
-            this.attractiveForce = this.computeAttractiveForce(new Coordinates(this.position),
-                    Coordinates.headingTowards(this.position, proposedNewPosition), proposedNewPosition,
-                    this.preferredWalkingDistance);
+            this.attractiveForce = this.computeAttractiveForce(
+                    new Coordinates(this.position),
+                    this.proposedHeading,
+                    proposedNewPosition,
+                    this.preferredWalkingDistance
+            );
+
             vectorsToAdd.add(attractiveForce);
-            this.shouldStepForward = false;
         }
+
 
         // Take note of the previous walking distance of this agent
         double previousWalkingDistance = this.currentWalkingDistance;
@@ -1183,9 +1120,8 @@ public class UniversityAgentMovement extends AgentMovement {
         Vector partialMotivationForce = Vector.computeResultantVector(new Coordinates(this.position), vectorsToAdd);
 
         // If the resultant vector is null (i.e., no change in position), simply don't move at all
-        if (!this.shouldStopAtPlatform && partialMotivationForce != null) {
-            // The distance by which the repulsion starts to kick in will depend on the density of the agent's
-            // surroundings
+        if (partialMotivationForce != null) {
+            // calculate repulsion
             final int minimumObstacleCount = 1;
             final double maximumDistance = 2.0;
             final int maximumObstacleCount = 2;
@@ -1205,6 +1141,24 @@ public class UniversityAgentMovement extends AgentMovement {
             // Only apply the social forces on a set number of obstacles
             int obstaclesProcessed = 0;
             final int obstaclesProcessedLimit = 4;
+            // Added code block to consider walls as obstacles
+            for (Map.Entry<Double, Patch> wallEntry : wallsEncountered.entrySet()) {
+                if (obstaclesProcessed == obstaclesProcessedLimit) {
+                    break;
+                }
+
+                this.repulsiveForcesFromObstacles.add(
+                        computeSocialForceFromObstacle(
+                                wallEntry.getValue(),
+                                wallEntry.getKey(),
+                                computedMaximumDistance,
+                                minimumObstacleStopDistance,
+                                partialMotivationForce.getMagnitude()
+                        )
+                );
+
+                obstaclesProcessed++;
+            }
 
             for (Map.Entry<Double, Amenity.AmenityBlock> obstacleEntry : obstaclesEncountered.entrySet()) {
                 if (obstaclesProcessed == obstaclesProcessedLimit) {
@@ -1223,8 +1177,6 @@ public class UniversityAgentMovement extends AgentMovement {
 
                 obstaclesProcessed++;
             }
-
-            // TODO add another one for walls encountered
 
             vectorsToAdd.clear();
 
@@ -1316,7 +1268,8 @@ public class UniversityAgentMovement extends AgentMovement {
                     // spent not moving
                     // Otherwise, reset the counter
                     // Do not count for movements/non-movements when the agent is in the "in queue" state
-                    if (this.state != State.IN_QUEUE) {
+                    if (this.action.getName() != Action.Name.GO_THROUGH_SCANNER && this.action.getName() != Action.Name.QUEUE_VENDOR
+                            && this.action.getName() != Action.Name.QUEUE_FOUNTAIN) {
                         if (this.recentPatches.size() <= noNewPatchesSeenThreshold) {
                             this.noNewPatchesSeenCounter++;
                             this.newPatchesSeenCounter = 0;
@@ -1342,9 +1295,11 @@ public class UniversityAgentMovement extends AgentMovement {
                             this.isStuck
                                     && (
                                     (
-                                            this.state == State.IN_QUEUE
-                                                    && this.movementCounter >= unstuckTicksThreshold
-                                                    || this.state != State.IN_QUEUE
+                                            (this.action.getName() == Action.Name.GO_THROUGH_SCANNER || this.action.getName() == Action.Name.QUEUE_VENDOR
+                                                    || this.action.getName() == Action.Name.QUEUE_FOUNTAIN
+                                                    && this.movementCounter >= unstuckTicksThreshold)
+                                                    || this.action.getName() != Action.Name.GO_THROUGH_SCANNER && this.action.getName() != Action.Name.QUEUE_VENDOR
+                                                    && this.action.getName() != Action.Name.QUEUE_FOUNTAIN
                                                     && this.newPatchesSeenCounter >= unstuckTicksThreshold/*
                                            || this.agentFollowedWhenAssembling != null*/
                                     )
@@ -1369,7 +1324,8 @@ public class UniversityAgentMovement extends AgentMovement {
             }
         }
 
-        this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null; // If it reaches this point, there is no movement to be made
+        this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null; // If it reaches this point,
+        // there is no movement to be made
 
         this.stop();
 
@@ -1381,8 +1337,8 @@ public class UniversityAgentMovement extends AgentMovement {
 
         return false;
     }
-
-    private boolean allowRepulsionFrom(Agent otherAgent) { // Checks if another agent should apply a repulsive force on this agent, taking into account parameters other than this agent
+    // Checks if another agent should apply a repulsive force on this agent
+    private boolean allowRepulsionFrom(Agent otherAgent) {
         boolean isNotHeadingToQueueable = this.action != Action.HEADING_TO_QUEUEABLE;
         boolean isNotInOppositeStatesWithOtherAgent
                 = !(this.state == State.IN_QUEUE && otherAgent.getAgentMovement().getState() != State.IN_QUEUE);
@@ -1587,6 +1543,44 @@ public class UniversityAgentMovement extends AgentMovement {
         final double minimumRepulsionFactor = 0.0;
 
         Coordinates repulsionVectorStartingPosition = amenityBlock.getPatch().getPatchCenterCoordinates();
+
+        // If this agent is closer than the minimum distance specified, apply a force as if the distance is just at that minimum
+        double modifiedDistanceToObstacle = Math.max(distanceToObstacle, minimumDistance);
+
+        double repulsionMagnitudeCoefficient;
+        double repulsionMagnitude;
+
+        repulsionMagnitudeCoefficient = computeRepulsionMagnitudeFactor(modifiedDistanceToObstacle, maximumDistance, minimumRepulsionFactor, minimumDistance, maximumRepulsionFactor);
+
+        repulsionMagnitude = repulsionMagnitudeCoefficient * maximumMagnitude;
+
+        // If an agent is stuck, do not exert much force from this obstacle
+        if (this.isStuck) {
+            final double factor = 0.05;
+
+            repulsionMagnitude -= this.stuckCounter * factor;
+
+            if (repulsionMagnitude <= 0.0001 * this.preferredWalkingDistance) {
+                repulsionMagnitude = 0.0001 * this.preferredWalkingDistance;
+            }
+        }
+
+        // Compute the heading from that origin point to this agent
+        double headingFromOtherObstacle = Coordinates.headingTowards(repulsionVectorStartingPosition, this.position);
+
+        // Then compute for a future position given the obstacle's position, the heading, and the magnitude
+        // This will be used as the endpoint of the repulsion vector from this obstacle
+        Coordinates obstacleRepulsionVectorFuturePosition = this.getFuturePosition(repulsionVectorStartingPosition, headingFromOtherObstacle, repulsionMagnitude);
+
+        // Finally, given the current position, heading, and future position, create the vector from the obstacle to the current agent
+        return new Vector(repulsionVectorStartingPosition, headingFromOtherObstacle, obstacleRepulsionVectorFuturePosition, repulsionMagnitude);
+    }
+
+    private Vector computeSocialForceFromObstacle(Patch wallPatch, final double distanceToObstacle, final double maximumDistance, double minimumDistance, final double maximumMagnitude) {
+        final double maximumRepulsionFactor = 1.0;
+        final double minimumRepulsionFactor = 0.0;
+
+        Coordinates repulsionVectorStartingPosition = wallPatch.getPatchCenterCoordinates();
 
         // If this agent is closer than the minimum distance specified, apply a force as if the distance is just at that minimum
         double modifiedDistanceToObstacle = Math.max(distanceToObstacle, minimumDistance);
@@ -2308,7 +2302,7 @@ public class UniversityAgentMovement extends AgentMovement {
     }
 
     // Get the best queueing patch around the current patch of another agent given the current floor field state
-    private Patch getBestQueueingPatchAroundAgent(Agent otherAgent) {
+    private Patch getBestQueueingPatchAroundAgent(UniversityAgent otherAgent) {
         // Get the other agent's patch
         Patch otherAgentPatch = otherAgent.getAgentMovement().getCurrentPatch();
 

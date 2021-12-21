@@ -1,5 +1,6 @@
 package com.socialsim.model.core.environment.generic;
 
+import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
@@ -18,6 +19,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     private final MatrixPosition matrixPosition;
     private final Coordinates patchCenterCoordinates;
     private final CopyOnWriteArrayList<Agent> agents;
+    private final CopyOnWriteArrayList<UniversityAgent> uniAgents; //TODO uni agents
     private Amenity.AmenityBlock amenityBlock; // Denotes the amenity block present on this patch
     private Pair<PatchField, Integer> patchField;
     private Pair<QueueingPatchField, Integer> queueingPatchField;
@@ -32,6 +34,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         this.matrixPosition = matrixPosition;
         this.patchCenterCoordinates = Coordinates.getPatchCenterCoordinates(this);
         this.agents = new CopyOnWriteArrayList<>();
+        this.uniAgents = new CopyOnWriteArrayList<>(); //TODO uni agents
         this.amenityBlock = null;
         this.patchField = null;
         this.queueingPatchField = null;
@@ -52,6 +55,10 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     public CopyOnWriteArrayList<Agent> getAgents() {
         return agents;
     }
+
+    public CopyOnWriteArrayList<UniversityAgent> getUniversityAgents() {
+        return uniAgents;
+    } //TODO uni agents
 
     public Amenity.AmenityBlock getAmenityBlock() {
         return amenityBlock;
@@ -88,6 +95,10 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     public void addAgent(Agent newAgent) {
         this.agents.add(newAgent);
     }
+
+    public void addUniversityAgent(UniversityAgent newAgent) {
+        this.uniAgents.add(newAgent);
+    } //TODO uni agents
 
     private List<MatrixPosition> computeNeighboringPatches() {
         int patchRow = this.matrixPosition.getRow();
