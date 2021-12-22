@@ -2,13 +2,19 @@ package com.socialsim.model.simulator.university;
 
 import com.socialsim.controller.Main;
 import com.socialsim.controller.university.controls.UniversityScreenController;
+import com.socialsim.model.core.agent.university.UniversityAction;
 import com.socialsim.model.core.agent.university.UniversityAgent;
+import com.socialsim.model.core.agent.university.UniversityAgentMovement;
+import com.socialsim.model.core.agent.university.UniversityState;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -21,11 +27,19 @@ public class UniversitySimulator extends Simulator {
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
 
+    private final int MAX_STUDENTS = 250;
+    private final int MAX_PROFESSORS = 10;
+
+    private int numStudents;
+    private int numProfessors;
+
     public UniversitySimulator() {
         this.university = null;
         this.running = new AtomicBoolean(false);
         this.time = new SimulationTime(0, 0, 0);
         this.playSemaphore = new Semaphore(0);
+        this.numStudents = 0;
+        this.numProfessors = 0;
         this.start(); // Start the simulation thread, but in reality it would be activated much later
     }
 
@@ -63,6 +77,10 @@ public class UniversitySimulator extends Simulator {
         this.running.set(false);
     }
 
+    public void reset() {
+        this.time.reset();
+    }
+
     private void start() {
         new Thread(() -> {
             final int speedAwarenessLimitMilliseconds = 10; // For times shorter than this, speed awareness will be implemented
@@ -73,13 +91,7 @@ public class UniversitySimulator extends Simulator {
 
                     while (this.isRunning()) { // Keep looping until paused
                         try {
-                            // Update the pertinent variables when ticking
-//                            Simulator.updateAgentsInStation(
-//                                    floorExecutorService,
-//                                    Main.simulator.getStation(),
-//                                    null,
-//                                    false
-//                            );
+                            updateAgentsInUniversity(university); // Update the pertinent variables when ticking
                             spawnAgent(university);
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -99,347 +111,129 @@ public class UniversitySimulator extends Simulator {
     }
 
     // Manage all agent-related updates
-//    public static void updateAgentsInStation(
-//            ExecutorService floorExecutorService,
-//            Station station,
-//            List<AgentTripInformation> agentsToSpawn,
-//            boolean willDrawFromAgentList
-//    ) throws InterruptedException {
-//        List<Agent> agentsToSwitchFloors = Collections.synchronizedList(new ArrayList<>());
-//        List<Agent> agentsToDespawn = Collections.synchronizedList(new ArrayList<>());
-//        List<Agent> agentsToBoard = Collections.synchronizedList(new ArrayList<>());
-//        List<Agent> agentsToDispose = Collections.synchronizedList(new ArrayList<>());
-//
-//        // For each portal, update its agents' time spent values
-//        Simulator.updateAgentsInPortals(station);
-//
-//        // Update all agents on the floors
-//        Simulator.updateAgentsOnFloors(
-//                floorExecutorService,
-//                station,
-//                agentsToSpawn,
-//                agentsToSwitchFloors,
-//                agentsToDespawn,
-//                agentsToBoard,
-//                agentsToDispose,
-//                willDrawFromAgentList
-//        );
-//
-//        // Manage all agent despawns
-//        Simulator.manageDespawning(
-//                agentsToSwitchFloors,
-//                agentsToDespawn,
-//                agentsToBoard,
-//                agentsToDispose,
-//                willDrawFromAgentList
-//        );
-//    }
-
-    // Update all agents on the floors
-//    private static void updateAgentsOnFloors(
-//            ExecutorService executorService,
-//            Station station,
-//            List<AgentTripInformation> agentsToSpawn,
-//            List<Agent> agentsToSwitchFloors,
-//            List<Agent> agentsToDespawn,
-//            List<Agent> agentsToBoard,
-//            List<Agent> agentsToDispose,
-//            boolean willDrawFromAgentList
-//    ) throws InterruptedException {
-//        List<FloorUpdateTask> floorsToUpdate = new ArrayList<>();
-//        HashMap<AgentTripInformation, StationGate> spawnMap = null;
-//
-//        if (agentsToSpawn != null) {
-//            spawnMap = collectAgentsToSpawn(station.getFloors(), agentsToSpawn);
-//        }
-//
-//        for (Floor floor : station.getFloors()) {
-//            spawnAgentsOnFloor(floor, spawnMap, willDrawFromAgentList);
-////            spawnAgentsOnFloor(floor);
-//
-//            floorsToUpdate.add(
-//                    new FloorUpdateTask(
-//                            floor,
-//                            willDrawFromAgentList,
-//                            agentsToSwitchFloors,
-//                            agentsToDespawn,
-//                            agentsToBoard,
-//                            agentsToDispose
-//                    )
-//            );
-//        }
-//
-//        executorService.invokeAll(floorsToUpdate);
-//    }
-
-//    private static HashMap<AgentTripInformation, StationGate> collectAgentsToSpawn(
-//            List<Floor> floors,
-//            List<AgentTripInformation> agentsToSpawn
-//    ) {
-//        HashMap<AgentTripInformation, StationGate> spawnMap = new HashMap<>();
-//
-//        // For each agent to spawn, get the station gates it is eligible to spawn from
-//        // Pick the one with the shortest backlog
-//        for (AgentTripInformation agentTripInformation : agentsToSpawn) {
-//            List<StationGate> eligibleStationGates = new ArrayList<>();
-//
-//            int leastBacklogs = Integer.MAX_VALUE;
-//
-//            // Compile all station gates which are eligible to spawn this agent
-//            for (Floor floor : floors) {
-//                for (StationGate stationGate : floor.getStationGates()) {
-//                    if (
-//                            stationGate.isEnabled()
-//                                    && stationGate.getStationGateMode() != StationGate.StationGateMode.EXIT
-//                    ) {
-//                        if (
-//                                stationGate.getStationGateAgentTravelDirections().contains(
-//                                        agentTripInformation.getTravelDirection()
-//                                )
-//                        ) {
-//                            com.trainsimulation.model.core.environment.trainservice.agentservice.stationset.Station
-//                                    station = stationGate.getAmenityBlocks().get(0).getPatch().getFloor().getStation()
-//                                    .getStation();
-//
-//                            final int currentBacklogs = station.getAgentBacklogs().get(stationGate).size();
-//
-//                            if (currentBacklogs < leastBacklogs) {
-//                                eligibleStationGates.clear();
-//                                eligibleStationGates.add(stationGate);
-//
-//                                leastBacklogs = currentBacklogs;
-//                            } else if (currentBacklogs == leastBacklogs) {
-//                                eligibleStationGates.add(stationGate);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            // From the station gates compiled, choose one which will actually spawn this agent
-//            int eligibleStationGatesSize = eligibleStationGates.size();
-//            int randomIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(eligibleStationGatesSize);
-//
-//            StationGate chosenStationGate = eligibleStationGates.get(randomIndex);
-//
-//            spawnMap.put(agentTripInformation, chosenStationGate);
-//        }
-//
-//        return spawnMap;
-//    }
-
-    // Manage the agents which spawn on the floor
-//    private static void spawnAgentsOnFloor(
-//            Floor floor,
-//            HashMap<AgentTripInformation, StationGate> spawnMap,
-//            boolean willDrawFromAgentList
-//    ) {
-//        // Take note of all station gates which did not spawn agents this tick
-//        List<StationGate> stationGatesWithoutSpawn = new ArrayList<>(floor.getStationGates());
-//
-//        if (willDrawFromAgentList) {
-//            if (spawnMap != null) {
-//                // Spawn all agents from their chosen station gates
-//                for (Map.Entry<AgentTripInformation, StationGate> entry : spawnMap.entrySet()) {
-//                    AgentTripInformation agentTripInformation = entry.getKey();
-//                    StationGate stationGate = entry.getValue();
-//
-//                    if (stationGate.getAmenityBlocks().get(0).getPatch().getFloor().equals(floor)) {
-//                        spawnAgent(floor, stationGate, agentTripInformation);
-//
-//                        stationGatesWithoutSpawn.remove(stationGate);
-//                    }
-//                }
-//            }
-//
-//            // In all station gates which did not spawn a agent, use the free time to spawn one agent from its
-//            // backlog, if any
-//            for (StationGate stationGate : stationGatesWithoutSpawn) {
-//                // If no agent happens to spawn this tick, use this free time to spawn a agent from the
-//                // backlog, if there are any
-//                // TODO: Offload to station gate itself
-//                spawnAgentFromStationGateBacklog(
-//                        floor,
-//                        stationGate,
-//                        willDrawFromAgentList
-//                );
-//            }
-//
-//            // Spawn from all open train doors
-//            synchronized (floor.getTrainDoors()) {
-//                for (TrainDoor trainDoor : floor.getTrainDoors()) {
-//                    if (trainDoor.isOpen()) {
-//                        trainDoor.releaseAgent(false);
-//                    }
-//                }
-//            }
-//        } else {
-//            // Make all station gates in this floor spawn agents depending on their spawn frequency
-//            // Generate a number from 0.0 to 1.0
-//            double boardingRandomNumber;
-//            double alightingRandomNumber;
-//
-//            final double alightingChancePerSecond = 0.1;
-//
-//            // Spawn boarding agents from the station gate
-//            for (StationGate stationGate : floor.getStationGates()) {
-//                boardingRandomNumber = RANDOM_NUMBER_GENERATOR.nextDouble();
-//
-//                // Only deal with station gates which have entrances
-//                if (
-//                        stationGate.isEnabled()
-//                                && stationGate.getStationGateMode() != StationGate.StationGateMode.EXIT
-//                ) {
-//                    // Spawn agents depending on the spawn frequency of the station gate
-//                    if (stationGate.getChancePerSecond() > boardingRandomNumber) {
-//                        spawnAgent(floor, stationGate);
-//                    } else {
-//                        // If no agent happens to spawn this tick, use this free time to spawn a agent from the
-//                        // backlog, if there are any
-//                        spawnAgentFromStationGateBacklog(floor, stationGate, false);
-//                    }
-//                }
-//            }
-//
-//            // Spawn alighting agents from the train doors
-//            for (TrainDoor trainDoor : floor.getTrainDoors()) {
-//                alightingRandomNumber = RANDOM_NUMBER_GENERATOR.nextDouble();
-//
-//                if (trainDoor.isOpen()) {
-//                    if (alightingChancePerSecond > alightingRandomNumber) {
-//                        spawnAgent(floor, trainDoor);
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-    // Entertain each agent marked for switching floors
-//    private static void manageDespawning(
-//            List<Agent> agentsToSwitchFloors,
-//            List<Agent> agentsToDespawn,
-//            List<Agent> agentsToBoard,
-//            List<Agent> agentsToDispose,
-//            boolean willDrawFromAgentList
-//    ) {
-//        try {
-//            // Manage agents to switch floors
-//            for (Agent agentToSwitchFloors : agentsToSwitchFloors) {
-//                // Get the agent's portal
-//                Portal portal = (Portal) agentToSwitchFloors.getAgentMovement().getCurrentAmenity();
-//
-//                // Have the gate absorb that agent
-//                portal.absorb(agentToSwitchFloors);
-//            }
-//
-//            // Remove all agents that are marked for removal
-//            for (Agent agentToDespawn : agentsToDespawn) {
-//                // Record the time it took
-//                agentToDespawn.getAgentTime().exitStation();
-//
-//                // Get the agent's gate
-//                Gate gate = (Gate) agentToDespawn.getAgentMovement().getCurrentAmenity();
-//
-//                // Have the gate despawn that agent
-//                gate.despawnAgent(agentToDespawn);
-//
-//                // Remove the agent from the train system
-//                // TODO: Have a better way of checking whether this agent has necessary information, or not
-//                //  perhaps insert a different agent information object to a agent when at train simulation and
-//                //  at station editing?
-//                if (willDrawFromAgentList) {
-//                    agentToDespawn.getAgentMovement().getRoutePlan().getOriginStation().getTrainSystem()
-//                            .getAgents().remove(agentToDespawn);
-//
-//                    // Log the agent who completed the journey
-//                    com.trainsimulation.model.simulator.Simulator.logAgent(agentToDespawn);
-//                }
-//            }
-//
-//            // Have agents board the carriage connected to its train door
-//            for (Agent agentToBoard : agentsToBoard) {
-//                // Get the agent's train door
-//                TrainDoor trainDoor = (TrainDoor) agentToBoard.getAgentMovement().getCurrentAmenity();
-//
-//                // Have the train door transfer that agent to the carriage
-//                trainDoor.boardAgent(agentToBoard);
-//            }
-//
-//            // Simply discard agents with errors
-//            if (willDrawFromAgentList) {
-//                for (Agent agentToDispose : agentsToDispose) {
-//                    // Get the agent's gate
-//                    Gate gate = (Gate) agentToDispose.getAgentMovement().getCurrentAmenity();
-//
-//                    // Have the gate despawn that agent
-//                    gate.despawnAgent(agentToDispose);
-//
-//                    // Remove the agent from the train system
-//                    agentToDispose.getAgentMovement().getRoutePlan().getOriginStation().getTrainSystem()
-//                            .getAgents().remove(agentToDispose);
-//                }
-//            }
-//
-//            agentsToDespawn.clear();
-//            agentsToSwitchFloors.clear();
-//            agentsToBoard.clear();
-//            agentsToDispose.clear();
-//        } catch (NullPointerException ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-
-    public void reset() {
-        this.time.reset();
+    public static void updateAgentsInUniversity(University university) throws InterruptedException {
+        moveAll(university);
     }
 
-    // Make all agents tick (move once in a one-second time frame) in the given floor
-//    private static void updateFloor(
-//            Floor floor,
-//            boolean willDrawFromAgentList,
-//            List<Agent> agentsToSwitchFloors,
-//            List<Agent> agentsToDespawn,
-//            List<Agent> agentsToBoard,
-//            List<Agent> agentsToDispose
-//    ) {
-//
-//        // Make each agent move
-//        synchronized (floor.getAgentsInFloor()) {
-//            for (Agent agent : floor.getAgentsInFloor()) {
-//                try {
-//                    moveAgent(
-//                            agent,
-//                            willDrawFromAgentList,
-//                            agentsToSwitchFloors,
-//                            agentsToDespawn,
-//                            agentsToBoard
-//                    );
-//
-//                    // Also update the graphic of the agent
-//                    agent.getAgentGraphic().change();
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        }
-//    }
+    // Make all agents move for one tick
+    private static void moveAll(University university) {
+        for (UniversityAgent agent : university.getAgents()) {
+            try {
+                moveOne(agent);
+                agent.getAgentGraphic().change();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
-//    private static void moveAgent(
-//            Agent agent,
-//            boolean willDrawFromAgentList,
-//            List<Agent> agentsToSwitchFloors,
-//            List<Agent> agentsToDespawn,
-//            List<Agent> agentsToBoard
-//    ) throws Exception {
-//        AgentMovement agentMovement = agent.getAgentMovement();
-//
-//        // Get the three agent movement states
-//        AgentMovement.Disposition disposition = agentMovement.getDisposition();
-//        AgentMovement.State state = agentMovement.getState();
-//        AgentMovement.Action action = agentMovement.getAction();
-//
-//        switch (disposition) {
-//            case BOARDING:
+    private static void moveOne(UniversityAgent agent) throws Exception {
+        UniversityAgentMovement agentMovement = agent.getAgentMovement();
+
+        // Get the three agent movement states
+        UniversityAgent.Type type = agent.getType();
+        UniversityAgent.Persona persona = agent.getPersona();
+        UniversityState state = agentMovement.getUniversityState();
+        UniversityAction action = agentMovement.getUniversityAction();
+
+        switch (type) {
+            case GUARD:
+                if (action.getName() == UniversityAction.Name.GUARD_STAY_PUT) {
+                    // do nothing
+                }
+                else if (action.getName() == UniversityAction.Name.GREET_PERSON) {
+                    // interact with person
+                }
+
+                break;
+
+            case JANITOR:
+                if (state.getName() == UniversityState.Name.MAINTENANCE_BATHROOM) {
+                    if (action.getName() == UniversityAction.Name.CLEAN_STAY_PUT) {
+                        // do nothing
+                    }
+                    else if (action.getName() == UniversityAction.Name.JANITOR_MOVE_SPOT) {
+                        // move to another patch
+                    }
+                }
+                else if (state.getName() == UniversityState.Name.MAINTENANCE_FOUNTAIN) {
+                    if (action.getName() == UniversityAction.Name.JANITOR_CHECK_FOUNTAIN) {
+                        // check fountain
+                    }
+                }
+
+                break;
+
+            case STUDENT:
+                /* Add 1 to state counter for each case*/
+                /*Insert Actions through each state*/
+                if (state.getName()== UniversityState.Name.GOING_TO_SECURITY) {
+                    /*Insert Action*/
+                    action.getName();
+                    int duration = action.getDuration();
+                    action.getDestination();
+                    while(duration!=0)
+                    {
+                        duration--; //every tick
+                    }
+
+                } else if (state.getName()== UniversityState.Name.WANDERING_AROUND) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.NEEDS_BATHROOM) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.NEEDS_DRINK) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.GOING_TO_STUDY) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.STUDYING) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.GOING_TO_CLASS_STUDENT) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.WAIT_FOR_CLASS_STUDENT) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.IN_CLASS_STUDENT) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.GOING_TO_LUNCH) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.EATING_LUNCH) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.GOING_HOME) {
+                    /*Insert Action*/
+                }
+                break;
+            case PROFESSOR:
+                if (state.getName()== UniversityState.Name.GOING_TO_SECURITY) {
+                    /*Insert Action*/
+                    action.getName();
+                    int duration = action.getDuration();
+                    action.getDestination();
+                    while(duration!=0)
+                    {
+                        duration--; //every tick
+                    }
+
+                } else if (state.getName()== UniversityState.Name.WANDERING_AROUND) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.NEEDS_BATHROOM) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.NEEDS_DRINK) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.GOING_TO_CLASS_PROFESSOR) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.IN_CLASS_PROFESSOR) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.GOING_TO_LUNCH) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.EATING_LUNCH) {
+                    /*Insert Action*/
+                } else if (state.getName()== UniversityState.Name.GOING_HOME) {
+                    /*Insert Action*/
+                }
+                break;
+
+
 //            case ALIGHTING:
 //                // The agent has entered the station and is heading towards the platform to board the train
 //                switch (state) {
@@ -511,7 +305,7 @@ public class UniversitySimulator extends Simulator {
 //                                        // If the agent has reached the patch with the nearest floor field value,
 //                                        // transition
 //                                        // into the "in queue" state and the "queueing" action
-//                                        if (agentMovement.hasReachedQueueingFloorField()) {
+//                                        if (agentMovement.hasReachedQueueingPatchField()) {
 //                                            // Mark this agent as the latest one to join its queue
 //                                            agentMovement.joinQueue();
 //
@@ -983,7 +777,7 @@ public class UniversitySimulator extends Simulator {
 //                            // Check whether the agent has reached its floor field
 //                            // If the agent has reached the patch with the nearest floor field value, transition
 //                            // into the "queueing" action
-//                            if (agentMovement.hasReachedQueueingFloorField()) {
+//                            if (agentMovement.hasReachedQueueingPatchField()) {
 //                                if (agentMovement.isNextAmenityTrainDoor()) {
 //                                    agentMovement.setAction(AgentMovement.Action.WAITING_FOR_TRAIN);
 //                                    action = AgentMovement.Action.WAITING_FOR_TRAIN;
@@ -1028,7 +822,7 @@ public class UniversitySimulator extends Simulator {
 //
 //                            // Check if the agent is on one of the current floor field's apices
 //                            // If not, keep following the floor field until it is reached
-//                            if (agentMovement.hasReachedQueueingFloorFieldApex()) {
+//                            if (agentMovement.hasReachedQueueingPatchFieldApex()) {
 //                                // Have the agent waiting for the amenity to be vacant
 //                                // TODO: Add waiting for turn state
 //                                agentMovement.beginWaitingOnAmenity();
@@ -1156,7 +950,7 @@ public class UniversitySimulator extends Simulator {
 //                                }
 //                            }
 //                        }
-//                    case IN_QUEUEABLE:
+//                    case IN_QUEUEABLE: //TODO IN_QUEABLE
 //                        if (action == AgentMovement.Action.BOARDING_TRAIN) {
 //                            // Have this agent's goal wrap up serving this agent
 //                            agentMovement.endServicingThisAgent();
@@ -1266,25 +1060,25 @@ public class UniversitySimulator extends Simulator {
 //                }
 //
 //                break;
+//
 //            case RIDING_TRAIN:
 //                // The agent is riding the train
 //                switch (state) {
-//                    case IN_TRAIN:
-//                        break;
+//                    case IN_TRAIN: break;
 //                }
 //
 //                break;
-//        }
-//    }
+        }
+    }
 
-    private static void spawnAgent(University university) {
+    private void spawnAgent(University university) {
         UniversityGate gate = university.getUniversityGates().get(1);
         Gate.GateBlock spawner = gate.getSpawners().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4));
         UniversityAgent agent = null;
-        
+
         int spawnChance = gate.getChancePerTick();
         int CHANCE_SPAWN = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-        if (spawnChance < CHANCE_SPAWN) {
+        if (spawnChance < CHANCE_SPAWN && UniversityAgent.studentCount != this.MAX_STUDENTS) {
             agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner.getPatch(), false);
             university.getAgents().add(agent);
             university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());

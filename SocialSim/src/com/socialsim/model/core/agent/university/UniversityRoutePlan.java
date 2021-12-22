@@ -20,26 +20,28 @@ public class UniversityRoutePlan {
         List<UniversityState> routePlan = new ArrayList<>();
         ArrayList<UniversityAction> actions;
 
-        if (agent.getPersona() == UniversityAgent.Persona.GUARD){
+        if (agent.getPersona() == UniversityAgent.Persona.GUARD) {
             actions = new ArrayList<>();
-            actions.add(new UniversityAction(UniversityAction.Name.GUARD_STAY_PUT, spawnPatch, 0)); //TODO: Change patch destination and duration
+            actions.add(new UniversityAction(UniversityAction.Name.GUARD_STAY_PUT, spawnPatch, 9000));
             routePlan.add(new UniversityState(UniversityState.Name.GUARD, this, agent, actions));
         }
-        else if (agent.getPersona() == UniversityAgent.Persona.JANITOR){
+        else if (agent.getPersona() == UniversityAgent.Persona.JANITOR) {
             for(int i = 0; i < Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_JANITOR_ROUNDS); i++){
                 actions = new ArrayList<>();
-                actions.add(new UniversityAction(UniversityAction.Name.CLEAN_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
-                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_MOVE_SPOT, null, 0)); //TODO: Change patch destination and duration
+                Patch randomToilet1 = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
+                Patch randomToilet2 = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
+                actions.add(new UniversityAction(UniversityAction.Name.CLEAN_STAY_PUT, randomToilet1, 180)); // TODO: Maybe loop this instead across 6 toilets for each janitor
+                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_MOVE_SPOT, randomToilet2)); // TODO: Maybe remove this should the comment above push thru
                 routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
                 actions = new ArrayList<>();
-                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, null, 0)); //TODO: Change patch destination and duration
+                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 180));
                 routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent));
             }
         }
         else {
             actions = new ArrayList<>();
-            actions.add(new UniversityAction(UniversityAction.Name.GREET_GUARD, null, 0)); //TODO: Change patch destination and duration
-            actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, null, 0)); //TODO: Change patch destination and duration
+            actions.add(new UniversityAction(UniversityAction.Name.GREET_GUARD, null, 0)); //TODO: Maybe remove this since interaction
+            actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2)); //TODO: Change patch destination and duration
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent));
             int CALCULATED_CLASSES, LUNCH_TIME;
             ArrayList<Integer> classes = new ArrayList<>();
@@ -134,22 +136,22 @@ public class UniversityRoutePlan {
                         }
                         else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
+                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
+                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, 12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         } else {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_DRINK, this, agent));
                         }
@@ -260,18 +262,18 @@ public class UniversityRoutePlan {
                         }
                         else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
+                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
+                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, 12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         } else {
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_DRINK, this, agent));
@@ -354,14 +356,14 @@ public class UniversityRoutePlan {
                     }
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
-                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA));
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR));
+                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR));
+                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, 6, 12));
+                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA));
                         routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
                         actions = new ArrayList<>();
-                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, 120, 720));
                         routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                     }
                 }
@@ -383,18 +385,18 @@ public class UniversityRoutePlan {
                         }
                         else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
+                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
+                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, 12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         } else {
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_DRINK, this, agent));
@@ -477,14 +479,14 @@ public class UniversityRoutePlan {
                     }
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
-                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA));
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR));
+                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR));
+                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, 6, 12));
+                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA));
                         routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
                         actions = new ArrayList<>();
-                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, 120, 720));
                         routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                     }
                 }
@@ -506,18 +508,18 @@ public class UniversityRoutePlan {
                         }
                         else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
+                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
+                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, 12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         } else {
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_DRINK, this, agent));
@@ -600,14 +602,14 @@ public class UniversityRoutePlan {
                     }
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
-                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA));
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR));
+                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR));
+                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, 6, 12));
+                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA));
                         routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
                         actions = new ArrayList<>();
-                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, 120, 720));
                         routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                     }
                 }
@@ -626,18 +628,18 @@ public class UniversityRoutePlan {
                         }
                         else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
-                        } else {
+                        } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, null, 0));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
+                            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
+                            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, 12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         }
                     }
@@ -718,21 +720,21 @@ public class UniversityRoutePlan {
                     }
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
-                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, null, 0)); //TODO: Change patch destination and duration
-                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CAFETERIA));
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR));
+                        actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR));
+                        actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, 6, 12));
+                        actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA));
                         routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
                         actions = new ArrayList<>();
-                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, null, 0)); //TODO: Change patch destination and duration
+                        actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, 120, 720));
                         routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                     }
                 }
             }
         }
         actions = new ArrayList<>();
-        actions.add(new UniversityAction(UniversityAction.Name.LEAVE_BUILDING, null, 0)); //TODO: Change patch destination and duration
+        actions.add(new UniversityAction(UniversityAction.Name.LEAVE_BUILDING));
         routePlan.add(new UniversityState(UniversityState.Name.GOING_HOME, this, agent, actions));
 
         this.currentRoutePlan = routePlan.listIterator();
