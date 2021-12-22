@@ -113,15 +113,15 @@ public class UniversityAgentMovement extends AgentMovement {
         this.routePlan = new UniversityRoutePlan(parent, university, currentPatch);
         if (parent.getInOnStart()) {
             // TODO: Set initial states and actions if necessary
-//            this.state = State.GOING_TO_SECURITY;
+//            this.state = UniversityState.GOING_TO_SECURITY;
 //            this.stateIndex = 0;
-//            this.action = Action.STANDING;
+//            this.action = UniversityAction.STANDING;
         }
         else {
             // TODO: Set initial states and actions if necessary
-//            this.state = State.GOING_TO_SECURITY;
+//            this.state = UniversityState.GOING_TO_SECURITY;
 //            this.stateIndex = 0;
-//            this.action = Action.WILL_QUEUE;
+//            this.action = UniversityAction.WILL_QUEUE;
             this.currentAmenity = university.getUniversityGates().get(1); // Getting Entrance Gate
         }
 
@@ -236,19 +236,19 @@ public class UniversityAgentMovement extends AgentMovement {
         return currentPath;
     }
 
-    public UniversityState getState() {
+    public UniversityState getUniversityState() {
         return state;
     }
 
-    public void setState(UniversityState state) {
+    public void setUniversityState(UniversityState state) {
         this.state = state;
     }
 
-    public UniversityAction getAction() {
+    public UniversityAction getUniversityAction() {
         return action;
     }
 
-    public void setAction(UniversityAction action) {
+    public void setUniversityAction(UniversityAction action) {
         this.action = action;
     }
 
@@ -451,7 +451,7 @@ public class UniversityAgentMovement extends AgentMovement {
     }
 
 //    public void nextPlanItem () { // Parent function to extract the next item in this agent's route plan
-//        State nextItem = this.routePlan.getCurrentClass();
+//        UniversityState nextItem = this.routePlan.getCurrentClass();
 //
 //        if (PatchField.class.isAssignableFrom(nextItem)) {
 //            goToRoom(nextItem);
@@ -701,12 +701,12 @@ public class UniversityAgentMovement extends AgentMovement {
         // and obstacles (if not in queueing action)
         // TODO add code to check if agent is already in queue / queueing logic
         if (
-                this.state.getName() == State.Name.GOING_TO_SECURITY || this.state.getName() == State.Name.GOING_TO_LUNCH
-                || this.state.getName() == State.Name.NEEDS_DRINK
+                this.state.getName() == UniversityState.Name.GOING_TO_SECURITY || this.state.getName() == UniversityState.Name.GOING_TO_LUNCH
+                || this.state.getName() == UniversityState.Name.NEEDS_DRINK
         ) {
             //Heading towards the queue, but not inside the queue yet
-            if (this.action.getName() != Action.Name.GO_THROUGH_SCANNER && this.action.getName() != Action.Name.QUEUE_VENDOR
-                    && this.action.getName() != Action.Name.QUEUE_FOUNTAIN) {
+            if (this.action.getName() != UniversityAction.Name.GO_THROUGH_SCANNER && this.action.getName() != UniversityAction.Name.QUEUE_VENDOR
+                    && this.action.getName() != UniversityAction.Name.QUEUE_FOUNTAIN) {
                 // Check if agent is stuck
                 if (
                     this.isStuck
@@ -725,8 +725,8 @@ public class UniversityAgentMovement extends AgentMovement {
             // Look around the patches that fall on the agent's field of view
             for (Patch patch : patchesToExplore) {
                 // If not in queue, count obstacles
-                if (this.action.getName() != Action.Name.GO_THROUGH_SCANNER && this.action.getName() != Action.Name.QUEUE_VENDOR
-                        && this.action.getName() != Action.Name.QUEUE_FOUNTAIN) {
+                if (this.action.getName() != UniversityAction.Name.GO_THROUGH_SCANNER && this.action.getName() != UniversityAction.Name.QUEUE_VENDOR
+                        && this.action.getName() != UniversityAction.Name.QUEUE_FOUNTAIN) {
                     Amenity.AmenityBlock patchAmenityBlock = patch.getAmenityBlock();
                     Class aPatchField = patch.getPatchField().getKey().getClass();
 
@@ -1216,8 +1216,8 @@ public class UniversityAgentMovement extends AgentMovement {
                     // spent not moving
                     // Otherwise, reset the counter
                     // Do not count for movements/non-movements when the agent is in the "in queue" state
-                    if (this.action.getName() != Action.Name.GO_THROUGH_SCANNER && this.action.getName() != Action.Name.QUEUE_VENDOR
-                            && this.action.getName() != Action.Name.QUEUE_FOUNTAIN) {
+                    if (this.action.getName() != UniversityAction.Name.GO_THROUGH_SCANNER && this.action.getName() != UniversityAction.Name.QUEUE_VENDOR
+                            && this.action.getName() != UniversityAction.Name.QUEUE_FOUNTAIN) {
                         if (this.recentPatches.size() <= noNewPatchesSeenThreshold) {
                             this.noNewPatchesSeenCounter++;
                             this.newPatchesSeenCounter = 0;
@@ -1243,11 +1243,11 @@ public class UniversityAgentMovement extends AgentMovement {
                             this.isStuck
                                     && (
                                     (
-                                            (this.action.getName() == Action.Name.GO_THROUGH_SCANNER || this.action.getName() == Action.Name.QUEUE_VENDOR
-                                                    || this.action.getName() == Action.Name.QUEUE_FOUNTAIN
+                                            (this.action.getName() == UniversityAction.Name.GO_THROUGH_SCANNER || this.action.getName() == UniversityAction.Name.QUEUE_VENDOR
+                                                    || this.action.getName() == UniversityAction.Name.QUEUE_FOUNTAIN
                                                     && this.movementCounter >= unstuckTicksThreshold)
-                                                    || this.action.getName() != Action.Name.GO_THROUGH_SCANNER && this.action.getName() != Action.Name.QUEUE_VENDOR
-                                                    && this.action.getName() != Action.Name.QUEUE_FOUNTAIN
+                                                    || this.action.getName() != UniversityAction.Name.GO_THROUGH_SCANNER && this.action.getName() != UniversityAction.Name.QUEUE_VENDOR
+                                                    && this.action.getName() != UniversityAction.Name.QUEUE_FOUNTAIN
                                                     && this.newPatchesSeenCounter >= unstuckTicksThreshold/*
                                            || this.agentFollowedWhenAssembling != null*/
                                     )
@@ -1285,88 +1285,10 @@ public class UniversityAgentMovement extends AgentMovement {
 
         return false;
     }
-    // Checks if another agent should apply a repulsive force on this agent
-    private boolean allowRepulsionFrom(Agent otherAgent) {
-        boolean isNotHeadingToQueueable = this.action != Action.HEADING_TO_QUEUEABLE;
-        boolean isNotInOppositeStatesWithOtherAgent
-                = !(this.state == UniversityState.IN_QUEUE && otherAgent.getAgentMovement().getState() != UniversityState.IN_QUEUE);
 
-        boolean otherAgentComesBefore;
+    //TODO add function to negate forces if agent is in queue
 
-        if (this.state == UniversityState.IN_QUEUE) {
-            Queueable queueable = this.getGoalAmenityAsQueueable();
-
-            if (!(queueable instanceof TrainDoor) && !(queueable instanceof Turnstile)) {
-                QueueObject queueObject = queueable.getQueueObject();
-                List<UniversityAgent> queueingAgents = queueObject.getAgentsQueueing();
-
-                if (queueingAgents.contains(this.parent) && queueingAgents.contains(otherAgent)) {
-                    otherAgentComesBefore = otherAgent.getAgentMovement().comesBefore(this.parent);
-                } else {
-                    otherAgentComesBefore = true;
-                }
-            } else {
-                otherAgentComesBefore = true;
-            }
-        } else {
-            otherAgentComesBefore = true;
-        }
-
-        boolean otherAgentInSameGoal;
-
-        Queueable thisAgentQueueable = this.getGoalAmenityAsQueueable();
-        Queueable otherAgentQueueable = otherAgent.getAgentMovement().getGoalAmenityAsQueueable();
-
-        if (thisAgentQueueable != null && otherAgentQueueable != null) {
-            otherAgentInSameGoal = thisAgentQueueable.equals(otherAgentQueueable);
-        } else {
-            otherAgentInSameGoal = true;
-        }
-
-        return
-                isNotHeadingToQueueable
-                        && isNotInOppositeStatesWithOtherAgent
-                        && otherAgentComesBefore
-                        && otherAgentInSameGoal;
-    }
-
-    private double computeSecurityFirstStepHeading() {
-        Security security = (Security) this.currentPatch.getAmenityBlock().getParent(); // First, get the apex of the floor field with the state of the agent
-
-        return computeHeadingFromApexToAttractor(security.getSecurityPatchFieldState(), security.getQueueObject(), security.getAttractors());
-    }
-
-    private double computeHeadingFromApexToAttractor(QueueingPatchField.PatchFieldState PatchFieldState, QueueObject queueObject, List<Amenity.AmenityBlock> attractors) {
-        Patch apexLocation;
-        double newHeading;
-
-        apexLocation = queueObject.getPatchFields().get(PatchFieldState).getApices().get(0);
-        // Then compute the heading from the apex to the turnstile attractor
-        newHeading = Coordinates.headingTowards(apexLocation.getPatchCenterCoordinates(), attractors.get(0).getPatch().getPatchCenterCoordinates());
-
-        return newHeading;
-    }
-
-    private double computeFirstStepHeading() {
-        double newHeading;
-
-        if (this.currentPatch.getAmenityBlock() != null && this.currentPatch.getAmenityBlock().getParent() instanceof Security) {
-            newHeading = computeSecurityFirstStepHeading();
-        }
-        else {
-            newHeading = this.previousHeading;
-        }
-
-        return newHeading;
-    }
-
-    private Coordinates computeFirstStepPosition() {
-        double newHeading = computeFirstStepHeading();
-
-        return this.getFuturePosition(this.position, newHeading, this.preferredWalkingDistance); // Compute for the proposed future position
-    }
-
-    public UniversityAgent getNearestAgentOnFirstStepPosition() {
+    /*public UniversityAgent getNearestAgentOnFirstStepPosition() {
         Patch firstStepPosition = this.university.getPatch(this.computeFirstStepPosition());
 
         UniversityAgent nearestAgent = null;
@@ -1383,18 +1305,14 @@ public class UniversityAgentMovement extends AgentMovement {
         }
 
         return nearestAgent;
-    }
-
-    public boolean isFirstStepPositionFree() {
-        return hasNoAgent(this.university.getPatch(this.computeFirstStepPosition()));
-    }
+    }*/
 
     private boolean hasNoAgent(Patch patch) {
         if (patch == null) {
             return true;
         }
 
-        List<UniversityAgent> agentsOnPatchWithoutThisAgent = patch.getAgents();
+        List<UniversityAgent> agentsOnPatchWithoutThisAgent = patch.getUniversityAgents();
         agentsOnPatchWithoutThisAgent.remove(this.parent);
 
         return agentsOnPatchWithoutThisAgent.isEmpty();
@@ -1747,18 +1665,18 @@ public class UniversityAgentMovement extends AgentMovement {
             // If a queueing patch has not yet been set for this goal, set it
             if (this.goalNearestQueueingPatch == null) {
                 // If the next floor field has not yet been set for this queueing patch, set it
-                if (this.goalQueueingPatchFieldState == null && this.goalQueueingPatchField == null) {
+                if (this.goalQueueingPatchFieldUniversityState == null && this.goalQueueingPatchField == null) {
                     Queueable queueable = this.getGoalAmenityAsQueueable();
 
                     if (queueable instanceof Turnstile) {
                         this.goalQueueingPatchField = queueable.retrievePatchField(
                                 this.goalQueueObject,
-                                this.goalQueueingPatchFieldState
+                                this.goalQueueingPatchFieldUniversityState
                         );
                     } else {
                         this.goalQueueingPatchField = queueable.retrievePatchField(
                                 queueable.getQueueObject(),
-                                this.goalQueueingPatchFieldState
+                                this.goalQueueingPatchFieldUniversityState
                         );
                     }
                 }
@@ -1766,7 +1684,7 @@ public class UniversityAgentMovement extends AgentMovement {
                 if (this.goalQueueingPatchField == null) {
                     this.getGoalAmenityAsQueueable().retrievePatchField(
                             this.goalQueueObject,
-                            this.goalQueueingPatchFieldState
+                            this.goalQueueingPatchFieldUniversityState
                     );
                 }
 
@@ -1968,7 +1886,7 @@ public class UniversityAgentMovement extends AgentMovement {
                     if (
                             !(this.getGoalAmenityAsQueueable() instanceof TrainDoor)
                                     && !(this.getGoalAmenityAsQueueable() instanceof Turnstile)
-                                    && lastAgent.getAgentMovement().getAction() == UniversityAction.ASSEMBLING
+                                    && lastAgent.getAgentMovement().getUniversityAction() == UniversityAction.ASSEMBLING
                     ) {
                         double distanceToGoalPatch = Coordinates.distance(
                                 this.currentFloor.getStation(),
@@ -2093,7 +2011,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
         for (Patch patch : associatedPatches) {
             double PatchFieldValue
-                    = patch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable()).get(this.goalQueueingPatchFieldState);
+                    = patch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable()).get(this.goalQueueingPatchFieldUniversityState);
 
             if (PatchFieldValue <= maximumPatchFieldValueThreshold) {
             // Get the distance of that patch from this agent
@@ -2117,20 +2035,20 @@ public class UniversityAgentMovement extends AgentMovement {
         double valueSum = 0.0;
 
         for (Patch patch : PatchFieldList) {
-            Map<QueueingPatchField.PatchFieldState, Double> PatchFieldStateDoubleMap
+            Map<QueueingPatchField.PatchFieldUniversityState, Double> PatchFieldUniversityStateDoubleMap
                     = patch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable());
 
             if (
                     !patch.getPatchFieldValues().isEmpty()
-                            && PatchFieldStateDoubleMap != null
-                            && !PatchFieldStateDoubleMap.isEmpty()
-                            && PatchFieldStateDoubleMap.get(
-                            this.goalQueueingPatchFieldState
+                            && PatchFieldUniversityStateDoubleMap != null
+                            && !PatchFieldUniversityStateDoubleMap.isEmpty()
+                            && PatchFieldUniversityStateDoubleMap.get(
+                            this.goalQueueingPatchFieldUniversityState
                     ) != null
             ) {
                 double futurePatchFieldValue = patch.getPatchFieldValues()
                         .get(this.getGoalAmenityAsQueueable())
-                        .get(this.goalQueueingPatchFieldState);
+                        .get(this.goalQueueingPatchFieldUniversityState);
 
 //                if (currentPatchFieldValue == null) {
                 valueSum += futurePatchFieldValue;
@@ -2173,20 +2091,20 @@ public class UniversityAgentMovement extends AgentMovement {
         double maximumPatchFieldValue = 0.0;
 
         for (Patch patch : PatchFieldList) {
-            Map<QueueingPatchField.PatchFieldState, Double> PatchFieldStateDoubleMap
+            Map<QueueingPatchField.PatchFieldUniversityState, Double> PatchFieldUniversityStateDoubleMap
                     = patch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable());
 
             if (
                     !patch.getPatchFieldValues().isEmpty()
-                            && PatchFieldStateDoubleMap != null
-                            && !PatchFieldStateDoubleMap.isEmpty()
-                            && PatchFieldStateDoubleMap.get(
-                            this.goalQueueingPatchFieldState
+                            && PatchFieldUniversityStateDoubleMap != null
+                            && !PatchFieldUniversityStateDoubleMap.isEmpty()
+                            && PatchFieldUniversityStateDoubleMap.get(
+                            this.goalQueueingPatchFieldUniversityState
                     ) != null
             ) {
                 double PatchFieldValue = patch.getPatchFieldValues()
                         .get(this.getGoalAmenityAsQueueable())
-                        .get(this.goalQueueingPatchFieldState);
+                        .get(this.goalQueueingPatchFieldUniversityState);
 
                 if (PatchFieldValue >= maximumPatchFieldValue) {
                     if (PatchFieldValue > maximumPatchFieldValue) {
@@ -2443,14 +2361,14 @@ public class UniversityAgentMovement extends AgentMovement {
     }
 
 /*
-    public enum State {
+    public enum UniversityState {
         GOING_TO_SECURITY, WANDERING_AROUND, NEEDS_BATHROOM, NEEDS_DRINK,
         GOING_TO_STUDY, STUDYING, GOING_TO_CLASS_STUDENT, GOING_TO_CLASS_PROFESSOR,
         IN_CLASS_STUDENT, IN_CLASS_PROFESSOR, GOING_TO_LUNCH, EATING_LUNCH,
         GOING_HOME, GUARD, MAINTENANCE_BATHROOM, MAINTENANCE_FOUNTAIN
     }
 
-    public enum Action {
+    public enum UniversityAction {
         */
 /* Walking actions *//*
 

@@ -18,8 +18,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     public static final double PATCH_SIZE_IN_SQUARE_METERS = 1.0;
     private final MatrixPosition matrixPosition;
     private final Coordinates patchCenterCoordinates;
-    private final CopyOnWriteArrayList<Agent> agents;
-    private final CopyOnWriteArrayList<UniversityAgent> uniAgents; //TODO uni agents
+    private final UniversityAgent uniAgent;
     private Amenity.AmenityBlock amenityBlock; // Denotes the amenity block present on this patch
     private Pair<PatchField, Integer> patchField;
     private Pair<QueueingPatchField, Integer> queueingPatchField;
@@ -33,8 +32,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
 
         this.matrixPosition = matrixPosition;
         this.patchCenterCoordinates = Coordinates.getPatchCenterCoordinates(this);
-        this.agents = new CopyOnWriteArrayList<>();
-        this.uniAgents = new CopyOnWriteArrayList<>(); //TODO uni agents
+        this.uniAgent = null;
         this.amenityBlock = null;
         this.patchField = null;
         this.queueingPatchField = null;
@@ -52,12 +50,8 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         return patchCenterCoordinates;
     }
 
-    public CopyOnWriteArrayList<Agent> getAgents() {
-        return agents;
-    }
-
-    public CopyOnWriteArrayList<UniversityAgent> getUniversityAgents() {
-        return uniAgents;
+    public UniversityAgent getUniversityAgent() {
+        return uniAgent;
     } //TODO uni agents
 
     public Amenity.AmenityBlock getAmenityBlock() {
@@ -92,12 +86,8 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         return environment;
     }
 
-    public void addAgent(Agent newAgent) {
-        this.agents.add(newAgent);
-    }
-
-    public void addUniversityAgent(UniversityAgent newAgent) {
-        this.uniAgents.add(newAgent);
+    public void setUniversityAgent(UniversityAgent newAgent) {
+        this.uniAgent = newAgent;
     } //TODO uni agents
 
     private List<MatrixPosition> computeNeighboringPatches() {
