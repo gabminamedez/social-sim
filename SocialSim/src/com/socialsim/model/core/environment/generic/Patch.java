@@ -18,7 +18,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     public static final double PATCH_SIZE_IN_SQUARE_METERS = 1.0;
     private final MatrixPosition matrixPosition;
     private final Coordinates patchCenterCoordinates;
-    private final UniversityAgent uniAgent;
+    private CopyOnWriteArrayList<Agent> agent;
     private Amenity.AmenityBlock amenityBlock; // Denotes the amenity block present on this patch
     private Pair<PatchField, Integer> patchField;
     private Pair<QueueingPatchField, Integer> queueingPatchField;
@@ -32,7 +32,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
 
         this.matrixPosition = matrixPosition;
         this.patchCenterCoordinates = Coordinates.getPatchCenterCoordinates(this);
-        this.uniAgent = null;
+        this.agent = new CopyOnWriteArrayList<>();
         this.amenityBlock = null;
         this.patchField = null;
         this.queueingPatchField = null;
@@ -50,9 +50,17 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         return patchCenterCoordinates;
     }
 
-    public UniversityAgent getUniversityAgent() {
-        return uniAgent;
-    } //TODO uni agents
+    public CopyOnWriteArrayList<Agent> getAgents() {
+        return agent;
+    }
+
+    public void addAgent(Agent newAgent) {
+        getAgents().add(newAgent);
+    }
+
+    public void removeAgent(Agent newAgent) {
+        getAgents().remove(newAgent);
+    }
 
     public Amenity.AmenityBlock getAmenityBlock() {
         return amenityBlock;
@@ -85,10 +93,6 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     public Environment getEnvironment() {
         return environment;
     }
-
-    public void setUniversityAgent(UniversityAgent newAgent) {
-        this.uniAgent = newAgent;
-    } //TODO uni agents
 
     private List<MatrixPosition> computeNeighboringPatches() {
         int patchRow = this.matrixPosition.getRow();

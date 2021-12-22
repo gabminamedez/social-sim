@@ -19,8 +19,10 @@ public class UniversityAction {
         STUDY_AREA_STAY_PUT,
         LUNCH_STAY_PUT,
 
+        FIND_BULLETIN,
         VIEW_BULLETIN,
         FIND_BENCH,
+        SIT_ON_BENCH,
         LEAVE_BUILDING,
         THROW_ITEM_TRASH_CAN,
 
@@ -48,6 +50,7 @@ public class UniversityAction {
 
         CLEAN_STAY_PUT,
         JANITOR_MOVE_SPOT,
+        JANITOR_GO_TO_FOUNTAIN,
         JANITOR_CHECK_FOUNTAIN
     }
 
