@@ -3,7 +3,6 @@ package com.socialsim.model.core.agent.university;
 import com.socialsim.controller.university.graphics.agent.UniversityAgentGraphic;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.generic.Patch;
-import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.Objects;

@@ -3,7 +3,7 @@ package com.socialsim.model.core.agent.university;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.simulator.Simulator;
 
-public class Action {
+public class UniversityAction {
 
     public enum Name{
         GREET_GUARD,
@@ -55,13 +55,13 @@ public class Action {
     private int duration;
     private Patch destination;
 
-    public Action(Name name, Patch destination, int minimumDuration, int maximumDuration){
+    public UniversityAction(Name name, Patch destination, int minimumDuration, int maximumDuration){
         this.name = name;
         this.destination = destination;
         this.duration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(maximumDuration - minimumDuration + 1) + minimumDuration;
     }
 
-    public Action(Name name, Patch destination, int duration){
+    public UniversityAction(Name name, Patch destination, int duration){
         this.name = name;
         this.destination = destination;
         this.duration = duration;
