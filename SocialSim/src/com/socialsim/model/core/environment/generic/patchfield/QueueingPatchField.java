@@ -51,6 +51,10 @@ public class QueueingPatchField extends BaseObject {
         }
     }
 
+    public Patch getLastQueuePatch() {
+        return this.associatedPatches.get(associatedPatches.size() - 1);
+    }
+
     public boolean inLastQueuePatch(Patch patch) {
         if (associatedPatches.indexOf(patch) == associatedPatches.size() - 1){
             return true;
