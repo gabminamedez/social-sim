@@ -339,8 +339,8 @@ public class UniversityScreenController extends ScreenController {
         DoorMapper.draw(doorUpPatches, "UP");
 
         List<Patch> doorRightPatches = new ArrayList<>();
-        doorRightPatches.add(university.getPatch(12, 59));
-        doorRightPatches.add(university.getPatch(3, 59));
+        doorRightPatches.add(university.getPatch(12, 59)); // mBathroom
+        doorRightPatches.add(university.getPatch(3, 59)); // fBathroom
         DoorMapper.draw(doorRightPatches, "RIGHT");
 
         List<Patch> eatTablePatches = new ArrayList<>();
