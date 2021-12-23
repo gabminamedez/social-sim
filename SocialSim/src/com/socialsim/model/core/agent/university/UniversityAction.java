@@ -19,8 +19,10 @@ public class UniversityAction {
         STUDY_AREA_STAY_PUT,
         LUNCH_STAY_PUT,
 
+        FIND_BULLETIN,
         VIEW_BULLETIN,
         FIND_BENCH,
+        SIT_ON_BENCH,
         LEAVE_BUILDING,
         THROW_ITEM_TRASH_CAN,
 
@@ -48,6 +50,7 @@ public class UniversityAction {
 
         CLEAN_STAY_PUT,
         JANITOR_MOVE_SPOT,
+        JANITOR_GO_TO_FOUNTAIN,
         JANITOR_CHECK_FOUNTAIN
     }
 
@@ -55,13 +58,33 @@ public class UniversityAction {
     private int duration;
     private Patch destination;
 
-    public UniversityAction(Name name, Patch destination, int minimumDuration, int maximumDuration){
+    public UniversityAction(Name name){ // For actions where the destination depends on the chooseGoal/chooseStall, and the duration also depends on the movement
+        this.name = name;
+        this.destination = destination;
+    }
+
+    public UniversityAction(Name name, Patch destination){ // For going to somewhere (since time will depend on AgentMovement)
+        this.name = name;
+        this.destination = destination;
+    }
+
+    public UniversityAction(Name name, int duration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
+        this.name = name;
+        this.duration = duration;
+    }
+
+    public UniversityAction(Name name, int minimumDuration, int maximumDuration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
+        this.name = name;
+        this.duration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(maximumDuration - minimumDuration + 1) + minimumDuration;
+    }
+
+    public UniversityAction(Name name, Patch destination, int minimumDuration, int maximumDuration){ // For complete actions with undefined duration
         this.name = name;
         this.destination = destination;
         this.duration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(maximumDuration - minimumDuration + 1) + minimumDuration;
     }
 
-    public UniversityAction(Name name, Patch destination, int duration){
+    public UniversityAction(Name name, Patch destination, int duration) { // For complete actions with defined duration
         this.name = name;
         this.destination = destination;
         this.duration = duration;

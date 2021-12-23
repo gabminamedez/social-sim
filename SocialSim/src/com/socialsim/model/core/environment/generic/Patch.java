@@ -1,5 +1,6 @@
 package com.socialsim.model.core.environment.generic;
 
+import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
@@ -17,7 +18,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     public static final double PATCH_SIZE_IN_SQUARE_METERS = 1.0;
     private final MatrixPosition matrixPosition;
     private final Coordinates patchCenterCoordinates;
-    private final CopyOnWriteArrayList<Agent> agents;
+    private CopyOnWriteArrayList<Agent> agent;
     private Amenity.AmenityBlock amenityBlock; // Denotes the amenity block present on this patch
     private Pair<PatchField, Integer> patchField;
     private Pair<QueueingPatchField, Integer> queueingPatchField;
@@ -31,7 +32,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
 
         this.matrixPosition = matrixPosition;
         this.patchCenterCoordinates = Coordinates.getPatchCenterCoordinates(this);
-        this.agents = new CopyOnWriteArrayList<>();
+        this.agent = new CopyOnWriteArrayList<>();
         this.amenityBlock = null;
         this.patchField = null;
         this.queueingPatchField = null;
@@ -50,7 +51,15 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     }
 
     public CopyOnWriteArrayList<Agent> getAgents() {
-        return agents;
+        return agent;
+    }
+
+    public void addAgent(Agent newAgent) {
+        getAgents().add(newAgent);
+    }
+
+    public void removeAgent(Agent newAgent) {
+        getAgents().remove(newAgent);
     }
 
     public Amenity.AmenityBlock getAmenityBlock() {
@@ -83,10 +92,6 @@ public class Patch extends BaseObject implements Comparable<Patch> {
 
     public Environment getEnvironment() {
         return environment;
-    }
-
-    public void addAgent(Agent newAgent) {
-        this.agents.add(newAgent);
     }
 
     private List<MatrixPosition> computeNeighboringPatches() {

@@ -46,7 +46,7 @@ public class UniversityScreenController extends ScreenController {
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
 
-    private final double CANVAS_SCALE = 0.5;
+    private final double CANVAS_SCALE = 0.7;
 
     public UniversityScreenController() {
     }

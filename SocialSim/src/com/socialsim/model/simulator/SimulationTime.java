@@ -33,7 +33,7 @@ public class SimulationTime {
 
     // Increment the time by one second
     public void tick() {
-        final long INCREMENT_COUNT = 1L;
+        final long INCREMENT_COUNT = 5L;
         this.setTime(this.time.plusSeconds(INCREMENT_COUNT));
     }
 

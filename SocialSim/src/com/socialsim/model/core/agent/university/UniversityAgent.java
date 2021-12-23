@@ -9,12 +9,12 @@ import java.util.Objects;
 
 public class UniversityAgent extends Agent {
 
-    private static int agentCount = 0;
-    private static int guardCount = 0;
-    private static int janitorCount = 0;
-    private static int officerCount = 0;
-    private static int professorCount = 0;
-    private static int studentCount = 0;
+    public static int agentCount = 0;
+    public static int guardCount = 0;
+    public static int janitorCount = 0;
+    public static int officerCount = 0;
+    public static int professorCount = 0;
+    public static int studentCount = 0;
 
     private final int id;
     private final UniversityAgent.Type type;
