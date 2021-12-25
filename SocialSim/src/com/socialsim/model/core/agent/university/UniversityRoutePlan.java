@@ -15,6 +15,7 @@ public class UniversityRoutePlan {
     private static final int MAX_CLASSES = 6;
     private static final int MAX_CLASSROOMS = 6;
     private static final int MAX_JANITOR_ROUNDS = 6;
+    private static int CLASSROOM_SIZES[][] = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
 
     public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch) {
         List<UniversityState> routePlan = new ArrayList<>();
