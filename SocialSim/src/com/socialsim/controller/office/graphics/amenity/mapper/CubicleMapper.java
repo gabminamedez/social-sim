@@ -13,9 +13,8 @@ import java.util.Objects;
 public class CubicleMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, String facing) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -67,7 +66,6 @@ public class CubicleMapper extends AmenityMapper {
             Cubicle cubicleToAdd = Cubicle.CubicleFactory.create(amenityBlocks, true, facing);
             Main.officeSimulator.getOffice().getCubicles().add(cubicleToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

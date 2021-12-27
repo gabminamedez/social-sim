@@ -12,9 +12,8 @@ import java.util.List;
 public class LabTableMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -41,7 +40,6 @@ public class LabTableMapper extends AmenityMapper {
             LabTable labTableToAdd = LabTable.LabTableFactory.create(amenityBlocks, true);
             Main.universitySimulator.getUniversity().getLabTables().add(labTableToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

@@ -12,9 +12,8 @@ import java.util.List;
 public class MallGateMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, MallGate.MallGateMode ugMode) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -41,7 +40,6 @@ public class MallGateMapper extends AmenityMapper {
             MallGate mallGateToAdd = MallGate.MallGateFactory.create(amenityBlocks, true, 20.0, ugMode);
             Main.mallSimulator.getMall().getMallGates().add(mallGateToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

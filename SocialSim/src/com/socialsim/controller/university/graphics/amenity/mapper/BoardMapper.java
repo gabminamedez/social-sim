@@ -12,9 +12,8 @@ import java.util.List;
 public class BoardMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, String facing) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -79,7 +78,6 @@ public class BoardMapper extends AmenityMapper {
             Board boardToAdd = Board.BoardFactory.create(amenityBlocks, true, facing);
             Main.universitySimulator.getUniversity().getBoards().add(boardToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

@@ -13,9 +13,8 @@ import java.util.Objects;
 public class CabinetMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, String facing) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -67,7 +66,6 @@ public class CabinetMapper extends AmenityMapper {
             Cabinet cabinetToAdd = Cabinet.CabinetFactory.create(amenityBlocks, true, facing);
             Main.officeSimulator.getOffice().getCabinets().add(cabinetToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

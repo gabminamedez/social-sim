@@ -14,10 +14,10 @@ import java.util.List;
 public class StallMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
         int iter = 1;
 
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -44,7 +44,6 @@ public class StallMapper extends AmenityMapper {
             }
             Main.universitySimulator.getUniversity().getStallFields().add(StallField.stallFieldFactory.create(stallFieldPatches, stallToAdd, iter));
             iter += 1;
-            amenityBlocks.clear();
         }
     }
 

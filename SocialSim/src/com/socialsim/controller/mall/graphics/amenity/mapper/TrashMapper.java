@@ -12,9 +12,8 @@ import java.util.List;
 public class TrashMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -26,7 +25,6 @@ public class TrashMapper extends AmenityMapper {
             Trash trashToAdd = Trash.TrashFactory.create(amenityBlocks, true);
             Main.mallSimulator.getMall().getTrashes().add(trashToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

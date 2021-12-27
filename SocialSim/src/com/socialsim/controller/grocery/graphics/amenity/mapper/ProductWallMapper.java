@@ -12,9 +12,8 @@ import java.util.List;
 public class ProductWallMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, String facing) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -76,7 +75,6 @@ public class ProductWallMapper extends AmenityMapper {
             ProductWall productWallToAdd = ProductWall.ProductWallFactory.create(amenityBlocks, true, facing);
             Main.grocerySimulator.getGrocery().getProductWalls().add(productWallToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

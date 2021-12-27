@@ -12,9 +12,8 @@ import java.util.List;
 public class PlantMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -26,7 +25,6 @@ public class PlantMapper extends AmenityMapper {
             Plant plantToAdd = Plant.PlantFactory.create(amenityBlocks, true);
             Main.mallSimulator.getMall().getPlants().add(plantToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

@@ -12,9 +12,8 @@ import java.util.List;
 public class CollabDeskMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -46,7 +45,6 @@ public class CollabDeskMapper extends AmenityMapper {
             CollabDesk collabDeskToAdd = CollabDesk.CollabDeskFactory.create(amenityBlocks, true);
             Main.officeSimulator.getOffice().getCollabDesks().add(collabDeskToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

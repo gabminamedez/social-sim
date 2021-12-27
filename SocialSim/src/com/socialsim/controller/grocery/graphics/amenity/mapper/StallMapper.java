@@ -12,9 +12,8 @@ import java.util.List;
 public class StallMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -31,7 +30,6 @@ public class StallMapper extends AmenityMapper {
             Stall stallToAdd = Stall.StallFactory.create(amenityBlocks, true, 20);
             Main.grocerySimulator.getGrocery().getStalls().add(stallToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

@@ -47,7 +47,7 @@ public class University extends Environment {
     private final List<StudyArea> studyAreas;
     private final List<Wall> walls;
 
-    private static final University.UniversityFactory universityFactory;
+    public static final University.UniversityFactory universityFactory;
 
     static {
         universityFactory = new UniversityFactory();

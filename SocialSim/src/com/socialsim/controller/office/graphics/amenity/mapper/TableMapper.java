@@ -13,9 +13,8 @@ import java.util.Objects;
 public class TableMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, String facing) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -41,7 +40,6 @@ public class TableMapper extends AmenityMapper {
             Table tableToAdd = Table.TableFactory.create(amenityBlocks, true, facing);
             Main.officeSimulator.getOffice().getTables().add(tableToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

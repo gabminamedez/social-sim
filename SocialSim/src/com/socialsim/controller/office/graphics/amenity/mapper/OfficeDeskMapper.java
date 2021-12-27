@@ -12,9 +12,8 @@ import java.util.List;
 public class OfficeDeskMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -51,7 +50,6 @@ public class OfficeDeskMapper extends AmenityMapper {
             OfficeDesk officeDeskToAdd = OfficeDesk.OfficeDeskFactory.create(amenityBlocks, true);
             Main.officeSimulator.getOffice().getOfficeDesks().add(officeDeskToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

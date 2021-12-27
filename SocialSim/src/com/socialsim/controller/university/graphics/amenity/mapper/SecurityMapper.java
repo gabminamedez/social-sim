@@ -14,9 +14,8 @@ import java.util.List;
 public class SecurityMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -43,8 +42,6 @@ public class SecurityMapper extends AmenityMapper {
                 }
             }
             Main.universitySimulator.getUniversity().getSecurityFields().add(SecurityField.securityFieldFactory.create(securityFieldPatches, securityToAdd, 1));
-
-            amenityBlocks.clear();
         }
     }
 

@@ -12,9 +12,8 @@ import java.util.List;
 public class BenchMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, String facing) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -59,7 +58,6 @@ public class BenchMapper extends AmenityMapper {
             Bench benchToAdd = Bench.BenchFactory.create(amenityBlocks, true, facing);
             Main.universitySimulator.getUniversity().getBenches().add(benchToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

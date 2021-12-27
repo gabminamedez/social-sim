@@ -201,6 +201,7 @@ public class UniversityScreenController extends ScreenController {
         benchRightPatches.add(university.getPatch(38,120));
         benchRightPatches.add(university.getPatch(43,120));
         benchRightPatches.add(university.getPatch(48,120));
+        benchRightPatches.add(university.getPatch(53,120));
         BenchMapper.draw(benchRightPatches, "RIGHT");
 
         List<Patch> benchLeftPatches = new ArrayList<>();
@@ -211,6 +212,7 @@ public class UniversityScreenController extends ScreenController {
         benchLeftPatches.add(university.getPatch(38,129));
         benchLeftPatches.add(university.getPatch(43,129));
         benchLeftPatches.add(university.getPatch(48,129));
+        benchLeftPatches.add(university.getPatch(53,129));
         BenchMapper.draw(benchLeftPatches, "LEFT");
 
         List<Patch> benchDownPatches = new ArrayList<>();
@@ -373,22 +375,22 @@ public class UniversityScreenController extends ScreenController {
             }
         }
         //Laboratory Chairs
-        chairPatches.add(university.getPatch(40,102));
-        chairPatches.add(university.getPatch(40,103));
-        chairPatches.add(university.getPatch(40,104));
-        chairPatches.add(university.getPatch(40,105));
-        chairPatches.add(university.getPatch(40,112));
-        chairPatches.add(university.getPatch(40,113));
-        chairPatches.add(university.getPatch(40,114));
-        chairPatches.add(university.getPatch(40,115));
-        chairPatches.add(university.getPatch(42,102));
-        chairPatches.add(university.getPatch(42,103));
-        chairPatches.add(university.getPatch(42,104));
-        chairPatches.add(university.getPatch(42,105));
-        chairPatches.add(university.getPatch(42,112));
-        chairPatches.add(university.getPatch(42,113));
-        chairPatches.add(university.getPatch(42,114));
-        chairPatches.add(university.getPatch(42,115));
+        chairPatches.add(university.getPatch(38,102));
+        chairPatches.add(university.getPatch(38,103));
+        chairPatches.add(university.getPatch(38,104));
+        chairPatches.add(university.getPatch(38,105));
+        chairPatches.add(university.getPatch(38,112));
+        chairPatches.add(university.getPatch(38,113));
+        chairPatches.add(university.getPatch(38,114));
+        chairPatches.add(university.getPatch(38,115));
+        chairPatches.add(university.getPatch(41,102));
+        chairPatches.add(university.getPatch(41,103));
+        chairPatches.add(university.getPatch(41,104));
+        chairPatches.add(university.getPatch(41,105));
+        chairPatches.add(university.getPatch(41,112));
+        chairPatches.add(university.getPatch(41,113));
+        chairPatches.add(university.getPatch(41,114));
+        chairPatches.add(university.getPatch(41,115));
         chairPatches.add(university.getPatch(44,102));
         chairPatches.add(university.getPatch(44,103));
         chairPatches.add(university.getPatch(44,104));
@@ -397,22 +399,22 @@ public class UniversityScreenController extends ScreenController {
         chairPatches.add(university.getPatch(44,113));
         chairPatches.add(university.getPatch(44,114));
         chairPatches.add(university.getPatch(44,115));
-        chairPatches.add(university.getPatch(46,102));
-        chairPatches.add(university.getPatch(46,103));
-        chairPatches.add(university.getPatch(46,104));
-        chairPatches.add(university.getPatch(46,105));
-        chairPatches.add(university.getPatch(46,112));
-        chairPatches.add(university.getPatch(46,113));
-        chairPatches.add(university.getPatch(46,114));
-        chairPatches.add(university.getPatch(46,115));
-        chairPatches.add(university.getPatch(48,102));
-        chairPatches.add(university.getPatch(48,103));
-        chairPatches.add(university.getPatch(48,104));
-        chairPatches.add(university.getPatch(48,105));
-        chairPatches.add(university.getPatch(48,112));
-        chairPatches.add(university.getPatch(48,113));
-        chairPatches.add(university.getPatch(48,114));
-        chairPatches.add(university.getPatch(48,115));
+        chairPatches.add(university.getPatch(47,102));
+        chairPatches.add(university.getPatch(47,103));
+        chairPatches.add(university.getPatch(47,104));
+        chairPatches.add(university.getPatch(47,105));
+        chairPatches.add(university.getPatch(47,112));
+        chairPatches.add(university.getPatch(47,113));
+        chairPatches.add(university.getPatch(47,114));
+        chairPatches.add(university.getPatch(47,115));
+        chairPatches.add(university.getPatch(50,102));
+        chairPatches.add(university.getPatch(50,103));
+        chairPatches.add(university.getPatch(50,104));
+        chairPatches.add(university.getPatch(50,105));
+        chairPatches.add(university.getPatch(50,112));
+        chairPatches.add(university.getPatch(50,113));
+        chairPatches.add(university.getPatch(50,114));
+        chairPatches.add(university.getPatch(50,115));
         ChairMapper.draw(chairPatches);
 
         List<Patch> doorDownPatches = new ArrayList<>();
@@ -477,16 +479,16 @@ public class UniversityScreenController extends ScreenController {
         SinkMapper.draw(sinkPatches);
 
         List<Patch> labTablePatches = new ArrayList<>();
-        labTablePatches.add(university.getPatch(41,102));
-        labTablePatches.add(university.getPatch(41,112));
-        labTablePatches.add(university.getPatch(43,102));
-        labTablePatches.add(university.getPatch(43,112));
+        labTablePatches.add(university.getPatch(39,102));
+        labTablePatches.add(university.getPatch(39,112));
+        labTablePatches.add(university.getPatch(42,102));
+        labTablePatches.add(university.getPatch(42,112));
         labTablePatches.add(university.getPatch(45,102));
         labTablePatches.add(university.getPatch(45,112));
-        labTablePatches.add(university.getPatch(47,102));
-        labTablePatches.add(university.getPatch(47,112));
-        labTablePatches.add(university.getPatch(49,102));
-        labTablePatches.add(university.getPatch(49,112));
+        labTablePatches.add(university.getPatch(48,102));
+        labTablePatches.add(university.getPatch(48,112));
+        labTablePatches.add(university.getPatch(51,102));
+        labTablePatches.add(university.getPatch(51,112));
         LabTableMapper.draw(labTablePatches);
 
         List<Patch> profTableRightPatches = new ArrayList<>();
@@ -504,11 +506,6 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> profTableUpPatches = new ArrayList<>();
         profTableUpPatches.add(university.getPatch(52,108)); // Laboratory
         ProfTableMapper.draw(profTableUpPatches, "UP");
-
-        List<Patch> staircasePatches = new ArrayList<>();
-        staircasePatches.add(university.getPatch(55,129));
-        staircasePatches.add(university.getPatch(58,129));
-        StaircaseMapper.draw(staircasePatches);
 
         List<Patch> studyTablePatches = new ArrayList<>();
         for (int i = 5; i < 17; i++) {
@@ -586,17 +583,17 @@ public class UniversityScreenController extends ScreenController {
 
         //TODO Maybe move this to university simulator since need to finish above functions before this
 
-//        UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, university.getPatch(57,12), true);
-//        university.getAgents().add(guard);
-//        university.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
-//
-//        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(5,65), true);
-//        university.getAgents().add(janitor1);
-//        university.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
-//
-//        UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(7,66), true);
-//        university.getAgents().add(janitor2);
-//        university.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
+        UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, university.getPatch(57,12), true);
+        university.getAgents().add(guard);
+        university.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
+
+        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(5,65), true);
+        university.getAgents().add(janitor1);
+        university.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
+
+        UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(7,66), true);
+        university.getAgents().add(janitor2);
+        university.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
     }
 
     private void drawInterface() {

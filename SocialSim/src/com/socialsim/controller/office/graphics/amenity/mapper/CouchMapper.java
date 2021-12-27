@@ -12,9 +12,8 @@ import java.util.List;
 public class CouchMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, String facing) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -70,7 +69,6 @@ public class CouchMapper extends AmenityMapper {
             Couch couchToAdd = Couch.CouchFactory.create(amenityBlocks, true, facing);
             Main.officeSimulator.getOffice().getCouches().add(couchToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

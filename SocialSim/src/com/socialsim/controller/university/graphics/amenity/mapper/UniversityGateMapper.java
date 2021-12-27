@@ -12,9 +12,8 @@ import java.util.List;
 public class UniversityGateMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, UniversityGate.UniversityGateMode ugMode) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -41,7 +40,6 @@ public class UniversityGateMapper extends AmenityMapper {
             UniversityGate universityGateToAdd = UniversityGate.UniversityGateFactory.create(amenityBlocks, true, 50, ugMode);
             Main.universitySimulator.getUniversity().getUniversityGates().add(universityGateToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

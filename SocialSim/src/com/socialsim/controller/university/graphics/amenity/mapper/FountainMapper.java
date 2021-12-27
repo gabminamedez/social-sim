@@ -15,9 +15,8 @@ import java.util.List;
 public class FountainMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -43,8 +42,6 @@ public class FountainMapper extends AmenityMapper {
             fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 7));
             fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 8));
             Main.universitySimulator.getUniversity().getFountainFields().add(FountainField.fountainFieldFactory.create(fountainFieldPatches, fountainToAdd, 1));
-
-            amenityBlocks.clear();
         }
     }
 

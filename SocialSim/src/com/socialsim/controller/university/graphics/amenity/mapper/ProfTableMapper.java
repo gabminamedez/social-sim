@@ -12,9 +12,8 @@ import java.util.List;
 public class ProfTableMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, String facing) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -39,7 +38,6 @@ public class ProfTableMapper extends AmenityMapper {
             ProfTable profTableToAdd = ProfTable.ProfTableFactory.create(amenityBlocks, true, facing);
             Main.universitySimulator.getUniversity().getProfTables().add(profTableToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

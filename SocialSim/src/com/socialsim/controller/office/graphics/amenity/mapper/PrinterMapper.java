@@ -12,9 +12,8 @@ import java.util.List;
 public class PrinterMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -31,7 +30,6 @@ public class PrinterMapper extends AmenityMapper {
             Printer printerToAdd = Printer.PrinterFactory.create(amenityBlocks, true);
             Main.officeSimulator.getOffice().getPrinters().add(printerToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

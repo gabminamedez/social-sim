@@ -12,9 +12,8 @@ import java.util.List;
 public class GroceryGateMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, GroceryGate.GroceryGateMode ugMode) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -41,7 +40,6 @@ public class GroceryGateMapper extends AmenityMapper {
             GroceryGate groceryGateToAdd = GroceryGate.GroceryGateFactory.create(amenityBlocks, true, 20.0, ugMode);
             Main.grocerySimulator.getGrocery().getGroceryGates().add(groceryGateToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 

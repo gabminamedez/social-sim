@@ -12,9 +12,8 @@ import java.util.List;
 public class DoorMapper extends AmenityMapper {
 
     public static void draw(List<Patch> patches, String facing) {
-        List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-
         for (Patch patch : patches) {
+            List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
             int origPatchRow = patch.getMatrixPosition().getRow();
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
@@ -39,7 +38,6 @@ public class DoorMapper extends AmenityMapper {
             Door doorToAdd = Door.DoorFactory.create(amenityBlocks, true, facing);
             Main.universitySimulator.getUniversity().getDoors().add(doorToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
-            amenityBlocks.clear();
         }
     }
 
