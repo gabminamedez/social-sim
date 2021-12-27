@@ -77,6 +77,20 @@ public class UniversitySimulator extends Simulator {
         this.running.set(false);
     }
 
+    public void spawnInitialAgents(University university) {
+        UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, university.getPatch(57,12), true);
+        university.getAgents().add(guard);
+        university.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
+
+        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(5,65), true);
+        university.getAgents().add(janitor1);
+        university.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
+
+        UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(7,66), true);
+        university.getAgents().add(janitor2);
+        university.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
+    }
+
     public void reset() {
         this.time.reset();
     }
@@ -92,7 +106,7 @@ public class UniversitySimulator extends Simulator {
                     while (this.isRunning()) { // Keep looping until paused
                         try {
                             updateAgentsInUniversity(university); // Update the pertinent variables when ticking
-                            spawnAgent(university);
+                            // spawnAgent(university);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -133,8 +147,8 @@ public class UniversitySimulator extends Simulator {
         // Get the three agent movement states
         UniversityAgent.Type type = agent.getType();
         UniversityAgent.Persona persona = agent.getPersona();
-        UniversityState state = agentMovement.getUniversityState();
-        UniversityAction action = agentMovement.getUniversityAction();
+        UniversityState state = agentMovement.getCurrentState();
+        UniversityAction action = agentMovement.getCurrentAction();
 
         switch (type) {
             case GUARD:
@@ -150,7 +164,13 @@ public class UniversitySimulator extends Simulator {
             case JANITOR:
                 if (state.getName() == UniversityState.Name.MAINTENANCE_BATHROOM) {
                     if (action.getName() == UniversityAction.Name.CLEAN_STAY_PUT) {
-                        // do nothing
+                        if (!agentMovement.hasReachedGoalPatch()) {
+                            if (agentMovement.getGoalAmenity() == null) {
+                                agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            }
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                        }
                     }
                     else if (action.getName() == UniversityAction.Name.JANITOR_MOVE_SPOT) {
                         // move to another patch

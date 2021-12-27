@@ -95,7 +95,19 @@ public class UniversityGraphicsController extends Controller {
         final double canvasWidth = backgroundCanvas.getWidth();
         final double canvasHeight = backgroundCanvas.getHeight();
 
+        clearCanvases(university, background, backgroundGraphicsContext, foregroundGraphicsContext, tileSize, canvasWidth, canvasHeight);
         drawUniversityObjects(university, background, backgroundGraphicsContext, foregroundGraphicsContext, tileSize);
+    }
+
+    private static void clearCanvases(University university, boolean background, GraphicsContext backgroundGraphicsContext, GraphicsContext foregroundGraphicsContext, double tileSize, double canvasWidth, double canvasHeight) {
+        if (!background) {
+            foregroundGraphicsContext.clearRect(0, 0, university.getColumns() * tileSize, university.getRows() * tileSize);
+        }
+        else {
+            foregroundGraphicsContext.clearRect(0, 0, university.getColumns() * tileSize, university.getRows() * tileSize);
+            backgroundGraphicsContext.setFill(Color.rgb(244, 244, 244));
+            backgroundGraphicsContext.fillRect(0, 0, canvasWidth, canvasHeight);
+        }
     }
 
     private static void drawUniversityObjects(University university, boolean background, GraphicsContext backgroundGraphicsContext, GraphicsContext foregroundGraphicsContext, double tileSize) {
@@ -219,29 +231,31 @@ public class UniversityGraphicsController extends Controller {
             }
 
             if (!background) { // Draw each agent in this patch, if the foreground is to be drawn
-                for (Agent agent : patch.getAgents()) {
-                    UniversityAgent universityAgent = (UniversityAgent) agent;
-                    AgentGraphicLocation agentGraphicLocation = universityAgent.getAgentGraphic().getGraphicLocation();
+                if (!patch.getAgents().isEmpty()) {
+                    for (Agent agent : patch.getAgents()) {
+                        UniversityAgent universityAgent = (UniversityAgent) agent;
+                        AgentGraphicLocation agentGraphicLocation = universityAgent.getAgentGraphic().getGraphicLocation();
 
-                    Image CURRENT_URL = null;
-                    if (universityAgent.getType() == UniversityAgent.Type.GUARD || universityAgent.getType() == UniversityAgent.Type.JANITOR || universityAgent.getType() == UniversityAgent.Type.OFFICER) {
-                        CURRENT_URL = AGENT_SPRITES_4;
-                    }
-                    else if (universityAgent.getType() == UniversityAgent.Type.PROFESSOR) {
-                        CURRENT_URL = AGENT_SPRITES_3;
-                    }
-                    else if (universityAgent.getType() == UniversityAgent.Type.STUDENT && universityAgent.getGender() == UniversityAgent.Gender.MALE) {
-                        CURRENT_URL = AGENT_SPRITES_1;
-                    }
-                    else if (universityAgent.getType() == UniversityAgent.Type.STUDENT && universityAgent.getGender() == UniversityAgent.Gender.FEMALE) {
-                        CURRENT_URL = AGENT_SPRITES_2;
-                    }
+                        Image CURRENT_URL = null;
+                        if (universityAgent.getType() == UniversityAgent.Type.GUARD || universityAgent.getType() == UniversityAgent.Type.JANITOR || universityAgent.getType() == UniversityAgent.Type.OFFICER) {
+                            CURRENT_URL = AGENT_SPRITES_4;
+                        }
+                        else if (universityAgent.getType() == UniversityAgent.Type.PROFESSOR) {
+                            CURRENT_URL = AGENT_SPRITES_3;
+                        }
+                        else if (universityAgent.getType() == UniversityAgent.Type.STUDENT && universityAgent.getGender() == UniversityAgent.Gender.MALE) {
+                            CURRENT_URL = AGENT_SPRITES_1;
+                        }
+                        else if (universityAgent.getType() == UniversityAgent.Type.STUDENT && universityAgent.getGender() == UniversityAgent.Gender.FEMALE) {
+                            CURRENT_URL = AGENT_SPRITES_2;
+                        }
 
-                    foregroundGraphicsContext.drawImage(
-                            CURRENT_URL,
-                            agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
-                            agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
-                            column * tileSize, row * tileSize, tileSize * 0.7, tileSize * 0.7);
+                        foregroundGraphicsContext.drawImage(
+                                CURRENT_URL,
+                                agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
+                                agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
+                                column * tileSize, row * tileSize, tileSize * 0.7, tileSize * 0.7);
+                    }
                 }
             }
         }

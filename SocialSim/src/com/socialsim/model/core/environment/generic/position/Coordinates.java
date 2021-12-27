@@ -53,10 +53,7 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
     }
 
     public static double distance(Patch sourcePatch, Patch targetPatch) {
-        PatchPair patchPair = new Coordinates.PatchPair(sourcePatch, targetPatch);
-        double distance = Coordinates.distance(sourcePatch.getPatchCenterCoordinates(), targetPatch.getPatchCenterCoordinates());
-
-        return distance;
+        return Coordinates.distance(sourcePatch.getPatchCenterCoordinates(), targetPatch.getPatchCenterCoordinates());
     }
 
     public static double headingTowards(Coordinates sourceCoordinates, Coordinates targetCoordinates) {
@@ -75,12 +72,7 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
         return angle;
     }
 
-    public static boolean isWithinFieldOfView(
-            Coordinates sourceCoordinates,
-            Coordinates targetCoordinates,
-            double heading,
-            double maximumHeadingChange
-    ) {
+    public static boolean isWithinFieldOfView(Coordinates sourceCoordinates, Coordinates targetCoordinates, double heading, double maximumHeadingChange) {
         double headingTowardsCoordinate = headingTowards(sourceCoordinates, targetCoordinates);
         double headingDifference = Coordinates.headingDifference(headingTowardsCoordinate, heading);
 
@@ -106,10 +98,7 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
             yHeadingSum += Math.sin(heading);
         }
 
-        return Math.atan2(
-                yHeadingSum / headings.length,
-                xHeadingSum / headings.length
-        );
+        return Math.atan2(yHeadingSum / headings.length, xHeadingSum / headings.length);
     }
 
     public static Coordinates computeFuturePosition(Coordinates startingPosition, double heading, double magnitude) {
@@ -124,8 +113,8 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinates that = (Coordinates) o;
-        return Double.compare(that.x, x) == 0 &&
-                Double.compare(that.y, y) == 0;
+
+        return Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0;
     }
 
     @Override
@@ -147,6 +136,7 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             PatchPair that = (PatchPair) o;
+
             return patch1.equals(that.patch1) && patch2.equals(that.patch2);
         }
 

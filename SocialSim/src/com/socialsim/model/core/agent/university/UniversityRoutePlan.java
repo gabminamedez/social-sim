@@ -9,9 +9,8 @@ import java.util.*;
 public class UniversityRoutePlan {
 
     private ListIterator<UniversityState> currentRoutePlan; // Denotes the current route plan of the agent which owns this
-    private UniversityState currentState; // Denotes the current class of the amenity/patchfield in the route plan
+    private UniversityState currentState; // Denotes the state in the route plan
 
-    //TODO: Maybe move this into another class that is static
     private static final int MAX_CLASSES = 6;
     private static final int MAX_CLASSROOMS = 6;
     private static final int MAX_JANITOR_ROUNDS = 6;
@@ -37,14 +36,14 @@ public class UniversityRoutePlan {
                 routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
                 actions = new ArrayList<>();
                 actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 180));
-                routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent));
+                routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
             }
         }
         else {
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.GREET_GUARD, null, 0)); //TODO: Maybe remove this since interaction
             actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2)); //TODO: Change patch destination and duration
-            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent));
+            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
             int CALCULATED_CLASSES, LUNCH_TIME;
             ArrayList<Integer> classes = new ArrayList<>();
             if (agent.getAgentMovement().getTickEntered() < 720) { // based on 1 tick = 5 seconds
@@ -890,9 +889,10 @@ public class UniversityRoutePlan {
         routePlan.add(new UniversityState(UniversityState.Name.GOING_HOME, this, agent, actions));
 
         this.currentRoutePlan = routePlan.listIterator();
+        setNextState();
     }
 
-    public void resetClassroomSizes(){
+    public void resetClassroomSizes() {
         CLASSROOM_SIZES_STUDENT = new int[][]{{40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}};
         CLASSROOM_SIZES_PROF = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
     }
@@ -900,7 +900,7 @@ public class UniversityRoutePlan {
     public void setNextState() { // Set the next class in the route plan
         this.currentState = this.currentRoutePlan.next();
     }
-    public void setPreviousState(){
+    public void setPreviousState() {
         this.currentState = this.currentRoutePlan.previous();
     }
 
@@ -908,9 +908,10 @@ public class UniversityRoutePlan {
         return currentRoutePlan;
     }
 
-    public UniversityState getCurrentClass() {
+    public UniversityState getCurrentState() {
         return currentState;
     }
+
     public void addUrgentRoute(UniversityState s){
         this.currentState = s;
     }

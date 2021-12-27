@@ -5,7 +5,7 @@ import com.socialsim.model.simulator.Simulator;
 
 public class UniversityAction {
 
-    public enum Name{
+    public enum Name {
         GREET_GUARD,
         GO_THROUGH_SCANNER,
 
