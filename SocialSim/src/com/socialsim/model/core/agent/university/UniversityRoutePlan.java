@@ -892,6 +892,11 @@ public class UniversityRoutePlan {
         this.currentRoutePlan = routePlan.listIterator();
     }
 
+    public void resetClassroomSizes(){
+        CLASSROOM_SIZES_STUDENT = new int[][]{{40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}};
+        CLASSROOM_SIZES_PROF = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
+    }
+
     public void setNextState() { // Set the next class in the route plan
         this.currentState = this.currentRoutePlan.next();
     }
