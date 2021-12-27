@@ -15,6 +15,8 @@ public class UniversityRoutePlan {
     private static final int MAX_CLASSES = 6;
     private static final int MAX_CLASSROOMS = 6;
     private static final int MAX_JANITOR_ROUNDS = 6;
+    private static int CLASSROOM_SIZES_STUDENT[][] = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
+    private static int CLASSROOM_SIZES_PROF[][] = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
 
     public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch) {
         List<UniversityState> routePlan = new ArrayList<>();
@@ -162,7 +164,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[0][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[0][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -174,7 +181,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[1][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[1][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -186,7 +198,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[2][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[2][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -198,7 +215,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[3][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[3][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -210,7 +232,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[4][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[4][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -222,7 +249,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[5][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[5][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -285,7 +317,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[0][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[0][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -297,7 +334,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[1][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[1][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -309,7 +351,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[2][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[2][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -321,7 +368,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[3][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[3][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -333,7 +385,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[4][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[4][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -345,7 +402,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[5][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[5][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -408,7 +470,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[0][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[0][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -420,7 +487,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[1][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[1][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -432,7 +504,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[2][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[2][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -444,7 +521,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[3][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[3][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -456,7 +538,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[4][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[4][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -468,7 +555,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[5][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[5][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -531,7 +623,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[0][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[0][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 720, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -543,7 +640,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[1][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[1][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 1980, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -555,7 +657,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[2][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[2][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 3240, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -567,7 +674,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[3][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[3][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 4500, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -579,7 +691,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[4][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[4][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 5760, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -591,7 +708,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_STUDENT[5][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_STUDENT[5][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_STUDENT, this, agent, 7020, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_STUDENT, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent);
@@ -649,7 +771,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 720, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_PROF[0][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_PROF[0][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 720, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
@@ -661,7 +788,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 1980, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_PROF[1][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_PROF[1][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 1980, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
@@ -673,7 +805,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 3240, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_PROF[2][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_PROF[2][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 3240, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
@@ -685,7 +822,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 4500, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_PROF[3][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_PROF[3][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 4500, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
@@ -697,7 +839,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 5760, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_PROF[4][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_PROF[4][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 5760, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
@@ -709,7 +856,12 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
                             actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 7020, Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS));
+                            int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            while (CLASSROOM_SIZES_PROF[5][classroomID] == 0){
+                                classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                            }
+                            CLASSROOM_SIZES_PROF[5][classroomID]--;
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 7020, classroomID);
                             //TODO: Randomized actions
                             newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
                             newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);

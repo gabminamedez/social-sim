@@ -889,13 +889,11 @@ public class UniversityAgentMovement extends AgentMovement {
                     // Only head towards that patch if the distance from that patch to the goal is further than the
                     // distance from this agent to the goal
                     double distanceFromChosenPatchToGoal = Coordinates.distance(
-                            this.currentFloor.getStation(),
                             PatchFieldPatch,
                             this.goalAttractor.getPatch()
                     );
 
                     double distanceFromThisAgentToGoal = Coordinates.distance(
-                            this.currentFloor.getStation(),
                             this.currentPatch,
                             this.goalAttractor.getPatch()
                     );
@@ -1829,96 +1827,99 @@ public class UniversityAgentMovement extends AgentMovement {
     }
 
     // TODO Change implementation based on the queues for cafeteria etc
-    private Patch computeBestQueueingPatchWeighted(List<Patch> PatchFieldList) {
-        // Collect the patches with the highest floor field values
-        List<Patch> PatchFieldCandidates = new ArrayList<>();
-        List<Double> PatchFieldValueCandidates = new ArrayList<>();
-
-        double valueSum = 0.0;
-
-        for (Patch patch : PatchFieldList) {
-            Map<QueueingPatchField.PatchFieldUniversityState, Double> PatchFieldUniversityStateDoubleMap
-                    = patch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable());
-
-            if (
-                    !patch.getPatchFieldValues().isEmpty()
-                            && PatchFieldUniversityStateDoubleMap != null
-                            && !PatchFieldUniversityStateDoubleMap.isEmpty()
-                            && PatchFieldUniversityStateDoubleMap.get(
-                            this.goalQueueingPatchFieldUniversityState
-                    ) != null
-            ) {
-                double futurePatchFieldValue = patch.getPatchFieldValues()
-                        .get(this.getGoalAmenityAsQueueable())
-                        .get(this.goalQueueingPatchFieldUniversityState);
-
-//                if (currentPatchFieldValue == null) {
-                valueSum += futurePatchFieldValue;
-
-                PatchFieldCandidates.add(patch);
-                PatchFieldValueCandidates.add(futurePatchFieldValue);
-//                }
-            }
-        }
-
-        // If it gets to this point without finding a floor field value greater than zero, return early
-        if (PatchFieldCandidates.isEmpty()) {
-            return null;
-        }
-
-        Patch chosenPatch;
-        int choiceIndex = 0;
-
-        // Use the floor field values as weights to choose among patches
-        for (
-                double randomNumber = Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * valueSum;
-                choiceIndex < PatchFieldValueCandidates.size() - 1;
-                choiceIndex++) {
-            randomNumber -= PatchFieldValueCandidates.get(choiceIndex);
-
-            if (randomNumber <= 0.0) {
-                break;
-            }
-        }
-
-        chosenPatch = PatchFieldCandidates.get(choiceIndex);
-        return chosenPatch;
-    }
+//    private Patch computeBestQueueingPatchWeighted(List<Patch> PatchFieldList) {
+//        // Collect the patches with the highest floor field values
+//        List<Patch> PatchFieldCandidates = new ArrayList<>();
+//        List<Double> PatchFieldValueCandidates = new ArrayList<>();
+//
+//        double valueSum = 0.0;
+//
+//        for (Patch patch : PatchFieldList) {
+//            Map<QueueingPatchField.PatchFieldUniversityState, Double> PatchFieldUniversityStateDoubleMap
+//                    = patch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable());
+//
+//            if (
+//                    !patch.getPatchFieldValues().isEmpty()
+//                            && PatchFieldUniversityStateDoubleMap != null
+//                            && !PatchFieldUniversityStateDoubleMap.isEmpty()
+//                            && PatchFieldUniversityStateDoubleMap.get(
+//                            this.goalQueueingPatchFieldUniversityState
+//                    ) != null
+//            ) {
+//                double futurePatchFieldValue = patch.getPatchFieldValues()
+//                        .get(this.getGoalAmenityAsQueueable())
+//                        .get(this.goalQueueingPatchFieldUniversityState);
+//
+////                if (currentPatchFieldValue == null) {
+//                valueSum += futurePatchFieldValue;
+//
+//                PatchFieldCandidates.add(patch);
+//                PatchFieldValueCandidates.add(futurePatchFieldValue);
+////                }
+//            }
+//        }
+//
+//        // If it gets to this point without finding a floor field value greater than zero, return early
+//        if (PatchFieldCandidates.isEmpty()) {
+//            return null;
+//        }
+//
+//        Patch chosenPatch;
+//        int choiceIndex = 0;
+//
+//        // Use the floor field values as weights to choose among patches
+//        for (
+//                double randomNumber = Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * valueSum;
+//                choiceIndex < PatchFieldValueCandidates.size() - 1;
+//                choiceIndex++) {
+//            randomNumber -= PatchFieldValueCandidates.get(choiceIndex);
+//
+//            if (randomNumber <= 0.0) {
+//                break;
+//            }
+//        }
+//
+//        chosenPatch = PatchFieldCandidates.get(choiceIndex);
+//        return chosenPatch;
+//    }
 
     // Get the best queueing patch around the current patch of another agent given the current floor field state
     // TODO Change implementation based on the queues for cafeteria etc
-    private Patch getBestQueueingPatchAroundAgent(UniversityAgent otherAgent) {
-        // Get the other agent's patch
-        Patch otherAgentPatch = otherAgent.getAgentMovement().getCurrentPatch();
-
-        // Get the neighboring patches of that patch
-        List<Patch> neighboringPatches = otherAgentPatch.getNeighbors();
-
-        // Remove the patch containing this agent
-        neighboringPatches.remove(this.currentPatch);
-
-        // Only add patches with the fewest agents
-        List<Patch> neighboringPatchesWithFewestAgents = new ArrayList<>();
-        int minimumAgentCount = Integer.MAX_VALUE;
-
-        for (Patch neighboringPatch : neighboringPatches) {
-            int neighboringPatchAgentCount = neighboringPatch.getAgents().size();
-
-            if (neighboringPatchAgentCount < minimumAgentCount) {
-                neighboringPatchesWithFewestAgents.clear();
-
-                minimumAgentCount = neighboringPatchAgentCount;
-            }
-
-            if (neighboringPatchAgentCount == minimumAgentCount) {
-                neighboringPatchesWithFewestAgents.add(neighboringPatch);
-            }
-        }
-
-        // Choose a floor field patch from this
-        Patch chosenPatch = this.computeBestQueueingPatchWeighted(neighboringPatchesWithFewestAgents);
-
-        return chosenPatch;
+//    private Patch getBestQueueingPatchAroundAgent(UniversityAgent otherAgent) {
+//        // Get the other agent's patch
+//        Patch otherAgentPatch = otherAgent.getAgentMovement().getCurrentPatch();
+//
+//        // Get the neighboring patches of that patch
+//        List<Patch> neighboringPatches = otherAgentPatch.getNeighbors();
+//
+//        // Remove the patch containing this agent
+//        neighboringPatches.remove(this.currentPatch);
+//
+//        // Only add patches with the fewest agents
+//        List<Patch> neighboringPatchesWithFewestAgents = new ArrayList<>();
+//        int minimumAgentCount = Integer.MAX_VALUE;
+//
+//        for (Patch neighboringPatch : neighboringPatches) {
+//            int neighboringPatchAgentCount = neighboringPatch.getAgents().size();
+//
+//            if (neighboringPatchAgentCount < minimumAgentCount) {
+//                neighboringPatchesWithFewestAgents.clear();
+//
+//                minimumAgentCount = neighboringPatchAgentCount;
+//            }
+//
+//            if (neighboringPatchAgentCount == minimumAgentCount) {
+//                neighboringPatchesWithFewestAgents.add(neighboringPatch);
+//            }
+//        }
+//
+//        // Choose a floor field patch from this
+//        Patch chosenPatch = this.computeBestQueueingPatchWeighted(neighboringPatchesWithFewestAgents);
+//
+//        return chosenPatch;
+//    }
+    private Patch getBestQueueingPatchAroundAgent(UniversityAgent agent){
+        return this.currentPatch;
     }
 
     // Check if the given patch has an obstacle
