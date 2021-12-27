@@ -3,7 +3,7 @@ package com.socialsim.model.core.agent.office;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.simulator.Simulator;
 
-public class UniversityAction {
+public class OfficeAction {
 
     public enum Name{
         GREET_GUARD,
@@ -58,33 +58,33 @@ public class UniversityAction {
     private int duration;
     private Patch destination;
 
-    public UniversityAction(Name name){ // For actions where the destination depends on the chooseGoal/chooseStall, and the duration also depends on the movement
+    public OfficeAction(Name name){ // For actions where the destination depends on the chooseGoal/chooseStall, and the duration also depends on the movement
         this.name = name;
         this.destination = destination;
     }
 
-    public UniversityAction(Name name, Patch destination){ // For going to somewhere (since time will depend on AgentMovement)
+    public OfficeAction(Name name, Patch destination){ // For going to somewhere (since time will depend on AgentMovement)
         this.name = name;
         this.destination = destination;
     }
 
-    public UniversityAction(Name name, int duration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
+    public OfficeAction(Name name, int duration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
         this.name = name;
         this.duration = duration;
     }
 
-    public UniversityAction(Name name, int minimumDuration, int maximumDuration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
+    public OfficeAction(Name name, int minimumDuration, int maximumDuration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
         this.name = name;
         this.duration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(maximumDuration - minimumDuration + 1) + minimumDuration;
     }
 
-    public UniversityAction(Name name, Patch destination, int minimumDuration, int maximumDuration){ // For complete actions with undefined duration
+    public OfficeAction(Name name, Patch destination, int minimumDuration, int maximumDuration){ // For complete actions with undefined duration
         this.name = name;
         this.destination = destination;
         this.duration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(maximumDuration - minimumDuration + 1) + minimumDuration;
     }
 
-    public UniversityAction(Name name, Patch destination, int duration) { // For complete actions with defined duration
+    public OfficeAction(Name name, Patch destination, int duration) { // For complete actions with defined duration
         this.name = name;
         this.destination = destination;
         this.duration = duration;

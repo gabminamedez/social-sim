@@ -4,45 +4,51 @@ import com.socialsim.model.core.agent.university.UniversityAgent;
 
 import java.util.ArrayList;
 
-public class UniversityState {
+public class GroceryState {
 
     public enum Name{
-        GOING_TO_SECURITY, WANDERING_AROUND, NEEDS_BATHROOM, NEEDS_DRINK,
-        GOING_TO_STUDY, STUDYING, GOING_TO_CLASS_STUDENT, GOING_TO_CLASS_PROFESSOR,
-        WAIT_FOR_CLASS_STUDENT, WAIT_FOR_CLASS_PROFESSOR,
-        IN_CLASS_STUDENT, IN_CLASS_PROFESSOR, GOING_TO_LUNCH, EATING_LUNCH,
-        GOING_HOME, GUARD, MAINTENANCE_BATHROOM, MAINTENANCE_FOUNTAIN;
+        GOING_TO_SECURITY, GOING_CART, NEEDS_HELP, NEEDS_DRINK,
+        GOING_TO_PRODUCTS, IN_PRODUCTS_AISLE, IN_PRODUCTS_WALL, IN_PRODUCTS_FROZEN, IN_PRODUCTS_FRESH, IN_PRODUCTS_MEAT,
+        GOING_TO_PAY, PAYING, GOING_TO_SERVICE, IN_SERVICE, GOING_TO_EAT, EATING,
+        GOING_HOME, GUARD_ENTRANCE, GUARD_EXIT, BUTCHER, CASHIER, BAGGER, CUSTOMER_SERVICE, STAFF_FOOD, STAFF_AISLE;
     }
 
     private Name name;
-    private UniversityRoutePlan routePlan;
-    private UniversityAgent agent;
-    private ArrayList<UniversityAction> actions;
+    private GroceryRoutePlan routePlan;
+    private GroceryAgent agent;
+    private ArrayList<GroceryAction> actions;
 
-    // Class-specific attributes
-    private int tickClassStart;
-    private int classroomID;
+    private int aisleID;
 
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent){
+    public GroceryState(Name a, GroceryRoutePlan routePlan, GroceryAgent agent){
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = new ArrayList<>();
     }
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, ArrayList<UniversityAction> actions){
+
+    public GroceryState(Name a, GroceryRoutePlan routePlan, GroceryAgent agent, int aisleID){
+        this.name = a;
+        this.routePlan = routePlan;
+        this.agent = agent;
+        this.aisleID = aisleID;
+        this.actions = new ArrayList<>();
+    }
+
+    public GroceryState(Name a, GroceryRoutePlan routePlan, GroceryAgent agent, ArrayList<GroceryAction> actions){
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = actions;
     }
 
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, int tickClassStart, int classroomID){ // Class state
-        this.name = a;
-        this.routePlan = routePlan;
-        this.agent = agent;
-        this.tickClassStart = tickClassStart;
-        this.classroomID = classroomID;
-        this.actions = new ArrayList<>();
+
+    public int getAisleID() {
+        return aisleID;
+    }
+
+    public void setAisleID(int aisleID) {
+        this.aisleID = aisleID;
     }
 
     public Name getName() {
@@ -53,31 +59,23 @@ public class UniversityState {
         this.name = name;
     }
 
-    public int getTickStart() {
-        return tickClassStart;
-    }
-
-    public void setTickStart(int tickStart) {
-        this.tickClassStart = tickStart;
-    }
-
-    public UniversityRoutePlan getRoutePlan() {
+    public GroceryRoutePlan getRoutePlan() {
         return routePlan;
     }
 
-    public void setRoutePlan(UniversityRoutePlan routePlan) {
+    public void setRoutePlan(GroceryRoutePlan routePlan) {
         this.routePlan = routePlan;
     }
 
-    public UniversityAgent getAgent() {
+    public GroceryAgent getAgent() {
         return agent;
     }
 
-    public void setAgent(UniversityAgent agent) {
+    public void setAgent(GroceryAgent agent) {
         this.agent = agent;
     }
 
-    public void addAction(UniversityAction a){
+    public void addAction(GroceryAction a){
         actions.add(a);
     }
 }

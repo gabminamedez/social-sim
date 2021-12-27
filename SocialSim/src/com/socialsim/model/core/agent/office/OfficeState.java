@@ -4,7 +4,7 @@ import com.socialsim.model.core.agent.university.UniversityAgent;
 
 import java.util.ArrayList;
 
-public class UniversityState {
+public class OfficeState {
 
     public enum Name{
         GOING_TO_SECURITY, WANDERING_AROUND, NEEDS_BATHROOM, NEEDS_DRINK,
@@ -15,28 +15,28 @@ public class UniversityState {
     }
 
     private Name name;
-    private UniversityRoutePlan routePlan;
+    private OfficeRoutePlan routePlan;
     private UniversityAgent agent;
-    private ArrayList<UniversityAction> actions;
+    private ArrayList<OfficeAction> actions;
 
     // Class-specific attributes
     private int tickClassStart;
     private int classroomID;
 
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent){
+    public OfficeState(Name a, OfficeRoutePlan routePlan, UniversityAgent agent){
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = new ArrayList<>();
     }
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, ArrayList<UniversityAction> actions){
+    public OfficeState(Name a, OfficeRoutePlan routePlan, UniversityAgent agent, ArrayList<OfficeAction> actions){
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = actions;
     }
 
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, int tickClassStart, int classroomID){ // Class state
+    public OfficeState(Name a, OfficeRoutePlan routePlan, UniversityAgent agent, int tickClassStart, int classroomID){ // Class state
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
@@ -61,11 +61,11 @@ public class UniversityState {
         this.tickClassStart = tickStart;
     }
 
-    public UniversityRoutePlan getRoutePlan() {
+    public OfficeRoutePlan getRoutePlan() {
         return routePlan;
     }
 
-    public void setRoutePlan(UniversityRoutePlan routePlan) {
+    public void setRoutePlan(OfficeRoutePlan routePlan) {
         this.routePlan = routePlan;
     }
 
@@ -77,7 +77,7 @@ public class UniversityState {
         this.agent = agent;
     }
 
-    public void addAction(UniversityAction a){
+    public void addAction(OfficeAction a){
         actions.add(a);
     }
 }

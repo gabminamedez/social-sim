@@ -3,88 +3,101 @@ package com.socialsim.model.core.agent.grocery;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.simulator.Simulator;
 
-public class UniversityAction {
+public class GroceryAction {
 
     public enum Name{
         GREET_GUARD,
         GO_THROUGH_SCANNER,
 
-        GO_TO_CAFETERIA,
-        GO_TO_STUDY_ROOM,
-        GO_TO_CLASSROOM,
-        GO_TO_BATHROOM,
-        GO_TO_DRINKING_FOUNTAIN,
+        GO_TO_CART_AREA,
+        GO_TO_AISLE,
+        GO_TO_PRODUCT_WALL,
+        GO_TO_FROZEN,
+        GO_TO_FRESH,
+        GO_TO_MEAT,
+        GO_TO_ASK_STAFF,
+        GO_TO_CUSTOMER_SERVICE,
+        GO_TO_FOOD_STALL,
 
-        CLASSROOM_STAY_PUT,
-        STUDY_AREA_STAY_PUT,
-        LUNCH_STAY_PUT,
+        GET_CART,
 
-        FIND_BULLETIN,
-        VIEW_BULLETIN,
-        FIND_BENCH,
-        SIT_ON_BENCH,
-        LEAVE_BUILDING,
-        THROW_ITEM_TRASH_CAN,
+        FIND_PRODUCTS,
+        CHECK_PRODUCTS,
 
-        FIND_CUBICLE,
-        RELIEVE_IN_CUBICLE,
-        WASH_IN_SINK,
-
-        QUEUE_FOUNTAIN,
-        DRINK_FOUNTAIN,
-
-        FIND_SEAT_STUDY_ROOM,
-        FIND_SEAT_CLASSROOM,
-        SIT_PROFESSOR_TABLE,
-        GO_TO_BLACKBOARD,
-        ASK_PROFESSOR_QUESTION,
-        ANSWER_STUDENT_QUESTION,
-
-        GO_TO_VENDOR,
-        QUEUE_VENDOR,
+        GO_TO_CHECKOUT,
+        QUEUE_CHECKOUT,
         CHECKOUT,
-        FIND_SEAT_CAFETERIA,
+        TALK_TO_CASHIER,
+        TALK_TO_BAGGER,
+
+        TALK_TO_CUSTOMER_SERVICE,
+        WAIT_FOR_CUSTOMER_SERVICE,
+
+        QUEUE_FOOD,
+        BUY_FOOD,
+        FIND_SEAT_FOOD_COURT,
+        EATING_FOOD,
+
+        CHECKOUT_GROCERIES_CUSTOMER,
+        CHECKOUT_GROCERIES_GUARD,
+
+        LEAVE_BUILDING,
+
+        BUTCHER_STATION,
+        BUTCHER_SERVE_CUSTOMER,
+
+        CASHIER_STATION,
+        CASHIER_SERVE_CUSTOMER,
+
+        BAGGER_STATION,
+        BAGGER_SERVE_CUSTOMER,
+
+        SERVICE_STATION,
+        SERVICE_SERVE_CUSTOMER,
+
 
         GREET_PERSON,
-        GUARD_STAY_PUT,
+        GUARD_STATION,
+        GUARD_CHECK_GROCERIES,
 
-        CLEAN_STAY_PUT,
-        JANITOR_MOVE_SPOT,
-        JANITOR_GO_TO_FOUNTAIN,
-        JANITOR_CHECK_FOUNTAIN
+        FOOD_STAFF_STATION,
+        FOOD_STAFF_SERVE_CUSTOMER,
+
+        AISLE_STAFF_ORGANIZE,
+        AISLE_STAFF_ANSWER_CUSTOMER
     }
 
     private Name name;
     private int duration;
     private Patch destination;
 
-    public UniversityAction(Name name){ // For actions where the destination depends on the chooseGoal/chooseStall, and the duration also depends on the movement
+    public GroceryAction(Name name){ // For actions where the destination depends on the chooseGoal/chooseStall, and the duration also depends on the movement
         this.name = name;
         this.destination = destination;
     }
 
-    public UniversityAction(Name name, Patch destination){ // For going to somewhere (since time will depend on AgentMovement)
+    public GroceryAction(Name name, Patch destination){ // For going to somewhere (since time will depend on AgentMovement)
         this.name = name;
         this.destination = destination;
     }
 
-    public UniversityAction(Name name, int duration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
+    public GroceryAction(Name name, int duration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
         this.name = name;
         this.duration = duration;
     }
 
-    public UniversityAction(Name name, int minimumDuration, int maximumDuration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
+    public GroceryAction(Name name, int minimumDuration, int maximumDuration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
         this.name = name;
         this.duration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(maximumDuration - minimumDuration + 1) + minimumDuration;
     }
 
-    public UniversityAction(Name name, Patch destination, int minimumDuration, int maximumDuration){ // For complete actions with undefined duration
+    public GroceryAction(Name name, Patch destination, int minimumDuration, int maximumDuration){ // For complete actions with undefined duration
         this.name = name;
         this.destination = destination;
         this.duration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(maximumDuration - minimumDuration + 1) + minimumDuration;
     }
 
-    public UniversityAction(Name name, Patch destination, int duration) { // For complete actions with defined duration
+    public GroceryAction(Name name, Patch destination, int duration) { // For complete actions with defined duration
         this.name = name;
         this.destination = destination;
         this.duration = duration;
