@@ -16,6 +16,7 @@ import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Qu
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.Vector;
 import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.environment.university.patchfield.Bathroom;
 import com.socialsim.model.core.environment.university.patchfield.StallField;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.simulator.Simulator;
@@ -443,27 +444,6 @@ public class UniversityAgentMovement extends AgentMovement {
         this.free(); // This agent is not yet stuck
     }
 
-//    public void nextPlanItem () { // Parent function to extract the next item in this agent's route plan
-//        UniversityState nextItem = this.routePlan.getCurrentClass();
-//
-//        if (PatchField.class.isAssignableFrom(nextItem)) {
-//            goToRoom(nextItem);
-//        }
-//        else if (Amenity.class.isAssignableFrom(nextItem)) {
-//            chooseGoal(nextItem);
-//        }
-//    }
-
-    public void goToRoom(Class<? extends BaseObject> nextRoomClass) {
-        // TODO: go to room mechanisms
-    }
-
-    public void goToClassroom(int classID){
-        // TODO add logic for door
-
-        // TODO can add logic to get classroom id
-    }
-
     // Set the nearest goal to this agent; That goal should also have the fewer agents queueing for it
     // To determine this, for each two agents in the queue (or fraction thereof), a penalty of one tile is added to the distance to this goal
     @SuppressWarnings("unchecked")
@@ -513,6 +493,51 @@ public class UniversityAgentMovement extends AgentMovement {
 
             }
             //TODO logic when all amenities are in use
+            this.goalAmenity = chosenAmenity;
+            this.goalAttractor = chosenAttractor;
+            this.goalPatch = chosenAttractor.getPatch();
+        }
+    }
+
+    public void chooseBathroomDoor() {
+        if (this.goalAmenity == null && (this.goalPatchField != null && this.goalPatchField.getClass() == Bathroom.class)) { // Only set the goal if one hasn't been set yet
+            Amenity chosenAmenity = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+
+            if (this.parent.getGender() == UniversityAgent.Gender.MALE) {
+                chosenAmenity = this.university.getDoors().get(14);
+            }
+            else {
+                chosenAmenity = this.university.getDoors().get(15);
+            }
+
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+
+            for (Amenity.AmenityBlock attractor : chosenAmenity.getAttractors()) { // Compute the distance to each attractor
+                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                distancesToAttractors.put(attractor, distanceToAttractor);
+            }
+
+            // Sort amenity by distance, from nearest to furthest
+            LinkedHashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<>();
+            sortedDistances.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue())
+                    .forEachOrdered(x -> distancesToAttractors.put(x.getKey(), x.getValue()));
+
+            // Look for a vacant amenity
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) {
+                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+
+                if(candidateAttractor.getPatch().getAgents() == null){ // Break when first vacant amenity is found
+                    chosenAmenity =  candidateAttractor.getParent();
+                    chosenAttractor = candidateAttractor;
+
+                    break;
+                }
+
+            }
+
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
             this.goalPatch = chosenAttractor.getPatch();
@@ -711,7 +736,7 @@ public class UniversityAgentMovement extends AgentMovement {
         // TODO add code to check if agent is already in queue / queueing logic
         if (
                 this.state.getName() == UniversityState.Name.GOING_TO_SECURITY || this.state.getName() == UniversityState.Name.GOING_TO_LUNCH
-                || this.state.getName() == UniversityState.Name.NEEDS_DRINK
+                        || this.state.getName() == UniversityState.Name.NEEDS_DRINK
         ) {
             //Heading towards the queue, but not inside the queue yet
             if (this.action.getName() == UniversityAction.Name.GO_THROUGH_SCANNER ||
@@ -1560,12 +1585,12 @@ public class UniversityAgentMovement extends AgentMovement {
     }
 
     // Check if this agent has reached its goal
-    public boolean hasReachedGoal() {
+    public boolean hasReachedGoalPatch() {
         if (this.isWaitingOnAmenity) { // If the agent is still waiting for an amenity to be vacant, it hasn't reached the goal yet
             return false;
         }
 
-        return isOnOrCloseToPatch(this.goalAttractor.getPatch());
+        return isOnOrCloseToPatch(this.goalPatch);
     }
 
     public void reachGoal() { // Set the agent's current amenity and position as it reaches the next goal
@@ -1655,141 +1680,142 @@ public class UniversityAgentMovement extends AgentMovement {
         this.proposedHeading = newHeading; // Then set the agent's proposed heading to it
     }
 
+    // TODO: Might delete, assess Simulator first
     // If the agent is following a path, have the agent face the next one, if any
-    public boolean chooseNextPatchInPath() {
-        // Generate a path, if one hasn't been generated yet
-        boolean wasPathJustGenerated = false;
-
-        final int recomputeThreshold = 10;
-
-        if (
-                this.currentPath == null
-                        || this.isStuck
-                        && this.noNewPatchesSeenCounter > recomputeThreshold
-        ) {
-            AgentPath agentPath;
-
-            if (this.getGoalAmenityAsQueueable() != null) {
-                // Head towards the queue of the goal
-                LinkedList<UniversityAgent> agentsQueueing
-                        = this.goalQueueObject.getAgentsQueueing();
-
-                // If there are no agents in that queue at all, simply head for the goal patch
-                if (agentsQueueing.isEmpty()) {
-                    agentPath = computePathWithinFloor(
-                            this.currentPatch,
-                            this.goalPatch,
-                            true,
-                            true,
-                            false
-                    );
-                } else {
-                    // If there are agents in the queue, this agent should only follow the last agent in
-                    // that queue if that agent is assembling
-                    // If the last agent is not assembling, simply head for the goal patch instead
-                    UniversityAgent lastAgent = agentsQueueing.getLast();
-
-                    if (
-                            !(this.getGoalAmenityAsQueueable() instanceof TrainDoor)
-                                    && !(this.getGoalAmenityAsQueueable() instanceof Turnstile)
-                                    && lastAgent.getAgentMovement().getUniversityAction() == UniversityAction.ASSEMBLING
-                    ) {
-                        double distanceToGoalPatch = Coordinates.distance(
-                                this.currentFloor.getStation(),
-                                this.currentPatch,
-                                this.goalPatch
-                        );
-
-                        double distanceToLastAgent = Coordinates.distance(
-                                this.currentFloor.getStation(),
-                                this.currentPatch,
-                                lastAgent.getAgentMovement().getCurrentPatch()
-                        );
-
-                        // Head to whichever is closer to this agent, the last agent, or the nearest queueing
-                        // path
-                        if (distanceToGoalPatch <= distanceToLastAgent) {
-                            agentPath = computePathWithinFloor(
-                                    this.currentPatch,
-                                    this.goalPatch,
-                                    true,
-                                    true,
-                                    false
-                            );
-                        } else {
-                            agentPath = computePathWithinFloor(
-                                    this.currentPatch,
-                                    lastAgent.getAgentMovement().getCurrentPatch(),
-                                    true,
-                                    true,
-                                    false
-                            );
-                        }
-                    } else {
-                        agentPath = computePathWithinFloor(
-                                this.currentPatch,
-                                this.goalPatch,
-                                true,
-                                true,
-                                false
-                        );
-                    }
-                }
-            } else {
-                agentPath = computePathWithinFloor(
-                        this.currentPatch,
-                        this.goalPatch,
-                        true,
-                        false,
-                        false
-                );
-            }
-
-            if (agentPath != null) {
-                // Create a copy of the object, to avoid using up the path directly from the cache
-                this.currentPath = new AgentPath(agentPath);
-
-                wasPathJustGenerated = true;
-            }
-        }
-
-        // Get the first patch still unvisited in the path
-        if (this.currentPath == null || this.currentPath.getPath().isEmpty()) {
-            return false;
-        }
-
-        // If a path was just generated, determine the first patch to visit
-        if (wasPathJustGenerated) {
-            Patch nextPatchInPath;
-
-            while (true) {
-                nextPatchInPath = this.currentPath.getPath().peek();
-
-                if (
-                        !(
-                                this.currentPath.getPath().size() > 1
-                                        && nextPatchInPath.getAmenityBlocksAround() == 0
-                                        && this.isOnOrCloseToPatch(nextPatchInPath)
-                                        && this.hasClearLineOfSight(
-                                        this.position,
-                                        nextPatchInPath.getPatchCenterCoordinates(),
-                                        true
-                                )
-                        )
-                ) {
-                    break;
-                }
-
-                this.currentPath.getPath().pop();
-            }
-
-            this.goalPatch = nextPatchInPath;
-        } else {
-            this.goalPatch = this.currentPath.getPath().peek();
-        }
-
-        return true;
-    }
+//    public boolean chooseNextPatchInPath() {
+//        // Generate a path, if one hasn't been generated yet
+//        boolean wasPathJustGenerated = false;
+//
+//        final int recomputeThreshold = 10;
+//
+//        if (
+//                this.currentPath == null
+//                        || this.isStuck
+//                        && this.noNewPatchesSeenCounter > recomputeThreshold
+//        ) {
+//            AgentPath agentPath;
+//
+//            if (this.getGoalAmenityAsQueueable() != null) {
+//                // Head towards the queue of the goal
+//                LinkedList<UniversityAgent> agentsQueueing
+//                        = this.goalQueueObject.getAgentsQueueing();
+//
+//                // If there are no agents in that queue at all, simply head for the goal patch
+//                if (agentsQueueing.isEmpty()) {
+//                    agentPath = computePathWithinFloor(
+//                            this.currentPatch,
+//                            this.goalPatch,
+//                            true,
+//                            true,
+//                            false
+//                    );
+//                } else {
+//                    // If there are agents in the queue, this agent should only follow the last agent in
+//                    // that queue if that agent is assembling
+//                    // If the last agent is not assembling, simply head for the goal patch instead
+//                    UniversityAgent lastAgent = agentsQueueing.getLast();
+//
+//                    if (
+//                            !(this.getGoalAmenityAsQueueable() instanceof TrainDoor)
+//                                    && !(this.getGoalAmenityAsQueueable() instanceof Turnstile)
+//                                    && lastAgent.getAgentMovement().getUniversityAction() == UniversityAction.ASSEMBLING
+//                    ) {
+//                        double distanceToGoalPatch = Coordinates.distance(
+//                                this.currentFloor.getStation(),
+//                                this.currentPatch,
+//                                this.goalPatch
+//                        );
+//
+//                        double distanceToLastAgent = Coordinates.distance(
+//                                this.currentFloor.getStation(),
+//                                this.currentPatch,
+//                                lastAgent.getAgentMovement().getCurrentPatch()
+//                        );
+//
+//                        // Head to whichever is closer to this agent, the last agent, or the nearest queueing
+//                        // path
+//                        if (distanceToGoalPatch <= distanceToLastAgent) {
+//                            agentPath = computePathWithinFloor(
+//                                    this.currentPatch,
+//                                    this.goalPatch,
+//                                    true,
+//                                    true,
+//                                    false
+//                            );
+//                        } else {
+//                            agentPath = computePathWithinFloor(
+//                                    this.currentPatch,
+//                                    lastAgent.getAgentMovement().getCurrentPatch(),
+//                                    true,
+//                                    true,
+//                                    false
+//                            );
+//                        }
+//                    } else {
+//                        agentPath = computePathWithinFloor(
+//                                this.currentPatch,
+//                                this.goalPatch,
+//                                true,
+//                                true,
+//                                false
+//                        );
+//                    }
+//                }
+//            } else {
+//                agentPath = computePathWithinFloor(
+//                        this.currentPatch,
+//                        this.goalPatch,
+//                        true,
+//                        false,
+//                        false
+//                );
+//            }
+//
+//            if (agentPath != null) {
+//                // Create a copy of the object, to avoid using up the path directly from the cache
+//                this.currentPath = new AgentPath(agentPath);
+//
+//                wasPathJustGenerated = true;
+//            }
+//        }
+//
+//        // Get the first patch still unvisited in the path
+//        if (this.currentPath == null || this.currentPath.getPath().isEmpty()) {
+//            return false;
+//        }
+//
+//        // If a path was just generated, determine the first patch to visit
+//        if (wasPathJustGenerated) {
+//            Patch nextPatchInPath;
+//
+//            while (true) {
+//                nextPatchInPath = this.currentPath.getPath().peek();
+//
+//                if (
+//                        !(
+//                                this.currentPath.getPath().size() > 1
+//                                        && nextPatchInPath.getAmenityBlocksAround() == 0
+//                                        && this.isOnOrCloseToPatch(nextPatchInPath)
+//                                        && this.hasClearLineOfSight(
+//                                        this.position,
+//                                        nextPatchInPath.getPatchCenterCoordinates(),
+//                                        true
+//                                )
+//                        )
+//                ) {
+//                    break;
+//                }
+//
+//                this.currentPath.getPath().pop();
+//            }
+//
+//            this.goalPatch = nextPatchInPath;
+//        } else {
+//            this.goalPatch = this.currentPath.getPath().peek();
+//        }
+//
+//        return true;
+//    }
 
     public void free() { // Make this agent free from being stuck
         this.isStuck = false;
