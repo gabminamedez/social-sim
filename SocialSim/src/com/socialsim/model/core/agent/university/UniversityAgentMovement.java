@@ -17,6 +17,7 @@ import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.Vector;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.university.patchfield.Bathroom;
+import com.socialsim.model.core.environment.university.patchfield.Classroom;
 import com.socialsim.model.core.environment.university.patchfield.StallField;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.simulator.Simulator;
@@ -493,6 +494,81 @@ public class UniversityAgentMovement extends AgentMovement {
 
             }
             //TODO logic when all amenities are in use
+            this.goalAmenity = chosenAmenity;
+            this.goalAttractor = chosenAttractor;
+            this.goalPatch = chosenAttractor.getPatch();
+        }
+    }
+
+    public void chooseClassroomDoor(int classID) {
+        if (this.goalAmenity == null && (this.goalPatchField != null && this.goalPatchField.getClass() == Classroom.class)) {
+            Amenity chosenAmenity = null;
+            Amenity temp1 = null;
+            Amenity temp2 = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+
+            switch(classID) {
+                case 1:
+                    temp1 = this.university.getDoors().get(1);
+                    temp2 = this.university.getDoors().get(2);
+                    break;
+                case 2:
+                    temp1 = this.university.getDoors().get(3);
+                    temp2 = this.university.getDoors().get(4);
+                    break;
+                case 3:
+                    temp1 = this.university.getDoors().get(6);
+                    temp2 = this.university.getDoors().get(7);
+                    break;
+                case 4:
+                    temp1 = this.university.getDoors().get(8);
+                    temp2 = this.university.getDoors().get(9);
+                    break;
+                case 5:
+                    temp1 = this.university.getDoors().get(10);
+                    temp2 = this.university.getDoors().get(11);
+                    break;
+                case 6:
+                    temp1 = this.university.getDoors().get(12);
+                    temp2 = this.university.getDoors().get(13);
+                    break;
+                case 7: // laboratory
+                    temp1 = this.university.getDoors().get(14);
+                    break;
+            }
+
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+
+            for (Amenity.AmenityBlock attractor : temp1.getAttractors()) { // Compute the distance to each attractor
+                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                distancesToAttractors.put(attractor, distanceToAttractor);
+            }
+
+            for (Amenity.AmenityBlock attractor : temp2.getAttractors()) { // Compute the distance to each attractor
+                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                distancesToAttractors.put(attractor, distanceToAttractor);
+            }
+
+            // Sort amenity by distance, from nearest to furthest
+            LinkedHashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<>();
+            sortedDistances.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue())
+                    .forEachOrdered(x -> distancesToAttractors.put(x.getKey(), x.getValue()));
+
+            // Look for a vacant amenity
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) {
+                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+
+                if(candidateAttractor.getPatch().getAgents() == null){ // Break when first vacant amenity is found
+                    chosenAmenity =  candidateAttractor.getParent();
+                    chosenAttractor = candidateAttractor;
+
+                    break;
+                }
+
+            }
+
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
             this.goalPatch = chosenAttractor.getPatch();
