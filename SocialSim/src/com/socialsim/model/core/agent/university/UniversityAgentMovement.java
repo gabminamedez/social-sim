@@ -14,7 +14,9 @@ import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Go
 import com.socialsim.model.core.environment.generic.patchobject.passable.goal.QueueableGoal;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.Vector;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.Door;
 import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.environment.university.patchfield.Classroom;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.simulator.Simulator;
 
@@ -465,17 +467,94 @@ public class UniversityAgentMovement extends AgentMovement {
         // TODO: go to room mechanisms
     }
 
+    public void chooseClassroom(int classID) {
+        if (this.goalAmenity == null && (this.goalPatchField != null && this.goalPatchField.getClass() == Classroom.class)) {
+            Amenity chosenAmenity = null;
+            Amenity temp1 = null;
+            Amenity temp2 = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+
+            switch(classID) {
+                case 1:
+                    temp1 = this.university.getDoors().get(1);
+                    temp2 = this.university.getDoors().get(2);
+                    break;
+                case 2:
+                    temp1 = this.university.getDoors().get(3);
+                    temp2 = this.university.getDoors().get(4);
+                    break;
+                case 3:
+                    temp1 = this.university.getDoors().get(6);
+                    temp2 = this.university.getDoors().get(7);
+                    break;
+                case 4:
+                    temp1 = this.university.getDoors().get(8);
+                    temp2 = this.university.getDoors().get(9);
+                    break;
+                case 5:
+                    temp1 = this.university.getDoors().get(10);
+                    temp2 = this.university.getDoors().get(11);
+                    break;
+                case 6:
+                    temp1 = this.university.getDoors().get(12);
+                    temp2 = this.university.getDoors().get(13);
+                    break;
+                case 7: // laboratory
+                    temp1 = this.university.getDoors().get(14);
+                    break;
+            }
+
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+
+            for (Amenity.AmenityBlock attractor : temp1.getAttractors()) { // Compute the distance to each attractor
+                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                distancesToAttractors.put(attractor, distanceToAttractor);
+            }
+
+            for (Amenity.AmenityBlock attractor : temp2.getAttractors()) { // Compute the distance to each attractor
+                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                distancesToAttractors.put(attractor, distanceToAttractor);
+            }
+
+            // Sort amenity by distance, from nearest to furthest
+            LinkedHashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<>();
+            sortedDistances.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue())
+                    .forEachOrdered(x -> distancesToAttractors.put(x.getKey(), x.getValue()));
+
+            // Look for a vacant amenity
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) {
+                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+
+                if(candidateAttractor.getPatch().getAgents() == null){ // Break when first vacant amenity is found
+                    chosenAmenity =  candidateAttractor.getParent();
+                    chosenAttractor = candidateAttractor;
+
+                    break;
+                }
+
+            }
+
+            this.goalAmenity = chosenAmenity;
+            this.goalAttractor = chosenAttractor;
+            this.goalPatch = chosenAttractor.getPatch();
+        }
+    }
+
     // Set the nearest goal to this agent; That goal should also have the fewer agents queueing for it
     // To determine this, for each two agents in the queue (or fraction thereof), a penalty of one tile is added to the distance to this goal
+    @SuppressWarnings("unchecked")
     public void chooseGoal(Class<? extends BaseObject> nextAmenityClass) {
-        if (this.goalAmenity == null) { // Only set the goal if one hasn't been set yet
+        if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
             // Get the amenity list in this university
-            List<? extends Amenity> amenityListInFloor = this.university.getAmenityList((Class<? extends Amenity>) nextAmenityClass);
+            List<? extends Amenity> amenityListInFloor =
+                    this.university.getAmenityList((Class<? extends Amenity>) nextAmenityClass);
 
             Amenity chosenAmenity = null;
             Amenity.AmenityBlock chosenAttractor = null;
 
-            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>(); // Compile all attractors from each amenity in the amenity list
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
 
             for (Amenity amenity : amenityListInFloor) {
                 NonObstacle nonObstacle = ((NonObstacle) amenity);
@@ -484,66 +563,34 @@ public class UniversityAgentMovement extends AgentMovement {
                     continue;
                 }
 
-                // Filter the amenity search space only to what is compatible with this agent
-                if (amenity instanceof UniversityGate) {
-                    // If the goal of the agent is a station gate, this means the agent is leaving; So only consider station gates which allow exits and accepts the agent's direction
-                    UniversityGate universityGateExit = ((UniversityGate) amenity);
-
-                    if (universityGateExit.getUniversityGateMode() == UniversityGate.UniversityGateMode.ENTRANCE) {
-                        continue;
-                    }
-                }
-
                 for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
                     double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
                     distancesToAttractors.put(attractor, distanceToAttractor);
                 }
             }
 
-            double minimumAttractorScore = Double.MAX_VALUE;
+            // Sort amenity by distance, from nearest to furthest
+            LinkedHashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<>();
+            sortedDistances.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue())
+                    .forEachOrdered(x -> distancesToAttractors.put(x.getKey(), x.getValue()));
 
-            // Then for each compiled amenity and their distance from this agent, see which has the smallest distance while taking into account the agents queueing for that amenity, if any
-            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
+            // Look for a vacant amenity
+            // TODO take IOS into account
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) {
                 Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                Double candidateDistance = distancesToAttractorEntry.getValue();
 
-                Amenity currentAmenity;
-
-                currentAmenity = candidateAttractor.getParent();
-
-                /*if (currentAmenity instanceof Queueable) { // Only collect queue objects from queueables
-                    Queueable queueable = ((Queueable) currentAmenity);
-                    currentQueueObject = queueable.getQueueObject();
-                }
-                else {
-                    currentQueueObject = null;
-                }
-
-                // If this is a queueable, take into account the agents queueing (except if it is a security gate)
-                // If this is not a queueable (or if it's a security gate), the distance will suffice
-                double attractorScore;
-
-                if (currentQueueObject != null) {
-                    if (!(currentAmenity instanceof Security)) {
-                        double agentPenalty = 25.0; // Avoid queueing to long lines
-                        attractorScore = candidateDistance + currentQueueObject.getAgentsQueueing().size() * agentPenalty;
-                    }
-                    else {
-                        attractorScore = candidateDistance;
-                    }
-                }
-                else {
-                    attractorScore = candidateDistance;
-                }
-
-                if (attractorScore < minimumAttractorScore) {
-                    minimumAttractorScore = attractorScore;
-                    chosenAmenity = currentAmenity;
-                    chosenQueueObject = currentQueueObject;
+                //Break when first vacant amenity is found
+                if(candidateAttractor.getPatch().getAgents() == null){
+                    chosenAmenity =  candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
-                }*/
-            }
 
+                    break;
+                }
+
+            }
+            //TODO logic when all amenities are in use
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
             this.goalPatch = chosenAttractor.getPatch();
