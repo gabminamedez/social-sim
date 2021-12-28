@@ -76,7 +76,7 @@ public class UniversityAgentMovement extends AgentMovement {
     private Vector attractiveForce;
     private Vector motivationForce;
 
-    public UniversityAgentMovement(Patch spawnPatch, UniversityAgent parent, double baseWalkingDistance, Coordinates coordinates) { // For inOnStart agents
+    public UniversityAgentMovement(Patch spawnPatch, UniversityAgent parent, double baseWalkingDistance, Coordinates coordinates, long tickEntered) { // For inOnStart agents
         this.parent = parent;
         this.position = new Coordinates(coordinates.getX(), coordinates.getY());
 
@@ -102,6 +102,7 @@ public class UniversityAgentMovement extends AgentMovement {
         this.currentPatch.getAgents().add(parent);
         this.university = (University) currentPatch.getEnvironment();
         this.currentPatchField = null;
+        this.tickEntered = (int) tickEntered;
         this.ticksUntilFullyAccelerated = 10; // Set the agent's time until it fully accelerates
         this.ticksAcceleratedOrMaintainedSpeed = 0;
 
@@ -110,7 +111,7 @@ public class UniversityAgentMovement extends AgentMovement {
         repulsiveForcesFromObstacles = new ArrayList<>();
         resetGoal(); // Set the agent goal
 
-        this.routePlan = new UniversityRoutePlan(parent, university, currentPatch);
+        this.routePlan = new UniversityRoutePlan(parent, university, currentPatch, (int) tickEntered);
         this.stateIndex = 0;
         this.actionIndex = 0;
         this.currentState = this.routePlan.getCurrentState();
@@ -118,8 +119,13 @@ public class UniversityAgentMovement extends AgentMovement {
         if (!parent.getInOnStart()) {
             this.currentAmenity = university.getUniversityGates().get(1); // Getting Entrance Gate
         }
-        this.goalAttractor = this.currentAction.getDestination().getAmenityBlock();
-        this.duration = this.currentAction.getDuration();
+        if (this.currentAction.getDestination() != null) {
+            this.goalAttractor = this.currentAction.getDestination().getAmenityBlock();
+            this.duration = this.currentAction.getDuration();
+        }
+        if (this.currentAction.getDuration() != 0) {
+            this.duration = this.currentAction.getDuration();
+        }
     }
 
     public UniversityAgent getParent() {
@@ -186,6 +192,10 @@ public class UniversityAgentMovement extends AgentMovement {
         return currentPath;
     }
 
+    public void setCurrentPath(AgentPath currentPath) {
+        this.currentPath = currentPath;
+    }
+
     public int getStateIndex() {
         return stateIndex;
     }
@@ -206,8 +216,12 @@ public class UniversityAgentMovement extends AgentMovement {
         return currentState;
     }
 
-    public void setCurrentState(UniversityState currentState) {
-        this.currentState = currentState;
+    public void setNextState() {
+        this.currentState = this.currentState.getRoutePlan().setNextState();
+    }
+
+    public void setPreviousState() {
+        this.currentState = this.currentState.getRoutePlan().setPreviousState();
     }
 
     public UniversityAction getCurrentAction() {
@@ -363,6 +377,7 @@ public class UniversityAgentMovement extends AgentMovement {
         this.goalAmenity = null;
         this.goalAttractor = null;
         this.goalPatchField = null;
+        this.currentPath = null;
         this.goalQueueingPatchField = null; // Take note of the patch field of the agent's goal
         this.goalNearestQueueingPatch = null; // Take note of the agent's nearest queueing patch
         this.hasEncounteredAgentToFollow = false; // No agents have been encountered yet
@@ -411,14 +426,16 @@ public class UniversityAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                path.push(goalAttractor.getPatch());
+                path.push(goalPatch);
                 double length = 0.0;
                 Patch currentPatch = goalPatch;
                 while (cameFrom.containsKey(currentPatch)) {
                     Patch previousPatch = cameFrom.get(currentPatch);
                     length += Coordinates.distance(previousPatch.getPatchCenterCoordinates(), currentPatch.getPatchCenterCoordinates());
                     currentPatch = previousPatch;
-                    path.push(currentPatch);
+                    if (!hasObstacle(currentPatch, goalAmenity)) {
+                        path.push(currentPatch);
+                    }
                 }
 
                 return new AgentPath(length, path);
@@ -716,7 +733,7 @@ public class UniversityAgentMovement extends AgentMovement {
                     this.currentAction.getName() == UniversityAction.Name.CLASSROOM_STAY_PUT || this.currentAction.getName() == UniversityAction.Name.STUDY_AREA_STAY_PUT ||
                     this.currentAction.getName() == UniversityAction.Name.LUNCH_STAY_PUT || this.currentAction.getName() == UniversityAction.Name.RELIEVE_IN_CUBICLE ||
                     this.currentAction.getName() == UniversityAction.Name.VIEW_BULLETIN || this.currentAction.getName() == UniversityAction.Name.SIT_ON_BENCH ||
-                    this.currentAction.getName() == UniversityAction.Name.GUARD_STAY_PUT || this.currentAction.getName() == UniversityAction.Name.CLEAN_STAY_PUT || this.currentAction.getName() == UniversityAction.Name.JANITOR_CHECK_FOUNTAIN) {
+                    this.currentAction.getName() == UniversityAction.Name.GUARD_STAY_PUT || this.currentAction.getName() == UniversityAction.Name.JANITOR_CLEAN_TOILET || this.currentAction.getName() == UniversityAction.Name.JANITOR_CHECK_FOUNTAIN) {
                 this.stop();
                 decrementDuration(); // TODO: check if this should be done on Simulator or Movement
             }
@@ -946,7 +963,7 @@ public class UniversityAgentMovement extends AgentMovement {
                         Coordinates newFuturePosition;
                         int attempts = 0;
                         // TODO: Adjustable if no clear line of sight
-                        final int attemptLimit = 10;
+                        final int attemptLimit = 5;
                         boolean freeSpaceFound;
 
                         do {
@@ -1200,7 +1217,7 @@ public class UniversityAgentMovement extends AgentMovement {
     }
 
     public boolean hasReachedNextPatchInPath() { // Check if this agent is on the next patch of its path
-        return isOnPatch(this.currentPath.getPath().peek());
+        return isOnOrCloseToPatch(this.currentPath.getPath().peek());
     }
 
     public void joinQueue() { // Register this agent to its queueable goal patch field's queue

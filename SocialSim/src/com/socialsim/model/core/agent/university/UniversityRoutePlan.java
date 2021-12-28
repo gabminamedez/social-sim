@@ -2,6 +2,8 @@ package com.socialsim.model.core.agent.university;
 
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.environment.university.patchfield.Bathroom;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.Door;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.*;
@@ -17,7 +19,7 @@ public class UniversityRoutePlan {
     private static int CLASSROOM_SIZES_STUDENT[][] = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
     private static int CLASSROOM_SIZES_PROF[][] = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
 
-    public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch) {
+    public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch, int tickEntered) {
         List<UniversityState> routePlan = new ArrayList<>();
         ArrayList<UniversityAction> actions;
 
@@ -29,12 +31,20 @@ public class UniversityRoutePlan {
         else if (agent.getPersona() == UniversityAgent.Persona.JANITOR) {
             //for(int i = 0; i < Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_JANITOR_ROUNDS); i++){
                 actions = new ArrayList<>();
-                Patch randomToilet1 = university.getDoors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2)).getAmenityBlocks().get(0).getPatch();
-                Patch randomToilet2 = university.getLabTables().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getAmenityBlocks().get(0).getPatch();
-                actions.add(new UniversityAction(UniversityAction.Name.CLEAN_STAY_PUT, randomToilet1, 180)); // TODO: Maybe loop this instead across 6 toilets for each janitor
-                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_MOVE_SPOT, randomToilet2)); // TODO: Maybe remove this should the comment above push thru
+                Patch randomToilet = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
+                List<Door> allDoors = university.getDoors();
+                Patch doorPatch = null;
+                for (Door door : allDoors) {
+                    if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == Bathroom.class && door.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == randomToilet.getPatchField().getValue()) {
+                        doorPatch = door.getAmenityBlocks().get(0).getPatch();
+                        break;
+                    }
+                }
+                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, doorPatch));
+                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 18));
                 routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
                 actions = new ArrayList<>();
+                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_FOUNTAIN, doorPatch));
                 actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 180));
                 routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
             //}
@@ -46,7 +56,7 @@ public class UniversityRoutePlan {
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
             int CALCULATED_CLASSES, LUNCH_TIME;
             ArrayList<Integer> classes = new ArrayList<>();
-            if (agent.getAgentMovement().getTickEntered() < 720) { // based on 1 tick = 5 seconds
+            if (tickEntered < 720) { // based on 1 tick = 5 seconds
                 CALCULATED_CLASSES = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSES);
                 LUNCH_TIME = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2;
                 int ctrClasses = CALCULATED_CLASSES;
@@ -57,7 +67,7 @@ public class UniversityRoutePlan {
                         ctrClasses--;
                     }
                 }
-            } else if (agent.getAgentMovement().getTickEntered() < 1980) {
+            } else if (tickEntered < 1980) {
                 CALCULATED_CLASSES = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSES - 1);
                 LUNCH_TIME = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2;
                 int ctrClasses = CALCULATED_CLASSES;
@@ -68,7 +78,7 @@ public class UniversityRoutePlan {
                         ctrClasses--;
                     }
                 }
-            } else if (agent.getAgentMovement().getTickEntered() < 3240) {
+            } else if (tickEntered < 3240) {
                 CALCULATED_CLASSES = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSES - 2);
                 LUNCH_TIME = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2;
                 int ctrClasses = CALCULATED_CLASSES;
@@ -79,7 +89,7 @@ public class UniversityRoutePlan {
                         ctrClasses--;
                     }
                 }
-            } else if (agent.getAgentMovement().getTickEntered() < 4500) {
+            } else if (tickEntered < 4500) {
                 CALCULATED_CLASSES = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSES - 2);
                 if (CALCULATED_CLASSES == MAX_CLASSES - 2 - 1)
                     LUNCH_TIME = -1;
@@ -93,7 +103,7 @@ public class UniversityRoutePlan {
                         ctrClasses--;
                     }
                 }
-            } else if (agent.getAgentMovement().getTickEntered() < 5760) {
+            } else if (tickEntered < 5760) {
                 CALCULATED_CLASSES = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSES - 3);
                 if (CALCULATED_CLASSES == MAX_CLASSES - 3 - 1)
                     LUNCH_TIME = -1;
@@ -897,11 +907,16 @@ public class UniversityRoutePlan {
         CLASSROOM_SIZES_PROF = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
     }
 
-    public void setNextState() { // Set the next class in the route plan
+    public UniversityState setNextState() { // Set the next class in the route plan
         this.currentState = this.currentRoutePlan.next();
+
+        return this.currentState;
     }
-    public void setPreviousState() {
+
+    public UniversityState setPreviousState() {
         this.currentState = this.currentRoutePlan.previous();
+
+        return this.currentState;
     }
 
     public ListIterator<UniversityState> getCurrentRoutePlan() {

@@ -48,14 +48,14 @@ public class UniversityAction {
         GREET_PERSON,
         GUARD_STAY_PUT,
 
-        CLEAN_STAY_PUT,
-        JANITOR_MOVE_SPOT,
-        JANITOR_GO_TO_FOUNTAIN,
+        JANITOR_GO_TOILET,
+        JANITOR_CLEAN_TOILET,
+        JANITOR_GO_FOUNTAIN,
         JANITOR_CHECK_FOUNTAIN
     }
 
     private Name name;
-    private int duration;
+    private int duration = 0;
     private Patch destination;
 
     public UniversityAction(Name name){ // For actions where the destination depends on the chooseGoal/chooseStall, and the duration also depends on the movement

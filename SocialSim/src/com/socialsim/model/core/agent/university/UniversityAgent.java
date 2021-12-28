@@ -32,7 +32,7 @@ public class UniversityAgent extends Agent {
         agentFactory = new UniversityAgent.UniversityAgentFactory();
     }
 
-    private UniversityAgent(UniversityAgent.Type type, Patch spawnPatch, boolean inOnStart) {
+    private UniversityAgent(UniversityAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick) {
         this.id = agentCount;
         this.type = type;
         this.inOnStart = inOnStart;
@@ -137,7 +137,7 @@ public class UniversityAgent extends Agent {
         }
 
         this.agentGraphic = new UniversityAgentGraphic(this);
-        this.agentMovement = new UniversityAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates());
+        this.agentMovement = new UniversityAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick);
     }
 
     public int getId() {
@@ -173,8 +173,8 @@ public class UniversityAgent extends Agent {
     }
 
     public static class UniversityAgentFactory extends Agent.AgentFactory {
-        public static UniversityAgent create(UniversityAgent.Type type, Patch spawnPatch, boolean inOnStart) {
-            return new UniversityAgent(type, spawnPatch, inOnStart);
+        public static UniversityAgent create(UniversityAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick) {
+            return new UniversityAgent(type, spawnPatch, inOnStart, currentTick);
         }
     }
 

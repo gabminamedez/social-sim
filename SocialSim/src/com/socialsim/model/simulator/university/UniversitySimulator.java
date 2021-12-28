@@ -12,6 +12,7 @@ import com.socialsim.model.core.environment.university.patchobject.passable.gate
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,15 +79,15 @@ public class UniversitySimulator extends Simulator {
     }
 
     public void spawnInitialAgents(University university) {
-        UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, university.getPatch(57,12), true);
+        UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, university.getPatch(57,12), true, -1);
         university.getAgents().add(guard);
         university.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
 
-        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(5,65), true);
+        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(5,65), true, -1);
         university.getAgents().add(janitor1);
         university.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
 
-        UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(7,66), true);
+        UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(7,66), true, -1);
         university.getAgents().add(janitor2);
         university.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
     }
@@ -98,6 +99,7 @@ public class UniversitySimulator extends Simulator {
     private void start() {
         new Thread(() -> {
             final int speedAwarenessLimitMilliseconds = 10; // For times shorter than this, speed awareness will be implemented
+            long currentTick = this.time.getStartTime().until(this.time.getTime(), ChronoUnit.SECONDS) / 5;
 
             while (true) {
                 try {
@@ -106,7 +108,7 @@ public class UniversitySimulator extends Simulator {
                     while (this.isRunning()) { // Keep looping until paused
                         try {
                             updateAgentsInUniversity(university); // Update the pertinent variables when ticking
-                            // spawnAgent(university);
+                            spawnAgent(university, currentTick);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -163,42 +165,97 @@ public class UniversitySimulator extends Simulator {
 
             case JANITOR:
                 if (state.getName() == UniversityState.Name.MAINTENANCE_BATHROOM) {
-                    if (action.getName() == UniversityAction.Name.CLEAN_STAY_PUT) {
-                        //if (!agentMovement.hasReachedGoalPatch()) {
-                            if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            }
+                    if (action.getName() == UniversityAction.Name.JANITOR_GO_TOILET) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                        }
 
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
 
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                    System.out.println(agentMovement.getCurrentPath().getPath());
-
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) { // Check if there are still patches left in the path
-                                        agentMovement.setCurrentAction(new UniversityAction(UniversityAction.Name.JANITOR_MOVE_SPOT, null, 128));
-//                                        agentMovement.setState(PassengerMovement.State.WALKING);
-//                                        state = PassengerMovement.State.WALKING;
-//
-//                                        passengerMovement.setAction(PassengerMovement.Action.WILL_QUEUE);
-//                                        action = PassengerMovement.Action.WILL_QUEUE;
-
-                                    }
-
-                                    break;
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // Check if there are still patches left in the path
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
                                 }
                             }
-                        //}
+                        }
                     }
-                    else if (action.getName() == UniversityAction.Name.JANITOR_MOVE_SPOT) {
-                        System.out.println("im here");
+                    else if (action.getName() == UniversityAction.Name.JANITOR_CLEAN_TOILET) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                            }
+                        }
+                        else {
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
+                            if (agentMovement.getDuration() == 0) {
+                                agentMovement.setNextState();
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }
+                        }
                     }
                 }
                 else if (state.getName() == UniversityState.Name.MAINTENANCE_FOUNTAIN) {
-                    if (action.getName() == UniversityAction.Name.JANITOR_CHECK_FOUNTAIN) {
-                        // check fountain
+                    if (action.getName() == UniversityAction.Name.JANITOR_GO_FOUNTAIN) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // Check if there are still patches left in the path
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == UniversityAction.Name.JANITOR_CHECK_FOUNTAIN) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                            }
+                        }
+                        else {
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
+                            if (agentMovement.getDuration() == 0) {
+                                agentMovement.setPreviousState();
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }
+                        }
                     }
                 }
 
@@ -1111,7 +1168,7 @@ public class UniversitySimulator extends Simulator {
         }
     }
 
-    private void spawnAgent(University university) {
+    private void spawnAgent(University university, long currentTick) {
         UniversityGate gate = university.getUniversityGates().get(1);
         Gate.GateBlock spawner = gate.getSpawners().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4));
         UniversityAgent agent = null;
@@ -1119,7 +1176,7 @@ public class UniversitySimulator extends Simulator {
         int spawnChance = gate.getChancePerTick();
         int CHANCE_SPAWN = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
         if (spawnChance < CHANCE_SPAWN && UniversityAgent.studentCount != this.MAX_STUDENTS) {
-            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner.getPatch(), false);
+            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner.getPatch(), false, currentTick);
             university.getAgents().add(agent);
             university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
         }
