@@ -1,6 +1,5 @@
 package com.socialsim.model.core.environment.generic;
 
-import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
@@ -26,6 +25,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     private final List<MatrixPosition> neighborIndices;
     private final List<MatrixPosition> neighbor7x7Indices; // Denotes the positions of the neighbors of this patch within a 7x7 range
     private int amenityBlocksAround; // Denotes the number of amenity blocks around this patch
+    private int wallsAround; // Denotes the number of amenity blocks around this patch
 
     public Patch(Environment environment, MatrixPosition matrixPosition) {
         super();
@@ -40,6 +40,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         this.neighborIndices = this.computeNeighboringPatches();
         this.neighbor7x7Indices = this.compute7x7Neighbors();
         this.amenityBlocksAround = 0;
+        this.wallsAround = 0;
     }
 
     public MatrixPosition getMatrixPosition() {
@@ -88,6 +89,10 @@ public class Patch extends BaseObject implements Comparable<Patch> {
 
     public int getAmenityBlocksAround() {
         return amenityBlocksAround;
+    }
+
+    public int getWallsAround() {
+        return wallsAround;
     }
 
     public Environment getEnvironment() {
@@ -216,6 +221,14 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         }
     }
 
+    public void signalAddWall() { // Signal to this patch and to its neighbors that an amenity block was added here
+        this.incrementWallsAround();
+
+        for (Patch neighbor : this.getNeighbors()) {
+            neighbor.incrementWallsAround();
+        }
+    }
+
     public void signalRemoveAmenityBlock() { // Signal to this patch and to its neighbors that an amenity block was removed from here
         this.decrementAmenityBlocksAround();
 
@@ -230,6 +243,10 @@ public class Patch extends BaseObject implements Comparable<Patch> {
 
     private void incrementAmenityBlocksAround() {
         this.amenityBlocksAround++;
+    }
+
+    private void incrementWallsAround() {
+        this.wallsAround++;
     }
 
     private void decrementAmenityBlocksAround() {

@@ -22,6 +22,9 @@ public abstract class Amenity extends PatchObject {
             for (AmenityBlock amenityBlock : this.amenityBlocks) {
                 amenityBlock.setParent(this);
                 amenityBlock.getPatch().setAmenityBlock(amenityBlock);
+                if (amenityBlock.getParent().getClass() != Door.class || amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Door.class) {
+                    amenityBlock.getPatch().signalAddAmenityBlock();
+                }
 
                 if (amenityBlock.isAttractor()) {
                     this.attractors.add(amenityBlock);

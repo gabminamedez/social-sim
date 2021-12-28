@@ -36,7 +36,7 @@ public class UniversitySimulator extends Simulator {
     public UniversitySimulator() {
         this.university = null;
         this.running = new AtomicBoolean(false);
-        this.time = new SimulationTime(0, 0, 0);
+        this.time = new SimulationTime(6, 30, 0);
         this.playSemaphore = new Semaphore(0);
         this.numStudents = 0;
         this.numProfessors = 0;
@@ -164,16 +164,36 @@ public class UniversitySimulator extends Simulator {
             case JANITOR:
                 if (state.getName() == UniversityState.Name.MAINTENANCE_BATHROOM) {
                     if (action.getName() == UniversityAction.Name.CLEAN_STAY_PUT) {
-                        if (!agentMovement.hasReachedGoalPatch()) {
+                        //if (!agentMovement.hasReachedGoalPatch()) {
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             }
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                        }
+
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                    System.out.println(agentMovement.getCurrentPath().getPath());
+
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) { // Check if there are still patches left in the path
+                                        agentMovement.setCurrentAction(new UniversityAction(UniversityAction.Name.JANITOR_MOVE_SPOT, null, 128));
+//                                        agentMovement.setState(PassengerMovement.State.WALKING);
+//                                        state = PassengerMovement.State.WALKING;
+//
+//                                        passengerMovement.setAction(PassengerMovement.Action.WILL_QUEUE);
+//                                        action = PassengerMovement.Action.WILL_QUEUE;
+
+                                    }
+
+                                    break;
+                                }
+                            }
+                        //}
                     }
                     else if (action.getName() == UniversityAction.Name.JANITOR_MOVE_SPOT) {
-                        // move to another patch
+                        System.out.println("im here");
                     }
                 }
                 else if (state.getName() == UniversityState.Name.MAINTENANCE_FOUNTAIN) {

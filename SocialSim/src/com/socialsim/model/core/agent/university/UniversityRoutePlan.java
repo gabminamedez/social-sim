@@ -27,17 +27,17 @@ public class UniversityRoutePlan {
             routePlan.add(new UniversityState(UniversityState.Name.GUARD, this, agent, actions));
         }
         else if (agent.getPersona() == UniversityAgent.Persona.JANITOR) {
-            for(int i = 0; i < Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_JANITOR_ROUNDS); i++){
+            //for(int i = 0; i < Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_JANITOR_ROUNDS); i++){
                 actions = new ArrayList<>();
-                Patch randomToilet1 = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
-                Patch randomToilet2 = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
+                Patch randomToilet1 = university.getDoors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2)).getAmenityBlocks().get(0).getPatch();
+                Patch randomToilet2 = university.getLabTables().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getAmenityBlocks().get(0).getPatch();
                 actions.add(new UniversityAction(UniversityAction.Name.CLEAN_STAY_PUT, randomToilet1, 180)); // TODO: Maybe loop this instead across 6 toilets for each janitor
                 actions.add(new UniversityAction(UniversityAction.Name.JANITOR_MOVE_SPOT, randomToilet2)); // TODO: Maybe remove this should the comment above push thru
                 routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
                 actions = new ArrayList<>();
                 actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 180));
                 routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
-            }
+            //}
         }
         else {
             actions = new ArrayList<>();

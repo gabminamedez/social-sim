@@ -254,7 +254,12 @@ public class UniversityGraphicsController extends Controller {
                                 CURRENT_URL,
                                 agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
                                 agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
-                                column * tileSize, row * tileSize, tileSize * 0.7, tileSize * 0.7);
+
+
+
+                                getScaledAgentCoordinates(universityAgent).getX() * tileSize,
+                                getScaledAgentCoordinates(universityAgent).getY() * tileSize,
+                                tileSize * 0.7, tileSize * 0.7);
                     }
                 }
             }
