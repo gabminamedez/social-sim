@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class UniversityState {
 
-    public enum Name{
+    public enum Name {
         GOING_TO_SECURITY, WANDERING_AROUND, NEEDS_BATHROOM, NEEDS_DRINK,
         GOING_TO_STUDY, STUDYING, GOING_TO_CLASS_STUDENT, GOING_TO_CLASS_PROFESSOR,
         WAIT_FOR_CLASS_STUDENT, WAIT_FOR_CLASS_PROFESSOR,
@@ -21,20 +21,21 @@ public class UniversityState {
     private int tickClassStart;
     private int classroomID;
 
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent){
+    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent) {
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = new ArrayList<>();
     }
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, ArrayList<UniversityAction> actions){
+
+    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, ArrayList<UniversityAction> actions) {
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = actions;
     }
 
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, int tickClassStart, int classroomID){ // Class state
+    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, int tickClassStart, int classroomID) { // Class state
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
@@ -73,6 +74,10 @@ public class UniversityState {
 
     public void setAgent(UniversityAgent agent) {
         this.agent = agent;
+    }
+
+    public ArrayList<UniversityAction> getActions() {
+        return this.actions;
     }
 
     public void addAction(UniversityAction a){

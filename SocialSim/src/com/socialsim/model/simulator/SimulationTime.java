@@ -26,19 +26,16 @@ public class SimulationTime {
         this.startTime = this.time;
     }
 
-    // Return true unless the given time is ahead of the given ending time
-    public boolean isTimeBeforeOrDuring(SimulationTime endingTime) {
+    public boolean isTimeBeforeOrDuring(SimulationTime endingTime) { // Return true unless the given time is ahead of the given ending time
         return this.time.compareTo(endingTime.getTime()) <= 0;
     }
 
-    // Increment the time by one second
-    public void tick() {
+    public void tick() { // Increment the time by one second
         final long INCREMENT_COUNT = 5L;
         this.setTime(this.time.plusSeconds(INCREMENT_COUNT));
     }
 
-    // Reset the time to the start time
-    public void reset() {
+    public void reset() { // Reset the time to the start time
         this.setTime(this.startTime);
     }
 

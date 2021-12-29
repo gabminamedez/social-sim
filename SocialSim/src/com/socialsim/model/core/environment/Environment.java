@@ -117,4 +117,5 @@ public abstract class Environment extends BaseObject implements SimulationObject
     public abstract SortedSet<Patch> getAmenityPatchSet();
 
     public abstract SortedSet<Patch> getAgentPatchSet();
+
 }

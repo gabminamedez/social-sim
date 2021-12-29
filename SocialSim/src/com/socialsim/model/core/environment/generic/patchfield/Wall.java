@@ -13,6 +13,7 @@ public class Wall extends PatchField {
         Pair<PatchField, Integer> pair = new Pair<>(this, num);
         for(Patch patch : patches) {
             patch.setPatchField(pair);
+            patch.signalAddWall();
         }
     }
 
