@@ -488,13 +488,24 @@ public class UniversityAgentMovement extends AgentMovement {
                     distancesToAttractors.put(attractor, distanceToAttractor);
                 }
             }
-
-            // TODO: Fix sorting
             // TODO: Fix choosing in a way na may "reservations" na
             // TODO: Paincorporate nalang yung above two changes sa other chooser functions
             // Sort amenity by distance, from nearest to furthest
-            LinkedHashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<>();
-            sortedDistances.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEachOrdered(x -> distancesToAttractors.put(x.getKey(), x.getValue()));
+            List<Map.Entry<Amenity.AmenityBlock, Double> > list =
+                    new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1,
+                                   Map.Entry<Amenity.AmenityBlock, Double> o2)
+                {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                sortedDistances.put(aa.getKey(), aa.getValue());
+            }
 
             for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
                 Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
@@ -503,11 +514,10 @@ public class UniversityAgentMovement extends AgentMovement {
                     chosenAttractor = candidateAttractor;
                     // TODO: Maybe add this line below for "reser
                     // candidateAttractor.getPatch().getAgents().add(this.parent);
+                    // TODO: logic when all amenities are in use
                     break;
                 }
             }
-
-            // TODO: logic when all amenities are in use
 
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
@@ -544,14 +554,30 @@ public class UniversityAgentMovement extends AgentMovement {
             }
 
             // Sort amenity by distance, from nearest to furthest
-            LinkedHashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<>();
-            sortedDistances.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEachOrdered(x -> distancesToAttractors.put(x.getKey(), x.getValue()));
+            List<Map.Entry<Amenity.AmenityBlock, Double> > list =
+                    new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1,
+                                   Map.Entry<Amenity.AmenityBlock, Double> o2)
+                {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                sortedDistances.put(aa.getKey(), aa.getValue());
+            }
 
             for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
                 Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                if (candidateAttractor.getPatch().getAgents().isEmpty()) { // Break when first vacant amenity is found
+                if (candidateAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
                     chosenAmenity =  candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
+                    // TODO: Maybe add this line below for "reser
+                    // candidateAttractor.getPatch().getAgents().add(this.parent);
+                    // TODO: logic when all amenities are in use
                     break;
                 }
             }
@@ -581,14 +607,30 @@ public class UniversityAgentMovement extends AgentMovement {
             }
 
             // Sort amenity by distance, from nearest to furthest
-            LinkedHashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<>();
-            sortedDistances.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEachOrdered(x -> distancesToAttractors.put(x.getKey(), x.getValue()));
+            List<Map.Entry<Amenity.AmenityBlock, Double> > list =
+                    new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1,
+                                   Map.Entry<Amenity.AmenityBlock, Double> o2)
+                {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                sortedDistances.put(aa.getKey(), aa.getValue());
+            }
 
             for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
                 Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                if(candidateAttractor.getPatch().getAgents().isEmpty()){ // Break when first vacant amenity is found
+                if (candidateAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
                     chosenAmenity =  candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
+                    // TODO: Maybe add this line below for "reser
+                    // candidateAttractor.getPatch().getAgents().add(this.parent);
+                    // TODO: logic when all amenities are in use
                     break;
                 }
             }
