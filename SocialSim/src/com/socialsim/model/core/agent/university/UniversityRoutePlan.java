@@ -40,8 +40,8 @@ public class UniversityRoutePlan {
                 }
             }
             actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, doorPatch));
-            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, randomToilet));
-            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, 180));
+            // actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, randomToilet));
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 180));
             routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_FOUNTAIN, doorPatch));

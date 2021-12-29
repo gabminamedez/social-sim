@@ -173,6 +173,7 @@ public class UniversitySimulator extends Simulator {
                     }
                     else if (action.getName() == UniversityAction.Name.JANITOR_CLEAN_TOILET) {
                         if (agentMovement.getGoalAmenity() == null) {
+                            System.out.println(agentMovement.getCurrentAction().getDestination());
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
                             agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
