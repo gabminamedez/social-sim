@@ -506,7 +506,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
-            this.goalPatch = chosenAttractor.getPatch();
+            System.out.println(goalAttractor);
         }
     }
 
@@ -554,7 +554,6 @@ public class UniversityAgentMovement extends AgentMovement {
 
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
-            this.goalPatch = chosenAttractor.getPatch();
         }
     }
 
@@ -592,7 +591,6 @@ public class UniversityAgentMovement extends AgentMovement {
 
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
-            this.goalPatch = chosenAttractor.getPatch();
         }
     }
 
@@ -630,7 +628,6 @@ public class UniversityAgentMovement extends AgentMovement {
 
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
-            this.goalPatch = chosenAttractor.getPatch().getQueueingPatchField().getKey().getLastQueuePatch();
             this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
         }
     }
