@@ -3,6 +3,7 @@ package com.socialsim.model.core.agent.university;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.university.patchfield.Bathroom;
+import com.socialsim.model.core.environment.university.patchfield.StudyArea;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Door;
 import com.socialsim.model.simulator.Simulator;
 
@@ -54,18 +55,66 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2));
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
 
-            actions = new ArrayList<>();
-            //Patch randomThing = university.getBenches().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4)).getAmenityBlocks().get(0).getPatch();
-            actions.add(new UniversityAction(UniversityAction.Name.FIND_BENCH));
-            actions.add(new UniversityAction(UniversityAction.Name.SIT_ON_BENCH,5));
-
-            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
+//            actions = new ArrayList<>();
+//            //Patch randomThing = university.getBenches().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4)).getAmenityBlocks().get(0).getPatch();
+//            actions.add(new UniversityAction(UniversityAction.Name.FIND_BENCH));
+//            actions.add(new UniversityAction(UniversityAction.Name.SIT_ON_BENCH,5));
+//            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
 
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.FIND_BULLETIN));
             actions.add(new UniversityAction(UniversityAction.Name.VIEW_BULLETIN,5));
-
             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
+
+            actions = new ArrayList<>();
+            List<Door> allDoors = university.getDoors();
+            Patch StudydoorPatch = null;
+            Patch BathroomDoorPatch = null;
+            for (Door door : allDoors) {
+                if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == Bathroom.class) {
+                    BathroomDoorPatch = door.getAmenityBlocks().get(0).getPatch();
+                    break;
+                }
+            }
+            for (Door door : allDoors) {
+                if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == StudyArea.class) {
+                    StudydoorPatch = door.getAmenityBlocks().get(0).getPatch();
+                    break;
+                }
+            }
+            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM,BathroomDoorPatch));
+            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
+            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE,5));
+            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK,5));
+            actions.add(new UniversityAction(UniversityAction.Name.LEAVE_BATHROOM,BathroomDoorPatch));
+            routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM,this,agent,actions));
+
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.FIND_BULLETIN));
+            actions.add(new UniversityAction(UniversityAction.Name.VIEW_BULLETIN,5));
+            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
+
+//            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM,StudydoorPatch));
+//            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
+//            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY,this,agent,actions));
+//
+//            actions = new ArrayList<>();
+//            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT,15));
+//            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT,StudydoorPatch));
+//            routePlan.add(new UniversityState(UniversityState.Name.STUDYING,this,agent,actions));
+//
+//            actions = new ArrayList<>();
+//            actions.add(new UniversityAction(UniversityAction.Name.FIND_BULLETIN));
+//            actions.add(new UniversityAction(UniversityAction.Name.VIEW_BULLETIN,5));
+//            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
+//
+//            actions = new ArrayList<>();
+//            //Patch randomThing = university.getBenches().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4)).getAmenityBlocks().get(0).getPatch();
+//            actions.add(new UniversityAction(UniversityAction.Name.FIND_BENCH));
+//            actions.add(new UniversityAction(UniversityAction.Name.SIT_ON_BENCH,5));
+//            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
+
+
 
             int CALCULATED_CLASSES, LUNCH_TIME;
             ArrayList<Integer> classes = new ArrayList<>();

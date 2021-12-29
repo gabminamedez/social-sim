@@ -8,9 +8,9 @@ import com.socialsim.model.core.agent.university.UniversityAgentMovement;
 import com.socialsim.model.core.agent.university.UniversityState;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.environment.university.patchfield.StudyArea;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Bench;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Bulletin;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
@@ -27,7 +27,7 @@ public class UniversitySimulator extends Simulator {
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
 
-    private final int MAX_STUDENTS = 250;
+    private final int MAX_STUDENTS = 10;//250
     private final int MAX_PROFESSORS = 10;
 
     public UniversitySimulator() {
@@ -183,7 +183,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                agentMovement.reachPatchInPath();
                             }
                         }
                         else {
@@ -208,8 +208,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // Check if there are still patches left in the path
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
@@ -228,7 +228,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                agentMovement.reachPatchInPath();
                             }
                         }
                         else {
@@ -258,10 +258,10 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                     agentMovement.joinQueue();
-                                    // agentMovement.resetGoal();
+
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 }
@@ -273,7 +273,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                agentMovement.reachPatchInPath();
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                     agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
                                 }
@@ -303,8 +303,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // Check if there are still patches left in the path
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                 }
                             }
                         }
@@ -317,13 +317,11 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
-                                    // agentMovement.resetGoal();
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.setDuration(agent.getAgentMovement().getDuration());
-                                    //transition to SIT_ON_BENCH
                                     System.out.println("Transition to SIT ON BENCH");
                                 }
                             }
@@ -337,17 +335,14 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setActionIndex(0);
                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                             agentMovement.resetGoal();
-                            System.out.println("I'm done sitting on bench");
                         }
                     }
                     else if(action.getName()==UniversityAction.Name.FIND_BULLETIN){
 
                         if (agentMovement.getGoalAmenity() == null) {
-                            System.out.print("FOUND Bulletin: ");
                             agentMovement.chooseGoal(Bulletin.class);
+                            System.out.print("Finding Bulletin: ");
                         }
-                        System.out.print("Finding Bulletin: ");
-                        System.out.println(agentMovement.getCurrentPath().getPath());
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
@@ -357,13 +352,14 @@ public class UniversitySimulator extends Simulator {
 
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.setDuration(agent.getAgentMovement().getDuration());
                                     //transition to VIEW_BULLETING
                                 }
                             }
                         }
                     }
                     else if(action.getName()==UniversityAction.Name.VIEW_BULLETIN){
-                        System.out.println("VIEWING BULLETING");
+                       // System.out.println("VIEWING BULLETING");
                         agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                         agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                         if (agentMovement.getCurrentAction().getDuration() == 0) {
@@ -385,40 +381,120 @@ public class UniversitySimulator extends Simulator {
 
                     /*Insert Action*/
                     if (action.getName()==UniversityAction.Name.GO_TO_BATHROOM){
-                        if(agentMovement.hasReachedGoalPatch()){
-                            action.setName(UniversityAction.Name.FIND_CUBICLE);
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
+                                    // agentMovement.resetGoal();
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                    System.out.println("Transition to FIND_CUBICLE");
+                                }
+                            }
                         }
                     }
                     else if(action.getName()==UniversityAction.Name.FIND_CUBICLE){
-                        if(agentMovement.hasReachedGoalPatch()){
-                            action.setName(UniversityAction.Name.RELIEVE_IN_CUBICLE);
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseGoal(Toilet.class);
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
+                                    // agentMovement.resetGoal();
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                                    System.out.println("Transition to RELIEVE_IN_CUBICLE");
+                                }
+                            }
                         }
                     }
                     else if(action.getName()==UniversityAction.Name.RELIEVE_IN_CUBICLE){
-                        //wait for certain amount of ticks
-                        if (action.getDuration()==0){
-                            action.setName(UniversityAction.Name.WASH_IN_SINK);
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                            agentMovement.resetGoal();
+                            System.out.println("Transition to Wash  in sink");
                         }
                     }
-//                    else if(action.getName()==UniversityAction.Name.WASH_IN_SINK){
-//                        if(action.getDuration()==0){
-//                            switch(STATE_INDEX){
-//                                case 1://from wandering around
-//                                    state.setName(UniversityState.Name.WANDERING_AROUND);
-//                                case 2://from studying
-//                                    state.setName(UniversityState.Name.GOING_TO_STUDY);
-//                                case 3://from class
-//                                    state.setName(UniversityState.Name.GOING_TO_CLASS_STUDENT);
-//                                case 4://from lunch
-//                                    state.setName(UniversityState.Name.GOING_TO_LUNCH);
-//                            }
-//                        }
-//                    }
-                } else if (state.getName()== UniversityState.Name.NEEDS_DRINK) {
+                    else if(action.getName()==UniversityAction.Name.WASH_IN_SINK){
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseGoal(Sink.class);
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                            }
+                        }
+                        else{
+                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                                agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                                agentMovement.resetGoal();
+                                System.out.println("Transition to Leave Bathroom");
+                            }
+                        }
+                    }
+                    else if(action.getName()==UniversityAction.Name.LEAVE_BATHROOM){
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            //declare bathroom door in routeplan
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
+                                    // agentMovement.resetGoal();
+                                    agentMovement.setNextState();
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                    System.out.println("Transition to NEXT STATE LEFT BATHROOM");
+                                    //TODO:Return to previous state.
+                                }
+                            }
+                        }
+                    }
+                } else if (state.getName()== UniversityState.Name.NEEDS_DRINK) { //TODO: Needs DRINK
                     /*Insert Action*/
                     if(action.getName()==UniversityAction.Name.GO_TO_DRINKING_FOUNTAIN){
-                        if(agentMovement.hasReachedQueueingPatchField()){
-                            action.setName(UniversityAction.Name.QUEUE_FOUNTAIN);
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseGoal(Fountain.class);
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
                         }
                     }
                     else if(action.getName()==UniversityAction.Name.QUEUE_FOUNTAIN){
@@ -442,23 +518,82 @@ public class UniversitySimulator extends Simulator {
 //                        }
                     }
                 } else if (state.getName()== UniversityState.Name.GOING_TO_STUDY) {
-                    /*Insert Action*/
                     if (action.getName()==UniversityAction.Name.GO_TO_STUDY_ROOM){
-                        if(agentMovement.hasReachedGoalPatch()){
-                            //if in study room TODO: if agent decides to study in diff location.
-                            action.setName(UniversityAction.Name.FIND_SEAT_STUDY_ROOM);
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
                         }
-                        else if(action.getName()==UniversityAction.Name.FIND_SEAT_STUDY_ROOM){
-                            state.setName(UniversityState.Name.STUDYING);
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
+                                    // agentMovement.resetGoal();
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                                    agentMovement.resetGoal();
+                                    System.out.println("Transition to FIND SEAT STUDYROOM");
+                                }
+                            }
                         }
                     }
-                } else if (state.getName()== UniversityState.Name.STUDYING) {
-                    /*Insert Action*/
-//                    STATE_INDEX = 2;
-                    if(action.getName()==UniversityAction.Name.STUDY_AREA_STAY_PUT){
-                        //if duration 0 do something
+                    else if (action.getName()==UniversityAction.Name.FIND_SEAT_STUDY_ROOM){
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseGoal(StudyTable.class);
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                    agentMovement.setNextState();
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    System.out.println("Find_seat_studyroom to Studying");
+                                }
+                            }
+                        }
+
                     }
-                } else if (state.getName()== UniversityState.Name.GOING_TO_CLASS_STUDENT) {
+                }
+                else if (state.getName()== UniversityState.Name.STUDYING) {
+                    if (action.getName()==UniversityAction.Name.STUDY_AREA_STAY_PUT){
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                            agentMovement.resetGoal();
+                            System.out.println("DONE STUDYING");
+                        }
+                    }
+                    else if(action.getName()==UniversityAction.Name.LEAVE_STUDY_AREA){
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
+                                    // agentMovement.resetGoal();
+                                    agentMovement.setNextState();
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                    System.out.println("LEFT THE STUDY AREA");
+                                }
+                            }
+                        }
+                    }
+
+                } else if (state.getName()== UniversityState.Name.GOING_TO_CLASS_STUDENT) {//TODO: GO TO CLASS
                     /*Insert Action*/
 //                    STATE_INDEX = 3;
                     if (action.getName()==UniversityAction.Name.GO_TO_CLASSROOM){
@@ -467,7 +602,8 @@ public class UniversitySimulator extends Simulator {
                         }
                     }
 
-                } else if (state.getName()== UniversityState.Name.WAIT_FOR_CLASS_STUDENT) {
+                }
+                else if (state.getName()== UniversityState.Name.WAIT_FOR_CLASS_STUDENT) {
                     /*Insert Action*/
                     if(action.getName()==UniversityAction.Name.FIND_SEAT_CLASSROOM){
                         if(agentMovement.hasReachedGoalPatch()){
@@ -482,7 +618,8 @@ public class UniversitySimulator extends Simulator {
                         state.setName(UniversityState.Name.IN_CLASS_STUDENT);
                     }
                      */
-                } else if (state.getName()== UniversityState.Name.IN_CLASS_STUDENT) {
+                }
+                else if (state.getName()== UniversityState.Name.IN_CLASS_STUDENT) {
                     /*Insert Action*/
                     if(action.getName()==UniversityAction.Name.CLASSROOM_STAY_PUT){
                         //do nothing
@@ -490,7 +627,8 @@ public class UniversitySimulator extends Simulator {
                     else if(action.getName()==UniversityAction.Name.ASK_PROFESSOR_QUESTION){
                         //do something
                     }
-                } else if (state.getName()== UniversityState.Name.GOING_TO_LUNCH) {
+                }
+                else if (state.getName()== UniversityState.Name.GOING_TO_LUNCH) { //TODO: GO TO LUNCH
                     /*Insert Action*/
 //                    STATE_INDEX = 4;
                     if(action.getName()==UniversityAction.Name.GO_TO_CAFETERIA){
@@ -518,12 +656,14 @@ public class UniversitySimulator extends Simulator {
                             }
                         }
                     }
-                } else if (state.getName()== UniversityState.Name.EATING_LUNCH) {
+                }
+                else if (state.getName()== UniversityState.Name.EATING_LUNCH) {
                     /*Insert Action*/
                     if(action.getName()==UniversityAction.Name.LUNCH_STAY_PUT){
                         //after number of ticks transition to randomized state
                     }
-                } else if (state.getName()== UniversityState.Name.GOING_HOME) {
+                }
+                else if (state.getName()== UniversityState.Name.GOING_HOME) {
                     /*Insert Action*/
                 }
                 break;

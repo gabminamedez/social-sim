@@ -42,6 +42,10 @@ public class UniversityAction {
         ASK_PROFESSOR_QUESTION,
         ANSWER_STUDENT_QUESTION,
 
+        LEAVE_STUDY_AREA,
+        LEAVE_BENCH,
+        LEAVE_BATHROOM,
+
         GO_TO_VENDOR,
         QUEUE_VENDOR,
         CHECKOUT,
