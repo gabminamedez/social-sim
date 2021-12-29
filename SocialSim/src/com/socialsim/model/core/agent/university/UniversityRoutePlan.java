@@ -29,31 +29,35 @@ public class UniversityRoutePlan {
             routePlan.add(new UniversityState(UniversityState.Name.GUARD, this, agent, actions));
         }
         else if (agent.getPersona() == UniversityAgent.Persona.JANITOR) {
-            //for(int i = 0; i < Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_JANITOR_ROUNDS); i++){
-                actions = new ArrayList<>();
-                Patch randomToilet = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
-                List<Door> allDoors = university.getDoors();
-                Patch doorPatch = null;
-                for (Door door : allDoors) {
-                    if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == Bathroom.class && door.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == randomToilet.getPatchField().getValue()) {
-                        doorPatch = door.getAmenityBlocks().get(0).getPatch();
-                        break;
-                    }
+            actions = new ArrayList<>();
+            Patch randomToilet = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
+            List<Door> allDoors = university.getDoors();
+            Patch doorPatch = null;
+            for (Door door : allDoors) {
+                if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == Bathroom.class && door.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == randomToilet.getPatchField().getValue()) {
+                    doorPatch = door.getAmenityBlocks().get(0).getPatch();
+                    break;
                 }
-                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, doorPatch));
-                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 18));
-                routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
-                actions = new ArrayList<>();
-                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_FOUNTAIN, doorPatch));
-                actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 180));
-                routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
-            //}
+            }
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, doorPatch));
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 180));
+            routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_FOUNTAIN, doorPatch));
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 180));
+            routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
         }
         else {
             actions = new ArrayList<>();
-            actions.add(new UniversityAction(UniversityAction.Name.GREET_GUARD, null, 0)); //TODO: Maybe remove this since interaction
-            actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2)); //TODO: Change patch destination and duration
+            actions.add(new UniversityAction(UniversityAction.Name.GOING_TO_SECURITY_QUEUE));
+            actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2));
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
+
+            actions = new ArrayList<>();
+            Patch randomThing = university.getBenches().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4)).getAmenityBlocks().get(0).getPatch();
+            actions.add(new UniversityAction(UniversityAction.Name.RANDOM_ACTION, randomThing, 180));
+            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
+
             int CALCULATED_CLASSES, LUNCH_TIME;
             ArrayList<Integer> classes = new ArrayList<>();
             if (tickEntered < 720) { // based on 1 tick = 5 seconds

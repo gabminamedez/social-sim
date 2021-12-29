@@ -57,6 +57,11 @@ public class UniversityScreenController extends ScreenController {
 
     @FXML
     public void initializeAction() {
+        if (Main.universitySimulator.isRunning()) { // If the simulator is running, stop it
+            playAction();
+            playButton.setSelected(false);
+        }
+
         int width = 60; // Value may be from 25-100
         int length = 130; // Value may be from 106-220
         int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
