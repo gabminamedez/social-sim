@@ -41,11 +41,11 @@ public class UniversityRoutePlan {
             }
             actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, doorPatch));
             // actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, randomToilet));
-            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 180));
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 10));
             routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_FOUNTAIN, doorPatch));
-            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 180));
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 10));
             routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
         }
         else {
@@ -55,9 +55,13 @@ public class UniversityRoutePlan {
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
 
             actions = new ArrayList<>();
-            Patch randomThing = university.getBenches().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4)).getAmenityBlocks().get(0).getPatch();
+            //Patch randomThing = university.getBenches().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4)).getAmenityBlocks().get(0).getPatch();
             actions.add(new UniversityAction(UniversityAction.Name.FIND_BENCH));
             actions.add(new UniversityAction(UniversityAction.Name.SIT_ON_BENCH,5));
+
+            routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
+
+            actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.FIND_BULLETIN));
             actions.add(new UniversityAction(UniversityAction.Name.VIEW_BULLETIN,5));
 
