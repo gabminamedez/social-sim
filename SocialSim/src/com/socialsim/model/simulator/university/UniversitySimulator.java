@@ -75,7 +75,7 @@ public class UniversitySimulator extends Simulator {
         university.getAgents().add(guard);
         university.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
 
-        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(5,65), true, -1);
+        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(6,65), true, -1);
         university.getAgents().add(janitor1);
         university.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
 
@@ -160,6 +160,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
                                 agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                System.out.println(agentMovement.getCurrentPath().getPath());
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) { // Check if there are still patches left in the path
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -384,44 +385,52 @@ public class UniversitySimulator extends Simulator {
             agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner0.getPatch(), false, currentTick);
             university.getAgents().add(agent);
             university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+            System.out.println(String.valueOf(UniversityAgent.studentCount) + " " + String.valueOf(agent.getPersona()));
         }
         else if (spawnChance < CHANCE_SPAWN_0 && !isStudent0 && UniversityAgent.professorCount != this.MAX_PROFESSORS) {
             agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.PROFESSOR, spawner0.getPatch(), false, currentTick);
             university.getAgents().add(agent);
             university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+            System.out.println(String.valueOf(UniversityAgent.professorCount) + " " + String.valueOf(agent.getPersona()));
         }
 
         if (spawnChance < CHANCE_SPAWN_1 && isStudent1 && UniversityAgent.studentCount != this.MAX_STUDENTS) {
             agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner1.getPatch(), false, currentTick);
             university.getAgents().add(agent);
             university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+            System.out.println(String.valueOf(UniversityAgent.studentCount) + " " + String.valueOf(agent.getPersona()));
         }
         else if (spawnChance < CHANCE_SPAWN_1 && !isStudent1 && UniversityAgent.professorCount != this.MAX_PROFESSORS) {
             agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.PROFESSOR, spawner1.getPatch(), false, currentTick);
             university.getAgents().add(agent);
             university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+            System.out.println(String.valueOf(UniversityAgent.professorCount) + " " + String.valueOf(agent.getPersona()));
         }
 
         if (spawnChance < CHANCE_SPAWN_2 && isStudent2 && UniversityAgent.studentCount != this.MAX_STUDENTS) {
             agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner2.getPatch(), false, currentTick);
             university.getAgents().add(agent);
             university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+            System.out.println(String.valueOf(UniversityAgent.studentCount) + " " + String.valueOf(agent.getPersona()));
         }
         else if (spawnChance < CHANCE_SPAWN_2 && !isStudent2 && UniversityAgent.professorCount != this.MAX_PROFESSORS) {
             agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.PROFESSOR, spawner2.getPatch(), false, currentTick);
             university.getAgents().add(agent);
             university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+            System.out.println(String.valueOf(UniversityAgent.professorCount) + " " + String.valueOf(agent.getPersona()));
         }
 
         if (spawnChance < CHANCE_SPAWN_3 && isStudent3 && UniversityAgent.studentCount != this.MAX_STUDENTS) {
             agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner3.getPatch(), false, currentTick);
             university.getAgents().add(agent);
             university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+            System.out.println(String.valueOf(UniversityAgent.studentCount) + " " + String.valueOf(agent.getPersona()));
         }
         else if (spawnChance < CHANCE_SPAWN_3 && !isStudent3 && UniversityAgent.professorCount != this.MAX_PROFESSORS) {
             agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.PROFESSOR, spawner3.getPatch(), false, currentTick);
             university.getAgents().add(agent);
             university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+            System.out.println(String.valueOf(UniversityAgent.professorCount) + " " + String.valueOf(agent.getPersona()));
         }
     }
 

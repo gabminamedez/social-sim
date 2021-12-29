@@ -17,6 +17,7 @@ import com.socialsim.model.core.environment.university.patchfield.Bathroom;
 import com.socialsim.model.core.environment.university.patchfield.Classroom;
 import com.socialsim.model.core.environment.university.patchfield.StallField;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Door;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.Security;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.*;
@@ -445,9 +446,7 @@ public class UniversityAgentMovement extends AgentMovement {
                     Patch previousPatch = cameFrom.get(currentPatch);
                     length += Coordinates.distance(previousPatch.getPatchCenterCoordinates(), currentPatch.getPatchCenterCoordinates());
                     currentPatch = previousPatch;
-                    if (!hasObstacle(currentPatch, goalAmenity)) {
-                        path.push(currentPatch);
-                    }
+                    path.push(currentPatch);
                 }
 
                 return new AgentPath(length, path);
@@ -457,6 +456,8 @@ public class UniversityAgentMovement extends AgentMovement {
             List<Patch> patchToExploreNeighbors = patchToExplore.getNeighbors();
             for (Patch patchToExploreNeighbor : patchToExploreNeighbors) {
                 if (patchToExploreNeighbor.getAmenityBlock() == null || patchToExploreNeighbor.getPatchField() == null
+                        || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getAmenityBlock().getParent().getClass() == Door.class)
+                        || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getAmenityBlock().getParent().getClass() == Security.class)
                         || (patchToExploreNeighbor.getPatchField() != null && patchToExploreNeighbor.getPatchField().getKey().getClass() != Wall.class)
                         || (!includeStartingPatch && patchToExplore.equals(startingPatch) || !includeGoalPatch && patchToExploreNeighbor.equals(goalPatch))) {
                     double obstacleClosenessPenalty = (patchToExploreNeighbor.getAmenityBlocksAround() + patchToExploreNeighbor.getWallsAround()) * 2.0;
@@ -1580,7 +1581,7 @@ public class UniversityAgentMovement extends AgentMovement {
             return true;
         }
         else if (patch.getAmenityBlock() != null && !patch.getAmenityBlock().getParent().equals(amenity)) {
-            if (patch.getAmenityBlock().getParent().getClass() == Door.class) {
+            if (patch.getAmenityBlock().getParent().getClass() == Door.class || patch.getAmenityBlock().getParent().getClass() == Security.class) {
                 return false;
             }
             else {
