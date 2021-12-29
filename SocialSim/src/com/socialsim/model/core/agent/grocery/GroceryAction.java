@@ -23,6 +23,7 @@ public class GroceryAction {
 
         FIND_PRODUCTS,
         CHECK_PRODUCTS,
+        FOLLOW_LEADER_SHOP,
 
         GO_TO_CHECKOUT,
         QUEUE_CHECKOUT,
@@ -32,9 +33,11 @@ public class GroceryAction {
 
         TALK_TO_CUSTOMER_SERVICE,
         WAIT_FOR_CUSTOMER_SERVICE,
+        FOLLOW_LEADER_SERVICE,
 
         QUEUE_FOOD,
         BUY_FOOD,
+        FOLLOW_LEADER_EAT,
         FIND_SEAT_FOOD_COURT,
         EATING_FOOD,
 
@@ -60,20 +63,21 @@ public class GroceryAction {
         GUARD_STATION,
         GUARD_CHECK_GROCERIES,
 
-        FOOD_STAFF_STATION,
-        FOOD_STAFF_SERVE_CUSTOMER,
+        STAFF_FOOD_STATION,
+        STAFF_FOOD_SERVE_CUSTOMER,
 
-        AISLE_STAFF_ORGANIZE,
-        AISLE_STAFF_ANSWER_CUSTOMER
+        STAFF_AISLE_ORGANIZE,
+        STAFF_AISLE_ANSWER_CUSTOMER
     }
 
     private Name name;
     private int duration;
     private Patch destination;
+    private int aisleID;
+    private GroceryAgent leaderAgent;
 
     public GroceryAction(Name name){ // For actions where the destination depends on the chooseGoal/chooseStall, and the duration also depends on the movement
         this.name = name;
-        this.destination = destination;
     }
 
     public GroceryAction(Name name, Patch destination){ // For going to somewhere (since time will depend on AgentMovement)
@@ -81,9 +85,20 @@ public class GroceryAction {
         this.destination = destination;
     }
 
-    public GroceryAction(Name name, int duration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
+    public GroceryAction(Name name, int aisleID){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
         this.name = name;
+        this.aisleID = aisleID;
+    }
+
+    public GroceryAction(Name name, GroceryAgent agent, int duration){ // For agents following a leader
+        this.name = name;
+        this.leaderAgent = agent;
         this.duration = duration;
+    }
+
+    public GroceryAction(Name name, GroceryAgent agent){ // For agents following a leader
+        this.name = name;
+        this.leaderAgent = agent;
     }
 
     public GroceryAction(Name name, int minimumDuration, int maximumDuration){ // For queueables (i.e. no need to specify patch) OR amenities where the specific patch is TBD (e.g. yet to find nearest amenity)
