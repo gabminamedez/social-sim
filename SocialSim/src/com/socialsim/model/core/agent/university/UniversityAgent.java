@@ -13,7 +13,6 @@ public class UniversityAgent extends Agent {
     public static int agentCount = 0;
     public static int guardCount = 0;
     public static int janitorCount = 0;
-    public static int officerCount = 0;
     public static int professorCount = 0;
     public static int studentCount = 0;
 
@@ -149,9 +148,6 @@ public class UniversityAgent extends Agent {
         }
         else if (type == UniversityAgent.Type.JANITOR) {
             UniversityAgent.janitorCount++;
-        }
-        else if (type == Type.OFFICER) {
-            UniversityAgent.officerCount++;
         }
         else if (type == UniversityAgent.Type.PROFESSOR) {
             UniversityAgent.professorCount++;
@@ -306,7 +302,7 @@ public class UniversityAgent extends Agent {
     }
 
     public enum Type {
-        GUARD, JANITOR, OFFICER, PROFESSOR, STUDENT
+        GUARD, JANITOR, PROFESSOR, STUDENT
     }
 
     public enum Gender {
