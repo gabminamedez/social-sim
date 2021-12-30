@@ -305,7 +305,10 @@ public class University extends Environment {
             Persona agent1 = agents.get(i).getPersona();
             ArrayList<Integer> IOSScales = new ArrayList<>();
             for (int j = 0 ; j < this.getAgents().size(); j++){
-                if (i != j){
+                if (i == j){
+                    IOSScales.add(0);
+                }
+                else {
                     Persona agent2 = agents.get(j).getPersona();
                     if (agent1 == Persona.GUARD){
                         //1. Get IOS Scale of each agent then put in an array
@@ -798,7 +801,10 @@ public class University extends Environment {
     public CopyOnWriteArrayList<Double> convertToChanceInteraction(ArrayList<Integer> IOSScales){// Convert IOS to chance based only on threshold, not 0 to said scale
         CopyOnWriteArrayList<Double> listIOS = new CopyOnWriteArrayList<>();
         for (int iosScale : IOSScales) {
-            listIOS.add((iosScale - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7);
+            if (iosScale == 0)
+                listIOS.add((double) 0);
+            else
+                listIOS.add((iosScale - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7);
 //            listIOS.add(Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * iosScale / 7);
          }
         return listIOS;
