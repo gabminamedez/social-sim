@@ -1,7 +1,9 @@
 package com.socialsim.model.core.agent.grocery;
 
 import com.socialsim.controller.grocery.graphics.agent.GroceryAgentGraphic;
+import com.socialsim.controller.university.graphics.agent.UniversityAgentGraphic;
 import com.socialsim.model.core.agent.Agent;
+import com.socialsim.model.core.agent.university.UniversityAgentMovement;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.simulator.Simulator;
@@ -25,9 +27,10 @@ public class GroceryAgent extends Agent {
     private final GroceryAgent.Gender gender;
     private GroceryAgent.AgeGroup ageGroup = null;
     private GroceryAgent.Persona persona = null;
+    private final boolean inOnStart;
 
-//    private final GroceryAgentGraphic agentGraphic;
-//    private final GroceryAgentMovement agentMovement;
+    private final GroceryAgentGraphic agentGraphic;
+    private final GroceryAgentMovement agentMovement;
 
     public static final GroceryAgent.GroceryAgentFactory agentFactory;
 
@@ -38,6 +41,7 @@ public class GroceryAgent extends Agent {
     private GroceryAgent(GroceryAgent.Type type, Patch spawnPatch, boolean inOnStart) {
         this.id = agentCount;
         this.type = type;
+        this.inOnStart = inOnStart;
 
         if (type == Type.CUSTOMER) {
             GroceryAgent.customerCount++;
@@ -155,6 +159,9 @@ public class GroceryAgent extends Agent {
 //            GroceryGate groceryGate = (GroceryGate) spawnPatch.getAmenityBlock().getParent();
 //            // this.agentMovement = new GroceryAgentMovement(groceryGate, this, 1.27, spawnPatch.getPatchCenterCoordinates());
 //        }
+
+        this.agentGraphic = new GroceryAgentGraphic();
+        this.agentMovement = new GroceryAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates());
     }
 
     public int getId() {
@@ -169,6 +176,10 @@ public class GroceryAgent extends Agent {
         return gender;
     }
 
+    public boolean getInOnStart() {
+        return inOnStart;
+    }
+
     public GroceryAgent.AgeGroup getAgeGroup() {
         return ageGroup;
     }
@@ -177,13 +188,13 @@ public class GroceryAgent extends Agent {
         return persona;
     }
 
-//    public GroceryAgentGraphic getAgentGraphic() {
-//        return agentGraphic;
-//    }
+    public GroceryAgentGraphic getAgentGraphic() {
+        return agentGraphic;
+    }
 
-//    public GroceryAgentMovement getAgentMovement() {
-//        return agentMovement;
-//    }
+    public GroceryAgentMovement getAgentMovement() {
+        return agentMovement;
+    }
 
     public static class GroceryAgentFactory extends Agent.AgentFactory {
         public static GroceryAgent create(GroceryAgent.Type type, Patch spawnPatch, boolean inOnStart) {
@@ -223,7 +234,7 @@ public class GroceryAgent extends Agent {
     }
 
     public enum Persona {
-        STAFF_AISLE, CASHIER, BAGGER, GUARD, BUTCHER, CUSTOMER_SERVICE, STAFF_FOOD,
+        GUARD_ENTRANCE, GUARD_EXIT, STAFF_AISLE, BUTCHER, CASHIER, BAGGER, CUSTOMER_SERVICE, STAFF_FOOD,
         STTP_ALONE_CUSTOMER, MODERATE_ALONE_CUSTOMER,
         COMPLETE_FAMILY_CUSTOMER, HELP_FAMILY_CUSTOMER, DUO_FAMILY_CUSTOMER
     }
