@@ -57,6 +57,11 @@ public class UniversityScreenController extends ScreenController {
 
     @FXML
     public void initializeAction() {
+        if (Main.universitySimulator.isRunning()) { // If the simulator is running, stop it
+            playAction();
+            playButton.setSelected(false);
+        }
+
         int width = 60; // Value may be from 25-100
         int length = 130; // Value may be from 106-220
         int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
@@ -70,6 +75,7 @@ public class UniversityScreenController extends ScreenController {
         Main.universitySimulator.resetToDefaultConfiguration(university);
         UniversityGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.universitySimulator.getUniversity().getRows();
         mapUniversity();
+        Main.universitySimulator.spawnInitialAgents(university);
         drawInterface();
     }
 
@@ -454,7 +460,7 @@ public class UniversityScreenController extends ScreenController {
         }
         EatTableMapper.draw(eatTablePatches);    
 
-        List<Patch> toiletPatches = new ArrayList<>(); //TODO: Change locations
+        List<Patch> toiletPatches = new ArrayList<>();
         toiletPatches.add(university.getPatch(0,50));
         toiletPatches.add(university.getPatch(0,52));
         toiletPatches.add(university.getPatch(0,54));
@@ -580,20 +586,6 @@ public class UniversityScreenController extends ScreenController {
         stallPatches.add(university.getPatch(3,120));
         stallPatches.add(university.getPatch(3,126));
         StallMapper.draw(stallPatches);
-
-        //TODO Maybe move this to university simulator since need to finish above functions before this
-
-        UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, university.getPatch(57,12), true);
-        university.getAgents().add(guard);
-        university.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
-
-        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(5,65), true);
-        university.getAgents().add(janitor1);
-        university.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
-
-        UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(7,66), true);
-        university.getAgents().add(janitor2);
-        university.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
     }
 
     private void drawInterface() {
@@ -616,10 +608,10 @@ public class UniversityScreenController extends ScreenController {
 
     public void updateSimulationTime() {
         LocalTime currentTime = Main.universitySimulator.getSimulationTime().getTime();
-        long elapsedTime = Main.universitySimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS);
+        long elapsedTime = Main.universitySimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS) / 5;
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
-        elapsedTimeText.setText("Elapsed time: " + timeString + " (" + elapsedTime + " s)");
+        elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
     }
 
     public void setElements() {
@@ -657,17 +649,27 @@ public class UniversityScreenController extends ScreenController {
 
     @FXML
     public void resetAction() {
+        initializeAction();
         Main.universitySimulator.reset();
-
-        // Clear all agents
-//        clearUniversity(Main.simulator.getUniversity());
-
+        clearUniversity(Main.universitySimulator.getUniversity());
+        Main.universitySimulator.spawnInitialAgents(Main.universitySimulator.getUniversity());
         drawUniversityViewForeground(Main.universitySimulator.getUniversity(), false); // Redraw the canvas
-
         if (Main.universitySimulator.isRunning()) { // If the simulator is running, stop it
             playAction();
             playButton.setSelected(false);
         }
+    }
+
+    public static void clearUniversity(University university) {
+        for (UniversityAgent agent : university.getAgents()) { // Remove the relationship between the patch and the agents
+            agent.getAgentMovement().getCurrentPatch().getAgents().clear();
+            agent.getAgentMovement().setCurrentPatch(null);
+        }
+
+        // Remove all the agents
+        university.getAgents().removeAll(university.getAgents());
+        university.getAgents().clear();
+        university.getAgentPatchSet().clear();
     }
 
     @Override

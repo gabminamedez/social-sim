@@ -37,7 +37,7 @@ public class UniversityGateMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock4);
             patch4.setAmenityBlock(amenityBlock4);
 
-            UniversityGate universityGateToAdd = UniversityGate.UniversityGateFactory.create(amenityBlocks, true, 50, ugMode);
+            UniversityGate universityGateToAdd = UniversityGate.UniversityGateFactory.create(amenityBlocks, true, 70, ugMode);
             Main.universitySimulator.getUniversity().getUniversityGates().add(universityGateToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
         }
