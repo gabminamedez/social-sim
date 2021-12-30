@@ -9,15 +9,20 @@ import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
+import com.socialsim.model.simulator.Simulator;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static com.socialsim.model.core.agent.university.UniversityAgent.*;
+
 public class University extends Environment {
+
 
     private final CopyOnWriteArrayList<UniversityAgent> agents;
     private final SortedSet<Patch> amenityPatchSet;
     private final SortedSet<Patch> agentPatchSet;
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOS;
 
     private final List<UniversityGate> universityGates;
     private final List<Bench> benches;
@@ -57,6 +62,7 @@ public class University extends Environment {
         super(rows, columns);
 
         this.agents = new CopyOnWriteArrayList<>();
+        this.IOS = new CopyOnWriteArrayList<>();
 
         this.amenityPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
         this.agentPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
@@ -263,6 +269,539 @@ public class University extends Environment {
         else {
             return null;
         }
+    }
+
+    public void createInitialAgentDemographics(int numAgents){
+        //Guard
+        UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, true);
+        this.getAgents().add(guard);
+
+        //Janitor
+        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, true);
+        this.getAgents().add(janitor1);
+
+        UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, true);
+        this.getAgents().add(janitor2);
+
+        numAgents = numAgents - 3;
+        //Students and Professors
+        while (numAgents > 0){
+            int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            if (x < INT_CHANCE_SPAWN + INT_ORG_CHANCE_SPAWN + EXT_CHANCE_SPAWN + EXT_ORG_CHANCE_SPAWN){
+                UniversityAgent newAgent = UniversityAgent.UniversityAgentFactory.create(Type.STUDENT, true);
+                //TODO: Check if need .clone() same with UniversityRoutePlan
+                this.getAgents().add(newAgent);
+            }
+            else{
+                UniversityAgent newAgent = UniversityAgent.UniversityAgentFactory.create(Type.PROFESSOR, true);
+                //TODO: Check if need .clone() same with UniversityRoutePlan
+                this.getAgents().add(newAgent);
+            }
+            numAgents--;
+        }
+
+        //TODO: Create IOS based on ID
+        for (int i = 0; i < this.getAgents().size(); i++){
+            Persona agent1 = agents.get(i).getPersona();
+            ArrayList<Integer> IOSScales = new ArrayList<>();
+            for (int j = 0 ; j < this.getAgents().size(); j++){
+                if (i != j){
+                    Persona agent2 = agents.get(j).getPersona();
+                    if (agent1 == Persona.GUARD){
+                        //1. Get IOS Scale of each agent then put in an array
+                        //2. Place in convert function and replace IOS
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.JANITOR){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.INT_Y1_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.INT_Y2_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.INT_Y3_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.INT_Y4_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.INT_Y1_ORG_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.INT_Y2_ORG_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.INT_Y3_ORG_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.INT_Y4_ORG_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_Y1_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_Y2_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_Y3_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_Y4_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_Y1_ORG_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_Y2_ORG_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_Y3_ORG_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_Y4_ORG_STUDENT){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.STRICT_PROFESSOR){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                    else if (agent1 == Persona.APPROACHABLE_PROFESSOR){
+                        switch (agent2){
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8));
+                        }
+                    }
+                }
+            }
+            IOS.add(convertToChanceInteraction(IOSScales));
+        }
+    }
+
+    public CopyOnWriteArrayList<Double> convertToChanceInteraction(ArrayList<Integer> IOSScales){// Convert IOS to chance based only on threshold, not 0 to said scale
+        CopyOnWriteArrayList<Double> listIOS = new CopyOnWriteArrayList<>();
+        for (int iosScale : IOSScales) {
+            listIOS.add((iosScale - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7);
+//            listIOS.add(Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * iosScale / 7);
+         }
+        return listIOS;
     }
 
     public static class UniversityFactory extends BaseObject.ObjectFactory {
