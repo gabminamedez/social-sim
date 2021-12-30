@@ -185,7 +185,6 @@ public class UniversityAgentMovement extends AgentMovement {
 
     public void setCurrentPatch(Patch currentPatch) {
         this.currentPatch = currentPatch;
-        setPosition(currentPatch.getPatchCenterCoordinates());
     }
 
     public AgentPath getCurrentPath() {
@@ -488,8 +487,7 @@ public class UniversityAgentMovement extends AgentMovement {
                     distancesToAttractors.put(attractor, distanceToAttractor);
                 }
             }
-            // TODO: Fix choosing in a way na may "reservations" na
-            // TODO: Paincorporate nalang yung above two changes sa other chooser functions
+
             // Sort amenity by distance, from nearest to furthest
             List<Map.Entry<Amenity.AmenityBlock, Double> > list =
                     new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
@@ -512,9 +510,7 @@ public class UniversityAgentMovement extends AgentMovement {
                 if (candidateAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
                     chosenAmenity =  candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
-                    // TODO: Maybe add this line below for "reser
-                    // candidateAttractor.getPatch().getAgents().add(this.parent);
-                    // TODO: logic when all amenities are in use
+                    candidateAttractor.getPatch().getAgents().add(this.parent);
                     break;
                 }
             }
@@ -575,9 +571,7 @@ public class UniversityAgentMovement extends AgentMovement {
                 if (candidateAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
                     chosenAmenity =  candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
-                    // TODO: Maybe add this line below for "reser
-                    // candidateAttractor.getPatch().getAgents().add(this.parent);
-                    // TODO: logic when all amenities are in use
+                    candidateAttractor.getPatch().getAgents().add(this.parent);
                     break;
                 }
             }
@@ -628,9 +622,7 @@ public class UniversityAgentMovement extends AgentMovement {
                 if (candidateAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
                     chosenAmenity =  candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
-                    // TODO: Maybe add this line below for "reser
-                    // candidateAttractor.getPatch().getAgents().add(this.parent);
-                    // TODO: logic when all amenities are in use
+                    candidateAttractor.getPatch().getAgents().add(this.parent);
                     break;
                 }
             }
@@ -1288,6 +1280,7 @@ public class UniversityAgentMovement extends AgentMovement {
             path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
         }
         this.currentPath = new AgentPath(0, path);
+        this.duration = currentAction.getDuration(); // TODO: [gab] fix for queueing stuck (tied to same comment in UniversitySimulator)
     }
 
     public void leaveQueue() { // Unregister this agent to its queueable goal patch field's queue

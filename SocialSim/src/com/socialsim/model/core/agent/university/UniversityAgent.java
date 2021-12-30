@@ -69,10 +69,6 @@ public class UniversityAgent extends Agent {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
             this.persona = Persona.JANITOR;
         }
-        else if(this.type == Type.OFFICER) {
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
-            this.persona = Persona.OFFICER;
-        }
         else if (this.type == Type.PROFESSOR) {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
 
@@ -177,10 +173,6 @@ public class UniversityAgent extends Agent {
         else if(this.type == Type.JANITOR) {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
             this.persona = Persona.JANITOR;
-        }
-        else if(this.type == Type.OFFICER) {
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
-            this.persona = Persona.OFFICER;
         }
         else if (this.type == Type.PROFESSOR) {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;

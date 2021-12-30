@@ -41,12 +41,12 @@ public class BoardMapper extends AmenityMapper {
                 Patch patch5 = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 4);
                 Amenity.AmenityBlock amenityBlock5 = amenityBlockFactory.create(patch5, true, true);
                 amenityBlocks.add(amenityBlock5);
-                patch3.setAmenityBlock(amenityBlock5);
+                patch5.setAmenityBlock(amenityBlock5);
 
                 Patch patch6 = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 5);
                 Amenity.AmenityBlock amenityBlock6 = amenityBlockFactory.create(patch6, true, false);
                 amenityBlocks.add(amenityBlock6);
-                patch4.setAmenityBlock(amenityBlock6);
+                patch6.setAmenityBlock(amenityBlock6);
             }
             else {
                 Patch patch2 = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
@@ -67,12 +67,12 @@ public class BoardMapper extends AmenityMapper {
                 Patch patch5 = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 4, origPatchCol);
                 Amenity.AmenityBlock amenityBlock5 = amenityBlockFactory.create(patch5, true, true);
                 amenityBlocks.add(amenityBlock5);
-                patch3.setAmenityBlock(amenityBlock5);
+                patch5.setAmenityBlock(amenityBlock5);
 
                 Patch patch6 = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 5, origPatchCol);
                 Amenity.AmenityBlock amenityBlock6 = amenityBlockFactory.create(patch6, true, false);
                 amenityBlocks.add(amenityBlock6);
-                patch4.setAmenityBlock(amenityBlock6);
+                patch6.setAmenityBlock(amenityBlock6);
             }
 
             Board boardToAdd = Board.BoardFactory.create(amenityBlocks, true, facing);
