@@ -258,10 +258,9 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.hasReachedNextPatchInPath()) {
                                 agentMovement.reachPatchInPath();
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.joinQueue();
-
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.joinQueue();
                                 }
                             }
                         }
@@ -272,17 +271,12 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
                                 agentMovement.reachPatchInPath();
-                                // TODO: [gab] fix for queueing stuck (tied to same comment in UniversityAgentMovement)
-//                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-//                                    agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-//                                }
                             }
                         }
                         else {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
-                                System.out.println(agentMovement.getParent().getId() + " = im done queueing");
                                 agentMovement.leaveQueue();
                                 agentMovement.setNextState();
                                 agentMovement.setActionIndex(0);
