@@ -48,9 +48,6 @@ public class UniversityAgent extends Agent {
         else if (type == UniversityAgent.Type.JANITOR) {
             UniversityAgent.janitorCount++;
         }
-        else if (type == Type.OFFICER) {
-            UniversityAgent.officerCount++;
-        }
         else if (type == UniversityAgent.Type.PROFESSOR) {
             UniversityAgent.professorCount++;
         }
