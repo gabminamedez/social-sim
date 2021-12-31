@@ -124,12 +124,6 @@ public class UniversityAgentGraphic extends Graphic {
         else if (agent.getType() == UniversityAgent.Type.JANITOR && agent.getGender() == UniversityAgent.Gender.FEMALE) {
             agentGraphics = femaleJanitorGraphics;
         }
-        else if (agent.getType() == UniversityAgent.Type.OFFICER && agent.getGender() == UniversityAgent.Gender.MALE) {
-            agentGraphics = maleOfficerGraphics;
-        }
-        else if (agent.getType() == UniversityAgent.Type.OFFICER && agent.getGender() == UniversityAgent.Gender.FEMALE) {
-            agentGraphics = femaleOfficerGraphics;
-        }
         else if (agent.getGender() == UniversityAgent.Gender.MALE && agent.getPersona() == UniversityAgent.Persona.STRICT_PROFESSOR) {
             agentGraphics = strictMaleProfessor;
         }
