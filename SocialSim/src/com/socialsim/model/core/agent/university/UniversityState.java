@@ -56,6 +56,14 @@ public class UniversityState {
         return tickClassStart;
     }
 
+    public void setActions(ArrayList<UniversityAction> actions) {
+        this.actions = actions;
+    }
+
+    public void setTickClassStart(int tickClassStart) {
+        this.tickClassStart = tickClassStart;
+    }
+
     public void setTickStart(int tickStart) {
         this.tickClassStart = tickStart;
     }
@@ -82,5 +90,17 @@ public class UniversityState {
 
     public void addAction(UniversityAction a){
         actions.add(a);
+    }
+
+    public void setClassroomID(int classroomID) {
+        this.classroomID = classroomID;
+    }
+
+    public int getClassroomID() {
+        return classroomID;
+    }
+
+    public int getTickClassStart() {
+        return tickClassStart;
     }
 }

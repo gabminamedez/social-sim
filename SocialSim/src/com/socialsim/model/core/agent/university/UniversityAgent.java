@@ -5,6 +5,7 @@ import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.simulator.Simulator;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class UniversityAgent extends Agent {
@@ -12,7 +13,6 @@ public class UniversityAgent extends Agent {
     public static int agentCount = 0;
     public static int guardCount = 0;
     public static int janitorCount = 0;
-    public static int officerCount = 0;
     public static int professorCount = 0;
     public static int studentCount = 0;
 
@@ -24,9 +24,13 @@ public class UniversityAgent extends Agent {
     private final boolean inOnStart;
 
     private final UniversityAgentGraphic agentGraphic;
-    private final UniversityAgentMovement agentMovement;
+    private UniversityAgentMovement agentMovement;
 
     public static final UniversityAgent.UniversityAgentFactory agentFactory;
+
+    public static final int INT_CHANCE_SPAWN = 10, INT_ORG_CHANCE_SPAWN = 10,
+            EXT_CHANCE_SPAWN = 10, EXT_ORG_CHANCE_SPAWN = 10,
+            STRICT_PROF_CHANCE_SPAWN = 10, APPROACHABLE_PROF_CHANCE_SPAWN = 10;
 
     static {
         agentFactory = new UniversityAgent.UniversityAgentFactory();
@@ -42,9 +46,6 @@ public class UniversityAgent extends Agent {
         }
         else if (type == UniversityAgent.Type.JANITOR) {
             UniversityAgent.janitorCount++;
-        }
-        else if (type == Type.OFFICER) {
-            UniversityAgent.officerCount++;
         }
         else if (type == UniversityAgent.Type.PROFESSOR) {
             UniversityAgent.professorCount++;
@@ -63,10 +64,6 @@ public class UniversityAgent extends Agent {
         else if(this.type == Type.JANITOR) {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
             this.persona = Persona.JANITOR;
-        }
-        else if(this.type == Type.OFFICER) {
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
-            this.persona = Persona.OFFICER;
         }
         else if (this.type == Type.PROFESSOR) {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
@@ -140,6 +137,106 @@ public class UniversityAgent extends Agent {
         this.agentMovement = new UniversityAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick);
     }
 
+
+    private UniversityAgent(UniversityAgent.Type type, boolean inOnStart) {
+        this.id = agentCount;
+        this.type = type;
+        this.inOnStart = inOnStart;
+
+        if (type == UniversityAgent.Type.GUARD) {
+            UniversityAgent.guardCount++;
+        }
+        else if (type == UniversityAgent.Type.JANITOR) {
+            UniversityAgent.janitorCount++;
+        }
+        else if (type == UniversityAgent.Type.PROFESSOR) {
+            UniversityAgent.professorCount++;
+        }
+        else if (type == UniversityAgent.Type.STUDENT) {
+            UniversityAgent.studentCount++;
+        }
+        UniversityAgent.agentCount++;
+
+        this.gender = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? Gender.FEMALE : Gender.MALE;
+
+        if (this.type == Type.GUARD) {
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+            this.persona = Persona.GUARD;
+        }
+        else if(this.type == Type.JANITOR) {
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+            this.persona = Persona.JANITOR;
+        }
+        else if (this.type == Type.PROFESSOR) {
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+
+            boolean isStrict = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+            if (isStrict) {
+                this.persona = Persona.STRICT_PROFESSOR;
+            }
+            else {
+                this.persona = Persona.APPROACHABLE_PROFESSOR;
+            }
+        }
+        else if (this.type == Type.STUDENT) {
+            this.ageGroup = AgeGroup.FROM_15_TO_24;
+
+            boolean isIntrovert = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+            int yearLevel = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
+            boolean isOrg = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+
+            if (isIntrovert && yearLevel == 1 && !isOrg) {
+                this.persona = Persona.INT_Y1_STUDENT;
+            }
+            else if (isIntrovert && yearLevel == 2 && !isOrg) {
+                this.persona = Persona.INT_Y2_STUDENT;
+            }
+            else if (isIntrovert && yearLevel == 3 && !isOrg) {
+                this.persona = Persona.INT_Y3_STUDENT;
+            }
+            else if (isIntrovert && yearLevel == 4 && !isOrg) {
+                this.persona = Persona.INT_Y4_STUDENT;
+            }
+            else if (!isIntrovert && yearLevel == 1 && !isOrg) {
+                this.persona = Persona.EXT_Y1_STUDENT;
+            }
+            else if (!isIntrovert && yearLevel == 2 && !isOrg) {
+                this.persona = Persona.EXT_Y2_STUDENT;
+            }
+            else if (!isIntrovert && yearLevel == 3 && !isOrg) {
+                this.persona = Persona.EXT_Y3_STUDENT;
+            }
+            else if (!isIntrovert && yearLevel == 4 && !isOrg) {
+                this.persona = Persona.EXT_Y4_STUDENT;
+            }
+            else if (isIntrovert && yearLevel == 1 && isOrg) {
+                this.persona = Persona.INT_Y1_ORG_STUDENT;
+            }
+            else if (isIntrovert && yearLevel == 2 && isOrg) {
+                this.persona = Persona.INT_Y2_ORG_STUDENT;
+            }
+            else if (isIntrovert && yearLevel == 3 && isOrg) {
+                this.persona = Persona.INT_Y3_ORG_STUDENT;
+            }
+            else if (isIntrovert && yearLevel == 4 && isOrg) {
+                this.persona = Persona.INT_Y4_ORG_STUDENT;
+            }
+            else if (!isIntrovert && yearLevel == 1 && isOrg) {
+                this.persona = Persona.EXT_Y1_ORG_STUDENT;
+            }
+            else if (!isIntrovert && yearLevel == 2 && isOrg) {
+                this.persona = Persona.EXT_Y2_ORG_STUDENT;
+            }
+            else if (!isIntrovert && yearLevel == 3 && isOrg) {
+                this.persona = Persona.EXT_Y3_ORG_STUDENT;
+            }
+            else if (!isIntrovert && yearLevel == 4 && isOrg) {
+                this.persona = Persona.EXT_Y4_ORG_STUDENT;
+            }
+        }
+        this.agentGraphic = new UniversityAgentGraphic(this);
+    }
+
     public int getId() {
         return id;
     }
@@ -172,9 +269,16 @@ public class UniversityAgent extends Agent {
         return agentMovement;
     }
 
+    public void setAgentMovement(UniversityAgentMovement agentMovement) {
+        this.agentMovement = agentMovement;
+    }
+
     public static class UniversityAgentFactory extends Agent.AgentFactory {
         public static UniversityAgent create(UniversityAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick) {
             return new UniversityAgent(type, spawnPatch, inOnStart, currentTick);
+        }
+        public static UniversityAgent create(UniversityAgent.Type type, boolean inOnStart) {
+            return new UniversityAgent(type, inOnStart);
         }
     }
 
@@ -198,7 +302,7 @@ public class UniversityAgent extends Agent {
     }
 
     public enum Type {
-        GUARD, JANITOR, OFFICER, PROFESSOR, STUDENT
+        GUARD, JANITOR, PROFESSOR, STUDENT
     }
 
     public enum Gender {
@@ -210,12 +314,13 @@ public class UniversityAgent extends Agent {
     }
 
     public enum Persona {
-        GUARD, JANITOR, OFFICER,
+        GUARD, JANITOR,
         INT_Y1_STUDENT, INT_Y2_STUDENT, INT_Y3_STUDENT, INT_Y4_STUDENT,
         INT_Y1_ORG_STUDENT, INT_Y2_ORG_STUDENT, INT_Y3_ORG_STUDENT, INT_Y4_ORG_STUDENT,
         EXT_Y1_STUDENT, EXT_Y2_STUDENT, EXT_Y3_STUDENT, EXT_Y4_STUDENT,
         EXT_Y1_ORG_STUDENT, EXT_Y2_ORG_STUDENT, EXT_Y3_ORG_STUDENT, EXT_Y4_ORG_STUDENT,
         STRICT_PROFESSOR, APPROACHABLE_PROFESSOR
+
     }
 
 }

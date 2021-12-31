@@ -237,7 +237,7 @@ public class UniversityGraphicsController extends Controller {
                         AgentGraphicLocation agentGraphicLocation = universityAgent.getAgentGraphic().getGraphicLocation();
 
                         Image CURRENT_URL = null;
-                        if (universityAgent.getType() == UniversityAgent.Type.GUARD || universityAgent.getType() == UniversityAgent.Type.JANITOR || universityAgent.getType() == UniversityAgent.Type.OFFICER) {
+                        if (universityAgent.getType() == UniversityAgent.Type.GUARD || universityAgent.getType() == UniversityAgent.Type.JANITOR) {
                             CURRENT_URL = AGENT_SPRITES_4;
                         }
                         else if (universityAgent.getType() == UniversityAgent.Type.PROFESSOR) {

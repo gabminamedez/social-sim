@@ -21,58 +21,69 @@ public class BulletinMapper extends AmenityMapper {
             Amenity.AmenityBlock amenityBlock = amenityBlockFactory.create(patch, true, true);
             amenityBlocks.add(amenityBlock);
             patch.setAmenityBlock(amenityBlock);
+            patch.setPatchField(null);
 
             if(facing.equals("UP") || facing.equals("DOWN")) {
                 Patch patch2 = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 1);
                 Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(patch2, true, false);
                 amenityBlocks.add(amenityBlock2);
                 patch2.setAmenityBlock(amenityBlock2);
+                patch2.setPatchField(null);
 
                 Patch patch3 = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 2);
                 Amenity.AmenityBlock amenityBlock3 = amenityBlockFactory.create(patch3, true, true);
                 amenityBlocks.add(amenityBlock3);
                 patch3.setAmenityBlock(amenityBlock3);
+                patch3.setPatchField(null);
 
                 Patch patch4 = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 3);
                 Amenity.AmenityBlock amenityBlock4 = amenityBlockFactory.create(patch4, true, false);
                 amenityBlocks.add(amenityBlock4);
                 patch4.setAmenityBlock(amenityBlock4);
+                patch4.setPatchField(null);
 
                 Patch patch5 = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 4);
                 Amenity.AmenityBlock amenityBlock5 = amenityBlockFactory.create(patch5, true, true);
                 amenityBlocks.add(amenityBlock5);
-                patch3.setAmenityBlock(amenityBlock5);
+                patch5.setAmenityBlock(amenityBlock5);
+                patch5.setPatchField(null);
 
                 Patch patch6 = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 5);
                 Amenity.AmenityBlock amenityBlock6 = amenityBlockFactory.create(patch6, true, false);
                 amenityBlocks.add(amenityBlock6);
-                patch4.setAmenityBlock(amenityBlock6);
+                patch6.setAmenityBlock(amenityBlock6);
+                patch6.setPatchField(null);
             }
             else {
                 Patch patch2 = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
                 Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(patch2, true, false);
                 amenityBlocks.add(amenityBlock2);
                 patch2.setAmenityBlock(amenityBlock2);
+                patch2.setPatchField(null);
 
                 Patch patch3 = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 2, origPatchCol);
                 Amenity.AmenityBlock amenityBlock3 = amenityBlockFactory.create(patch3, true, true);
                 amenityBlocks.add(amenityBlock3);
                 patch3.setAmenityBlock(amenityBlock3);
+                patch3.setPatchField(null);
 
                 Patch patch4 = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 3, origPatchCol);
                 Amenity.AmenityBlock amenityBlock4 = amenityBlockFactory.create(patch4, true, false);
                 amenityBlocks.add(amenityBlock4);
                 patch4.setAmenityBlock(amenityBlock4);
+                patch4.setPatchField(null);
 
                 Patch patch5 = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 4, origPatchCol);
                 Amenity.AmenityBlock amenityBlock5 = amenityBlockFactory.create(patch5, true, true);
                 amenityBlocks.add(amenityBlock5);
-                patch3.setAmenityBlock(amenityBlock5);
+                patch5.setAmenityBlock(amenityBlock5);
+                patch5.setPatchField(null);
 
                 Patch patch6 = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 5, origPatchCol);
                 Amenity.AmenityBlock amenityBlock6 = amenityBlockFactory.create(patch6, true, false);
                 amenityBlocks.add(amenityBlock6);
-                patch4.setAmenityBlock(amenityBlock6);
+                patch6.setAmenityBlock(amenityBlock6);
+                patch6.setPatchField(null);
             }
 
             Bulletin bulletinToAdd = Bulletin.BulletinFactory.create(amenityBlocks, true, facing);
