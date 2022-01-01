@@ -191,10 +191,10 @@ public class OfficeScreenController extends ScreenController {
         CabinetMapper.draw(cabinetUpPatches, "UP");
 
         List<Patch> chairPatches = new ArrayList<>();
-        chairPatches.add(office.getPatch(51,58));
-        chairPatches.add(office.getPatch(51,61));
-        chairPatches.add(office.getPatch(46,37));
-        for (int i = 87; i < 95; i++) {
+        chairPatches.add(office.getPatch(51,58)); // 0
+        chairPatches.add(office.getPatch(51,61)); // 1
+        chairPatches.add(office.getPatch(46,37));  // 2
+        for (int i = 87; i < 95; i++) { // 3-56
             chairPatches.add(office.getPatch(9, i));
             chairPatches.add(office.getPatch(14, i));
             chairPatches.add(office.getPatch(27, i));
@@ -202,20 +202,20 @@ public class OfficeScreenController extends ScreenController {
             chairPatches.add(office.getPatch(45, i));
             chairPatches.add(office.getPatch(50, i));
         }
-        chairPatches.add(office.getPatch(11,85));
-        chairPatches.add(office.getPatch(12,85));
-        chairPatches.add(office.getPatch(11,96));
-        chairPatches.add(office.getPatch(12,96));
-        chairPatches.add(office.getPatch(29,85));
-        chairPatches.add(office.getPatch(30,85));
-        chairPatches.add(office.getPatch(29,96));
-        chairPatches.add(office.getPatch(30,96));
-        chairPatches.add(office.getPatch(47,85));
-        chairPatches.add(office.getPatch(48,85));
-        chairPatches.add(office.getPatch(47,96));
-        chairPatches.add(office.getPatch(48,96));
-        chairPatches.add(office.getPatch(55,60));
-        chairPatches.add(office.getPatch(55,63));
+        chairPatches.add(office.getPatch(11,85)); // 57
+        chairPatches.add(office.getPatch(12,85)); // 58
+        chairPatches.add(office.getPatch(11,96)); // 59
+        chairPatches.add(office.getPatch(12,96)); // 60
+        chairPatches.add(office.getPatch(29,85)); // 61
+        chairPatches.add(office.getPatch(30,85)); // 62
+        chairPatches.add(office.getPatch(29,96)); // 63
+        chairPatches.add(office.getPatch(30,96)); // 64
+        chairPatches.add(office.getPatch(47,85)); // 65
+        chairPatches.add(office.getPatch(48,85)); // 66
+        chairPatches.add(office.getPatch(47,96)); // 67
+        chairPatches.add(office.getPatch(48,96)); // 68
+        chairPatches.add(office.getPatch(55,60)); // 69
+        chairPatches.add(office.getPatch(55,63)); // 70
         for (int i = 64; i < 70; i++) {
             chairPatches.add(office.getPatch(7, i));
             chairPatches.add(office.getPatch(10, i));
