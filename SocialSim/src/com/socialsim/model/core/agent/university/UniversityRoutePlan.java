@@ -3,6 +3,7 @@ package com.socialsim.model.core.agent.university;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.university.patchfield.Bathroom;
+import com.socialsim.model.core.environment.university.patchfield.Cafeteria;
 import com.socialsim.model.core.environment.university.patchfield.StudyArea;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Door;
 import com.socialsim.model.simulator.Simulator;
@@ -70,6 +71,7 @@ public class UniversityRoutePlan {
             List<Door> allDoors = university.getDoors();
             Patch StudydoorPatch = null;
             Patch BathroomDoorPatch = null;
+            Patch CafeteriaDoorPatch = null;
             for (Door door : allDoors) {
                 if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == Bathroom.class) {
                     BathroomDoorPatch = door.getAmenityBlocks().get(0).getPatch();
@@ -114,6 +116,18 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.FIND_BULLETIN));
             actions.add(new UniversityAction(UniversityAction.Name.VIEW_BULLETIN,5));
             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
+
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR));
+            actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR));
+            actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT,4));
+            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH,this,agent,actions));
+
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA));
+            actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT,10));
+            routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH,this,agent,actions));
+
 
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_BUILDING));
