@@ -13,6 +13,7 @@ import java.util.List;
 public class OfficeAmenityGraphic extends Graphic {
 
     public static final String AMENITY_SPRITE_SHEET_URL = "com/socialsim/view/image/Office/amenity_spritesheet.png";
+    public static final String AMENITY_SPRITE_SHEET_URL2 = "com/socialsim/view/image/University/amenity_spritesheet.png";
     public static final HashMap<Class<?>, List<AmenityGraphicLocation>> AMENITY_GRAPHICS = new HashMap<>();
 
     static {
@@ -76,6 +77,14 @@ public class OfficeAmenityGraphic extends Graphic {
         tableGraphic.add(new AmenityGraphicLocation(6, 0)); // Horizontal
         tableGraphic.add(new AmenityGraphicLocation(10, 3)); // Vertical
         AMENITY_GRAPHICS.put(Table.class, tableGraphic);
+
+        final List<AmenityGraphicLocation> sinkGraphic = new ArrayList<>();
+        sinkGraphic.add(new AmenityGraphicLocation(16, 1));
+        AMENITY_GRAPHICS.put(Sink.class, sinkGraphic);
+
+        final List<AmenityGraphicLocation> toiletGraphic = new ArrayList<>();
+        toiletGraphic.add(new AmenityGraphicLocation(16, 0));
+        AMENITY_GRAPHICS.put(Toilet.class, toiletGraphic);
     }
 
     protected final Amenity amenity;

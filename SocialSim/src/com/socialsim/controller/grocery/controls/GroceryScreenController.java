@@ -145,8 +145,8 @@ public class GroceryScreenController extends ScreenController {
         GroceryGateMapper.draw(groceryGateEntrancePatches, GroceryGate.GroceryGateMode.ENTRANCE);
 
         List<Patch> meatSectionPatches = new ArrayList<>();
-        meatSectionPatches.add(grocery.getPatch(25,2));
-        meatSectionPatches.add(grocery.getPatch(34,2));
+        meatSectionPatches.add(grocery.getPatch(25,1));
+        meatSectionPatches.add(grocery.getPatch(34,1));
         MeatSectionMapper.draw(meatSectionPatches);
 
         List<Patch> productAislePatches = new ArrayList<>();
@@ -208,20 +208,20 @@ public class GroceryScreenController extends ScreenController {
         SecurityMapper.draw(securityPatches);
 
         List<Patch> serviceCounterPatches = new ArrayList<>();
-        serviceCounterPatches.add(grocery.getPatch(45,4));
-        serviceCounterPatches.add(grocery.getPatch(45,8));
-        serviceCounterPatches.add(grocery.getPatch(45,12));
+        serviceCounterPatches.add(grocery.getPatch(44,4));
+        serviceCounterPatches.add(grocery.getPatch(44,8));
+        serviceCounterPatches.add(grocery.getPatch(44,12));
         ServiceCounterMapper.draw(serviceCounterPatches);
 
         List<Patch> stallPatches = new ArrayList<>();
-        stallPatches.add(grocery.getPatch(57,8));
-        stallPatches.add(grocery.getPatch(57,17));
-        stallPatches.add(grocery.getPatch(57,26));
-        stallPatches.add(grocery.getPatch(57,35));
-        stallPatches.add(grocery.getPatch(57,63));
-        stallPatches.add(grocery.getPatch(57,72));
-        stallPatches.add(grocery.getPatch(57,81));
-        stallPatches.add(grocery.getPatch(57,90));
+        stallPatches.add(grocery.getPatch(58,8));
+        stallPatches.add(grocery.getPatch(58,17));
+        stallPatches.add(grocery.getPatch(58,26));
+        stallPatches.add(grocery.getPatch(58,35));
+        stallPatches.add(grocery.getPatch(58,63));
+        stallPatches.add(grocery.getPatch(58,72));
+        stallPatches.add(grocery.getPatch(58,81));
+        stallPatches.add(grocery.getPatch(58,90));
         StallMapper.draw(stallPatches);
 
         List<Patch> tablePatches = new ArrayList<>();

@@ -15,6 +15,8 @@ import com.socialsim.model.core.environment.generic.position.Location;
 import com.socialsim.model.core.environment.generic.position.MatrixPosition;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchfield.*;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.Sink;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.Toilet;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 public class OfficeGraphicsController extends Controller {
 
     private static final Image AMENITY_SPRITES = new Image(OfficeAmenityGraphic.AMENITY_SPRITE_SHEET_URL);
+    private static final Image AMENITY_SPRITES2 = new Image(OfficeAmenityGraphic.AMENITY_SPRITE_SHEET_URL2);
     public static List<Amenity.AmenityBlock> firstPortalAmenityBlocks;
     public static double tileSize;
     private static boolean isDrawingStraightX;
@@ -146,14 +149,26 @@ public class OfficeGraphicsController extends Controller {
 
                     AmenityGraphicLocation amenityGraphicLocation = drawablePatchAmenity.getGraphicLocation();
 
-                    foregroundGraphicsContext.drawImage(
-                            AMENITY_SPRITES,
-                            amenityGraphicLocation.getSourceX(), amenityGraphicLocation.getSourceY(),
-                            amenityGraphicLocation.getSourceWidth(), amenityGraphicLocation.getSourceHeight(),
-                            column * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity. getGraphicObject()).getAmenityGraphicOffset().getColumnOffset() * tileSize,
-                            row * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getRowOffset() * tileSize,
-                            tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getColumnSpan(),
-                            tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
+                    if (patchAmenity.getClass() == Toilet.class || patchAmenity.getClass() == Sink.class) {
+                        foregroundGraphicsContext.drawImage(
+                                AMENITY_SPRITES2,
+                                amenityGraphicLocation.getSourceX(), amenityGraphicLocation.getSourceY(),
+                                amenityGraphicLocation.getSourceWidth(), amenityGraphicLocation.getSourceHeight(),
+                                column * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity. getGraphicObject()).getAmenityGraphicOffset().getColumnOffset() * tileSize,
+                                row * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getRowOffset() * tileSize,
+                                tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getColumnSpan(),
+                                tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
+                    }
+                    else {
+                        foregroundGraphicsContext.drawImage(
+                                AMENITY_SPRITES,
+                                amenityGraphicLocation.getSourceX(), amenityGraphicLocation.getSourceY(),
+                                amenityGraphicLocation.getSourceWidth(), amenityGraphicLocation.getSourceHeight(),
+                                column * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity. getGraphicObject()).getAmenityGraphicOffset().getColumnOffset() * tileSize,
+                                row * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getRowOffset() * tileSize,
+                                tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getColumnSpan(),
+                                tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
+                    }
 
                     if (drawGraphicTransparently) { // Reset transparency if previously added
                         foregroundGraphicsContext.setGlobalAlpha(1.0);

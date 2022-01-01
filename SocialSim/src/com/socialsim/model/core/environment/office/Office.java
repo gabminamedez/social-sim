@@ -33,6 +33,8 @@ public class Office extends Environment {
     private final List<ReceptionTable> receptionTables;
     private final List<Security> securities;
     private final List<Table> tables;
+    private final List<Sink> sinks;
+    private final List<Toilet> toilets;
 
     private final List<Bathroom> bathrooms;
     private final List<Breakroom> breakrooms;
@@ -71,6 +73,8 @@ public class Office extends Environment {
         this.receptionTables = Collections.synchronizedList(new ArrayList<>());
         this.securities = Collections.synchronizedList(new ArrayList<>());
         this.tables = Collections.synchronizedList(new ArrayList<>());
+        this.sinks = Collections.synchronizedList(new ArrayList<>());
+        this.toilets = Collections.synchronizedList(new ArrayList<>());
 
         this.bathrooms = Collections.synchronizedList(new ArrayList<>());
         this.breakrooms = Collections.synchronizedList(new ArrayList<>());
@@ -152,6 +156,14 @@ public class Office extends Environment {
         return tables;
     }
 
+    public List<Sink> getSinks() {
+        return sinks;
+    }
+
+    public List<Toilet> getToilets() {
+        return toilets;
+    }
+
     public List<Bathroom> getBathrooms() {
         return bathrooms;
     }
@@ -222,6 +234,12 @@ public class Office extends Environment {
         }
         else if (amenityClass == Table.class) {
             return this.getTables();
+        }
+        else if (amenityClass == Sink.class) {
+            return this.getSinks();
+        }
+        else if (amenityClass == Toilet.class) {
+            return this.getToilets();
         }
         else {
             return null;
