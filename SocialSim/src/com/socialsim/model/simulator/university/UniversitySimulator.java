@@ -260,6 +260,7 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.setDuration(agent.getAgentMovement().getDuration());
                                     agentMovement.joinQueue();
                                 }
                             }
@@ -275,8 +276,8 @@ public class UniversitySimulator extends Simulator {
                         }
                         else {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
+                            agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                            if (agentMovement.getCurrentAction().getDuration() == 0) {
                                 agentMovement.leaveQueue();
                                 agentMovement.setNextState();
                                 agentMovement.setActionIndex(0);
@@ -368,8 +369,21 @@ public class UniversitySimulator extends Simulator {
                         }
                     }
                     else if(action.getName()==UniversityAction.Name.LEAVE_BUILDING){
-                        if(agentMovement.hasReachedGoalPatch()){
-                            //leaves building
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getUniversityGates().get(0));
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            System.out.println("LEAVING BUILDING");
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                    agentMovement.despawn();
+                                    System.out.println("Left the building:Despawned");
+                                }
+                            }
                         }
                     }
 
@@ -518,6 +532,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setNextState(); //TODO: Return to previous state something
                             agentMovement.setActionIndex(0);
                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            System.out.println("Done DRINKING");
                             agentMovement.resetGoal();
                         }
                     }
@@ -586,7 +601,6 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.hasReachedNextPatchInPath()) {
                                 agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
-                                    // agentMovement.resetGoal();
                                     agentMovement.setNextState();
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -669,7 +683,24 @@ public class UniversitySimulator extends Simulator {
                     }
                 }
                 else if (state.getName()== UniversityState.Name.GOING_HOME) {
-                    /*Insert Action*/
+                    if(action.getName()==UniversityAction.Name.LEAVE_BUILDING){
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getUniversityGates().get(0));
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            System.out.println("LEAVING BUILDING");
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                    agentMovement.despawn();
+                                    System.out.println("Left the building:Despawned");
+                                }
+                            }
+                        }
+                    }
                 }
                 break;
 //                else if (state.getName()== UniversityState.Name.NEEDS_BATHROOM) {
