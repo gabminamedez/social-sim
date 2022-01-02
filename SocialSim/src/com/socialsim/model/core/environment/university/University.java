@@ -100,6 +100,24 @@ public class University extends Environment {
         return agents;
     }
 
+    public CopyOnWriteArrayList<UniversityAgent> getMovableAgents() {
+        CopyOnWriteArrayList<UniversityAgent> movable = new CopyOnWriteArrayList<>();
+        for (UniversityAgent agent: getAgents()){
+            if (agent.getAgentMovement() != null)
+                movable.add(agent);
+        }
+        return movable;
+    }
+
+    public CopyOnWriteArrayList<UniversityAgent> getUnspawnedAgents() {
+        CopyOnWriteArrayList<UniversityAgent> unspawned = new CopyOnWriteArrayList<>();
+        for (UniversityAgent agent: getAgents()){
+            if (agent.getAgentMovement() == null)
+                unspawned.add(agent);
+        }
+        return unspawned;
+    }
+
     @Override
     public SortedSet<Patch> getAmenityPatchSet() {
         return amenityPatchSet;

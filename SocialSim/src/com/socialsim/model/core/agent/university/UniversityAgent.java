@@ -235,6 +235,7 @@ public class UniversityAgent extends Agent {
             }
         }
         this.agentGraphic = new UniversityAgentGraphic(this);
+        this.agentMovement = null;
     }
 
     public int getId() {
