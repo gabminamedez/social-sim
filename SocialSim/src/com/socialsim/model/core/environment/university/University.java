@@ -109,6 +109,10 @@ public class University extends Environment {
         return movable;
     }
 
+    public CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> getIOS() {
+        return IOS;
+    }
+
     public CopyOnWriteArrayList<UniversityAgent> getUnspawnedAgents() {
         CopyOnWriteArrayList<UniversityAgent> unspawned = new CopyOnWriteArrayList<>();
         for (UniversityAgent agent: getAgents()){

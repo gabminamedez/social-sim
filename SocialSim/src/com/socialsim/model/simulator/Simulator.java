@@ -10,4 +10,12 @@ public abstract class Simulator {
         RANDOM_NUMBER_GENERATOR = new Random();
     }
 
+    public static double roll(){
+        return RANDOM_NUMBER_GENERATOR.nextDouble();
+    }
+
+    public static int rollInt(){
+        return RANDOM_NUMBER_GENERATOR.nextInt(100);
+    }
+
 }

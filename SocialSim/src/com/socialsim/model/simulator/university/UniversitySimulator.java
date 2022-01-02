@@ -29,7 +29,7 @@ public class UniversitySimulator extends Simulator {
 
     public static int currentProfessorCount = 0;
     public static int currentStudentCount = 0;
-    private final int MAX_STUDENTS = 5;//250
+    private final int MAX_STUDENTS = 5; //250
     private final int MAX_PROFESSORS = 0;
     private final int NUM_AGENTS = 500;
 
@@ -743,7 +743,7 @@ public class UniversitySimulator extends Simulator {
         for (int i = 0; i < 4; i++){ // 4 gates
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-            if (spawnChance > CHANCE){
+            if (CHANCE < spawnChance){
                 agent = university.getUnspawnedAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(university.getUnspawnedAgents().size()));
                 if (agent.getType() == UniversityAgent.Type.STUDENT && currentStudentCount < this.MAX_STUDENTS && currentStudentCount < UniversityAgent.studentCount){
                     agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
