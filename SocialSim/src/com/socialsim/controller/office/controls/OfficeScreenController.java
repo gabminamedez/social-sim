@@ -386,10 +386,6 @@ public class OfficeScreenController extends ScreenController {
         receptionTablePatches.add(office.getPatch(47,35));
         ReceptionTableMapper.draw(receptionTablePatches);
 
-        List<Patch> securityPatches = new ArrayList<>();
-        securityPatches.add(office.getPatch(56,36));
-        SecurityMapper.draw(securityPatches);
-
         List<Patch> tableUpPatches = new ArrayList<>();
         tableUpPatches.add(office.getPatch(21,9));
         tableUpPatches.add(office.getPatch(22,9));
@@ -431,6 +427,10 @@ public class OfficeScreenController extends ScreenController {
         sinkPatches.add(office.getPatch(11,13));
         sinkPatches.add(office.getPatch(11,16));
         SinkMapper.draw(sinkPatches);
+
+        List<Patch> securityPatches = new ArrayList<>();
+        securityPatches.add(office.getPatch(56,36));
+        SecurityMapper.draw(securityPatches);
     }
 
     private void drawInterface() {

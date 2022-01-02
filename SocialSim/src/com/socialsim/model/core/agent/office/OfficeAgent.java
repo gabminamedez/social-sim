@@ -29,6 +29,7 @@ public class OfficeAgent extends Agent {
     private OfficeAgent.Gender gender;
     private OfficeAgent.AgeGroup ageGroup = null;
     private OfficeAgent.Persona persona = null;
+    private boolean inOnStart;
 
 //    private final OfficeAgentGraphic agentGraphic;
 //    private final OfficeAgentMovement agentMovement;
@@ -42,6 +43,7 @@ public class OfficeAgent extends Agent {
     private OfficeAgent(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart) {
         this.id = agentCount;
         this.type = type;
+        this.inOnStart = inOnStart;
 
         if (type == Type.BOSS) {
             OfficeAgent.bossCount++;
@@ -194,6 +196,10 @@ public class OfficeAgent extends Agent {
 
     public OfficeAgent.Persona getPersona() {
         return persona;
+    }
+
+    public boolean getInOnStart() {
+        return inOnStart;
     }
 
 //    public OfficeAgentGraphic getAgentGraphic() {

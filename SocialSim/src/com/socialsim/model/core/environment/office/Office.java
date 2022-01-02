@@ -42,6 +42,7 @@ public class Office extends Environment {
     private final List<OfficeRoom> officeRooms;
     private final List<Reception> receptions;
     private final List<Wall> walls;
+    private final List<SecurityField> securityFields;
 
     List<OfficeAgent> agentBacklogs;
 
@@ -82,6 +83,7 @@ public class Office extends Environment {
         this.officeRooms = Collections.synchronizedList(new ArrayList<>());
         this.receptions = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
+        this.securityFields = Collections.synchronizedList(new ArrayList<>());
 
         this.agentBacklogs = Collections.synchronizedList(new ArrayList<>());
     }
@@ -186,6 +188,10 @@ public class Office extends Environment {
 
     public List<Wall> getWalls() {
         return walls;
+    }
+
+    public List<SecurityField> getSecurityFields() {
+        return securityFields;
     }
 
     public List<OfficeAgent> getAgentBacklogs() {
