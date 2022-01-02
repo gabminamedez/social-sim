@@ -737,12 +737,12 @@ public class UniversitySimulator extends Simulator {
 
     private void spawnAgent(University university, long currentTick) {
         UniversityGate gate = university.getUniversityGates().get(1);
-        int spawnChance = gate.getChancePerTick();
+        double spawnChance = gate.getChancePerTick();
         UniversityAgent agent = null;
 
         for (int i = 0; i < 4; i++){ // 4 gates
             Gate.GateBlock spawner = gate.getSpawners().get(i);
-            int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            double CHANCE = Simulator.roll();
             if (CHANCE < spawnChance){
                 agent = university.getUnspawnedAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(university.getUnspawnedAgents().size()));
                 if (agent.getType() == UniversityAgent.Type.STUDENT && currentStudentCount < this.MAX_STUDENTS && currentStudentCount < UniversityAgent.studentCount){

@@ -308,8 +308,8 @@ public class University extends Environment {
         numAgents = numAgents - 3;
         //Students and Professors
         while (numAgents > 0){
-            int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-            if (x < INT_CHANCE_SPAWN + INT_ORG_CHANCE_SPAWN + EXT_CHANCE_SPAWN + EXT_ORG_CHANCE_SPAWN){
+            double CHANCE = Simulator.roll();
+            if (CHANCE < INT_CHANCE_SPAWN + INT_ORG_CHANCE_SPAWN + EXT_CHANCE_SPAWN + EXT_ORG_CHANCE_SPAWN){
                 UniversityAgent newAgent = UniversityAgent.UniversityAgentFactory.create(Type.STUDENT, true);
                 //TODO: Check if need .clone() same with UniversityRoutePlan
                 this.getAgents().add(newAgent);

@@ -21,26 +21,26 @@ public class UniversityRoutePlan {
     private static int CLASSROOM_SIZES_PROF[][] = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
 
     //Chances of INT Y1-Y4
-    public static final int INT_CHANCE_WANDERING_AROUND = 22, INT_CHANCE_GOING_TO_STUDY = 58,
-            INT_NEED_BATHROOM_NO_CLASSES = 10, INT_NEEDS_DRINK_NO_CLASSES = 10,
-            INT_CHANCE_NEEDS_BATHROOM_STUDYING = 5, INT_CHANCE_NEEDS_DRINK_STUDYING = 5;
+    public static final double INT_CHANCE_WANDERING_AROUND = 0.22, INT_CHANCE_GOING_TO_STUDY = 0.58,
+            INT_NEED_BATHROOM_NO_CLASSES = 0.10, INT_NEEDS_DRINK_NO_CLASSES = 0.10,
+            INT_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, INT_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
     //Chances of INT ORG Y1-Y4
-    public static final int INT_ORG_CHANCE_WANDERING_AROUND = 22, INT_ORG_CHANCE_GOING_TO_STUDY = 58,
-            INT_ORG_NEED_BATHROOM_NO_CLASSES = 10, INT_ORG_NEEDS_DRINK_NO_CLASSES = 10,
-            INT_ORG_CHANCE_NEEDS_BATHROOM_STUDYING = 5, INT_ORG_CHANCE_NEEDS_DRINK_STUDYING = 5;
+    public static final double INT_ORG_CHANCE_WANDERING_AROUND = 0.22, INT_ORG_CHANCE_GOING_TO_STUDY = 0.58,
+            INT_ORG_NEED_BATHROOM_NO_CLASSES = 0.10, INT_ORG_NEEDS_DRINK_NO_CLASSES = 0.10,
+            INT_ORG_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, INT_ORG_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
     //Chances of EXT Y1-Y4
-    public static final int EXT_CHANCE_WANDERING_AROUND = 40, EXT_CHANCE_GOING_TO_STUDY = 40,
-            EXT_NEED_BATHROOM_NO_CLASSES = 10, EXT_NEEDS_DRINK_NO_CLASSES = 10,
-            EXT_CHANCE_NEEDS_BATHROOM_STUDYING = 5, EXT_CHANCE_NEEDS_DRINK_STUDYING = 5;
+    public static final double EXT_CHANCE_WANDERING_AROUND = 0.40, EXT_CHANCE_GOING_TO_STUDY = 0.40,
+            EXT_NEED_BATHROOM_NO_CLASSES = 0.10, EXT_NEEDS_DRINK_NO_CLASSES = 0.10,
+            EXT_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, EXT_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
     //Chances of EXT ORG Y1-Y4
-    public static final int EXT_ORG_CHANCE_WANDERING_AROUND = 48, EXT_ORG_CHANCE_GOING_TO_STUDY = 32,
-            EXT_ORG_NEED_BATHROOM_NO_CLASSES = 10, EXT_ORG_NEEDS_DRINK_NO_CLASSES = 10,
-            EXT_ORG_CHANCE_NEEDS_BATHROOM_STUDYING = 5, EXT_ORG_CHANCE_NEEDS_DRINK_STUDYING = 5;
+    public static final double EXT_ORG_CHANCE_WANDERING_AROUND = 0.48, EXT_ORG_CHANCE_GOING_TO_STUDY = 0.32,
+            EXT_ORG_NEED_BATHROOM_NO_CLASSES = 0.10, EXT_ORG_NEEDS_DRINK_NO_CLASSES = 0.10,
+            EXT_ORG_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, EXT_ORG_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
 
     //Chances of PROF
-    public static final int PROF_CHANCE_WANDERING_AROUND = 80, PROF_CHANCE_GOING_TO_STUDY = 10,
-            PROF_NEED_BATHROOM_NO_CLASSES = 10, PROF_NEEDS_DRINK_NO_CLASSES = 0,
-            PROF_CHANCE_NEEDS_BATHROOM_STUDYING = 5, PROF_CHANCE_NEEDS_DRINK_STUDYING = 5;
+    public static final double PROF_CHANCE_WANDERING_AROUND = 0.80, PROF_CHANCE_GOING_TO_STUDY = 0.10,
+            PROF_NEED_BATHROOM_NO_CLASSES = 0.10, PROF_NEEDS_DRINK_NO_CLASSES = 0,
+            PROF_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, PROF_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
   
     public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch, int tickEntered) {
         List<UniversityState> routePlan = new ArrayList<>();
@@ -220,7 +220,7 @@ public class UniversityRoutePlan {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 5; j++) {
-                        int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                        double x = Simulator.roll();
                         if (x < INT_CHANCE_WANDERING_AROUND) {
                             //TODO: Randomize actions
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
@@ -373,7 +373,7 @@ public class UniversityRoutePlan {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 5; j++) {
-                        int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                        double x = Simulator.roll();
                         if (x < INT_ORG_CHANCE_WANDERING_AROUND) {
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
@@ -522,7 +522,7 @@ public class UniversityRoutePlan {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 5; j++) {
-                        int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                        double x = Simulator.roll();
                         if (x < EXT_CHANCE_WANDERING_AROUND) {
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
@@ -671,7 +671,7 @@ public class UniversityRoutePlan {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 5; j++) {
-                        int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                        double x = Simulator.roll();
                         if (x < EXT_ORG_CHANCE_WANDERING_AROUND) {
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
@@ -817,7 +817,7 @@ public class UniversityRoutePlan {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 5; j++) {
-                        int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                        double x = Simulator.roll();
                         if (x < PROF_CHANCE_WANDERING_AROUND) {
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }

@@ -28,9 +28,9 @@ public class UniversityAgent extends Agent {
 
     public static final UniversityAgent.UniversityAgentFactory agentFactory;
 
-    public static final int INT_CHANCE_SPAWN = 10, INT_ORG_CHANCE_SPAWN = 10,
-            EXT_CHANCE_SPAWN = 10, EXT_ORG_CHANCE_SPAWN = 10,
-            STRICT_PROF_CHANCE_SPAWN = 10, APPROACHABLE_PROF_CHANCE_SPAWN = 10;
+    public static final double INT_CHANCE_SPAWN = 0.10, INT_ORG_CHANCE_SPAWN = 0.10,
+            EXT_CHANCE_SPAWN = 0.10, EXT_ORG_CHANCE_SPAWN = 0.10,
+            STRICT_PROF_CHANCE_SPAWN = 0.10, APPROACHABLE_PROF_CHANCE_SPAWN = 0.10;
 
     static {
         agentFactory = new UniversityAgent.UniversityAgentFactory();
