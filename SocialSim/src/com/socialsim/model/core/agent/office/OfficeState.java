@@ -1,6 +1,7 @@
 package com.socialsim.model.core.agent.office;
 
 import com.socialsim.model.core.agent.office.OfficeAgent;
+import com.socialsim.model.core.agent.university.UniversityAction;
 
 import java.util.ArrayList;
 
@@ -21,21 +22,21 @@ public class OfficeState {
     private int tickClassStart;
     private int classroomID;
 
-    public OfficeState(Name a, OfficeRoutePlan routePlan, OfficeAgent agent){
+    public OfficeState(Name a, OfficeRoutePlan routePlan, OfficeAgent agent) {
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = new ArrayList<>();
     }
 
-    public OfficeState(Name a, OfficeRoutePlan routePlan, OfficeAgent agent, ArrayList<OfficeAction> actions){
+    public OfficeState(Name a, OfficeRoutePlan routePlan, OfficeAgent agent, ArrayList<OfficeAction> actions) {
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = actions;
     }
 
-    public OfficeState(Name a, OfficeRoutePlan routePlan, OfficeAgent agent, int tickClassStart, int classroomID){ // Class state
+    public OfficeState(Name a, OfficeRoutePlan routePlan, OfficeAgent agent, int tickClassStart, int classroomID) { // Class state
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
@@ -74,6 +75,10 @@ public class OfficeState {
 
     public void setAgent(OfficeAgent agent) {
         this.agent = agent;
+    }
+
+    public ArrayList<OfficeAction> getActions() {
+        return this.actions;
     }
 
     public void addAction(OfficeAction a){

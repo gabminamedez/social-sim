@@ -3,7 +3,6 @@ package com.socialsim.model.core.agent.office;
 import com.socialsim.controller.office.graphics.agent.OfficeAgentGraphic;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.generic.Patch;
-import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.Objects;
@@ -32,7 +31,7 @@ public class OfficeAgent extends Agent {
     private boolean inOnStart;
 
 //    private final OfficeAgentGraphic agentGraphic;
-//    private final OfficeAgentMovement agentMovement;
+    private final OfficeAgentMovement agentMovement;
 
     public static final OfficeAgent.OfficeAgentFactory agentFactory;
 
@@ -40,7 +39,7 @@ public class OfficeAgent extends Agent {
         agentFactory = new OfficeAgent.OfficeAgentFactory();
     }
 
-    private OfficeAgent(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart) {
+    private OfficeAgent(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick) {
         this.id = agentCount;
         this.type = type;
         this.inOnStart = inOnStart;
@@ -169,13 +168,7 @@ public class OfficeAgent extends Agent {
         }
 
         // this.agentGraphic = new OfficeAgentGraphic(this);
-        if (inOnStart) { // If the agent is already inside the environment on initialization
-            // this.agentMovement = new OfficeAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates());
-        }
-        else {
-            OfficeGate officeGate = (OfficeGate) spawnPatch.getAmenityBlock().getParent();
-            // this.agentMovement = new OfficeAgentMovement(officeGate, this, 1.27, spawnPatch.getPatchCenterCoordinates());
-        }
+        this.agentMovement = new OfficeAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick);
     }
 
     public int getId() {
@@ -206,13 +199,13 @@ public class OfficeAgent extends Agent {
 //        return agentGraphic;
 //    }
 
-//    public OfficeAgentMovement getAgentMovement() {
-//        return agentMovement;
-//    }
+    public OfficeAgentMovement getAgentMovement() {
+        return agentMovement;
+    }
 
     public static class OfficeAgentFactory extends Agent.AgentFactory {
-        public static OfficeAgent create(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart) {
-            return new OfficeAgent(type, spawnPatch, inOnStart);
+        public static OfficeAgent create(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick) {
+            return new OfficeAgent(type, spawnPatch, inOnStart, currentTick);
         }
     }
 

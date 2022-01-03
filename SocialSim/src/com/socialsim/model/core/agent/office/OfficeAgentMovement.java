@@ -13,7 +13,6 @@ import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Qu
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.Vector;
 import com.socialsim.model.core.environment.office.Office;
-import com.socialsim.model.core.environment.office.patchfield.Bathroom;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Door;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Security;
 import com.socialsim.model.simulator.Simulator;
@@ -518,118 +517,6 @@ public class OfficeAgentMovement extends AgentMovement {
         }
     }
 
-    public void chooseClassroomDoor(int classID) {
-        if (this.goalAmenity == null && (this.goalPatchField != null && this.goalPatchField.getClass() == Classroom.class)) {
-            Amenity chosenAmenity = null;
-            Amenity temp1 = null;
-            Amenity temp2 = null;
-            Amenity.AmenityBlock chosenAttractor = null;
-
-            switch(classID) {
-                case 1: temp1 = this.office.getDoors().get(1); temp2 = this.office.getDoors().get(2); break;
-                case 2: temp1 = this.office.getDoors().get(3); temp2 = this.office.getDoors().get(4); break;
-                case 3: temp1 = this.office.getDoors().get(6); temp2 = this.office.getDoors().get(7); break;
-                case 4: temp1 = this.office.getDoors().get(8); temp2 = this.office.getDoors().get(9); break;
-                case 5: temp1 = this.office.getDoors().get(10); temp2 = this.office.getDoors().get(11); break;
-                case 6: temp1 = this.office.getDoors().get(12); temp2 = this.office.getDoors().get(13); break;
-                case 7: temp1 = this.office.getDoors().get(14); break;
-            }
-
-            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-
-            for (Amenity.AmenityBlock attractor : temp1.getAttractors()) { // Compute the distance to each attractor
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
-            }
-
-            for (Amenity.AmenityBlock attractor : temp2.getAttractors()) { // Compute the distance to each attractor
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
-            }
-
-            // Sort amenity by distance, from nearest to furthest
-            List<Map.Entry<Amenity.AmenityBlock, Double> > list =
-                    new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
-
-            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
-                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1,
-                                   Map.Entry<Amenity.AmenityBlock, Double> o2)
-                {
-                    return (o1.getValue()).compareTo(o2.getValue());
-                }
-            });
-
-            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
-            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
-                sortedDistances.put(aa.getKey(), aa.getValue());
-            }
-
-            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
-                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                if (candidateAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
-                    chosenAmenity =  candidateAttractor.getParent();
-                    chosenAttractor = candidateAttractor;
-                    candidateAttractor.getPatch().getAgents().add(this.parent);
-                    break;
-                }
-            }
-
-            this.goalAmenity = chosenAmenity;
-            this.goalAttractor = chosenAttractor;
-        }
-    }
-
-    public void chooseBathroomDoor() {
-        if (this.goalAmenity == null && (this.goalPatchField != null && this.goalPatchField.getClass() == Bathroom.class)) { // Only set the goal if one hasn't been set yet
-            Amenity chosenAmenity = null;
-            Amenity.AmenityBlock chosenAttractor = null;
-
-            if (this.parent.getGender() == OfficeAgent.Gender.MALE) {
-                chosenAmenity = this.office.getDoors().get(14);
-            }
-            else {
-                chosenAmenity = this.office.getDoors().get(15);
-            }
-
-            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-
-            for (Amenity.AmenityBlock attractor : chosenAmenity.getAttractors()) { // Compute the distance to each attractor
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
-            }
-
-            // Sort amenity by distance, from nearest to furthest
-            List<Map.Entry<Amenity.AmenityBlock, Double> > list =
-                    new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
-
-            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
-                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1,
-                                   Map.Entry<Amenity.AmenityBlock, Double> o2)
-                {
-                    return (o1.getValue()).compareTo(o2.getValue());
-                }
-            });
-
-            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
-            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
-                sortedDistances.put(aa.getKey(), aa.getValue());
-            }
-
-            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
-                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                if (candidateAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
-                    chosenAmenity =  candidateAttractor.getParent();
-                    chosenAttractor = candidateAttractor;
-                    candidateAttractor.getPatch().getAgents().add(this.parent);
-                    break;
-                }
-            }
-
-            this.goalAmenity = chosenAmenity;
-            this.goalAttractor = chosenAttractor;
-        }
-    }
-
     private Coordinates getFuturePosition(double walkingDistance) {
         return getFuturePosition(this.goalAmenity, this.proposedHeading, walkingDistance);
     }
@@ -1003,7 +890,7 @@ public class OfficeAgentMovement extends AgentMovement {
 
                     // If this agent's distance covered falls under the threshold, increment the counter denoting the ticks spent not moving; Otherwise, reset the counter
                     // Do not count for movements/non-movements when the agent is in the "in queue" state
-                    if (this.currentAction.getName() != OfficeAction.Name.GO_THROUGH_SCANNER && this.currentAction.getName() != OfficeAction.Name.QUEUE_VENDOR && this.currentAction.getName() != OfficeAction.Name.QUEUE_FOUNTAIN) {
+                    if (this.currentAction.getName() != OfficeAction.Name.GO_THROUGH_SCANNER) {
                         if (this.recentPatches.size() <= noNewPatchesSeenThreshold) {
                             this.noNewPatchesSeenCounter++;
                             this.newPatchesSeenCounter = 0;
@@ -1026,8 +913,8 @@ public class OfficeAgentMovement extends AgentMovement {
 
                     // If the agent has moved above the no-movement threshold for at least this number of ticks, remove the agent from its stuck state
                     if (this.isStuck &&
-                            (((this.currentAction.getName() == OfficeAction.Name.GO_THROUGH_SCANNER || this.currentAction.getName() == OfficeAction.Name.QUEUE_VENDOR || this.currentAction.getName() == OfficeAction.Name.QUEUE_FOUNTAIN && this.movementCounter >= unstuckTicksThreshold)
-                                    || this.currentAction.getName() != OfficeAction.Name.GO_THROUGH_SCANNER && this.currentAction.getName() != OfficeAction.Name.QUEUE_VENDOR && this.currentAction.getName() != OfficeAction.Name.QUEUE_FOUNTAIN && this.newPatchesSeenCounter >= unstuckTicksThreshold                                    ))) {
+                            (((this.currentAction.getName() == OfficeAction.Name.GO_THROUGH_SCANNER && this.movementCounter >= unstuckTicksThreshold)
+                                    || this.currentAction.getName() != OfficeAction.Name.GO_THROUGH_SCANNER && this.newPatchesSeenCounter >= unstuckTicksThreshold                                    ))) {
                         this.isReadyToFree = true;
                     }
                     this.timeSinceLeftPreviousGoal++;

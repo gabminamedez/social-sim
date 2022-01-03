@@ -6,7 +6,7 @@ import com.socialsim.model.simulator.Simulator;
 public class OfficeAction {
 
     public enum Name {
-        LEAVE_OFFICE, GO_TO_LUNCH,
+        LEAVE_OFFICE, GO_TO_LUNCH, GOING_TO_SECURITY_QUEUE, GO_THROUGH_SCANNER,
         GUARD_STAY_PUT,
         JANITOR_GO_TOILET, JANITOR_CLEAN_TOILET,
         JANITOR_GO_PLANT, JANITOR_WATER_PLANT,
