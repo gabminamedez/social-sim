@@ -1280,7 +1280,7 @@ public class UniversityAgentMovement extends AgentMovement {
             path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
         }
         this.currentPath = new AgentPath(0, path);
-        this.duration = currentAction.getDuration();
+        //this.duration = currentAction.getDuration();
     }
 
     public void leaveQueue() { // Unregister this agent to its queueable goal patch field's queue
