@@ -36,7 +36,7 @@ public class SecurityMapper extends AmenityMapper {
             securityFieldPatches.add(Main.officeSimulator.getOffice().getPatch(origPatchRow + 1, origPatchCol));
             for (int i = origPatchRow + 1; i < Main.officeSimulator.getOffice().getRows(); i++) {
                 Patch currentPatch = Main.officeSimulator.getOffice().getPatch(i, origPatchCol);
-                if (currentPatch.getPatchField() == null && currentPatch.getQueueingPatchField() == null && currentPatch.getAmenityBlock() == null) {
+                if (currentPatch.getQueueingPatchField() == null && currentPatch.getAmenityBlock() == null) {
                     securityFieldPatches.add(currentPatch);
                 }
             }

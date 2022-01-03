@@ -38,12 +38,12 @@ public class OfficeDeskMapper extends AmenityMapper {
             patch4.setAmenityBlock(amenityBlock4);
 
             Patch patch5 = Main.officeSimulator.getOffice().getPatch(origPatchRow, origPatchCol + 4);
-            Amenity.AmenityBlock amenityBlock5 = amenityBlockFactory.create(patch3, true, true);
+            Amenity.AmenityBlock amenityBlock5 = amenityBlockFactory.create(patch5, true, true);
             amenityBlocks.add(amenityBlock5);
             patch5.setAmenityBlock(amenityBlock5);
 
             Patch patch6 = Main.officeSimulator.getOffice().getPatch(origPatchRow, origPatchCol + 5);
-            Amenity.AmenityBlock amenityBlock6 = amenityBlockFactory.create(patch4, true, false);
+            Amenity.AmenityBlock amenityBlock6 = amenityBlockFactory.create(patch6, true, false);
             amenityBlocks.add(amenityBlock6);
             patch6.setAmenityBlock(amenityBlock6);
 

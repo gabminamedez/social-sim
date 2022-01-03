@@ -38,7 +38,11 @@ public class OfficeGraphicsController extends Controller {
 
     private static final Image AMENITY_SPRITES = new Image(OfficeAmenityGraphic.AMENITY_SPRITE_SHEET_URL);
     private static final Image AMENITY_SPRITES2 = new Image(OfficeAmenityGraphic.AMENITY_SPRITE_SHEET_URL2);
-    private static final Image AGENT_SPRITES = new Image(OfficeAgentGraphic.AGENTS_URL);
+    private static final Image AGENT_SPRITES1 = new Image(OfficeAgentGraphic.AGENTS_URL_1);
+    private static final Image AGENT_SPRITES2 = new Image(OfficeAgentGraphic.AGENTS_URL_2);
+    private static final Image AGENT_SPRITES3 = new Image(OfficeAgentGraphic.AGENTS_URL_3);
+    private static final Image AGENT_SPRITES4 = new Image(OfficeAgentGraphic.AGENTS_URL_4);
+
     public static List<Amenity.AmenityBlock> firstPortalAmenityBlocks;
     public static double tileSize;
     private static boolean isDrawingStraightX;
@@ -51,14 +55,14 @@ public class OfficeGraphicsController extends Controller {
     private static long millisecondsLastCanvasRefresh;
 
     static {
-        firstPortalAmenityBlocks = null;
-        isDrawingStraightX = false;
-        isDrawingStraightY = false;
-        lockedX = null;
-        lockedY = null;
-        drawMeasurement = false;
-        measurementStartPatch = null;
-        willPeek = false;
+        OfficeGraphicsController.firstPortalAmenityBlocks = null;
+        OfficeGraphicsController.isDrawingStraightX = false;
+        OfficeGraphicsController.isDrawingStraightY = false;
+        OfficeGraphicsController.lockedX = null;
+        OfficeGraphicsController.lockedY = null;
+        OfficeGraphicsController.drawMeasurement = false;
+        OfficeGraphicsController.measurementStartPatch = null;
+        OfficeGraphicsController.willPeek = false;
         millisecondsLastCanvasRefresh = 0;
     }
 
@@ -237,17 +241,33 @@ public class OfficeGraphicsController extends Controller {
             }
 
             if (!background) { // Draw each agent in this patch, if the foreground is to be drawn
-                for (Agent agent : patch.getAgents()) {
-                    OfficeAgent officeAgent = (OfficeAgent) agent;
-                    AgentGraphicLocation agentGraphicLocation = officeAgent.getAgentGraphic().getGraphicLocation();
+                if (!patch.getAgents().isEmpty()) {
+                    for (Agent agent : patch.getAgents()) {
+                        OfficeAgent officeAgent = (OfficeAgent) agent;
+                        AgentGraphicLocation agentGraphicLocation = officeAgent.getAgentGraphic().getGraphicLocation();
 
-                    foregroundGraphicsContext.drawImage(
-                            AGENT_SPRITES,
-                            agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
-                            agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
-                            getScaledAgentCoordinates(officeAgent).getX() * tileSize,
-                            getScaledAgentCoordinates(officeAgent).getY() * tileSize,
-                            tileSize * 0.7, tileSize * 0.7);
+                        Image CURRENT_URL = null;
+                        if (officeAgent.getType() == OfficeAgent.Type.GUARD || officeAgent.getType() == OfficeAgent.Type.RECEPTIONIST || officeAgent.getType() == OfficeAgent.Type.JANITOR || officeAgent.getType() == OfficeAgent.Type.VISITOR || officeAgent.getType() == OfficeAgent.Type.SECRETARY || officeAgent.getType() == OfficeAgent.Type.DRIVER) {
+                            CURRENT_URL = AGENT_SPRITES1;
+                        }
+                        else if (officeAgent.getType() == OfficeAgent.Type.BUSINESS || officeAgent.getType() == OfficeAgent.Type.RESEARCHER) {
+                            CURRENT_URL = AGENT_SPRITES2;
+                        }
+                        else if (officeAgent.getType() == OfficeAgent.Type.TECHNICAL || officeAgent.getType() == OfficeAgent.Type.BOSS || officeAgent.getType() == OfficeAgent.Type.MANAGER) {
+                            CURRENT_URL = AGENT_SPRITES3;
+                        }
+                        else if (officeAgent.getType() == OfficeAgent.Type.CLIENT) {
+                            CURRENT_URL = AGENT_SPRITES4;
+                        }
+
+                        foregroundGraphicsContext.drawImage(
+                                CURRENT_URL,
+                                agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
+                                agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
+                                getScaledAgentCoordinates(officeAgent).getX() * tileSize,
+                                getScaledAgentCoordinates(officeAgent).getY() * tileSize,
+                                tileSize * 0.7, tileSize * 0.7);
+                    }
                 }
             }
         }

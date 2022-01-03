@@ -44,9 +44,7 @@ public class Office extends Environment {
     private final List<Wall> walls;
     private final List<SecurityField> securityFields;
 
-    List<OfficeAgent> agentBacklogs;
-
-    private static final Office.OfficeFactory officeFactory;
+    public static final Office.OfficeFactory officeFactory;
 
     static {
         officeFactory = new Office.OfficeFactory();
@@ -84,8 +82,6 @@ public class Office extends Environment {
         this.receptions = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
         this.securityFields = Collections.synchronizedList(new ArrayList<>());
-
-        this.agentBacklogs = Collections.synchronizedList(new ArrayList<>());
     }
 
     public CopyOnWriteArrayList<OfficeAgent> getAgents() {
@@ -192,10 +188,6 @@ public class Office extends Environment {
 
     public List<SecurityField> getSecurityFields() {
         return securityFields;
-    }
-
-    public List<OfficeAgent> getAgentBacklogs() {
-        return agentBacklogs;
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {

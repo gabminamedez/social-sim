@@ -3,25 +3,26 @@ package com.socialsim.model.core.agent.office;
 import com.socialsim.controller.office.graphics.agent.OfficeAgentGraphic;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.Cubicle;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.Objects;
 
 public class OfficeAgent extends Agent {
 
-    private static int agentCount = 0;
-    private static int bossCount = 0;
-    private static int managerCount = 0;
-    private static int businessCount = 0;
-    private static int researcherCount = 0;
-    private static int janitorCount = 0;
-    private static int clientCount = 0;
-    private static int driverCount = 0;
-    private static int technicalCount = 0;
-    private static int visitorCount = 0;
-    private static int guardCount = 0;
-    private static int receptionistCount = 0;
-    private static int secretaryCount = 0;
+    public static int agentCount = 0;
+    public static int bossCount = 0;
+    public static int managerCount = 0;
+    public static int businessCount = 0;
+    public static int researcherCount = 0;
+    public static int janitorCount = 0;
+    public static int clientCount = 0;
+    public static int driverCount = 0;
+    public static int technicalCount = 0;
+    public static int visitorCount = 0;
+    public static int guardCount = 0;
+    public static int receptionistCount = 0;
+    public static int secretaryCount = 0;
 
     private final int id;
     private final OfficeAgent.Type type;
@@ -39,7 +40,7 @@ public class OfficeAgent extends Agent {
         agentFactory = new OfficeAgent.OfficeAgentFactory();
     }
 
-    private OfficeAgent(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick) {
+    private OfficeAgent(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick, int team, Cubicle assignedCubicle) {
         this.id = agentCount;
         this.type = type;
         this.inOnStart = inOnStart;
@@ -168,7 +169,7 @@ public class OfficeAgent extends Agent {
         }
 
         this.agentGraphic = new OfficeAgentGraphic(this);
-        this.agentMovement = new OfficeAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick);
+        this.agentMovement = new OfficeAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick, team, assignedCubicle);
     }
 
     public int getId() {
@@ -204,8 +205,8 @@ public class OfficeAgent extends Agent {
     }
 
     public static class OfficeAgentFactory extends Agent.AgentFactory {
-        public static OfficeAgent create(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick) {
-            return new OfficeAgent(type, spawnPatch, inOnStart, currentTick);
+        public static OfficeAgent create(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick, int team, Cubicle assignedCubicle) {
+            return new OfficeAgent(type, spawnPatch, inOnStart, currentTick, team, assignedCubicle);
         }
     }
 

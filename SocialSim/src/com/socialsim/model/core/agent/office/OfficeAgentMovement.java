@@ -13,6 +13,7 @@ import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Qu
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.Vector;
 import com.socialsim.model.core.environment.office.Office;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.Cubicle;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Door;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Security;
 import com.socialsim.model.simulator.Simulator;
@@ -31,6 +32,8 @@ public class OfficeAgentMovement extends AgentMovement {
     private double proposedHeading;// Denotes the proposed heading of the agent in degrees where E = 0 degrees, N = 90 degrees, W = 180 degrees, S = 270 degrees
     private double heading;
     private double previousHeading;
+    private int team;
+    private Cubicle assignedCubicle;
 
     private Patch currentPatch;
     private Amenity currentAmenity;
@@ -74,9 +77,11 @@ public class OfficeAgentMovement extends AgentMovement {
     private Vector attractiveForce;
     private Vector motivationForce;
 
-    public OfficeAgentMovement(Patch spawnPatch, OfficeAgent parent, double baseWalkingDistance, Coordinates coordinates, long tickEntered) { // For inOnStart agents
+    public OfficeAgentMovement(Patch spawnPatch, OfficeAgent parent, double baseWalkingDistance, Coordinates coordinates, long tickEntered, int team, Cubicle assignedCubicle) { // For inOnStart agents
         this.parent = parent;
         this.position = new Coordinates(coordinates.getX(), coordinates.getY());
+        this.team = team;
+        this.assignedCubicle = assignedCubicle;
 
         final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
         this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
@@ -109,7 +114,7 @@ public class OfficeAgentMovement extends AgentMovement {
         repulsiveForcesFromObstacles = new ArrayList<>();
         resetGoal(); // Set the agent goal
 
-        this.routePlan = new OfficeRoutePlan(parent, office, currentPatch, (int) tickEntered);
+        this.routePlan = new OfficeRoutePlan(parent, office, currentPatch, (int) tickEntered, team, assignedCubicle);
         this.stateIndex = 0;
         this.actionIndex = 0;
         this.currentState = this.routePlan.getCurrentState();
@@ -162,6 +167,14 @@ public class OfficeAgentMovement extends AgentMovement {
 
     public Office getOffice() {
         return office;
+    }
+
+    public int getTeam() {
+        return team;
+    }
+
+    public Cubicle getAssignedCubicle() {
+        return assignedCubicle;
     }
 
     public double getCurrentWalkingDistance() {

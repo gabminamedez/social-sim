@@ -9,16 +9,16 @@ import java.util.List;
 
 public class OfficeAgentGraphic extends Graphic {
 
-    public static final String AGENTS_URL = "com/socialsim/view/image/Office/office_agents.png";
+    public static final String AGENTS_URL_1 = "com/socialsim/view/image/Office/office_agents_1.png";
+    public static final String AGENTS_URL_2 = "com/socialsim/view/image/Office/office_agents_2.png";
+    public static final String AGENTS_URL_3 = "com/socialsim/view/image/Office/office_agents_3.png";
+    public static final String AGENTS_URL_4 = "com/socialsim/view/image/Office/office_agents_4.png";
 
     public static final List<AgentGraphicLocation> maleGuardGraphics;
-    public static final List<AgentGraphicLocation> femaleGuardGraphics;
     public static final List<AgentGraphicLocation> receptionistGraphics;
     public static final List<AgentGraphicLocation> maleJanitorGraphics;
-    public static final List<AgentGraphicLocation> femaleJanitorGraphics;
     public static final List<AgentGraphicLocation> maleVisitorGraphics;
     public static final List<AgentGraphicLocation> femaleVisitorGraphics;
-    public static final List<AgentGraphicLocation> maleSecretaryGraphics;
     public static final List<AgentGraphicLocation> femaleSecretaryGraphics;
     public static final List<AgentGraphicLocation> maleIntBusinessGraphics;
     public static final List<AgentGraphicLocation> femaleIntBusinessGraphics;
@@ -29,9 +29,7 @@ public class OfficeAgentGraphic extends Graphic {
     public static final List<AgentGraphicLocation> maleExtResearcherGraphics;
     public static final List<AgentGraphicLocation> femaleExtResearcherGraphics;
     public static final List<AgentGraphicLocation> maleIntTechnicalGraphics;
-    public static final List<AgentGraphicLocation> femaleIntTechnicalGraphics;
     public static final List<AgentGraphicLocation> maleExtTechnicalGraphics;
-    public static final List<AgentGraphicLocation> femaleExtTechnicalGraphics;
     public static final List<AgentGraphicLocation> maleProBossGraphics;
     public static final List<AgentGraphicLocation> femaleProBossGraphics;
     public static final List<AgentGraphicLocation> maleAppBossGraphics;
@@ -45,75 +43,57 @@ public class OfficeAgentGraphic extends Graphic {
     static {
         maleGuardGraphics = new ArrayList<>();
         for (int i = 0; i < 4; i++) { maleGuardGraphics.add(new AgentGraphicLocation(0, i)); }
-        femaleGuardGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleGuardGraphics.add(new AgentGraphicLocation(1, i)); }
-
         receptionistGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { receptionistGraphics.add(new AgentGraphicLocation(2, i)); }
-
+        for (int i = 0; i < 4; i++) { receptionistGraphics.add(new AgentGraphicLocation(1, i)); }
         maleJanitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleJanitorGraphics.add(new AgentGraphicLocation(3, i)); }
-        femaleJanitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleJanitorGraphics.add(new AgentGraphicLocation(4, i)); }
-
+        for (int i = 0; i < 4; i++) { maleJanitorGraphics.add(new AgentGraphicLocation(2, i)); }
         maleVisitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleVisitorGraphics.add(new AgentGraphicLocation(5, i)); }
+        for (int i = 0; i < 4; i++) { maleVisitorGraphics.add(new AgentGraphicLocation(3, i)); }
         femaleVisitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleVisitorGraphics.add(new AgentGraphicLocation(6, i)); }
-
-        maleSecretaryGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleSecretaryGraphics.add(new AgentGraphicLocation(7, i)); }
+        for (int i = 0; i < 4; i++) { femaleVisitorGraphics.add(new AgentGraphicLocation(4, i)); }
         femaleSecretaryGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleSecretaryGraphics.add(new AgentGraphicLocation(8, i)); }
+        for (int i = 0; i < 4; i++) { femaleSecretaryGraphics.add(new AgentGraphicLocation(5, i)); }
+        driverGraphics = new ArrayList<>();
+        for (int i = 0; i < 4; i++) { driverGraphics.add(new AgentGraphicLocation(6, i)); }
 
         maleIntBusinessGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleIntBusinessGraphics.add(new AgentGraphicLocation(9, i)); }
+        for (int i = 0; i < 4; i++) { maleIntBusinessGraphics.add(new AgentGraphicLocation(0, i)); }
         femaleIntBusinessGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleIntBusinessGraphics.add(new AgentGraphicLocation(10, i)); }
+        for (int i = 0; i < 4; i++) { femaleIntBusinessGraphics.add(new AgentGraphicLocation(1, i)); }
         maleExtBusinessGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleExtBusinessGraphics.add(new AgentGraphicLocation(11, i)); }
+        for (int i = 0; i < 4; i++) { maleExtBusinessGraphics.add(new AgentGraphicLocation(2, i)); }
         femaleExtBusinessGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleExtBusinessGraphics.add(new AgentGraphicLocation(12, i)); }
-
+        for (int i = 0; i < 4; i++) { femaleExtBusinessGraphics.add(new AgentGraphicLocation(3, i)); }
         maleIntResearcherGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleIntResearcherGraphics.add(new AgentGraphicLocation(13, i)); }
+        for (int i = 0; i < 4; i++) { maleIntResearcherGraphics.add(new AgentGraphicLocation(4, i)); }
         femaleIntResearcherGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleIntResearcherGraphics.add(new AgentGraphicLocation(14, i)); }
+        for (int i = 0; i < 4; i++) { femaleIntResearcherGraphics.add(new AgentGraphicLocation(5, i)); }
         maleExtResearcherGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleExtResearcherGraphics.add(new AgentGraphicLocation(15, i)); }
+        for (int i = 0; i < 4; i++) { maleExtResearcherGraphics.add(new AgentGraphicLocation(6, i)); }
         femaleExtResearcherGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleExtResearcherGraphics.add(new AgentGraphicLocation(16, i)); }
+        for (int i = 0; i < 4; i++) { femaleExtResearcherGraphics.add(new AgentGraphicLocation(7, i)); }
 
         maleIntTechnicalGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleIntTechnicalGraphics.add(new AgentGraphicLocation(17, i)); }
-        femaleIntTechnicalGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleIntTechnicalGraphics.add(new AgentGraphicLocation(18, i)); }
+        for (int i = 0; i < 4; i++) { maleIntTechnicalGraphics.add(new AgentGraphicLocation(0, i)); }
         maleExtTechnicalGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleExtTechnicalGraphics.add(new AgentGraphicLocation(19, i)); }
-        femaleExtTechnicalGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleExtTechnicalGraphics.add(new AgentGraphicLocation(20, i)); }
-
+        for (int i = 0; i < 4; i++) { maleExtTechnicalGraphics.add(new AgentGraphicLocation(1, i)); }
         maleProBossGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleProBossGraphics.add(new AgentGraphicLocation(21, i)); }
+        for (int i = 0; i < 4; i++) { maleProBossGraphics.add(new AgentGraphicLocation(2, i)); }
         femaleProBossGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleProBossGraphics.add(new AgentGraphicLocation(22, i)); }
+        for (int i = 0; i < 4; i++) { femaleProBossGraphics.add(new AgentGraphicLocation(3, i)); }
         maleAppBossGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleAppBossGraphics.add(new AgentGraphicLocation(23, i)); }
+        for (int i = 0; i < 4; i++) { maleAppBossGraphics.add(new AgentGraphicLocation(4, i)); }
         femaleAppBossGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleAppBossGraphics.add(new AgentGraphicLocation(24, i)); }
-
+        for (int i = 0; i < 4; i++) { femaleAppBossGraphics.add(new AgentGraphicLocation(5, i)); }
         maleManagerGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleManagerGraphics.add(new AgentGraphicLocation(25, i)); }
+        for (int i = 0; i < 4; i++) { maleManagerGraphics.add(new AgentGraphicLocation(6, i)); }
         femaleManagerGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleManagerGraphics.add(new AgentGraphicLocation(26, i)); }
-
-        driverGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { driverGraphics.add(new AgentGraphicLocation(27, i)); }
+        for (int i = 0; i < 4; i++) { femaleManagerGraphics.add(new AgentGraphicLocation(7, i)); }
 
         maleClientGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleClientGraphics.add(new AgentGraphicLocation(28, i)); }
+        for (int i = 0; i < 4; i++) { maleClientGraphics.add(new AgentGraphicLocation(0, i)); }
         femaleClientGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleClientGraphics.add(new AgentGraphicLocation(29, i)); }
+        for (int i = 0; i < 4; i++) { femaleClientGraphics.add(new AgentGraphicLocation(1, i)); }
     }
 
     private final OfficeAgent agent;
@@ -129,26 +109,17 @@ public class OfficeAgentGraphic extends Graphic {
         if (agent.getType() == OfficeAgent.Type.GUARD && agent.getGender() == OfficeAgent.Gender.MALE) {
             agentGraphics = maleGuardGraphics;
         }
-        else if (agent.getType() == OfficeAgent.Type.GUARD && agent.getGender() == OfficeAgent.Gender.FEMALE) {
-            agentGraphics = femaleGuardGraphics;
-        }
         else if (agent.getType() == OfficeAgent.Type.RECEPTIONIST) {
             agentGraphics = receptionistGraphics;
         }
         else if (agent.getType() == OfficeAgent.Type.JANITOR && agent.getGender() == OfficeAgent.Gender.MALE) {
             agentGraphics = maleJanitorGraphics;
         }
-        else if (agent.getType() == OfficeAgent.Type.JANITOR && agent.getGender() == OfficeAgent.Gender.FEMALE) {
-            agentGraphics = femaleJanitorGraphics;
-        }
         else if (agent.getType() == OfficeAgent.Type.VISITOR && agent.getGender() == OfficeAgent.Gender.MALE) {
             agentGraphics = maleVisitorGraphics;
         }
         else if (agent.getType() == OfficeAgent.Type.VISITOR && agent.getGender() == OfficeAgent.Gender.FEMALE) {
             agentGraphics = femaleVisitorGraphics;
-        }
-        else if (agent.getType() == OfficeAgent.Type.SECRETARY && agent.getGender() == OfficeAgent.Gender.MALE) {
-            agentGraphics = maleSecretaryGraphics;
         }
         else if (agent.getType() == OfficeAgent.Type.SECRETARY && agent.getGender() == OfficeAgent.Gender.FEMALE) {
             agentGraphics = femaleSecretaryGraphics;
@@ -180,14 +151,8 @@ public class OfficeAgentGraphic extends Graphic {
         else if (agent.getGender() == OfficeAgent.Gender.MALE && agent.getPersona() == OfficeAgent.Persona.INT_TECHNICAL) {
             agentGraphics = maleIntTechnicalGraphics;
         }
-        else if (agent.getGender() == OfficeAgent.Gender.FEMALE && agent.getPersona() == OfficeAgent.Persona.INT_TECHNICAL) {
-            agentGraphics = femaleIntTechnicalGraphics;
-        }
         else if (agent.getGender() == OfficeAgent.Gender.MALE && agent.getPersona() == OfficeAgent.Persona.EXT_TECHNICAL) {
             agentGraphics = maleExtTechnicalGraphics;
-        }
-        else if (agent.getGender() == OfficeAgent.Gender.FEMALE && agent.getPersona() == OfficeAgent.Persona.EXT_TECHNICAL) {
-            agentGraphics = femaleExtTechnicalGraphics;
         }
         else if (agent.getGender() == OfficeAgent.Gender.MALE && agent.getPersona() == OfficeAgent.Persona.PROFESSIONAL_BOSS) {
             agentGraphics = maleProBossGraphics;
