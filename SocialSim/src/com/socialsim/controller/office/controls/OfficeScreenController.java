@@ -4,6 +4,7 @@ import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.Main;
 import com.socialsim.controller.office.graphics.OfficeGraphicsController;
 import com.socialsim.controller.office.graphics.amenity.mapper.*;
+import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.office.Office;
@@ -42,7 +43,7 @@ public class OfficeScreenController extends ScreenController {
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
 
-    private final double CANVAS_SCALE = 0.3;
+    private final double CANVAS_SCALE = 0.5;
 
     public OfficeScreenController() {
     }
@@ -53,10 +54,15 @@ public class OfficeScreenController extends ScreenController {
 
     @FXML
     public void initializeAction() {
+        if (Main.officeSimulator.isRunning()) { // If the simulator is running, stop it
+            playAction();
+            playButton.setSelected(false);
+        }
+
         int width = 60; // Value may be from 25-100
         int length = 100; // Value may be from 106-220
         int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
         Office office = Office.OfficeFactory.create(rows, columns);
         initializeOffice(office);
         setElements();
@@ -66,6 +72,7 @@ public class OfficeScreenController extends ScreenController {
         Main.officeSimulator.resetToDefaultConfiguration(office);
         OfficeGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.officeSimulator.getOffice().getRows();
         mapOffice();
+        Main.officeSimulator.spawnInitialAgents(office);
         drawInterface();
     }
 
@@ -453,10 +460,10 @@ public class OfficeScreenController extends ScreenController {
 
     public void updateSimulationTime() {
         LocalTime currentTime = Main.officeSimulator.getSimulationTime().getTime();
-        long elapsedTime = Main.officeSimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS);
+        long elapsedTime = Main.officeSimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS) / 5;
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
-        elapsedTimeText.setText("Elapsed time: " + timeString + " (" + elapsedTime + " s)");
+        elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
     }
 
     public void setElements() {
@@ -494,17 +501,27 @@ public class OfficeScreenController extends ScreenController {
 
     @FXML
     public void resetAction() {
+        initializeAction();
         Main.officeSimulator.reset();
-
-        // Clear all agents
-//        clearOffice(Main.simulator.getOffice());
-
+        clearOffice(Main.officeSimulator.getOffice());
+        Main.officeSimulator.spawnInitialAgents(Main.officeSimulator.getOffice());
         drawOfficeViewForeground(Main.officeSimulator.getOffice(), false); // Redraw the canvas
-
         if (Main.officeSimulator.isRunning()) { // If the simulator is running, stop it
             playAction();
             playButton.setSelected(false);
         }
+    }
+
+    public static void clearOffice(Office office) {
+        for (OfficeAgent agent : office.getAgents()) { // Remove the relationship between the patch and the agents
+            agent.getAgentMovement().getCurrentPatch().getAgents().clear();
+            agent.getAgentMovement().setCurrentPatch(null);
+        }
+
+        // Remove all the agents
+        office.getAgents().removeAll(office.getAgents());
+        office.getAgents().clear();
+        office.getAgentPatchSet().clear();
     }
 
     @Override

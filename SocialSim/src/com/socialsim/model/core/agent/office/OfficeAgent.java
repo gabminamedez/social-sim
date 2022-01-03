@@ -30,7 +30,7 @@ public class OfficeAgent extends Agent {
     private OfficeAgent.Persona persona = null;
     private boolean inOnStart;
 
-//    private final OfficeAgentGraphic agentGraphic;
+    private final OfficeAgentGraphic agentGraphic;
     private final OfficeAgentMovement agentMovement;
 
     public static final OfficeAgent.OfficeAgentFactory agentFactory;
@@ -167,7 +167,7 @@ public class OfficeAgent extends Agent {
             }
         }
 
-        // this.agentGraphic = new OfficeAgentGraphic(this);
+        this.agentGraphic = new OfficeAgentGraphic(this);
         this.agentMovement = new OfficeAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick);
     }
 
@@ -195,9 +195,9 @@ public class OfficeAgent extends Agent {
         return inOnStart;
     }
 
-//    public OfficeAgentGraphic getAgentGraphic() {
-//        return agentGraphic;
-//    }
+    public OfficeAgentGraphic getAgentGraphic() {
+        return agentGraphic;
+    }
 
     public OfficeAgentMovement getAgentMovement() {
         return agentMovement;

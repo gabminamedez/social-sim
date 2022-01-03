@@ -1,7 +1,5 @@
 package com.socialsim.model.core.agent.office;
 
-import com.socialsim.model.core.agent.office.OfficeAction;
-import com.socialsim.model.core.agent.office.OfficeState;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.simulator.Simulator;
@@ -159,6 +157,7 @@ public class OfficeRoutePlan {
         routePlan.add(new OfficeState(OfficeState.Name.GOING_HOME, this, agent, actions));
 
         this.currentRoutePlan = routePlan.listIterator();
+        setNextState();
     }
 
     public OfficeState setNextState() { // Set the next class in the route plan
