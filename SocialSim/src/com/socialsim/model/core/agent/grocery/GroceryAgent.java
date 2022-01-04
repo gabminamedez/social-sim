@@ -24,7 +24,7 @@ public class GroceryAgent extends Agent {
 
     private final int id;
     private final GroceryAgent.Type type;
-    private final GroceryAgent.Gender gender;
+    private GroceryAgent.Gender gender;
     private GroceryAgent.AgeGroup ageGroup = null;
     private GroceryAgent.Persona persona = null;
     private final boolean inOnStart;
@@ -38,7 +38,7 @@ public class GroceryAgent extends Agent {
         agentFactory = new GroceryAgent.GroceryAgentFactory();
     }
 
-    private GroceryAgent(GroceryAgent.Type type, Patch spawnPatch, boolean inOnStart) {
+    private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, GroceryAgent leaderAgent) {
         this.id = agentCount;
         this.type = type;
         this.inOnStart = inOnStart;
@@ -71,97 +71,42 @@ public class GroceryAgent extends Agent {
 
         this.gender = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.FEMALE : GroceryAgent.Gender.MALE;
 
-//        if (this.type == GroceryAgent.Type.GUARD) {
-//            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.AgeGroup.FROM_25_TO_54 : GroceryAgent.AgeGroup.FROM_55_TO_64;
-//            this.persona = GroceryAgent.Persona.GUARD;
-//        }
-//        else if(this.type == GroceryAgent.Type.JANITOR) {
-//            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.AgeGroup.FROM_25_TO_54 : GroceryAgent.AgeGroup.FROM_55_TO_64;
-//            this.persona = GroceryAgent.Persona.JANITOR;
-//        }
-//        else if(this.type == GroceryAgent.Type.OFFICER) {
-//            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.AgeGroup.FROM_25_TO_54 : GroceryAgent.AgeGroup.FROM_55_TO_64;
-//            this.persona = GroceryAgent.Persona.OFFICER;
-//        }
-//        else if (this.type == GroceryAgent.Type.PROFESSOR) {
-//            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.AgeGroup.FROM_25_TO_54 : GroceryAgent.AgeGroup.FROM_55_TO_64;
-//
-//            boolean isStrict = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-//            if (isStrict) {
-//                this.persona = GroceryAgent.Persona.STRICT_PROFESSOR;
-//            }
-//            else {
-//                this.persona = GroceryAgent.Persona.APPROACHABLE_PROFESSOR;
-//            }
-//        }
-//        else if (this.type == GroceryAgent.Type.STUDENT) {
-//            this.ageGroup = GroceryAgent.AgeGroup.FROM_15_TO_24;
-//
-//            boolean isIntrovert = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-//            int yearLevel = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
-//            boolean isOrg = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-//
-//            if (isIntrovert && yearLevel == 1 && !isOrg) {
-//                this.persona = GroceryAgent.Persona.INT_Y1_STUDENT;
-//            }
-//            else if (isIntrovert && yearLevel == 2 && !isOrg) {
-//                this.persona = GroceryAgent.Persona.INT_Y2_STUDENT;
-//            }
-//            else if (isIntrovert && yearLevel == 3 && !isOrg) {
-//                this.persona = GroceryAgent.Persona.INT_Y3_STUDENT;
-//            }
-//            else if (isIntrovert && yearLevel == 4 && !isOrg) {
-//                this.persona = GroceryAgent.Persona.INT_Y4_STUDENT;
-//            }
-//            else if (!isIntrovert && yearLevel == 1 && !isOrg) {
-//                this.persona = GroceryAgent.Persona.EXT_Y1_STUDENT;
-//            }
-//            else if (!isIntrovert && yearLevel == 2 && !isOrg) {
-//                this.persona = GroceryAgent.Persona.EXT_Y2_STUDENT;
-//            }
-//            else if (!isIntrovert && yearLevel == 3 && !isOrg) {
-//                this.persona = GroceryAgent.Persona.EXT_Y3_STUDENT;
-//            }
-//            else if (!isIntrovert && yearLevel == 4 && !isOrg) {
-//                this.persona = GroceryAgent.Persona.EXT_Y4_STUDENT;
-//            }
-//            else if (isIntrovert && yearLevel == 1 && isOrg) {
-//                this.persona = GroceryAgent.Persona.INT_Y1_ORG_STUDENT;
-//            }
-//            else if (isIntrovert && yearLevel == 2 && isOrg) {
-//                this.persona = GroceryAgent.Persona.INT_Y2_ORG_STUDENT;
-//            }
-//            else if (isIntrovert && yearLevel == 3 && isOrg) {
-//                this.persona = GroceryAgent.Persona.INT_Y3_ORG_STUDENT;
-//            }
-//            else if (isIntrovert && yearLevel == 4 && isOrg) {
-//                this.persona = GroceryAgent.Persona.INT_Y4_ORG_STUDENT;
-//            }
-//            else if (!isIntrovert && yearLevel == 1 && isOrg) {
-//                this.persona = GroceryAgent.Persona.EXT_Y1_ORG_STUDENT;
-//            }
-//            else if (!isIntrovert && yearLevel == 2 && isOrg) {
-//                this.persona = GroceryAgent.Persona.EXT_Y2_ORG_STUDENT;
-//            }
-//            else if (!isIntrovert && yearLevel == 3 && isOrg) {
-//                this.persona = GroceryAgent.Persona.EXT_Y3_ORG_STUDENT;
-//            }
-//            else if (!isIntrovert && yearLevel == 4 && isOrg) {
-//                this.persona = GroceryAgent.Persona.EXT_Y4_ORG_STUDENT;
-//            }
-//        }
-//
-//        this.agentGraphic = new GroceryAgentGraphic(this);
-//        if (inOnStart) { // If the agent is already inside the environment on initialization
-//            // this.agentMovement = new GroceryAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates());
-//        }
-//        else {
-//            GroceryGate groceryGate = (GroceryGate) spawnPatch.getAmenityBlock().getParent();
-//            // this.agentMovement = new GroceryAgentMovement(groceryGate, this, 1.27, spawnPatch.getPatchCenterCoordinates());
-//        }
+        if (type == Type.STAFF_AISLE) {
+            this.persona = Persona.STAFF_AISLE;
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+        }
+        else if (type == Type.CASHIER) {
+            this.persona = Persona.CASHIER;
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+        }
+        else if (type == Type.BAGGER) {
+            this.persona = Persona.BAGGER;
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+        }
+        else if (type == Type.BUTCHER) {
+            this.persona = Persona.BUTCHER;
+            this.ageGroup = AgeGroup.FROM_25_TO_54;
+        }
+        else if (type == Type.CUSTOMER_SERVICE) {
+            this.persona = Persona.CUSTOMER_SERVICE;
+            this.ageGroup = AgeGroup.FROM_25_TO_54;
+        }
+        else if (type == Type.STAFF_FOOD) {
+            this.persona = Persona.STAFF_FOOD;
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+        }
+        else if (type == GroceryAgent.Type.GUARD) {
+            this.persona = persona;
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+        }
+        else if (type == Type.CUSTOMER) {
+            this.persona = persona;
+            this.gender = gender;
+            this.ageGroup = ageGroup;
+        }
 
         this.agentGraphic = new GroceryAgentGraphic();
-        this.agentMovement = new GroceryAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates());
+        this.agentMovement = new GroceryAgentMovement(spawnPatch, this, leaderAgent, 1.27, spawnPatch.getPatchCenterCoordinates());
     }
 
     public int getId() {
@@ -197,8 +142,8 @@ public class GroceryAgent extends Agent {
     }
 
     public static class GroceryAgentFactory extends Agent.AgentFactory {
-        public static GroceryAgent create(GroceryAgent.Type type, Patch spawnPatch, boolean inOnStart) {
-            return new GroceryAgent(type, spawnPatch, inOnStart);
+        public static GroceryAgent create(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, GroceryAgent leaderAgent) {
+            return new GroceryAgent(type, persona, gender, ageGroup, spawnPatch, inOnStart, leaderAgent);
         }
     }
 

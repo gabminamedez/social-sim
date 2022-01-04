@@ -4,6 +4,7 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.graphics.amenity.AmenityMapper;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
+import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterField;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.ServiceCounter;
 
 import java.util.ArrayList;
@@ -30,6 +31,16 @@ public class ServiceCounterMapper extends AmenityMapper {
             ServiceCounter serviceCounterToAdd = ServiceCounter.ServiceCounterFactory.create(amenityBlocks, true, 20);
             Main.grocerySimulator.getGrocery().getServiceCounters().add(serviceCounterToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
+
+            List<Patch> serviceCounterFieldPatches = new ArrayList<>();
+            serviceCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow, origPatchCol + 1));
+            for (int i = origPatchRow + 1; i < 5; i++) {
+                Patch currentPatch = Main.grocerySimulator.getGrocery().getPatch(i, origPatchCol + 1);
+                if (currentPatch.getPatchField() == null && currentPatch.getQueueingPatchField() == null && currentPatch.getAmenityBlock() == null) {
+                    serviceCounterFieldPatches.add(currentPatch);
+                }
+            }
+            Main.grocerySimulator.getGrocery().getServiceCounterFields().add(ServiceCounterField.serviceCounterFieldFactory.create(serviceCounterFieldPatches, serviceCounterToAdd, 1));
         }
     }
 

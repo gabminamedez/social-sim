@@ -268,20 +268,26 @@ public class GroceryRoutePlan {
         this.currentRoutePlan = routePlan.listIterator();
     }
 
-    public void setNextState() { // Set the next class in the route plan
+    public GroceryState setNextState() { // Set the next class in the route plan
         this.currentState = this.currentRoutePlan.next();
+
+        return this.currentState;
     }
-    public void setPreviousState(){
+
+    public GroceryState setPreviousState(){
         this.currentState = this.currentRoutePlan.previous();
+
+        return this.currentState;
     }
 
     public ListIterator<GroceryState> getCurrentRoutePlan() {
         return currentRoutePlan;
     }
 
-    public GroceryState getCurrentClass() {
+    public GroceryState getCurrentState() {
         return currentState;
     }
+
     public void addUrgentRoute(GroceryState s){
         this.currentState = s;
     }
