@@ -322,7 +322,6 @@ public class University extends Environment {
             numAgents--;
         }
 
-        //TODO: Create IOS based on ID
         for (int i = 0; i < this.getAgents().size(); i++){
             Persona agent1 = agents.get(i).getPersona();
             ArrayList<Integer> IOSScales = new ArrayList<>();
@@ -733,7 +732,7 @@ public class University extends Environment {
                             case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
                             case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
                             case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 3)
+                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 3);
                             case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
                             case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
                             case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);

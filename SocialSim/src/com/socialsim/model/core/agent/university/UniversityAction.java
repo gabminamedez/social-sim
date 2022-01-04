@@ -6,60 +6,67 @@ import com.socialsim.model.simulator.Simulator;
 public class UniversityAction {
 
     public enum Name {
-        GREET_GUARD,
-        GOING_TO_SECURITY_QUEUE,
-        GO_THROUGH_SCANNER,
-        RANDOM_ACTION,
+        GREET_GUARD(0),
+        GOING_TO_SECURITY_QUEUE(1),
+        GO_THROUGH_SCANNER(2),
+        RANDOM_ACTION(3),
 
-        GO_TO_CAFETERIA,
-        GO_TO_STUDY_ROOM,
-        GO_TO_CLASSROOM,
-        GO_TO_BATHROOM,
-        GO_TO_DRINKING_FOUNTAIN,
+        GO_TO_CAFETERIA(4),
+        GO_TO_STUDY_ROOM(5),
+        GO_TO_CLASSROOM(6),
+        GO_TO_BATHROOM(7),
+        GO_TO_DRINKING_FOUNTAIN(8),
 
-        CLASSROOM_STAY_PUT,
-        STUDY_AREA_STAY_PUT,
-        LUNCH_STAY_PUT,
+        CLASSROOM_STAY_PUT(9),
+        STUDY_AREA_STAY_PUT(10),
+        LUNCH_STAY_PUT(11),
 
-        FIND_BULLETIN,
-        VIEW_BULLETIN,
-        FIND_BENCH,
-        SIT_ON_BENCH,
-        LEAVE_BUILDING,
-        THROW_ITEM_TRASH_CAN,
+        FIND_BULLETIN(12),
+        VIEW_BULLETIN(13),
+        FIND_BENCH(14),
+        SIT_ON_BENCH(15),
+        LEAVE_BUILDING(16),
+        THROW_ITEM_TRASH_CAN(17),
 
-        FIND_CUBICLE,
-        RELIEVE_IN_CUBICLE,
-        WASH_IN_SINK,
+        FIND_CUBICLE(18),
+        RELIEVE_IN_CUBICLE(19),
+        WASH_IN_SINK(20),
 
-        QUEUE_FOUNTAIN,
-        DRINK_FOUNTAIN,
+        QUEUE_FOUNTAIN(21),
+        DRINK_FOUNTAIN(22),
 
-        FIND_SEAT_STUDY_ROOM,
-        FIND_SEAT_CLASSROOM,
-        SIT_PROFESSOR_TABLE,
-        GO_TO_BLACKBOARD,
-        ASK_PROFESSOR_QUESTION,
-        ANSWER_STUDENT_QUESTION,
+        FIND_SEAT_STUDY_ROOM(23),
+        FIND_SEAT_CLASSROOM(24),
+        SIT_PROFESSOR_TABLE(25),
+        GO_TO_BLACKBOARD(26),
+        ASK_PROFESSOR_QUESTION(27),
+        ANSWER_STUDENT_QUESTION(28),
 
-        LEAVE_STUDY_AREA,
-        LEAVE_BENCH,
-        LEAVE_BATHROOM,
+        LEAVE_STUDY_AREA(29),
+        LEAVE_BENCH(30),
+        LEAVE_BATHROOM(31),
 
-        GO_TO_VENDOR,
-        QUEUE_VENDOR,
-        CHECKOUT,
-        FIND_SEAT_CAFETERIA,
+        GO_TO_VENDOR(32),
+        QUEUE_VENDOR(33),
+        CHECKOUT(34),
+        FIND_SEAT_CAFETERIA(35),
 
-        GREET_PERSON,
-        GUARD_STAY_PUT,
+        GREET_PERSON(36),
+        GUARD_STAY_PUT(37),
 
-        JANITOR_GO_TOILET,
-        JANITOR_CLEAN_TOILET,
-        JANITOR_GO_FOUNTAIN,
-        JANITOR_CHECK_FOUNTAIN
+        JANITOR_GO_TOILET(38),
+        JANITOR_CLEAN_TOILET(39),
+        JANITOR_GO_FOUNTAIN(40),
+        JANITOR_CHECK_FOUNTAIN(41);
+
+        final int ID;
+        Name(int ID){
+            this.ID = ID;
+        }
+        public int getID() {
+            return ID;
+        }
     }
-
     private Name name;
     private int duration = 0;
     private Patch destination;

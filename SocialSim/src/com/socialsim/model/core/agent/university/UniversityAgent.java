@@ -5,6 +5,7 @@ import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.simulator.Simulator;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -15,7 +16,17 @@ public class UniversityAgent extends Agent {
     public static int janitorCount = 0;
     public static int professorCount = 0;
     public static int studentCount = 0;
-
+    public static final double[][][] chancePerActionInteractionType = new double[][][]
+    {
+        {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}},
+        {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}},
+        {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}},
+        {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}},
+        {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}},
+        {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}},
+        {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}},
+        {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}},
+    };
     private final int id;
     private final UniversityAgent.Type type;
     private final UniversityAgent.Gender gender;
@@ -315,13 +326,20 @@ public class UniversityAgent extends Agent {
     }
 
     public enum Persona {
-        GUARD, JANITOR,
-        INT_Y1_STUDENT, INT_Y2_STUDENT, INT_Y3_STUDENT, INT_Y4_STUDENT,
-        INT_Y1_ORG_STUDENT, INT_Y2_ORG_STUDENT, INT_Y3_ORG_STUDENT, INT_Y4_ORG_STUDENT,
-        EXT_Y1_STUDENT, EXT_Y2_STUDENT, EXT_Y3_STUDENT, EXT_Y4_STUDENT,
-        EXT_Y1_ORG_STUDENT, EXT_Y2_ORG_STUDENT, EXT_Y3_ORG_STUDENT, EXT_Y4_ORG_STUDENT,
-        STRICT_PROFESSOR, APPROACHABLE_PROFESSOR
+        GUARD(0), JANITOR(1),
+        INT_Y1_STUDENT(2), INT_Y2_STUDENT(2), INT_Y3_STUDENT(2), INT_Y4_STUDENT(2),
+        INT_Y1_ORG_STUDENT(3), INT_Y2_ORG_STUDENT(3), INT_Y3_ORG_STUDENT(3), INT_Y4_ORG_STUDENT(3),
+        EXT_Y1_STUDENT(4), EXT_Y2_STUDENT(4), EXT_Y3_STUDENT(4), EXT_Y4_STUDENT(4),
+        EXT_Y1_ORG_STUDENT(5), EXT_Y2_ORG_STUDENT(5), EXT_Y3_ORG_STUDENT(5), EXT_Y4_ORG_STUDENT(5),
+        STRICT_PROFESSOR(6), APPROACHABLE_PROFESSOR(7);
 
+        final int ID;
+        Persona(int ID){
+            this.ID = ID;
+        }
+        public int getID() {
+            return ID;
+        }
     }
 
 }
