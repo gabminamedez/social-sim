@@ -1,11 +1,8 @@
 package com.socialsim.model.core.agent.grocery;
 
 import com.socialsim.controller.grocery.graphics.agent.GroceryAgentGraphic;
-import com.socialsim.controller.university.graphics.agent.UniversityAgentGraphic;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.agent.university.UniversityAgentMovement;
 import com.socialsim.model.core.environment.generic.Patch;
-import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.Objects;
@@ -77,14 +74,17 @@ public class GroceryAgent extends Agent {
         }
         else if (type == Type.CASHIER) {
             this.persona = Persona.CASHIER;
+            this.gender = Gender.FEMALE;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
         }
         else if (type == Type.BAGGER) {
             this.persona = Persona.BAGGER;
+            this.gender = Gender.MALE;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
         }
         else if (type == Type.BUTCHER) {
             this.persona = Persona.BUTCHER;
+            this.gender = Gender.MALE;
             this.ageGroup = AgeGroup.FROM_25_TO_54;
         }
         else if (type == Type.CUSTOMER_SERVICE) {
@@ -105,7 +105,7 @@ public class GroceryAgent extends Agent {
             this.ageGroup = ageGroup;
         }
 
-        this.agentGraphic = new GroceryAgentGraphic();
+        this.agentGraphic = new GroceryAgentGraphic(this);
         this.agentMovement = new GroceryAgentMovement(spawnPatch, this, leaderAgent, 1.27, spawnPatch.getPatchCenterCoordinates());
     }
 

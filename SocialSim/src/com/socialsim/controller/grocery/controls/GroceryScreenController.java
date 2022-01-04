@@ -4,6 +4,7 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.grocery.graphics.GroceryGraphicsController;
 import com.socialsim.controller.grocery.graphics.amenity.mapper.*;
+import com.socialsim.model.core.agent.grocery.GroceryAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.grocery.Grocery;
@@ -60,10 +61,15 @@ public class GroceryScreenController extends ScreenController {
 
     @FXML
     public void initializeAction() {
+        if (Main.grocerySimulator.isRunning()) { // If the simulator is running, stop it
+            playAction();
+            playButton.setSelected(false);
+        }
+
         int width = 60; // Value may be from 25-100
         int length = 100; // Value may be from 106-220
         int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
         Grocery grocery = Grocery.GroceryFactory.create(rows, columns);
         initializeGrocery(grocery);
         setElements();
@@ -73,6 +79,7 @@ public class GroceryScreenController extends ScreenController {
         Main.grocerySimulator.resetToDefaultConfiguration(grocery);
         GroceryGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.grocerySimulator.getGrocery().getRows();
         mapGrocery();
+        Main.grocerySimulator.spawnInitialAgents(grocery);
         drawInterface();
     }
 
@@ -299,7 +306,7 @@ public class GroceryScreenController extends ScreenController {
         long elapsedTime = Main.grocerySimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS);
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
-        elapsedTimeText.setText("Elapsed time: " + timeString + " (" + elapsedTime + " s)");
+        elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
     }
 
     public void setElements() {
@@ -337,17 +344,27 @@ public class GroceryScreenController extends ScreenController {
 
     @FXML
     public void resetAction() {
+        initializeAction();
         Main.grocerySimulator.reset();
-
-        // Clear all agents
-//        clearGrocery(Main.simulator.getGrocery());
-
+        clearGrocery(Main.grocerySimulator.getGrocery());
+        Main.universitySimulator.spawnInitialAgents(Main.universitySimulator.getUniversity());
         drawGroceryViewForeground(Main.grocerySimulator.getGrocery(), false); // Redraw the canvas
-
         if (Main.grocerySimulator.isRunning()) { // If the simulator is running, stop it
             playAction();
             playButton.setSelected(false);
         }
+    }
+
+    public static void clearGrocery(Grocery grocery) {
+        for (GroceryAgent agent : grocery.getAgents()) { // Remove the relationship between the patch and the agents
+            agent.getAgentMovement().getCurrentPatch().getAgents().clear();
+            agent.getAgentMovement().setCurrentPatch(null);
+        }
+
+        // Remove all the agents
+        grocery.getAgents().removeAll(grocery.getAgents());
+        grocery.getAgents().clear();
+        grocery.getAgentPatchSet().clear();
     }
 
     @Override
