@@ -1700,28 +1700,37 @@ public class UniversityAgentMovement extends AgentMovement {
         // set other agent interaction parameters
         agent.getAgentMovement().setInteracting(true);
         agent.getAgentMovement().setInteractionType(interactionType);
+        double interactionStdDeviation, interactionMean;
 
         if (interactionType == InteractionType.NON_VERBAL){
-
+            interactionStdDeviation = 1;
+            interactionMean = 2;
         }
         else if (interactionType == InteractionType.COOPERATIVE){
 
+            interactionStdDeviation = 5;
+            interactionMean = 19;
         }
         else if (interactionType == InteractionType.EXCHANGE){
 
+            interactionStdDeviation = 5;
+            interactionMean = 19;
         }
-
+        else{
+            interactionStdDeviation = 0;
+            interactionMean = 0;
+        }
+        this.interactionDuration = (int) Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean);
     }
     public void rollAgentInteraction(UniversityAgent agent){
         //TODO: Statistics in interaction
-
-        // get IOS of both
 
         double IOS1 = university.getIOS().get(this.getParent().getId()).get(agent.getId());
         double IOS2 = university.getIOS().get(agent.getId()).get(this.getParent().getId());
         // roll if possible interaction
         double CHANCE1 = Simulator.roll();
         double CHANCE2 = Simulator.roll();
+        double interactionStdDeviation, interactionMean;
         if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
             // set own agent interaction parameters
             this.isInteracting = true;
@@ -1729,29 +1738,43 @@ public class UniversityAgentMovement extends AgentMovement {
             agent.getAgentMovement().setInteracting(true);
 
             // roll if what kind of interaction
-            double CHANCE = Simulator.roll();
-            double CHANCE_NONVERBAL = 0.33, CHANCE_COOPERATIVE = 0.33, CHANCE_EXCHANGE = 0.33;
-            InteractionType interactionType;
-            if (CHANCE < CHANCE_NONVERBAL){
-                interactionType = InteractionType.NON_VERBAL;
+            CHANCE1 = Simulator.roll() * IOS1;
+            CHANCE2 = Simulator.roll() * IOS2;
+            double CHANCE = (CHANCE1 + CHANCE2) / 2;
+            double CHANCE_NONVERBAL1 = UniversityAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
+                    CHANCE_COOPERATIVE1 = UniversityAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
+                    CHANCE_EXCHANGE1 = UniversityAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
+                    CHANCE_NONVERBAL2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
+                    CHANCE_COOPERATIVE2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
+                    CHANCE_EXCHANGE2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
+            if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
+                this.getParent().getAgentMovement().setInteractionType(InteractionType.NON_VERBAL);
+                agent.getAgentMovement().setInteractionType(InteractionType.NON_VERBAL);
+                interactionStdDeviation = 1;
+                interactionMean = 2;
             }
-            else if (CHANCE < CHANCE_NONVERBAL + CHANCE_COOPERATIVE){
-                interactionType = InteractionType.COOPERATIVE;
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
+                this.getParent().getAgentMovement().setInteractionType(InteractionType.COOPERATIVE);
+                agent.getAgentMovement().setInteractionType(InteractionType.COOPERATIVE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
+                this.getParent().getAgentMovement().setInteractionType(InteractionType.EXCHANGE);
+                agent.getAgentMovement().setInteractionType(InteractionType.EXCHANGE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
             }
             else{
-                interactionType = InteractionType.EXCHANGE;
+                interactionStdDeviation = 0;
+                interactionMean = 0;
             }
             // roll duration (NOTE GAUSSIAN)
-            double interactionStdDeviation = 1, interactionMean = 5;
-            if (interactionType == InteractionType.NON_VERBAL){
-                this.interactionDuration = (int) Math.floor(Math.abs(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian()) * interactionStdDeviation + interactionMean);
-            }
-            else if (interactionType == InteractionType.COOPERATIVE){
-
-            }
-            else if (interactionType == InteractionType.EXCHANGE){
-
-            }
+            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
         }
     }
     public void interact(){

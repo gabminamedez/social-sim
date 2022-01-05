@@ -9,6 +9,7 @@ public class UniversityAction {
         GREET_GUARD(0),
         GOING_TO_SECURITY_QUEUE(1),
         GO_THROUGH_SCANNER(2),
+        RANDOM_ACTION(3),
 
         GO_TO_CAFETERIA(3),
         GO_TO_STUDY_ROOM(4),
