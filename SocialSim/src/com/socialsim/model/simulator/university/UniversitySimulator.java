@@ -812,8 +812,9 @@ public class UniversitySimulator extends Simulator {
 //                        }
                     if(action.getName()==UniversityAction.Name.GO_TO_VENDOR){
                         if (agentMovement.getGoalQueueingPatchField() == null) {
-                            agentMovement.setGoalQueueingPatchField(Main.universitySimulator.getUniversity().getStalls().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
-                            agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getStalls().get(0)); //
+                            agentMovement.chooseStall();
+//                            agentMovement.setGoalQueueingPatchField(Main.universitySimulator.getUniversity().getStalls().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
+//                            agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getStalls().get(0)); //
                         }
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
