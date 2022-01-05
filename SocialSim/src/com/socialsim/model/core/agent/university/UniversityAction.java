@@ -46,6 +46,7 @@ public class UniversityAction {
         LEAVE_BENCH,
         LEAVE_BATHROOM,
         LEAVE_CAFETERIA,
+        LEAVE_CLASSROOM,
 
         GO_TO_VENDOR,
         QUEUE_VENDOR,
