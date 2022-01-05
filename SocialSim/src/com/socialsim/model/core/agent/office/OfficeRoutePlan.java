@@ -45,7 +45,9 @@ public class OfficeRoutePlan {
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.CLIENT_GO_RECEPTIONIST, office.getReceptionTables().get(0).getAmenityBlocks().get(2).getPatch(), 12, 24));
             actions.add(new OfficeAction(OfficeAction.Name.CLIENT_GO_COUCH, 60, 180));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getDoors().get(5).getAttractors().get(0).getPatch()));
             actions.add(new OfficeAction(OfficeAction.Name.CLIENT_GO_OFFICE, office.getChairs().get(1).getAmenityBlocks().get(0).getPatch(),360, 720));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getDoors().get(5).getAttractors().get(0).getPatch()));
             actions.add(new OfficeAction(OfficeAction.Name.CLIENT_GO_RECEPTIONIST, office.getReceptionTables().get(0).getAmenityBlocks().get(2).getPatch(), 12, 24));
             routePlan.add(new OfficeState(OfficeState.Name.CLIENT, this, agent, actions));
         }
@@ -69,12 +71,13 @@ public class OfficeRoutePlan {
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.VISITOR_GO_RECEPTIONIST, office.getReceptionTables().get(0).getAmenityBlocks().get(2).getPatch(), 12, 24));
-            actions.add(new OfficeAction(OfficeAction.Name.VISITOR_GO_OFFICE, office.getChairs().get(70).getAmenityBlocks().get(0).getPatch(),360, 2160));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getDoors().get(5).getAttractors().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.VISITOR_GO_OFFICE, office.getChairs().get(5).getAmenityBlocks().get(0).getPatch(),360, 2160));
             routePlan.add(new OfficeState(OfficeState.Name.VISITOR, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.RECEPTIONIST) {
             actions = new ArrayList<>();
-            actions.add(new OfficeAction(OfficeAction.Name.RECEPTIONIST_STAY_PUT, spawnPatch, 5760));
+            actions.add(new OfficeAction(OfficeAction.Name.RECEPTIONIST_STAY_PUT, office.getChairs().get(2).getAmenityBlocks().get(0).getPatch(), 5760));
             routePlan.add(new OfficeState(OfficeState.Name.RECEPTIONIST, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.SECRETARY) {
@@ -84,9 +87,9 @@ public class OfficeRoutePlan {
             routePlan.add(new OfficeState(OfficeState.Name.GOING_TO_SECURITY, this, agent, actions));
 
             actions = new ArrayList<>();
-            actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_STAY_PUT, 360, 720));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getDoors().get(5).getAttractors().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_STAY_PUT, office.getChairs().get(3).getAttractors().get(0).getPatch(), 360, 720));
             actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_CHECK_CABINET, 12, 36));
-            actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_GO_BOSS, 12, 36));
             routePlan.add(new OfficeState(OfficeState.Name.SECRETARY, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.INT_BUSINESS || agent.getPersona() == OfficeAgent.Persona.EXT_BUSINESS || agent.getPersona() == OfficeAgent.Persona.INT_RESEARCHER || agent.getPersona() == OfficeAgent.Persona.EXT_RESEARCHER) {
@@ -98,9 +101,17 @@ public class OfficeRoutePlan {
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, assignedCubicle.getAttractors().get(0).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
+
             actions = new ArrayList<>();
-            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, 180, 360));
+            if (agent.getPersona() == OfficeAgent.Persona.EXT_BUSINESS || agent.getPersona() == OfficeAgent.Persona.EXT_RESEARCHER) {
+                actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, office.getDoors().get(1).getAttractors().get(1).getPatch()));
+            }
+            actions.add(new OfficeAction(OfficeAction.Name.EAT_LUNCH, 180, 360));
+            if (agent.getPersona() == OfficeAgent.Persona.EXT_BUSINESS || agent.getPersona() == OfficeAgent.Persona.EXT_RESEARCHER) {
+                actions.add(new OfficeAction(OfficeAction.Name.EXIT_LUNCH, office.getDoors().get(1).getAttractors().get(1).getPatch()));
+            }
             routePlan.add(new OfficeState(OfficeState.Name.EATING_LUNCH, this, agent, actions));
+
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, assignedCubicle.getAttractors().get(0).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
@@ -114,9 +125,17 @@ public class OfficeRoutePlan {
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, assignedCubicle.getAttractors().get(0).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
+
             actions = new ArrayList<>();
-            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, 180, 360));
+            if (agent.getPersona() == OfficeAgent.Persona.EXT_TECHNICAL) {
+                actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, office.getDoors().get(1).getAttractors().get(1).getPatch()));
+            }
+            actions.add(new OfficeAction(OfficeAction.Name.EAT_LUNCH, 180, 360));
+            if (agent.getPersona() == OfficeAgent.Persona.EXT_TECHNICAL) {
+                actions.add(new OfficeAction(OfficeAction.Name.EXIT_LUNCH, office.getDoors().get(1).getAttractors().get(1).getPatch()));
+            }
             routePlan.add(new OfficeState(OfficeState.Name.EATING_LUNCH, this, agent, actions));
+
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, assignedCubicle.getAttractors().get(0).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
@@ -128,13 +147,24 @@ public class OfficeRoutePlan {
             routePlan.add(new OfficeState(OfficeState.Name.GOING_TO_SECURITY, this, agent, actions));
 
             actions = new ArrayList<>();
-            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, office.getChairs().get(0).getAttractors().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getDoors().get(5).getAttractors().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, office.getChairs().get(4).getAttractors().get(0).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
+
             actions = new ArrayList<>();
-            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, 180, 360));
+            if (agent.getPersona() == OfficeAgent.Persona.APPROACHABLE_BOSS) {
+                actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getDoors().get(5).getAttractors().get(0).getPatch()));
+                actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, office.getDoors().get(1).getAttractors().get(1).getPatch()));
+            }
+            actions.add(new OfficeAction(OfficeAction.Name.EAT_LUNCH, 180, 360));
+            if (agent.getPersona() == OfficeAgent.Persona.APPROACHABLE_BOSS) {
+                actions.add(new OfficeAction(OfficeAction.Name.EXIT_LUNCH, office.getDoors().get(1).getAttractors().get(1).getPatch()));
+            }
             routePlan.add(new OfficeState(OfficeState.Name.EATING_LUNCH, this, agent, actions));
+
             actions = new ArrayList<>();
-            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, office.getChairs().get(0).getAttractors().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getDoors().get(5).getAttractors().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, office.getChairs().get(4).getAttractors().get(0).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.MANAGER) {
@@ -146,10 +176,15 @@ public class OfficeRoutePlan {
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, assignedCubicle.getAttractors().get(0).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
+
             actions = new ArrayList<>();
-            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, 180, 360));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, office.getDoors().get(1).getAttractors().get(1).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.EAT_LUNCH, 180, 360));
+            actions.add(new OfficeAction(OfficeAction.Name.EXIT_LUNCH, office.getDoors().get(1).getAttractors().get(1).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.EATING_LUNCH, this, agent, actions));
+
             actions = new ArrayList<>();
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getDoors().get(5).getAttractors().get(0).getPatch()));
             actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, assignedCubicle.getAttractors().get(0).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
         }

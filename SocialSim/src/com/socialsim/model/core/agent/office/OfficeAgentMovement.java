@@ -13,13 +13,13 @@ import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Qu
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.Vector;
 import com.socialsim.model.core.environment.office.Office;
-import com.socialsim.model.core.environment.office.patchobject.passable.goal.Cubicle;
-import com.socialsim.model.core.environment.office.patchobject.passable.goal.Door;
-import com.socialsim.model.core.environment.office.patchobject.passable.goal.Security;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class OfficeAgentMovement extends AgentMovement {
 
@@ -506,6 +506,54 @@ public class OfficeAgentMovement extends AgentMovement {
                 public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1,
                                    Map.Entry<Amenity.AmenityBlock, Double> o2)
                 {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                sortedDistances.put(aa.getKey(), aa.getValue());
+            }
+
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
+                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                if (candidateAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
+                    chosenAmenity =  candidateAttractor.getParent();
+                    chosenAttractor = candidateAttractor;
+                    candidateAttractor.getPatch().getAgents().add(this.parent);
+                    break;
+                }
+            }
+
+            this.goalAmenity = chosenAmenity;
+            this.goalAttractor = chosenAttractor;
+        }
+    }
+
+    public void chooseBreakroomSeat() { // Set the nearest goal to this agent
+        if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
+            List<? extends Amenity> chairs = this.office.getAmenityList(Chair.class);
+            List<? extends Amenity> couches = this.office.getAmenityList(Couch.class);
+            List<? extends Amenity> amenityListInFloor = Stream.concat(chairs.stream(), couches.stream()).collect(Collectors.toList());
+
+            Amenity chosenAmenity = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+
+            for (Amenity amenity : amenityListInFloor) {
+                if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField() != null && amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getKey() == this.office.getBreakrooms().get(0)) {
+                    for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                        double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                        distancesToAttractors.put(attractor, distanceToAttractor);
+                    }
+                }
+            }
+
+            // Sort amenity by distance, from nearest to furthest
+            List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
                     return (o1.getValue()).compareTo(o2.getValue());
                 }
             });
@@ -1359,7 +1407,7 @@ public class OfficeAgentMovement extends AgentMovement {
 
             while (true) {
                 nextPatchInPath = this.currentPath.getPath().peek();
-                if (!(this.currentPath.getPath().size() > 1 && nextPatchInPath.getAmenityBlocksAround() == 0
+                if (!(this.currentPath.getPath().size() > 1 && nextPatchInPath.getAmenityBlocksAround() == 0 && nextPatchInPath.getWallsAround() == 0
                         && this.isOnOrCloseToPatch(nextPatchInPath)
                         && this.hasClearLineOfSight(this.position, nextPatchInPath.getPatchCenterCoordinates(), true))) {
                     break;
