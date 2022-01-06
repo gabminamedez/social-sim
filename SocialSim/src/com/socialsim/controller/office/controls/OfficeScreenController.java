@@ -510,8 +510,9 @@ public class OfficeScreenController extends ScreenController {
 
     @FXML
     public void resetAction() {
-        initializeAction();
         Main.officeSimulator.reset();
+        Main.officeSimulator.replenishSeats();
+        OfficeAgent.clearOfficeAgentCounts();
         clearOffice(Main.officeSimulator.getOffice());
         Main.officeSimulator.spawnInitialAgents(Main.officeSimulator.getOffice());
         drawOfficeViewForeground(Main.officeSimulator.getOffice(), false); // Redraw the canvas

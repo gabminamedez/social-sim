@@ -210,6 +210,22 @@ public class OfficeAgent extends Agent {
         }
     }
 
+    public static void clearOfficeAgentCounts() {
+        agentCount = 0;
+        bossCount = 0;
+        managerCount = 0;
+        businessCount = 0;
+        researcherCount = 0;
+        janitorCount = 0;
+        clientCount = 0;
+        driverCount = 0;
+        technicalCount = 0;
+        visitorCount = 0;
+        guardCount = 0;
+        receptionistCount = 0;
+        secretaryCount = 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

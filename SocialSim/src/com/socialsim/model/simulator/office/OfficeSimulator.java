@@ -30,22 +30,22 @@ public class OfficeSimulator extends Simulator {
     private final Semaphore playSemaphore;
 
     private final int MAX_BOSSES = 1;
-    private List<Integer> MANAGERS_1 = new LinkedList<Integer>(List.of(11));
-    private List<Integer> MANAGERS_2 = new LinkedList<Integer>(List.of(19));
-    private List<Integer> MANAGERS_3 = new LinkedList<Integer>(List.of(27));
-    private List<Integer> MANAGERS_4 = new LinkedList<Integer>(List.of(35));
-    private List<Integer> BUSINESS_1 = new LinkedList<Integer>(List.of(0, 1, 2, 3, 4));
-    private List<Integer> BUSINESS_2 = new LinkedList<Integer>(List.of(36, 37, 38, 39, 40, 41, 42));
-    private List<Integer> BUSINESS_3 = new LinkedList<Integer>(List.of(44, 45, 46, 47, 48, 49, 50));
-    private List<Integer> BUSINESS_4 = new LinkedList<Integer>(List.of(52, 53, 54, 55, 56, 57, 58));
-    private List<Integer> RESEARCH_1 = new LinkedList<Integer>(List.of(5, 6, 7, 8, 9));
-    private List<Integer> RESEARCH_2 = new LinkedList<Integer>(List.of(12, 13, 14, 15, 16, 17, 18));
-    private List<Integer> RESEARCH_3 = new LinkedList<Integer>(List.of(20, 21, 22, 23, 24, 25, 26));
-    private List<Integer> RESEARCH_4 = new LinkedList<Integer>(List.of(28, 29, 30, 31, 32, 33, 34));
-    private List<Integer> TECHNICAL_1 = new LinkedList<Integer>(List.of(10));
-    private List<Integer> TECHNICAL_2 = new LinkedList<Integer>(List.of(43));
-    private List<Integer> TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
-    private List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
+    public static List<Integer> MANAGERS_1 = new LinkedList<Integer>(List.of(11));
+    public static List<Integer> MANAGERS_2 = new LinkedList<Integer>(List.of(19));
+    public static List<Integer> MANAGERS_3 = new LinkedList<Integer>(List.of(27));
+    public static List<Integer> MANAGERS_4 = new LinkedList<Integer>(List.of(35));
+    public static List<Integer> BUSINESS_1 = new LinkedList<Integer>(List.of(0, 1, 2, 3, 4));
+    public static List<Integer> BUSINESS_2 = new LinkedList<Integer>(List.of(36, 37, 38, 39, 40, 41, 42));
+    public static List<Integer> BUSINESS_3 = new LinkedList<Integer>(List.of(44, 45, 46, 47, 48, 49, 50));
+    public static List<Integer> BUSINESS_4 = new LinkedList<Integer>(List.of(52, 53, 54, 55, 56, 57, 58));
+    public static List<Integer> RESEARCH_1 = new LinkedList<Integer>(List.of(5, 6, 7, 8, 9));
+    public static List<Integer> RESEARCH_2 = new LinkedList<Integer>(List.of(12, 13, 14, 15, 16, 17, 18));
+    public static List<Integer> RESEARCH_3 = new LinkedList<Integer>(List.of(20, 21, 22, 23, 24, 25, 26));
+    public static List<Integer> RESEARCH_4 = new LinkedList<Integer>(List.of(28, 29, 30, 31, 32, 33, 34));
+    public static List<Integer> TECHNICAL_1 = new LinkedList<Integer>(List.of(10));
+    public static List<Integer> TECHNICAL_2 = new LinkedList<Integer>(List.of(43));
+    public static List<Integer> TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
+    public static List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
     private final int MAX_SECRETARIES = 1;
     private final int MAX_CLIENTS = 6;
     private final int MAX_DRIVERS = 3;
@@ -1143,6 +1143,25 @@ public class OfficeSimulator extends Simulator {
                 }
             }
         }
+    }
+
+    public void replenishSeats() {
+        MANAGERS_1 = new LinkedList<Integer>(List.of(11));
+        MANAGERS_2 = new LinkedList<Integer>(List.of(19));
+        MANAGERS_3 = new LinkedList<Integer>(List.of(27));
+        MANAGERS_4 = new LinkedList<Integer>(List.of(35));
+        BUSINESS_1 = new LinkedList<Integer>(List.of(0, 1, 2, 3, 4));
+        BUSINESS_2 = new LinkedList<Integer>(List.of(36, 37, 38, 39, 40, 41, 42));
+        BUSINESS_3 = new LinkedList<Integer>(List.of(44, 45, 46, 47, 48, 49, 50));
+        BUSINESS_4 = new LinkedList<Integer>(List.of(52, 53, 54, 55, 56, 57, 58));
+        RESEARCH_1 = new LinkedList<Integer>(List.of(5, 6, 7, 8, 9));
+        RESEARCH_2 = new LinkedList<Integer>(List.of(12, 13, 14, 15, 16, 17, 18));
+        RESEARCH_3 = new LinkedList<Integer>(List.of(20, 21, 22, 23, 24, 25, 26));
+        RESEARCH_4 = new LinkedList<Integer>(List.of(28, 29, 30, 31, 32, 33, 34));
+        TECHNICAL_1 = new LinkedList<Integer>(List.of(10));
+        TECHNICAL_2 = new LinkedList<Integer>(List.of(43));
+        TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
+        TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
     }
 
 }
