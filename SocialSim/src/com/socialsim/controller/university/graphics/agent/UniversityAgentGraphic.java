@@ -46,60 +46,138 @@ public class UniversityAgentGraphic extends Graphic {
 
     static {
         intY1MaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { intY1MaleStudents.add(new AgentGraphicLocation(0, i)); }
+        for (int i = 0; i < 4; i++) {
+            intY1MaleStudents.add(new AgentGraphicLocation(0, i));
+            intY1MaleStudents.add(new AgentGraphicLocation(8, i));
+        }
         extY1MaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { extY1MaleStudents.add(new AgentGraphicLocation(1, i)); }
+        for (int i = 0; i < 4; i++) {
+            extY1MaleStudents.add(new AgentGraphicLocation(1, i));
+            extY1MaleStudents.add(new AgentGraphicLocation(9, i));
+        }
         intY2MaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { intY2MaleStudents.add(new AgentGraphicLocation(2, i)); }
+        for (int i = 0; i < 4; i++) {
+            intY2MaleStudents.add(new AgentGraphicLocation(2, i));
+            intY2MaleStudents.add(new AgentGraphicLocation(10, i));
+        }
         extY2MaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { extY2MaleStudents.add(new AgentGraphicLocation(3, i)); }
+        for (int i = 0; i < 4; i++) {
+            extY2MaleStudents.add(new AgentGraphicLocation(3, i));
+            extY2MaleStudents.add(new AgentGraphicLocation(11, i));
+        }
         intY3MaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { intY3MaleStudents.add(new AgentGraphicLocation(4, i)); }
+        for (int i = 0; i < 4; i++) {
+            intY3MaleStudents.add(new AgentGraphicLocation(4, i));
+            intY3MaleStudents.add(new AgentGraphicLocation(12, i));
+        }
         extY3MaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { extY3MaleStudents.add(new AgentGraphicLocation(5, i)); }
+        for (int i = 0; i < 4; i++) {
+            extY3MaleStudents.add(new AgentGraphicLocation(5, i));
+            extY3MaleStudents.add(new AgentGraphicLocation(13, i));
+        }
         intY4MaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { intY4MaleStudents.add(new AgentGraphicLocation(6, i)); }
+        for (int i = 0; i < 4; i++) {
+            intY4MaleStudents.add(new AgentGraphicLocation(6, i));
+            intY4MaleStudents.add(new AgentGraphicLocation(14, i));
+        }
         extY4MaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { extY4MaleStudents.add(new AgentGraphicLocation(7, i)); }
+        for (int i = 0; i < 4; i++) {
+            extY4MaleStudents.add(new AgentGraphicLocation(7, i));
+            extY4MaleStudents.add(new AgentGraphicLocation(15, i));
+        }
 
         intY1FemaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { intY1FemaleStudents.add(new AgentGraphicLocation(0, i)); }
+        for (int i = 0; i < 4; i++) {
+            intY1FemaleStudents.add(new AgentGraphicLocation(0, i));
+            intY1FemaleStudents.add(new AgentGraphicLocation(8, i));
+        }
         extY1FemaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { extY1FemaleStudents.add(new AgentGraphicLocation(1, i)); }
+        for (int i = 0; i < 4; i++) {
+            extY1FemaleStudents.add(new AgentGraphicLocation(1, i));
+            extY1FemaleStudents.add(new AgentGraphicLocation(9, i));
+        }
         intY2FemaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { intY2FemaleStudents.add(new AgentGraphicLocation(2, i)); }
+        for (int i = 0; i < 4; i++) {
+            intY2FemaleStudents.add(new AgentGraphicLocation(2, i));
+            intY2FemaleStudents.add(new AgentGraphicLocation(10, i));
+        }
         extY2FemaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { extY2FemaleStudents.add(new AgentGraphicLocation(3, i)); }
+        for (int i = 0; i < 4; i++) {
+            extY2FemaleStudents.add(new AgentGraphicLocation(3, i));
+            extY2FemaleStudents.add(new AgentGraphicLocation(11, i));
+        }
         intY3FemaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { intY3FemaleStudents.add(new AgentGraphicLocation(4, i)); }
+        for (int i = 0; i < 4; i++) {
+            intY3FemaleStudents.add(new AgentGraphicLocation(4, i));
+            intY3FemaleStudents.add(new AgentGraphicLocation(12, i));
+        }
         extY3FemaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { extY3FemaleStudents.add(new AgentGraphicLocation(5, i)); }
+        for (int i = 0; i < 4; i++) {
+            extY3FemaleStudents.add(new AgentGraphicLocation(5, i));
+            extY3FemaleStudents.add(new AgentGraphicLocation(13, i));
+        }
         intY4FemaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { intY4FemaleStudents.add(new AgentGraphicLocation(6, i)); }
+        for (int i = 0; i < 4; i++) {
+            intY4FemaleStudents.add(new AgentGraphicLocation(6, i));
+            intY4FemaleStudents.add(new AgentGraphicLocation(14, i));
+        }
         extY4FemaleStudents = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { extY4FemaleStudents.add(new AgentGraphicLocation(7, i)); }
+        for (int i = 0; i < 4; i++) {
+            extY4FemaleStudents.add(new AgentGraphicLocation(7, i));
+            extY4FemaleStudents.add(new AgentGraphicLocation(15, i));
+        }
 
         strictMaleProfessor = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { strictMaleProfessor.add(new AgentGraphicLocation(0, i)); }
+        for (int i = 0; i < 4; i++) {
+            strictMaleProfessor.add(new AgentGraphicLocation(0, i));
+            strictMaleProfessor.add(new AgentGraphicLocation(4, i));
+        }
         strictFemaleProfessor = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { strictFemaleProfessor.add(new AgentGraphicLocation(1, i)); }
+        for (int i = 0; i < 4; i++) {
+            strictFemaleProfessor.add(new AgentGraphicLocation(1, i));
+            strictFemaleProfessor.add(new AgentGraphicLocation(5, i));
+        }
         approachableMaleProfessor = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { approachableMaleProfessor.add(new AgentGraphicLocation(2, i)); }
+        for (int i = 0; i < 4; i++) {
+            approachableMaleProfessor.add(new AgentGraphicLocation(2, i));
+            approachableMaleProfessor.add(new AgentGraphicLocation(6, i));
+        }
         approachableFemaleProfessor = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { approachableFemaleProfessor.add(new AgentGraphicLocation(3, i)); }
+        for (int i = 0; i < 4; i++) {
+            approachableFemaleProfessor.add(new AgentGraphicLocation(3, i));
+            approachableFemaleProfessor.add(new AgentGraphicLocation(7, i));
+        }
 
         maleGuardGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleGuardGraphics.add(new AgentGraphicLocation(0, i)); }
+        for (int i = 0; i < 4; i++) {
+            maleGuardGraphics.add(new AgentGraphicLocation(0, i));
+            maleGuardGraphics.add(new AgentGraphicLocation(6, i));
+        }
         femaleGuardGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleGuardGraphics.add(new AgentGraphicLocation(1, i)); }
+        for (int i = 0; i < 4; i++) {
+            femaleGuardGraphics.add(new AgentGraphicLocation(1, i));
+            femaleGuardGraphics.add(new AgentGraphicLocation(7, i));
+        }
         maleJanitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleJanitorGraphics.add(new AgentGraphicLocation(2, i)); }
+        for (int i = 0; i < 4; i++) {
+            maleJanitorGraphics.add(new AgentGraphicLocation(2, i));
+            maleJanitorGraphics.add(new AgentGraphicLocation(8, i));
+        }
         femaleJanitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleJanitorGraphics.add(new AgentGraphicLocation(3, i)); }
+        for (int i = 0; i < 4; i++) {
+            femaleJanitorGraphics.add(new AgentGraphicLocation(3, i));
+            femaleJanitorGraphics.add(new AgentGraphicLocation(9, i));
+        }
         maleOfficerGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleOfficerGraphics.add(new AgentGraphicLocation(4, i)); }
+        for (int i = 0; i < 4; i++) {
+            maleOfficerGraphics.add(new AgentGraphicLocation(4, i));
+            maleOfficerGraphics.add(new AgentGraphicLocation(10, i));
+        }
         femaleOfficerGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleOfficerGraphics.add(new AgentGraphicLocation(5, i)); }
+        for (int i = 0; i < 4; i++) {
+            femaleOfficerGraphics.add(new AgentGraphicLocation(5, i));
+            femaleOfficerGraphics.add(new AgentGraphicLocation(11, i));
+        }
     }
 
     private final UniversityAgent agent;
@@ -211,16 +289,28 @@ public class UniversityAgentGraphic extends Graphic {
         double agentHeadingDegrees = Math.toDegrees(agentHeading);
 
         if (agentHeadingDegrees >= 315 && agentHeadingDegrees < 360 || agentHeadingDegrees >= 0 && agentHeadingDegrees < 45) {
-            this.graphicIndex = 1;
+            if (this.agent.getAgentMovement().isInteracting())
+                this.graphicIndex = 5;
+            else
+                this.graphicIndex = 1;
         }
         else if (agentHeadingDegrees >= 45 && agentHeadingDegrees < 135) {
-            this.graphicIndex = 0;
+            if (this.agent.getAgentMovement().isInteracting())
+                this.graphicIndex = 4;
+            else
+                this.graphicIndex = 0;
         }
         else if (agentHeadingDegrees >= 135 && agentHeadingDegrees < 225) {
-            this.graphicIndex = 3;
+            if (this.agent.getAgentMovement().isInteracting())
+                this.graphicIndex = 7;
+            else
+                this.graphicIndex = 3;
         }
         else if (agentHeadingDegrees >= 225 && agentHeadingDegrees < 315) {
-            this.graphicIndex = 2;
+            if (this.agent.getAgentMovement().isInteracting())
+                this.graphicIndex = 6;
+            else
+                this.graphicIndex = 2;
         }
     }
 
