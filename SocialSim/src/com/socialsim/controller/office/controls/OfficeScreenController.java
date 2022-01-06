@@ -4,11 +4,13 @@ import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.Main;
 import com.socialsim.controller.office.graphics.OfficeGraphicsController;
 import com.socialsim.controller.office.graphics.amenity.mapper.*;
+import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchfield.*;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
+import com.socialsim.model.simulator.SimulationTime;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -42,7 +44,7 @@ public class OfficeScreenController extends ScreenController {
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
 
-    private final double CANVAS_SCALE = 0.3;
+    private final double CANVAS_SCALE = 0.5;
 
     public OfficeScreenController() {
     }
@@ -52,11 +54,23 @@ public class OfficeScreenController extends ScreenController {
     }
 
     @FXML
+    private void initialize() {
+        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            SimulationTime.SLEEP_TIME_MILLISECONDS.set((int) (1.0 / newVal.intValue() * 1000));
+        });
+    }
+
+    @FXML
     public void initializeAction() {
+        if (Main.officeSimulator.isRunning()) { // If the simulator is running, stop it
+            playAction();
+            playButton.setSelected(false);
+        }
+
         int width = 60; // Value may be from 25-100
         int length = 100; // Value may be from 106-220
         int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
         Office office = Office.OfficeFactory.create(rows, columns);
         initializeOffice(office);
         setElements();
@@ -66,6 +80,7 @@ public class OfficeScreenController extends ScreenController {
         Main.officeSimulator.resetToDefaultConfiguration(office);
         OfficeGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.officeSimulator.getOffice().getRows();
         mapOffice();
+        Main.officeSimulator.spawnInitialAgents(office);
         drawInterface();
     }
 
@@ -169,6 +184,12 @@ public class OfficeScreenController extends ScreenController {
                 wall2Patches.add(office.getPatch(i, 80));
             }
         }
+        for (int i = 2; i < 6; i++) {
+            wall2Patches.add(office.getPatch(i, 19));
+        }
+        for (int i = 8; i < 12; i++) {
+            wall2Patches.add(office.getPatch(i, 19));
+        }
         Main.officeSimulator.getOffice().getWalls().add(Wall.wallFactory.create(wall2Patches, 1));
 
         List<Patch> cabinetDownPatches = new ArrayList<>();
@@ -185,8 +206,60 @@ public class OfficeScreenController extends ScreenController {
         CabinetMapper.draw(cabinetUpPatches, "UP");
 
         List<Patch> chairPatches = new ArrayList<>();
-        chairPatches.add(office.getPatch(51,58));
-        chairPatches.add(office.getPatch(51,61));
+        chairPatches.add(office.getPatch(51,58)); // 0
+        chairPatches.add(office.getPatch(51,61)); // 1
+        chairPatches.add(office.getPatch(46,37));  // 2
+        chairPatches.add(office.getPatch(49,50)); // 3
+        chairPatches.add(office.getPatch(55,60)); // 4
+        chairPatches.add(office.getPatch(55,63)); // 5
+        for (int i = 87; i < 95; i++) {
+            chairPatches.add(office.getPatch(9, i));
+            chairPatches.add(office.getPatch(14, i));
+            chairPatches.add(office.getPatch(27, i));
+            chairPatches.add(office.getPatch(32, i));
+            chairPatches.add(office.getPatch(45, i));
+            chairPatches.add(office.getPatch(50, i));
+        }
+        chairPatches.add(office.getPatch(11,85));
+        chairPatches.add(office.getPatch(12,85));
+        chairPatches.add(office.getPatch(11,96));
+        chairPatches.add(office.getPatch(12,96));
+        chairPatches.add(office.getPatch(29,85));
+        chairPatches.add(office.getPatch(30,85));
+        chairPatches.add(office.getPatch(29,96));
+        chairPatches.add(office.getPatch(30,96));
+        chairPatches.add(office.getPatch(47,85));
+        chairPatches.add(office.getPatch(48,85));
+        chairPatches.add(office.getPatch(47,96));
+        chairPatches.add(office.getPatch(48,96));
+        for (int i = 64; i < 70; i++) {
+            chairPatches.add(office.getPatch(7, i));
+            chairPatches.add(office.getPatch(10, i));
+            chairPatches.add(office.getPatch(14, i));
+            chairPatches.add(office.getPatch(17, i));
+            chairPatches.add(office.getPatch(21, i));
+            chairPatches.add(office.getPatch(24, i));
+            chairPatches.add(office.getPatch(28, i));
+            chairPatches.add(office.getPatch(31, i));
+            chairPatches.add(office.getPatch(35, i));
+            chairPatches.add(office.getPatch(38, i));
+        }
+        chairPatches.add(office.getPatch(32,1)); chairPatches.add(office.getPatch(32,3));
+        chairPatches.add(office.getPatch(33,1)); chairPatches.add(office.getPatch(33,3));
+        chairPatches.add(office.getPatch(32,5)); chairPatches.add(office.getPatch(32,7));
+        chairPatches.add(office.getPatch(33,5)); chairPatches.add(office.getPatch(33,7));
+        chairPatches.add(office.getPatch(32,9)); chairPatches.add(office.getPatch(32,11));
+        chairPatches.add(office.getPatch(33,9)); chairPatches.add(office.getPatch(33,11));
+        chairPatches.add(office.getPatch(32,13)); chairPatches.add(office.getPatch(32,15));
+        chairPatches.add(office.getPatch(33,13)); chairPatches.add(office.getPatch(33,15));
+        chairPatches.add(office.getPatch(36,1)); chairPatches.add(office.getPatch(36,3));
+        chairPatches.add(office.getPatch(37,1)); chairPatches.add(office.getPatch(37,3));
+        chairPatches.add(office.getPatch(36,5)); chairPatches.add(office.getPatch(36,7));
+        chairPatches.add(office.getPatch(37,5)); chairPatches.add(office.getPatch(37,7));
+        chairPatches.add(office.getPatch(36,9)); chairPatches.add(office.getPatch(36,11));
+        chairPatches.add(office.getPatch(37,9)); chairPatches.add(office.getPatch(37,11));
+        chairPatches.add(office.getPatch(36,13)); chairPatches.add(office.getPatch(36,15));
+        chairPatches.add(office.getPatch(37,13)); chairPatches.add(office.getPatch(37,15));
         ChairMapper.draw(chairPatches);
 
         List<Patch> collabDeskPatches = new ArrayList<>();
@@ -274,17 +347,18 @@ public class OfficeScreenController extends ScreenController {
         CubicleMapper.draw(cubicleDownPatches, "DOWN");
 
         List<Patch> doorRightPatches = new ArrayList<>();
-        doorRightPatches.add(office.getPatch(27,19));
+        doorRightPatches.add(office.getPatch(6,19)); // 0
+        doorRightPatches.add(office.getPatch(27,19)); // 1
         DoorMapper.draw(doorRightPatches, "RIGHT");
 
         List<Patch> doorLeftPatches = new ArrayList<>();
-        doorLeftPatches.add(office.getPatch(11,80));
-        doorLeftPatches.add(office.getPatch(29,80));
-        doorLeftPatches.add(office.getPatch(47,80));
+        doorLeftPatches.add(office.getPatch(11,80)); // 2
+        doorLeftPatches.add(office.getPatch(29,80)); // 3
+        doorLeftPatches.add(office.getPatch(47,80)); // 4
         DoorMapper.draw(doorLeftPatches, "LEFT");
 
         List<Patch> doorUpPatches = new ArrayList<>();
-        doorUpPatches.add(office.getPatch(45,59));
+        doorUpPatches.add(office.getPatch(45,59)); // 5
         DoorMapper.draw(doorUpPatches, "UP");
 
         List<Patch> meetingDeskPatches = new ArrayList<>();
@@ -328,10 +402,6 @@ public class OfficeScreenController extends ScreenController {
         receptionTablePatches.add(office.getPatch(47,35));
         ReceptionTableMapper.draw(receptionTablePatches);
 
-        List<Patch> securityPatches = new ArrayList<>();
-        securityPatches.add(office.getPatch(56,36));
-        SecurityMapper.draw(securityPatches);
-
         List<Patch> tableUpPatches = new ArrayList<>();
         tableUpPatches.add(office.getPatch(21,9));
         tableUpPatches.add(office.getPatch(22,9));
@@ -361,6 +431,22 @@ public class OfficeScreenController extends ScreenController {
         tableRightPatches.add(office.getPatch(36,10));
         tableRightPatches.add(office.getPatch(36,14));
         TableMapper.draw(tableRightPatches, "RIGHT");
+
+        List<Patch> toiletPatches = new ArrayList<>();
+        toiletPatches.add(office.getPatch(2,10));
+        toiletPatches.add(office.getPatch(2,13));
+        toiletPatches.add(office.getPatch(2,16));
+        ToiletMapper.draw(toiletPatches);
+
+        List<Patch> sinkPatches = new ArrayList<>();
+        sinkPatches.add(office.getPatch(11,10));
+        sinkPatches.add(office.getPatch(11,13));
+        sinkPatches.add(office.getPatch(11,16));
+        SinkMapper.draw(sinkPatches);
+
+        List<Patch> securityPatches = new ArrayList<>();
+        securityPatches.add(office.getPatch(56,36));
+        SecurityMapper.draw(securityPatches);
     }
 
     private void drawInterface() {
@@ -383,10 +469,10 @@ public class OfficeScreenController extends ScreenController {
 
     public void updateSimulationTime() {
         LocalTime currentTime = Main.officeSimulator.getSimulationTime().getTime();
-        long elapsedTime = Main.officeSimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS);
+        long elapsedTime = Main.officeSimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS) / 5;
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
-        elapsedTimeText.setText("Elapsed time: " + timeString + " (" + elapsedTime + " s)");
+        elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
     }
 
     public void setElements() {
@@ -425,16 +511,27 @@ public class OfficeScreenController extends ScreenController {
     @FXML
     public void resetAction() {
         Main.officeSimulator.reset();
-
-        // Clear all agents
-//        clearOffice(Main.simulator.getOffice());
-
+        Main.officeSimulator.replenishSeats();
+        OfficeAgent.clearOfficeAgentCounts();
+        clearOffice(Main.officeSimulator.getOffice());
+        Main.officeSimulator.spawnInitialAgents(Main.officeSimulator.getOffice());
         drawOfficeViewForeground(Main.officeSimulator.getOffice(), false); // Redraw the canvas
-
         if (Main.officeSimulator.isRunning()) { // If the simulator is running, stop it
             playAction();
             playButton.setSelected(false);
         }
+    }
+
+    public static void clearOffice(Office office) {
+        for (OfficeAgent agent : office.getAgents()) { // Remove the relationship between the patch and the agents
+            agent.getAgentMovement().getCurrentPatch().getAgents().clear();
+            agent.getAgentMovement().setCurrentPatch(null);
+        }
+
+        // Remove all the agents
+        office.getAgents().removeAll(office.getAgents());
+        office.getAgents().clear();
+        office.getAgentPatchSet().clear();
     }
 
     @Override

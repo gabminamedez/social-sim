@@ -2,10 +2,15 @@ package com.socialsim.controller.grocery.graphics;
 
 import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.Controller;
+import com.socialsim.controller.generic.graphics.agent.AgentGraphicLocation;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
+import com.socialsim.controller.grocery.graphics.agent.GroceryAgentGraphic;
 import com.socialsim.controller.grocery.graphics.amenity.GroceryAmenityGraphic;
+import com.socialsim.model.core.agent.Agent;
+import com.socialsim.model.core.agent.grocery.GroceryAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
+import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.generic.patchobject.Drawable;
@@ -29,6 +34,9 @@ import java.util.stream.Collectors;
 public class GroceryGraphicsController extends Controller {
 
     private static final Image AMENITY_SPRITES = new Image(GroceryAmenityGraphic.AMENITY_SPRITE_SHEET_URL);
+    private static final Image AGENT_SPRITES_1 = new Image(GroceryAgentGraphic.AGENTS_URL_1);
+    private static final Image AGENT_SPRITES_2 = new Image(GroceryAgentGraphic.AGENTS_URL_2);
+    private static final Image AGENT_SPRITES_3 = new Image(GroceryAgentGraphic.AGENTS_URL_3);
     public static List<Amenity.AmenityBlock> firstPortalAmenityBlocks;
     public static double tileSize;
     private static boolean isDrawingStraightX;
@@ -85,7 +93,19 @@ public class GroceryGraphicsController extends Controller {
         final double canvasWidth = backgroundCanvas.getWidth();
         final double canvasHeight = backgroundCanvas.getHeight();
 
+        clearCanvases(grocery, background, backgroundGraphicsContext, foregroundGraphicsContext, tileSize, canvasWidth, canvasHeight);
         drawGroceryObjects(grocery, background, backgroundGraphicsContext, foregroundGraphicsContext, tileSize);
+    }
+
+    private static void clearCanvases(Grocery grocery, boolean background, GraphicsContext backgroundGraphicsContext, GraphicsContext foregroundGraphicsContext, double tileSize, double canvasWidth, double canvasHeight) {
+        if (!background) {
+            foregroundGraphicsContext.clearRect(0, 0, grocery.getColumns() * tileSize, grocery.getRows() * tileSize);
+        }
+        else {
+            foregroundGraphicsContext.clearRect(0, 0, grocery.getColumns() * tileSize, grocery.getRows() * tileSize);
+            backgroundGraphicsContext.setFill(Color.rgb(244, 244, 244));
+            backgroundGraphicsContext.fillRect(0, 0, canvasWidth, canvasHeight);
+        }
     }
 
     private static void drawGroceryObjects(Grocery grocery, boolean background, GraphicsContext backgroundGraphicsContext, GraphicsContext foregroundGraphicsContext, double tileSize) {
@@ -120,6 +140,7 @@ public class GroceryGraphicsController extends Controller {
             // Draw graphics corresponding to whatever is in the content of the patch; If the patch has no amenity on it, just draw a blank patch
             Amenity.AmenityBlock patchAmenityBlock = currentPatch.getAmenityBlock();
             Pair<PatchField, Integer> patchNumPair = currentPatch.getPatchField();
+            Pair<QueueingPatchField, Integer> patchNumPair2 = currentPatch.getQueueingPatchField();
             Color patchColor;
 
             if (patchAmenityBlock == null) {
@@ -170,33 +191,38 @@ public class GroceryGraphicsController extends Controller {
                 }
             }
 
+            if (patchNumPair2 != null) { // TODO: FOR VISUALIZATION ONLY; DELETE LATER
+                patchColor = Color.rgb(0, 0, 0);
+                backgroundGraphicsContext.setFill(patchColor);
+                backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+            }
+
             if (!background) { // Draw each agent in this patch, if the foreground is to be drawn
-//                for (Agent agent : patch.getAgents()) {
-//                    GroceryAgent groceryAgent = (GroceryAgent) agent;
-//                    AgentGraphicLocation agentGraphicLocation = groceryAgent.getAgentGraphic().getGraphicLocation();
-//
-//                    Image CURRENT_URL = null;
-//                    if (groceryAgent.getType() == GroceryAgent.Type.GUARD || groceryAgent.getType() == GroceryAgent.Type.JANITOR || groceryAgent.getType() == GroceryAgent.Type.OFFICER) {
-//                        CURRENT_URL = AGENT_SPRITES_4;
-//                    }
-//                    else if (groceryAgent.getType() == GroceryAgent.Type.PROFESSOR) {
-//                        CURRENT_URL = AGENT_SPRITES_3;
-//                    }
-//                    else if (groceryAgent.getType() == GroceryAgent.Type.STUDENT && groceryAgent.getGender() == GroceryAgent.Gender.MALE) {
-//                        CURRENT_URL = AGENT_SPRITES_1;
-//                    }
-//                    else if (groceryAgent.getType() == GroceryAgent.Type.STUDENT && groceryAgent.getGender() == GroceryAgent.Gender.FEMALE) {
-//                        CURRENT_URL = AGENT_SPRITES_2;
-//                    }
-//
-//                    foregroundGraphicsContext.drawImage(
-//                            CURRENT_URL,
-//                            agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
-//                            agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
-//                            GroceryGraphicsController.getScaledAgentCoordinates(groceryAgent).getX() * tileSize - tileSize,
-//                            GroceryGraphicsController.getScaledAgentCoordinates(groceryAgent).getY() * tileSize - tileSize * 2,
-//                            tileSize * 2, tileSize * 2 + tileSize * 0.25);
-//                }
+                if (!patch.getAgents().isEmpty()) {
+                    for (Agent agent : patch.getAgents()) {
+                        GroceryAgent groceryAgent = (GroceryAgent) agent;
+                        AgentGraphicLocation agentGraphicLocation = groceryAgent.getAgentGraphic().getGraphicLocation();
+
+                        Image CURRENT_URL = null;
+                        if (groceryAgent.getPersona() == GroceryAgent.Persona.STTP_ALONE_CUSTOMER || groceryAgent.getPersona() == GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER) {
+                            CURRENT_URL = AGENT_SPRITES_1;
+                        }
+                        else if (groceryAgent.getPersona() == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER || groceryAgent.getPersona() == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER || groceryAgent.getPersona() == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER) {
+                            CURRENT_URL = AGENT_SPRITES_2;
+                        }
+                        else {
+                            CURRENT_URL = AGENT_SPRITES_3;
+                        }
+
+                        foregroundGraphicsContext.drawImage(
+                                CURRENT_URL,
+                                agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
+                                agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
+                                getScaledAgentCoordinates(groceryAgent).getX() * tileSize,
+                                getScaledAgentCoordinates(groceryAgent).getY() * tileSize,
+                                tileSize * 0.7, tileSize * 0.7);
+                    }
+                }
             }
         }
     }
@@ -239,11 +265,11 @@ public class GroceryGraphicsController extends Controller {
         }
     }
 
-//    public static Coordinates getScaledAgentCoordinates(Agent agent) {
-//        Coordinates agentPosition = agent.getAgentMovement().getPosition();
-//
-//        return GroceryGraphicsController.getScaledCoordinates(agentPosition);
-//    }
+    public static Coordinates getScaledAgentCoordinates(GroceryAgent agent) {
+        Coordinates agentPosition = agent.getAgentMovement().getPosition();
+
+        return GroceryGraphicsController.getScaledCoordinates(agentPosition);
+    }
 
     public static Coordinates getScaledCoordinates(Coordinates coordinates) {
         return new Coordinates(coordinates.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS, coordinates.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
