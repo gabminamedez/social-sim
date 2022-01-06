@@ -21,6 +21,28 @@ public class UniversityRoutePlan {
     private static int CLASSROOM_SIZES_STUDENT[][] = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
     private static int CLASSROOM_SIZES_PROF[][] = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
 
+    //Chances of INT Y1-Y4
+    public static final int INT_CHANCE_WANDERING_AROUND = 22, INT_CHANCE_GOING_TO_STUDY = 58,
+            INT_NEED_BATHROOM_NO_CLASSES = 10, INT_NEEDS_DRINK_NO_CLASSES = 10,
+            INT_CHANCE_NEEDS_BATHROOM_STUDYING = 5, INT_CHANCE_NEEDS_DRINK_STUDYING = 5;
+    //Chances of INT ORG Y1-Y4
+    public static final int INT_ORG_CHANCE_WANDERING_AROUND = 22, INT_ORG_CHANCE_GOING_TO_STUDY = 58,
+            INT_ORG_NEED_BATHROOM_NO_CLASSES = 10, INT_ORG_NEEDS_DRINK_NO_CLASSES = 10,
+            INT_ORG_CHANCE_NEEDS_BATHROOM_STUDYING = 5, INT_ORG_CHANCE_NEEDS_DRINK_STUDYING = 5;
+    //Chances of EXT Y1-Y4
+    public static final int EXT_CHANCE_WANDERING_AROUND = 40, EXT_CHANCE_GOING_TO_STUDY = 40,
+            EXT_NEED_BATHROOM_NO_CLASSES = 10, EXT_NEEDS_DRINK_NO_CLASSES = 10,
+            EXT_CHANCE_NEEDS_BATHROOM_STUDYING = 5, EXT_CHANCE_NEEDS_DRINK_STUDYING = 5;
+    //Chances of EXT ORG Y1-Y4
+    public static final int EXT_ORG_CHANCE_WANDERING_AROUND = 48, EXT_ORG_CHANCE_GOING_TO_STUDY = 32,
+            EXT_ORG_NEED_BATHROOM_NO_CLASSES = 10, EXT_ORG_NEEDS_DRINK_NO_CLASSES = 10,
+            EXT_ORG_CHANCE_NEEDS_BATHROOM_STUDYING = 5, EXT_ORG_CHANCE_NEEDS_DRINK_STUDYING = 5;
+
+    //Chances of PROF
+    public static final int PROF_CHANCE_WANDERING_AROUND = 80, PROF_CHANCE_GOING_TO_STUDY = 10,
+            PROF_NEED_BATHROOM_NO_CLASSES = 10, PROF_NEEDS_DRINK_NO_CLASSES = 0,
+            PROF_CHANCE_NEEDS_BATHROOM_STUDYING = 5, PROF_CHANCE_NEEDS_DRINK_STUDYING = 5;
+  
     public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch, int tickEntered) {
         List<UniversityState> routePlan = new ArrayList<>();
         ArrayList<UniversityAction> actions;
@@ -234,20 +256,15 @@ public class UniversityRoutePlan {
                     || agent.getPersona() == UniversityAgent.Persona.INT_Y3_STUDENT
                     || agent.getPersona() == UniversityAgent.Persona.INT_Y4_STUDENT) {
 
-                //Chances of INT Y1-Y4
-                final int CHANCE_WANDERING_AROUND = 22, CHANCE_GOING_TO_STUDY = 58,
-                        NEED_BATHROOM_NO_CLASSES = 10, NEEDS_DRINK_NO_CLASSES = 10,
-                        CHANCE_NEEDS_BATHROOM_STUDYING = 5, CHANCE_NEEDS_DRINK_STUDYING = 5;
-
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 5; j++) {
                         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-                        if (x < CHANCE_WANDERING_AROUND) {
+                        if (x < INT_CHANCE_WANDERING_AROUND) {
                             //TODO: Randomize actions
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
-                        else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
+                        else if (x < INT_CHANCE_WANDERING_AROUND + INT_CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM,StudydoorPatch));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
@@ -256,7 +273,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_STUDY_AREA,StudydoorPatch));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
-                        } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
+                        } else if (x < INT_CHANCE_WANDERING_AROUND + INT_CHANCE_GOING_TO_STUDY + INT_NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM,BathroomDoorPatch));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
@@ -399,19 +416,15 @@ public class UniversityRoutePlan {
                     || agent.getPersona() == UniversityAgent.Persona.INT_Y2_ORG_STUDENT
                     || agent.getPersona() == UniversityAgent.Persona.INT_Y3_ORG_STUDENT
                     || agent.getPersona() == UniversityAgent.Persona.INT_Y4_ORG_STUDENT) {
-                //Chances of INT ORG Y1-Y4
-                final int CHANCE_WANDERING_AROUND = 22, CHANCE_GOING_TO_STUDY = 58,
-                        NEED_BATHROOM_NO_CLASSES = 10, NEEDS_DRINK_NO_CLASSES = 10,
-                        CHANCE_NEEDS_BATHROOM_STUDYING = 5, CHANCE_NEEDS_DRINK_STUDYING = 5;
 
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 5; j++) {
                         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-                        if (x < CHANCE_WANDERING_AROUND) {
+                        if (x < INT_ORG_CHANCE_WANDERING_AROUND) {
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
-                        else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
+                        else if (x < INT_ORG_CHANCE_WANDERING_AROUND + INT_ORG_CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM,StudydoorPatch));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
@@ -420,7 +433,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_STUDY_AREA,StudydoorPatch));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
-                        } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
+                        } else if (x < INT_ORG_CHANCE_WANDERING_AROUND + INT_ORG_CHANCE_GOING_TO_STUDY + INT_ORG_NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM,BathroomDoorPatch));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
@@ -558,19 +571,15 @@ public class UniversityRoutePlan {
                     || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_STUDENT
                     || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_STUDENT
                     || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_STUDENT) {
-                //Chances of EXT Y1-Y4
-                final int CHANCE_WANDERING_AROUND = 40, CHANCE_GOING_TO_STUDY = 40,
-                        NEED_BATHROOM_NO_CLASSES = 10, NEEDS_DRINK_NO_CLASSES = 10,
-                        CHANCE_NEEDS_BATHROOM_STUDYING = 5, CHANCE_NEEDS_DRINK_STUDYING = 5;
 
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 5; j++) {
                         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-                        if (x < CHANCE_WANDERING_AROUND) {
+                        if (x < EXT_CHANCE_WANDERING_AROUND) {
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
-                        else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
+                        else if (x < EXT_CHANCE_WANDERING_AROUND + EXT_CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM,StudydoorPatch));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
@@ -579,7 +588,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_STUDY_AREA,StudydoorPatch));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
-                        } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
+                        } else if (x < EXT_CHANCE_WANDERING_AROUND + EXT_CHANCE_GOING_TO_STUDY + EXT_NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM,BathroomDoorPatch));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
@@ -717,19 +726,15 @@ public class UniversityRoutePlan {
                     || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_ORG_STUDENT
                     || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_ORG_STUDENT
                     || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_ORG_STUDENT) {
-                //Chances of EXT ORG Y1-Y4
-                final int CHANCE_WANDERING_AROUND = 48, CHANCE_GOING_TO_STUDY = 32,
-                        NEED_BATHROOM_NO_CLASSES = 10, NEEDS_DRINK_NO_CLASSES = 10,
-                        CHANCE_NEEDS_BATHROOM_STUDYING = 5, CHANCE_NEEDS_DRINK_STUDYING = 5;
 
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 5; j++) {
                         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-                        if (x < CHANCE_WANDERING_AROUND) {
+                        if (x < EXT_ORG_CHANCE_WANDERING_AROUND) {
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
-                        else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
+                        else if (x < EXT_ORG_CHANCE_WANDERING_AROUND + EXT_ORG_CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM,StudydoorPatch));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
@@ -738,7 +743,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_STUDY_AREA,StudydoorPatch));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
-                        } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
+                        } else if (x < EXT_ORG_CHANCE_WANDERING_AROUND + EXT_ORG_CHANCE_GOING_TO_STUDY + EXT_ORG_NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM,BathroomDoorPatch));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
@@ -873,19 +878,15 @@ public class UniversityRoutePlan {
                     }
                 }
             } else {
-                //Chances of PROF
-                final int CHANCE_WANDERING_AROUND = 80, CHANCE_GOING_TO_STUDY = 10,
-                        NEED_BATHROOM_NO_CLASSES = 10, NEEDS_DRINK_NO_CLASSES = 0,
-                        CHANCE_NEEDS_BATHROOM_STUDYING = 5, CHANCE_NEEDS_DRINK_STUDYING = 5;
 
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 5; j++) {
                         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-                        if (x < CHANCE_WANDERING_AROUND) {
+                        if (x < PROF_CHANCE_WANDERING_AROUND) {
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent));
                         }
-                        else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY) {
+                        else if (x < PROF_CHANCE_WANDERING_AROUND + PROF_CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM,StudydoorPatch));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
@@ -894,7 +895,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_STUDY_AREA,StudydoorPatch));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
-                        } else if (x < CHANCE_WANDERING_AROUND + CHANCE_GOING_TO_STUDY + NEED_BATHROOM_NO_CLASSES) {
+                        } else if (x < PROF_CHANCE_WANDERING_AROUND + PROF_CHANCE_GOING_TO_STUDY + PROF_NEED_BATHROOM_NO_CLASSES) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM,BathroomDoorPatch));
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
