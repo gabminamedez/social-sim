@@ -45,19 +45,20 @@ public class UniversityAction {
         LEAVE_STUDY_AREA(28),
         LEAVE_BENCH(29),
         LEAVE_BATHROOM(30),
+        LEAVE_CLASSROOM(31),
 
-        GO_TO_VENDOR(31),
-        QUEUE_VENDOR(32),
-        CHECKOUT(33),
-        FIND_SEAT_CAFETERIA(34),
+        GO_TO_VENDOR(32),
+        QUEUE_VENDOR(33),
+        CHECKOUT(34),
+        FIND_SEAT_CAFETERIA(35),
 
-        GREET_PERSON(35),
-        GUARD_STAY_PUT(36),
+        GREET_PERSON(36),
+        GUARD_STAY_PUT(37),
 
-        JANITOR_GO_TOILET(37),
-        JANITOR_CLEAN_TOILET(38),
-        JANITOR_GO_FOUNTAIN(39),
-        JANITOR_CHECK_FOUNTAIN(40);
+        JANITOR_GO_TOILET(38),
+        JANITOR_CLEAN_TOILET(39),
+        JANITOR_GO_FOUNTAIN(40),
+        JANITOR_CHECK_FOUNTAIN(41);
 
         final int ID;
         Name(int ID){
