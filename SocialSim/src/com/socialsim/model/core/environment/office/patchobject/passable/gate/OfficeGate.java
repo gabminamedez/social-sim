@@ -13,9 +13,8 @@ import java.util.List;
 
 public class OfficeGate extends Gate {
 
-    private double chancePerSecond; // Denotes the chance of generating an agent per second
+    private double chancePerTick; // Denotes the chance of generating an agent per second
     private OfficeGate.OfficeGateMode officeGateMode; // Denotes the mode of this station gate (whether it's entry/exit only, or both)
-    private int agentBacklogCount; // Denotes the number of agents who are supposed to enter the gate, but cannot
     public static final OfficeGate.OfficeGateFactory officeGateFactory;
     private final OfficeGateGraphic officeGateGraphic;
 
@@ -23,37 +22,24 @@ public class OfficeGate extends Gate {
         officeGateFactory = new OfficeGate.OfficeGateFactory();
     }
 
-    protected OfficeGate(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerSecond, OfficeGate.OfficeGateMode officeGateMode) {
+    protected OfficeGate(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerTick, OfficeGate.OfficeGateMode officeGateMode) {
         super(amenityBlocks, enabled);
 
-        this.chancePerSecond = chancePerSecond;
+        this.chancePerTick = chancePerTick;
         this.officeGateMode = officeGateMode;
-        this.agentBacklogCount = 0;
         this.officeGateGraphic = new OfficeGateGraphic(this);
     }
 
-    public double getChancePerSecond() {
-        return chancePerSecond;
+    public double getChancePerTick() {
+        return chancePerTick;
     }
 
-    public void setChancePerSecond(double chancePerSecond) {
-        this.chancePerSecond = chancePerSecond;
+    public void setChancePerTick(double chancePerTick) {
+        this.chancePerTick = chancePerTick;
     }
 
     public OfficeGate.OfficeGateMode getOfficeGateMode() {
         return officeGateMode;
-    }
-
-    public int getAgentBacklogCount() {
-        return agentBacklogCount;
-    }
-
-    public void incrementBacklogs() {
-        this.agentBacklogCount++;
-    }
-
-    public void resetBacklogs() {
-        this.agentBacklogCount = 0;
     }
 
     public void setOfficeGateMode(OfficeGate.OfficeGateMode officeGateMode) {
@@ -114,32 +100,6 @@ public class OfficeGate extends Gate {
         return patchesFree;
     }
 
-    public OfficeAgent spawnAgentFromBacklogs(boolean forceEntry) { // Spawn an agent from the backlogs
-        Office office = (Office) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
-
-        if (office != null) {
-            List<OfficeAgent> officeGateQueue = office.getAgentBacklogs();
-
-            if (!officeGateQueue.isEmpty()) { // If the backlog queue isn't empty, check if this gate is free from agents
-                if (forceEntry || this.isGateFree()) { // If this gate is free from other agents, get one from the backlog queue
-                    OfficeAgent agent = officeGateQueue.remove(0);
-                    Patch spawnPatch = this.getSpawners().get(0).getPatch();
-
-                    return agent;
-                }
-                else {
-                    return null;
-                }
-            }
-            else {
-                return null;
-            }
-        }
-        else {
-            return null;
-        }
-    }
-
     public enum OfficeGateMode {
         ENTRANCE("Entrance"), EXIT("Exit"), ENTRANCE_AND_EXIT("Entrance and Exit");
 
@@ -180,8 +140,8 @@ public class OfficeGate extends Gate {
     }
 
     public static class OfficeGateFactory extends GateFactory {
-        public static OfficeGate create(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerSecond, OfficeGate.OfficeGateMode stationGateMode) {
-            return new OfficeGate(amenityBlocks, enabled, chancePerSecond, stationGateMode);
+        public static OfficeGate create(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerTick, OfficeGate.OfficeGateMode stationGateMode) {
+            return new OfficeGate(amenityBlocks, enabled, chancePerTick, stationGateMode);
         }
     }
 

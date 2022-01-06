@@ -9,6 +9,7 @@ import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.mall.Mall;
 import com.socialsim.model.core.environment.mall.patchfield.*;
 import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
+import com.socialsim.model.simulator.SimulationTime;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -50,6 +51,13 @@ public class MallScreenController extends ScreenController {
 
     public StackPane getStackPane() {
         return stackPane;
+    }
+
+    @FXML
+    private void initialize() {
+        speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            SimulationTime.SLEEP_TIME_MILLISECONDS.set((int) (1.0 / newVal.intValue() * 1000));
+        });
     }
 
     @FXML

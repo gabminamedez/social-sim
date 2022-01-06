@@ -4,6 +4,7 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.graphics.amenity.AmenityMapper;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
+import com.socialsim.model.core.environment.grocery.patchfield.CashierCounterField;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.CashierCounter;
 
 import java.util.ArrayList;
@@ -38,6 +39,17 @@ public class CashierCounterMapper extends AmenityMapper {
             CashierCounter cashierCounterToAdd = CashierCounter.CashierCounterFactory.create(amenityBlocks, true, 20);
             Main.grocerySimulator.getGrocery().getCashierCounters().add(cashierCounterToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
+
+            List<Patch> cashierCounterFieldPatches = new ArrayList<>();
+            cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 2, origPatchCol));
+            cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 2, origPatchCol - 1));
+            cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 1, origPatchCol - 1));
+            cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow, origPatchCol - 1));
+            cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow - 1, origPatchCol - 1));
+            cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow - 2, origPatchCol - 1));
+            cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow - 3, origPatchCol - 1));
+            cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow - 4, origPatchCol - 1));
+            Main.grocerySimulator.getGrocery().getCashierCounterFields().add(CashierCounterField.cashierCounterFieldFactory.create(cashierCounterFieldPatches, cashierCounterToAdd, 1));
         }
     }
 

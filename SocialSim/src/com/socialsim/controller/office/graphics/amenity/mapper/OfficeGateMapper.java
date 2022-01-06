@@ -37,7 +37,7 @@ public class OfficeGateMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock4);
             patch4.setAmenityBlock(amenityBlock4);
 
-            OfficeGate officeGateToAdd = OfficeGate.OfficeGateFactory.create(amenityBlocks, true, 20.0, ugMode);
+            OfficeGate officeGateToAdd = OfficeGate.OfficeGateFactory.create(amenityBlocks, true, 10, ugMode);
             Main.officeSimulator.getOffice().getOfficeGates().add(officeGateToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
         }

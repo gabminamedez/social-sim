@@ -6,6 +6,10 @@ import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
+import com.socialsim.model.core.environment.grocery.patchfield.CashierCounterField;
+import com.socialsim.model.core.environment.grocery.patchfield.SecurityField;
+import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterField;
+import com.socialsim.model.core.environment.grocery.patchfield.StallField;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
 
@@ -34,10 +38,12 @@ public class Grocery extends Environment {
     private final List<Table> tables;
 
     private final List<Wall> walls;
+    private final List<CashierCounterField> cashierCounterFields;
+    private final List<SecurityField> securityFields;
+    private final List<ServiceCounterField> serviceCounterFields;
+    private final List<StallField> stallFields;
 
-    List<GroceryAgent> agentBacklogs;
-
-    private static final Grocery.GroceryFactory groceryFactory;
+    public static final Grocery.GroceryFactory groceryFactory;
 
     static {
         groceryFactory = new Grocery.GroceryFactory();
@@ -67,8 +73,10 @@ public class Grocery extends Environment {
         this.tables = Collections.synchronizedList(new ArrayList<>());
 
         this.walls = Collections.synchronizedList(new ArrayList<>());
-
-        this.agentBacklogs = Collections.synchronizedList(new ArrayList<>());
+        this.cashierCounterFields = Collections.synchronizedList(new ArrayList<>());
+        this.securityFields = Collections.synchronizedList(new ArrayList<>());
+        this.serviceCounterFields = Collections.synchronizedList(new ArrayList<>());
+        this.stallFields = Collections.synchronizedList(new ArrayList<>());
     }
 
     public CopyOnWriteArrayList<GroceryAgent> getAgents() {
@@ -145,8 +153,20 @@ public class Grocery extends Environment {
         return walls;
     }
 
-    public List<GroceryAgent> getAgentBacklogs() {
-        return agentBacklogs;
+    public List<CashierCounterField> getCashierCounterFields() {
+        return cashierCounterFields;
+    }
+
+    public List<SecurityField> getSecurityFields() {
+        return securityFields;
+    }
+
+    public List<ServiceCounterField> getServiceCounterFields() {
+        return serviceCounterFields;
+    }
+
+    public List<StallField> getStallFields() {
+        return stallFields;
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {
