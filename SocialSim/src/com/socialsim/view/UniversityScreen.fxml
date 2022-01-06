@@ -78,7 +78,7 @@
                         <VBox alignment="CENTER" prefHeight="70.0" prefWidth="100.0" spacing="10.0">
                             <Button id="initializeButton" mnemonicParsing="false" text="Initialize" onAction="#initializeAction" />
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                                <Text fx:id="elapsedTimeText" strokeType="OUTSIDE" strokeWidth="0.0" text="Elapsed time: 00:00:00 (0 s)" textAlignment="CENTER" />
+                                <Text fx:id="elapsedTimeText" strokeType="OUTSIDE" strokeWidth="0.0" text="Current time: 00:00:00 (0 ticks)" textAlignment="CENTER" />
                             </HBox>
 
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="230.0" spacing="10.0">

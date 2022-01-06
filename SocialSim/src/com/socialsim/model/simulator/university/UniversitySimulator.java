@@ -28,8 +28,11 @@ public class UniversitySimulator extends Simulator {
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
 
-    private final int MAX_STUDENTS = 100;//250
-    private final int MAX_PROFESSORS = 5;
+    public static int currentProfessorCount = 0;
+    public static int currentStudentCount = 0;
+    private final int MAX_STUDENTS = 5; //250
+    private final int MAX_PROFESSORS = 0;
+    private final int NUM_AGENTS = 500;
 
     public UniversitySimulator() {
         this.university = null;
@@ -74,15 +77,19 @@ public class UniversitySimulator extends Simulator {
     }
 
     public void spawnInitialAgents(University university) {
-        UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, university.getPatch(57,12), true, -1);
+        university.createInitialAgentDemographics(NUM_AGENTS);
+        UniversityAgent guard = university.getAgents().get(0); // 0
+        guard.setAgentMovement(new UniversityAgentMovement(university.getPatch(57,12), guard, 1.27, university.getPatch(57,12).getPatchCenterCoordinates(), -1));
         university.getAgents().add(guard);
         university.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
 
-        UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(6,65), true, -1);
+        UniversityAgent janitor1 = university.getAgents().get(1); // 1
+        janitor1.setAgentMovement(new UniversityAgentMovement(university.getPatch(6,65), janitor1, 1.27, university.getPatch(6,65).getPatchCenterCoordinates(), -1));
         university.getAgents().add(janitor1);
         university.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
 
-        UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, university.getPatch(7,66), true, -1);
+        UniversityAgent janitor2 = university.getAgents().get(2); // 2
+        janitor2.setAgentMovement(new UniversityAgentMovement(university.getPatch(7,66), janitor2, 1.27, university.getPatch(7,66).getPatchCenterCoordinates(), -1));
         university.getAgents().add(janitor2);
         university.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
     }
@@ -94,13 +101,12 @@ public class UniversitySimulator extends Simulator {
     private void start() {
         new Thread(() -> {
             final int speedAwarenessLimitMilliseconds = 10; // For times shorter than this, speed awareness will be implemented
-            long currentTick = this.time.getStartTime().until(this.time.getTime(), ChronoUnit.SECONDS) / 5;
 
             while (true) {
                 try {
                     playSemaphore.acquire(); // Wait until the play button has been pressed
-
                     while (this.isRunning()) { // Keep looping until paused
+                        long currentTick = this.time.getStartTime().until(this.time.getTime(), ChronoUnit.SECONDS) / 5;
                         try {
                             updateAgentsInUniversity(university);
                             spawnAgent(university, currentTick);
@@ -132,7 +138,7 @@ public class UniversitySimulator extends Simulator {
     }
 
     private static void moveAll(University university) { // Make all agents move for one tick
-        for (UniversityAgent agent : university.getAgents()) {
+        for (UniversityAgent agent : university.getMovableAgents()) {
             try {
                 moveOne(agent);
                 agent.getAgentGraphic().change();
@@ -1573,64 +1579,27 @@ public class UniversitySimulator extends Simulator {
 
     private void spawnAgent(University university, long currentTick) {
         UniversityGate gate = university.getUniversityGates().get(1);
-        Gate.GateBlock spawner0 = gate.getSpawners().get(0);
-        Gate.GateBlock spawner1 = gate.getSpawners().get(1);
-        Gate.GateBlock spawner2 = gate.getSpawners().get(2);
-        Gate.GateBlock spawner3 = gate.getSpawners().get(3);
+        double spawnChance = gate.getChancePerTick();
         UniversityAgent agent = null;
 
-        int spawnChance = gate.getChancePerTick();
-        int CHANCE_SPAWN_0 = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-        int CHANCE_SPAWN_1 = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-        int CHANCE_SPAWN_2 = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-        int CHANCE_SPAWN_3 = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-        boolean isStudent0 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-        boolean isStudent1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-        boolean isStudent2 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-        boolean isStudent3 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-
-        if (spawnChance < CHANCE_SPAWN_0 && isStudent0 && UniversityAgent.studentCount != this.MAX_STUDENTS) {
-            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner0.getPatch(), false, currentTick);
-            university.getAgents().add(agent);
-            university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-        }
-        else if (spawnChance < CHANCE_SPAWN_0 && !isStudent0 && UniversityAgent.professorCount != this.MAX_PROFESSORS) {
-            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.PROFESSOR, spawner0.getPatch(), false, currentTick);
-            university.getAgents().add(agent);
-            university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-        }
-
-        if (spawnChance < CHANCE_SPAWN_1 && isStudent1 && UniversityAgent.studentCount != this.MAX_STUDENTS) {
-            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner1.getPatch(), false, currentTick);
-            university.getAgents().add(agent);
-            university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-        }
-        else if (spawnChance < CHANCE_SPAWN_1 && !isStudent1 && UniversityAgent.professorCount != this.MAX_PROFESSORS) {
-            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.PROFESSOR, spawner1.getPatch(), false, currentTick);
-            university.getAgents().add(agent);
-            university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-        }
-
-        if (spawnChance < CHANCE_SPAWN_2 && isStudent2 && UniversityAgent.studentCount != this.MAX_STUDENTS) {
-            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner2.getPatch(), false, currentTick);
-            university.getAgents().add(agent);
-            university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-        }
-        else if (spawnChance < CHANCE_SPAWN_2 && !isStudent2 && UniversityAgent.professorCount != this.MAX_PROFESSORS) {
-            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.PROFESSOR, spawner2.getPatch(), false, currentTick);
-            university.getAgents().add(agent);
-            university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-        }
-
-        if (spawnChance < CHANCE_SPAWN_3 && isStudent3 && UniversityAgent.studentCount != this.MAX_STUDENTS) {
-            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STUDENT, spawner3.getPatch(), false, currentTick);
-            university.getAgents().add(agent);
-            university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-        }
-        else if (spawnChance < CHANCE_SPAWN_3 && !isStudent3 && UniversityAgent.professorCount != this.MAX_PROFESSORS) {
-            agent = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.PROFESSOR, spawner3.getPatch(), false, currentTick);
-            university.getAgents().add(agent);
-            university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+        for (int i = 0; i < 4; i++){ // 4 gates
+            Gate.GateBlock spawner = gate.getSpawners().get(i);
+            double CHANCE = Simulator.roll();
+            if (CHANCE < spawnChance){
+                agent = university.getUnspawnedAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(university.getUnspawnedAgents().size()));
+                if (agent.getType() == UniversityAgent.Type.STUDENT && currentStudentCount < this.MAX_STUDENTS && currentStudentCount < UniversityAgent.studentCount){
+                    agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
+                    university.getAgents().add(agent);
+                    university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    currentStudentCount++;
+                }
+                else if (agent.getType() == UniversityAgent.Type.PROFESSOR && currentProfessorCount < this.MAX_PROFESSORS && currentProfessorCount < UniversityAgent.professorCount){
+                    agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
+                    university.getAgents().add(agent);
+                    university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    currentProfessorCount++;
+                }
+            }
         }
     }
 

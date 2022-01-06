@@ -114,32 +114,6 @@ public class GroceryGate extends Gate {
         return patchesFree;
     }
 
-    public GroceryAgent spawnAgentFromBacklogs(boolean forceEntry) { // Spawn an agent from the backlogs
-        Grocery grocery = (Grocery) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
-
-        if (grocery != null) {
-            List<GroceryAgent> groceryGateQueue = grocery.getAgentBacklogs();
-
-            if (!groceryGateQueue.isEmpty()) { // If the backlog queue isn't empty, check if this gate is free from agents
-                if (forceEntry || this.isGateFree()) { // If this gate is free from other agents, get one from the backlog queue
-                    GroceryAgent agent = groceryGateQueue.remove(0);
-                    Patch spawnPatch = this.getSpawners().get(0).getPatch();
-
-                    return agent;
-                }
-                else {
-                    return null;
-                }
-            }
-            else {
-                return null;
-            }
-        }
-        else {
-            return null;
-        }
-    }
-
     public enum GroceryGateMode {
         ENTRANCE("Entrance"), EXIT("Exit"), ENTRANCE_AND_EXIT("Entrance and Exit");
 

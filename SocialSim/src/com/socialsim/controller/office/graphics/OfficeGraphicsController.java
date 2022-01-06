@@ -2,10 +2,15 @@ package com.socialsim.controller.office.graphics;
 
 import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.Controller;
+import com.socialsim.controller.generic.graphics.agent.AgentGraphicLocation;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
+import com.socialsim.controller.office.graphics.agent.OfficeAgentGraphic;
 import com.socialsim.controller.office.graphics.amenity.OfficeAmenityGraphic;
+import com.socialsim.model.core.agent.Agent;
+import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
+import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.generic.patchobject.Drawable;
@@ -15,6 +20,8 @@ import com.socialsim.model.core.environment.generic.position.Location;
 import com.socialsim.model.core.environment.generic.position.MatrixPosition;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchfield.*;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.Sink;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.Toilet;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -30,6 +37,12 @@ import java.util.stream.Collectors;
 public class OfficeGraphicsController extends Controller {
 
     private static final Image AMENITY_SPRITES = new Image(OfficeAmenityGraphic.AMENITY_SPRITE_SHEET_URL);
+    private static final Image AMENITY_SPRITES2 = new Image(OfficeAmenityGraphic.AMENITY_SPRITE_SHEET_URL2);
+    private static final Image AGENT_SPRITES1 = new Image(OfficeAgentGraphic.AGENTS_URL_1);
+    private static final Image AGENT_SPRITES2 = new Image(OfficeAgentGraphic.AGENTS_URL_2);
+    private static final Image AGENT_SPRITES3 = new Image(OfficeAgentGraphic.AGENTS_URL_3);
+    private static final Image AGENT_SPRITES4 = new Image(OfficeAgentGraphic.AGENTS_URL_4);
+
     public static List<Amenity.AmenityBlock> firstPortalAmenityBlocks;
     public static double tileSize;
     private static boolean isDrawingStraightX;
@@ -42,14 +55,14 @@ public class OfficeGraphicsController extends Controller {
     private static long millisecondsLastCanvasRefresh;
 
     static {
-        firstPortalAmenityBlocks = null;
-        isDrawingStraightX = false;
-        isDrawingStraightY = false;
-        lockedX = null;
-        lockedY = null;
-        drawMeasurement = false;
-        measurementStartPatch = null;
-        willPeek = false;
+        OfficeGraphicsController.firstPortalAmenityBlocks = null;
+        OfficeGraphicsController.isDrawingStraightX = false;
+        OfficeGraphicsController.isDrawingStraightY = false;
+        OfficeGraphicsController.lockedX = null;
+        OfficeGraphicsController.lockedY = null;
+        OfficeGraphicsController.drawMeasurement = false;
+        OfficeGraphicsController.measurementStartPatch = null;
+        OfficeGraphicsController.willPeek = false;
         millisecondsLastCanvasRefresh = 0;
     }
 
@@ -86,7 +99,19 @@ public class OfficeGraphicsController extends Controller {
         final double canvasWidth = backgroundCanvas.getWidth();
         final double canvasHeight = backgroundCanvas.getHeight();
 
+        clearCanvases(office, background, backgroundGraphicsContext, foregroundGraphicsContext, tileSize, canvasWidth, canvasHeight);
         drawOfficeObjects(office, background, backgroundGraphicsContext, foregroundGraphicsContext, tileSize);
+    }
+
+    private static void clearCanvases(Office office, boolean background, GraphicsContext backgroundGraphicsContext, GraphicsContext foregroundGraphicsContext, double tileSize, double canvasWidth, double canvasHeight) {
+        if (!background) {
+            foregroundGraphicsContext.clearRect(0, 0, office.getColumns() * tileSize, office.getRows() * tileSize);
+        }
+        else {
+            foregroundGraphicsContext.clearRect(0, 0, office.getColumns() * tileSize, office.getRows() * tileSize);
+            backgroundGraphicsContext.setFill(Color.rgb(244, 244, 244));
+            backgroundGraphicsContext.fillRect(0, 0, canvasWidth, canvasHeight);
+        }
     }
 
     private static void drawOfficeObjects(Office office, boolean background, GraphicsContext backgroundGraphicsContext, GraphicsContext foregroundGraphicsContext, double tileSize) {
@@ -121,6 +146,7 @@ public class OfficeGraphicsController extends Controller {
             // Draw graphics corresponding to whatever is in the content of the patch; If the patch has no amenity on it, just draw a blank patch
             Amenity.AmenityBlock patchAmenityBlock = currentPatch.getAmenityBlock();
             Pair<PatchField, Integer> patchNumPair = currentPatch.getPatchField();
+            Pair<QueueingPatchField, Integer> patchNumPair2 = currentPatch.getQueueingPatchField();
             Color patchColor;
 
             if (patchAmenityBlock == null) {
@@ -146,14 +172,26 @@ public class OfficeGraphicsController extends Controller {
 
                     AmenityGraphicLocation amenityGraphicLocation = drawablePatchAmenity.getGraphicLocation();
 
-                    foregroundGraphicsContext.drawImage(
-                            AMENITY_SPRITES,
-                            amenityGraphicLocation.getSourceX(), amenityGraphicLocation.getSourceY(),
-                            amenityGraphicLocation.getSourceWidth(), amenityGraphicLocation.getSourceHeight(),
-                            column * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity. getGraphicObject()).getAmenityGraphicOffset().getColumnOffset() * tileSize,
-                            row * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getRowOffset() * tileSize,
-                            tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getColumnSpan(),
-                            tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
+                    if (patchAmenity.getClass() == Toilet.class || patchAmenity.getClass() == Sink.class) {
+                        foregroundGraphicsContext.drawImage(
+                                AMENITY_SPRITES2,
+                                amenityGraphicLocation.getSourceX(), amenityGraphicLocation.getSourceY(),
+                                amenityGraphicLocation.getSourceWidth(), amenityGraphicLocation.getSourceHeight(),
+                                column * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity. getGraphicObject()).getAmenityGraphicOffset().getColumnOffset() * tileSize,
+                                row * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getRowOffset() * tileSize,
+                                tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getColumnSpan(),
+                                tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
+                    }
+                    else {
+                        foregroundGraphicsContext.drawImage(
+                                AMENITY_SPRITES,
+                                amenityGraphicLocation.getSourceX(), amenityGraphicLocation.getSourceY(),
+                                amenityGraphicLocation.getSourceWidth(), amenityGraphicLocation.getSourceHeight(),
+                                column * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity. getGraphicObject()).getAmenityGraphicOffset().getColumnOffset() * tileSize,
+                                row * tileSize + ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getRowOffset() * tileSize,
+                                tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getColumnSpan(),
+                                tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
+                    }
 
                     if (drawGraphicTransparently) { // Reset transparency if previously added
                         foregroundGraphicsContext.setGlobalAlpha(1.0);
@@ -196,33 +234,41 @@ public class OfficeGraphicsController extends Controller {
                 }
             }
 
+            if (patchNumPair2 != null) { // TODO: FOR VISUALIZATION ONLY; DELETE LATER
+                patchColor = Color.rgb(0, 0, 0);
+                backgroundGraphicsContext.setFill(patchColor);
+                backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+            }
+
             if (!background) { // Draw each agent in this patch, if the foreground is to be drawn
-//                for (Agent agent : patch.getAgents()) {
-//                    OfficeAgent officeAgent = (OfficeAgent) agent;
-//                    AgentGraphicLocation agentGraphicLocation = officeAgent.getAgentGraphic().getGraphicLocation();
-//
-//                    Image CURRENT_URL = null;
-//                    if (officeAgent.getType() == OfficeAgent.Type.GUARD || officeAgent.getType() == OfficeAgent.Type.JANITOR || officeAgent.getType() == OfficeAgent.Type.OFFICER) {
-//                        CURRENT_URL = AGENT_SPRITES_4;
-//                    }
-//                    else if (officeAgent.getType() == OfficeAgent.Type.PROFESSOR) {
-//                        CURRENT_URL = AGENT_SPRITES_3;
-//                    }
-//                    else if (officeAgent.getType() == OfficeAgent.Type.STUDENT && officeAgent.getGender() == OfficeAgent.Gender.MALE) {
-//                        CURRENT_URL = AGENT_SPRITES_1;
-//                    }
-//                    else if (officeAgent.getType() == OfficeAgent.Type.STUDENT && officeAgent.getGender() == OfficeAgent.Gender.FEMALE) {
-//                        CURRENT_URL = AGENT_SPRITES_2;
-//                    }
-//
-//                    foregroundGraphicsContext.drawImage(
-//                            CURRENT_URL,
-//                            agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
-//                            agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
-//                            OfficeGraphicsController.getScaledAgentCoordinates(officeAgent).getX() * tileSize - tileSize,
-//                            OfficeGraphicsController.getScaledAgentCoordinates(officeAgent).getY() * tileSize - tileSize * 2,
-//                            tileSize * 2, tileSize * 2 + tileSize * 0.25);
-//                }
+                if (!patch.getAgents().isEmpty()) {
+                    for (Agent agent : patch.getAgents()) {
+                        OfficeAgent officeAgent = (OfficeAgent) agent;
+                        AgentGraphicLocation agentGraphicLocation = officeAgent.getAgentGraphic().getGraphicLocation();
+
+                        Image CURRENT_URL = null;
+                        if (officeAgent.getType() == OfficeAgent.Type.GUARD || officeAgent.getType() == OfficeAgent.Type.RECEPTIONIST || officeAgent.getType() == OfficeAgent.Type.JANITOR || officeAgent.getType() == OfficeAgent.Type.VISITOR || officeAgent.getType() == OfficeAgent.Type.SECRETARY || officeAgent.getType() == OfficeAgent.Type.DRIVER) {
+                            CURRENT_URL = AGENT_SPRITES1;
+                        }
+                        else if (officeAgent.getType() == OfficeAgent.Type.BUSINESS || officeAgent.getType() == OfficeAgent.Type.RESEARCHER) {
+                            CURRENT_URL = AGENT_SPRITES2;
+                        }
+                        else if (officeAgent.getType() == OfficeAgent.Type.TECHNICAL || officeAgent.getType() == OfficeAgent.Type.BOSS || officeAgent.getType() == OfficeAgent.Type.MANAGER) {
+                            CURRENT_URL = AGENT_SPRITES3;
+                        }
+                        else if (officeAgent.getType() == OfficeAgent.Type.CLIENT) {
+                            CURRENT_URL = AGENT_SPRITES4;
+                        }
+
+                        foregroundGraphicsContext.drawImage(
+                                CURRENT_URL,
+                                agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
+                                agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
+                                getScaledAgentCoordinates(officeAgent).getX() * tileSize,
+                                getScaledAgentCoordinates(officeAgent).getY() * tileSize,
+                                tileSize * 0.7, tileSize * 0.7);
+                    }
+                }
             }
         }
     }
@@ -265,11 +311,11 @@ public class OfficeGraphicsController extends Controller {
         }
     }
 
-//    public static Coordinates getScaledAgentCoordinates(Agent agent) {
-//        Coordinates agentPosition = agent.getAgentMovement().getPosition();
-//
-//        return OfficeGraphicsController.getScaledCoordinates(agentPosition);
-//    }
+    public static Coordinates getScaledAgentCoordinates(OfficeAgent agent) {
+        Coordinates agentPosition = agent.getAgentMovement().getPosition();
+
+        return OfficeGraphicsController.getScaledCoordinates(agentPosition);
+    }
 
     public static Coordinates getScaledCoordinates(Coordinates coordinates) {
         return new Coordinates(coordinates.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS, coordinates.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);

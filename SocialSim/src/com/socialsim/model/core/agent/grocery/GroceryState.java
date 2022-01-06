@@ -1,20 +1,18 @@
 package com.socialsim.model.core.agent.grocery;
 
-import com.socialsim.model.core.agent.university.UniversityAgent;
-
 import java.util.ArrayList;
 
 public class GroceryState {
 
-    public enum Name{
+    public enum Name {
         GOING_TO_SECURITY, GOING_CART, NEEDS_HELP,
         GOING_TO_PRODUCTS, IN_PRODUCTS_AISLE, IN_PRODUCTS_WALL, IN_PRODUCTS_FROZEN, IN_PRODUCTS_FRESH, IN_PRODUCTS_MEAT,
         FOLLOW_LEADER_SHOP, FOLLOW_LEADER_SERVICE,
         GOING_TO_PAY, PAYING, GOING_TO_SERVICE, IN_SERVICE, GOING_TO_EAT, EATING,
-        GOING_HOME, GUARD_ENTRANCE, GUARD_EXIT, BUTCHER, CASHIER, BAGGER, CUSTOMER_SERVICE, STAFF_FOOD, STAFF_AISLE;
+        GOING_HOME, GUARD_ENTRANCE, GUARD_EXIT, BUTCHER, CASHIER, BAGGER, CUSTOMER_SERVICE, STAFF_FOOD, STAFF_AISLE
     }
 
-    public enum AisleCluster{
+    public enum AisleCluster {
         RIGHT_WALL_CLUSTER(0),
         TOP_WALL_CLUSTER(1),
         AISLE_1_2_CLUSTER(2),
@@ -103,6 +101,10 @@ public class GroceryState {
 
     public void setAgent(GroceryAgent agent) {
         this.agent = agent;
+    }
+
+    public ArrayList<GroceryAction> getActions() {
+        return this.actions;
     }
 
     public void addAction(GroceryAction a){

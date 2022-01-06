@@ -5,6 +5,7 @@ import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.simulator.Simulator;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -15,7 +16,17 @@ public class UniversityAgent extends Agent {
     public static int janitorCount = 0;
     public static int professorCount = 0;
     public static int studentCount = 0;
-
+    public static final double[][][] chancePerActionInteractionType = new double[][][]
+    {
+        {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 100}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+        {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 100, 0}, {0, 100, 0}, {0, 100, 0}, {0, 100, 0}},
+        {{90, 0, 10}, {20, 0, 80}, {0, 0, 0}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {5, 20, 75}, {15, 30, 55}, {15, 30, 55}, {20, 0, 80}, {5, 20, 75}, {20, 0, 80}, {15, 30, 55}, {20, 0, 80}, {20, 0, 80}, {60, 0, 40}, {0, 0, 0}, {50, 0, 50}, {20, 0, 80}, {0, 0, 0}, {60, 0, 40}, {20, 0, 80}, {0, 0, 0}, {0, 30, 70}, {0, 30, 70}, {0, 0, 0}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {0, 20, 80}, {20, 0, 80}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+        {{85, 0, 15}, {20, 0, 80}, {0, 0, 0}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {5, 20, 75}, {15, 30, 55}, {15, 30, 55}, {20, 0, 80}, {5, 20, 75}, {20, 0, 80}, {15, 30, 55}, {20, 0, 80}, {20, 0, 80}, {60, 0, 40}, {0, 0, 0}, {50, 0, 50}, {20, 0, 80}, {0, 0, 0}, {60, 0, 40}, {20, 0, 80}, {0, 0, 0}, {0, 30, 70}, {0, 30, 70}, {0, 0, 0}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {20, 0, 80}, {0, 20, 80}, {20, 0, 80}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+        {{80, 0, 20}, {10, 0, 90}, {0, 0, 0}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {5, 20, 75}, {10, 30, 60}, {10, 30, 60}, {10, 0, 90}, {0, 20, 80}, {10, 0, 90}, {10, 30, 60}, {10, 0, 90}, {10, 0, 90}, {60, 0, 40}, {0, 0, 0}, {50, 0, 50}, {10, 0, 90}, {0, 0, 0}, {60, 0, 40}, {10, 0, 90}, {0, 0, 0}, {0, 30, 70}, {0, 30, 70}, {0, 0, 0}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {0, 20, 80}, {10, 0, 90}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+        {{80, 0, 20}, {10, 0, 90}, {0, 0, 0}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {5, 20, 75}, {10, 30, 60}, {10, 30, 60}, {10, 0, 90}, {0, 20, 80}, {10, 0, 90}, {10, 30, 60}, {10, 0, 90}, {10, 0, 90}, {60, 0, 40}, {0, 0, 0}, {50, 0, 50}, {10, 0, 90}, {0, 0, 0}, {60, 0, 40}, {10, 0, 90}, {0, 0, 0}, {0, 30, 70}, {0, 30, 70}, {0, 0, 0}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {10, 0, 90}, {0, 20, 80}, {10, 0, 90}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+        {{90, 0, 10}, {75, 0, 25}, {0, 0, 0}, {75, 0, 25}, {75, 0, 25}, {75, 0, 25}, {75, 0, 25}, {75, 0, 25}, {0, 0, 0}, {0, 0, 0}, {15, 30, 55}, {75, 0, 25}, {5, 20, 75}, {75, 0, 25}, {15, 30, 55}, {75, 0, 25}, {75, 0, 25}, {60, 0, 40}, {0, 0, 0}, {50, 0, 50}, {75, 0, 25}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 40, 60}, {0, 50, 50}, {0, 0, 0}, {0, 40, 60}, {75, 0, 25}, {75, 0, 25}, {75, 0, 25}, {75, 0, 25}, {75, 0, 25}, {0, 20, 80}, {75, 0, 25}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+        {{80, 0, 20}, {65, 0, 35}, {0, 0, 0}, {65, 0, 35}, {65, 0, 35}, {65, 0, 35}, {65, 0, 35}, {65, 0, 35}, {0, 0, 0}, {0, 0, 0}, {10, 30, 60}, {65, 0, 35}, {0, 20, 80}, {65, 0, 35}, {10, 30, 60}, {65, 0, 35}, {65, 0, 35}, {60, 0, 40}, {0, 0, 0}, {50, 0, 50}, {65, 0, 35}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 40, 60}, {0, 50, 50}, {0, 0, 0}, {0, 40, 60}, {65, 0, 35}, {65, 0, 35}, {65, 0, 35}, {65, 0, 35}, {65, 0, 35}, {0, 20, 80}, {65, 0, 35}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+    };
     private final int id;
     private final UniversityAgent.Type type;
     private final UniversityAgent.Gender gender;
@@ -28,9 +39,9 @@ public class UniversityAgent extends Agent {
 
     public static final UniversityAgent.UniversityAgentFactory agentFactory;
 
-    public static final int INT_CHANCE_SPAWN = 10, INT_ORG_CHANCE_SPAWN = 10,
-            EXT_CHANCE_SPAWN = 10, EXT_ORG_CHANCE_SPAWN = 10,
-            STRICT_PROF_CHANCE_SPAWN = 10, APPROACHABLE_PROF_CHANCE_SPAWN = 10;
+    public static final double INT_CHANCE_SPAWN = 0.10, INT_ORG_CHANCE_SPAWN = 0.10,
+            EXT_CHANCE_SPAWN = 0.10, EXT_ORG_CHANCE_SPAWN = 0.10,
+            STRICT_PROF_CHANCE_SPAWN = 0.10, APPROACHABLE_PROF_CHANCE_SPAWN = 0.10;
 
     static {
         agentFactory = new UniversityAgent.UniversityAgentFactory();
@@ -235,6 +246,7 @@ public class UniversityAgent extends Agent {
             }
         }
         this.agentGraphic = new UniversityAgentGraphic(this);
+        this.agentMovement = null;
     }
 
     public int getId() {
@@ -314,13 +326,20 @@ public class UniversityAgent extends Agent {
     }
 
     public enum Persona {
-        GUARD, JANITOR,
-        INT_Y1_STUDENT, INT_Y2_STUDENT, INT_Y3_STUDENT, INT_Y4_STUDENT,
-        INT_Y1_ORG_STUDENT, INT_Y2_ORG_STUDENT, INT_Y3_ORG_STUDENT, INT_Y4_ORG_STUDENT,
-        EXT_Y1_STUDENT, EXT_Y2_STUDENT, EXT_Y3_STUDENT, EXT_Y4_STUDENT,
-        EXT_Y1_ORG_STUDENT, EXT_Y2_ORG_STUDENT, EXT_Y3_ORG_STUDENT, EXT_Y4_ORG_STUDENT,
-        STRICT_PROFESSOR, APPROACHABLE_PROFESSOR
+        GUARD(0), JANITOR(1),
+        INT_Y1_STUDENT(2), INT_Y2_STUDENT(2), INT_Y3_STUDENT(2), INT_Y4_STUDENT(2),
+        INT_Y1_ORG_STUDENT(3), INT_Y2_ORG_STUDENT(3), INT_Y3_ORG_STUDENT(3), INT_Y4_ORG_STUDENT(3),
+        EXT_Y1_STUDENT(4), EXT_Y2_STUDENT(4), EXT_Y3_STUDENT(4), EXT_Y4_STUDENT(4),
+        EXT_Y1_ORG_STUDENT(5), EXT_Y2_ORG_STUDENT(5), EXT_Y3_ORG_STUDENT(5), EXT_Y4_ORG_STUDENT(5),
+        STRICT_PROFESSOR(6), APPROACHABLE_PROFESSOR(7);
 
+        final int ID;
+        Persona(int ID){
+            this.ID = ID;
+        }
+        public int getID() {
+            return ID;
+        }
     }
 
 }
