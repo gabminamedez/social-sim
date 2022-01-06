@@ -71,6 +71,18 @@ public class UniversityAgentMovement extends AgentMovement {
     private boolean isReadyToFree; // Denotes whether the agent is ready to be freed from being stuck
     private final ConcurrentHashMap<Patch, Integer> recentPatches; // Denotes the recent patches this agent has been in
 
+    // Interaction parameters
+    private boolean isInteracting; // Denotes whether the agent is currently interacting with another agent
+    private boolean isSimultaneousInteractionAllowed; // Denotes whether an interaction is allowed while an action is being done simultaneously
+    private int interactionDuration;
+    private InteractionType interactionType;
+
+    public enum InteractionType {
+        NON_VERBAL,
+        COOPERATIVE,
+        EXCHANGE
+    }
+
     // The vectors of this agent
     private final List<Vector> repulsiveForceFromAgents;
     private final List<Vector> repulsiveForcesFromObstacles;
@@ -126,6 +138,9 @@ public class UniversityAgentMovement extends AgentMovement {
         if (this.currentAction.getDuration() != 0) {
             this.duration = this.currentAction.getDuration();
         }
+
+        this.isInteracting = false;
+
     }
 
     public UniversityAgent getParent() {
@@ -1371,7 +1386,7 @@ public class UniversityAgentMovement extends AgentMovement {
         return Coordinates.distance(this.position, patch.getPatchCenterCoordinates()) <= this.preferredWalkingDistance;
     }
 
-    public void despawn() {
+    public void despawn() { // TODO: palitan based on current agents na umalis
         if (this.currentPatch != null) {
             this.currentPatch.getAgents().remove(this.parent);
             this.getUniversity().getAgents().remove(this.parent);
@@ -1679,8 +1694,139 @@ public class UniversityAgentMovement extends AgentMovement {
         }
     }
 
+    public void forceActionInteraction(UniversityAgent agent, InteractionType interactionType){
+        //TODO: Statistics in interaction
+
+        // set own agent interaction parameters
+        this.isInteracting = true;
+        this.interactionType = interactionType;
+        // set other agent interaction parameters
+        agent.getAgentMovement().setInteracting(true);
+        agent.getAgentMovement().setInteractionType(interactionType);
+        double interactionStdDeviation, interactionMean;
+
+        if (interactionType == InteractionType.NON_VERBAL){
+            interactionStdDeviation = 1;
+            interactionMean = 2;
+        }
+        else if (interactionType == InteractionType.COOPERATIVE){
+
+            interactionStdDeviation = 5;
+            interactionMean = 19;
+        }
+        else if (interactionType == InteractionType.EXCHANGE){
+
+            interactionStdDeviation = 5;
+            interactionMean = 19;
+        }
+        else{
+            interactionStdDeviation = 0;
+            interactionMean = 0;
+        }
+        this.interactionDuration = (int) Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean);
+    }
+    public void rollAgentInteraction(UniversityAgent agent){
+        //TODO: Statistics in interaction
+
+        double IOS1 = university.getIOS().get(this.getParent().getId()).get(agent.getId());
+        double IOS2 = university.getIOS().get(agent.getId()).get(this.getParent().getId());
+        // roll if possible interaction
+        double CHANCE1 = Simulator.roll();
+        double CHANCE2 = Simulator.roll();
+        double interactionStdDeviation, interactionMean;
+        if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
+            // set own agent interaction parameters
+            this.isInteracting = true;
+            // set other agent interaction parameters
+            agent.getAgentMovement().setInteracting(true);
+
+            // roll if what kind of interaction
+            CHANCE1 = Simulator.roll() * IOS1;
+            CHANCE2 = Simulator.roll() * IOS2;
+            double CHANCE = (CHANCE1 + CHANCE2) / 2;
+            double CHANCE_NONVERBAL1 = UniversityAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
+                    CHANCE_COOPERATIVE1 = UniversityAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
+                    CHANCE_EXCHANGE1 = UniversityAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
+                    CHANCE_NONVERBAL2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
+                    CHANCE_COOPERATIVE2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
+                    CHANCE_EXCHANGE2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
+            if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
+                this.getParent().getAgentMovement().setInteractionType(InteractionType.NON_VERBAL);
+                agent.getAgentMovement().setInteractionType(InteractionType.NON_VERBAL);
+                interactionStdDeviation = 1;
+                interactionMean = 2;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
+                this.getParent().getAgentMovement().setInteractionType(InteractionType.COOPERATIVE);
+                agent.getAgentMovement().setInteractionType(InteractionType.COOPERATIVE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
+                this.getParent().getAgentMovement().setInteractionType(InteractionType.EXCHANGE);
+                agent.getAgentMovement().setInteractionType(InteractionType.EXCHANGE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else{
+                interactionStdDeviation = 0;
+                interactionMean = 0;
+            }
+            // roll duration (NOTE GAUSSIAN)
+            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+        }
+    }
+    public void interact(){
+        //TODO: Statistics in interaction
+
+        // if 0 na, remove interacting phase for agent
+        if (this.interactionDuration == 0){
+            this.isInteracting = false;
+            this.interactionType = null;
+        }
+        // -- interaction
+        else{
+            this.interactionDuration--;
+        }
+    }
+
     public void decrementDuration(){
         this.duration = getDuration() - 1;
     }
 
+    public boolean isInteracting() {
+        return isInteracting;
+    }
+
+    public void setInteracting(boolean interacting) {
+        isInteracting = interacting;
+    }
+
+    public boolean isSimultaneousInteractionAllowed() {
+        return isSimultaneousInteractionAllowed;
+    }
+
+    public void setSimultaneousInteractionAllowed(boolean simultaneousInteractionAllowed) {
+        isSimultaneousInteractionAllowed = simultaneousInteractionAllowed;
+    }
+
+    public int getInteractionDuration() {
+        return interactionDuration;
+    }
+
+    public void setInteractionDuration(int interactionDuration) {
+        this.interactionDuration = interactionDuration;
+    }
+
+    public InteractionType getInteractionType() {
+        return interactionType;
+    }
+
+    public void setInteractionType(InteractionType interactionType) {
+        this.interactionType = interactionType;
+    }
 }

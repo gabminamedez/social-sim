@@ -14,7 +14,7 @@ import java.util.List;
 
 public class UniversityGate extends Gate {
 
-    private int chancePerTick; // Denotes the chance of generating an agent per second
+    private double chancePerTick; // Denotes the chance of generating an agent per second
     private UniversityGateMode universityGateMode; // Denotes the mode of this station gate (whether it's entry/exit only, or both)
     private int agentBacklogCount; // Denotes the number of agents who are supposed to enter the gate, but cannot
     public static final UniversityGateFactory universityGateFactory;
@@ -24,7 +24,7 @@ public class UniversityGate extends Gate {
         universityGateFactory = new UniversityGateFactory();
     }
 
-    protected UniversityGate(List<AmenityBlock> amenityBlocks, boolean enabled, int chancePerTick, UniversityGateMode universityGateMode) {
+    protected UniversityGate(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerTick, UniversityGateMode universityGateMode) {
         super(amenityBlocks, enabled);
 
         this.chancePerTick = chancePerTick;
@@ -33,11 +33,11 @@ public class UniversityGate extends Gate {
         this.universityGateGraphic = new UniversityGateGraphic(this);
     }
 
-    public int getChancePerTick() {
+    public double getChancePerTick() {
         return chancePerTick;
     }
 
-    public void setChancePerTick(int chancePerTick) {
+    public void setChancePerTick(double chancePerTick) {
         this.chancePerTick = chancePerTick;
     }
 
@@ -146,7 +146,7 @@ public class UniversityGate extends Gate {
     }
 
     public static class UniversityGateFactory extends GateFactory {
-        public static UniversityGate create(List<AmenityBlock> amenityBlocks, boolean enabled, int chancePerTick, UniversityGateMode stationGateMode) {
+        public static UniversityGate create(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerTick, UniversityGateMode stationGateMode) {
             return new UniversityGate(amenityBlocks, enabled, chancePerTick, stationGateMode);
         }
     }
