@@ -515,7 +515,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
                     this.goalAmenity = chosenAmenity;
                     this.goalAttractor = chosenAttractor;
-                    break;
+                    return true;
                 }else if(temp == sortedDistances.size()){
                     return false;
                 }
