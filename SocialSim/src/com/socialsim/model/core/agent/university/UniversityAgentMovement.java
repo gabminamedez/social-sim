@@ -102,13 +102,13 @@ public class UniversityAgentMovement extends AgentMovement {
             this.proposedHeading = Math.toRadians(270.0);
             this.heading = Math.toRadians(270.0);
             this.previousHeading = Math.toRadians(270.0);
-            this.fieldOfViewAngle = Math.toRadians(270.0);
+            this.fieldOfViewAngle = Math.toRadians(30.0);
         }
         else { // All newly generated agents will face the north by default
             this.proposedHeading = Math.toRadians(90.0);
             this.heading = Math.toRadians(90.0);
             this.previousHeading = Math.toRadians(90.0);
-            this.fieldOfViewAngle = Math.toRadians(90.0);
+            this.fieldOfViewAngle = Math.toRadians(30.0);
         }
 
         this.currentPatch = spawnPatch; // Add this agent to the spawn patch
@@ -192,6 +192,10 @@ public class UniversityAgentMovement extends AgentMovement {
 
     public double getHeading() {
         return heading;
+    }
+
+    public double getFieldOfViewAngle() {
+        return fieldOfViewAngle;
     }
 
     public Patch getCurrentPatch() {
@@ -1694,7 +1698,7 @@ public class UniversityAgentMovement extends AgentMovement {
         }
     }
 
-    public void forceActionInteraction(UniversityAgent agent, InteractionType interactionType){
+    public void forceActionInteraction(UniversityAgent agent, InteractionType interactionType, int duration){
         //TODO: Statistics in interaction
 
         // set own agent interaction parameters
@@ -1723,7 +1727,11 @@ public class UniversityAgentMovement extends AgentMovement {
             interactionStdDeviation = 0;
             interactionMean = 0;
         }
-        this.interactionDuration = (int) Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean);
+        if (duration == -1)
+            this.interactionDuration = (int) Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean);
+        else
+            this.interactionDuration = duration;
+
     }
     public void rollAgentInteraction(UniversityAgent agent){
         //TODO: Statistics in interaction
