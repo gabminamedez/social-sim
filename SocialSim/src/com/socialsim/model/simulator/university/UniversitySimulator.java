@@ -30,7 +30,7 @@ public class UniversitySimulator extends Simulator {
 
     public static int currentProfessorCount = 0;
     public static int currentStudentCount = 0;
-    private final int MAX_STUDENTS = 5; //250
+    private final int MAX_STUDENTS = 3; //250
     private final int MAX_PROFESSORS = 0;
     private final int NUM_AGENTS = 500;
 
@@ -258,6 +258,8 @@ public class UniversitySimulator extends Simulator {
                 break;
 
             case STUDENT:
+                System.out.println(agentMovement.getCurrentState().getName().toString());
+                System.out.println(agentMovement.getCurrentAction().getName().toString());
                 if (state.getName() == UniversityState.Name.GOING_TO_SECURITY) {
                     if (action.getName() == UniversityAction.Name.GOING_TO_SECURITY_QUEUE) {
                         if (agentMovement.getGoalQueueingPatchField() == null) {

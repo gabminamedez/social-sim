@@ -43,6 +43,14 @@ public class UniversityState {
         this.classroomID = classroomID;
         this.actions = new ArrayList<>();
     }
+    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, int tickClassStart, int classroomID, ArrayList<UniversityAction> actions) { // Class state
+        this.name = a;
+        this.routePlan = routePlan;
+        this.agent = agent;
+        this.tickClassStart = tickClassStart;
+        this.classroomID = classroomID;
+        this.actions = actions;
+    }
 
     public Name getName() {
         return name;
