@@ -34,12 +34,10 @@ public class ServiceCounterMapper extends AmenityMapper {
 
             List<Patch> serviceCounterFieldPatches = new ArrayList<>();
             serviceCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow, origPatchCol + 1));
-            for (int i = origPatchRow + 1; i < 5; i++) {
-                Patch currentPatch = Main.grocerySimulator.getGrocery().getPatch(i, origPatchCol + 1);
-                if (currentPatch.getPatchField() == null && currentPatch.getQueueingPatchField() == null && currentPatch.getAmenityBlock() == null) {
-                    serviceCounterFieldPatches.add(currentPatch);
-                }
-            }
+            serviceCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 1, origPatchCol + 1));
+            serviceCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 2, origPatchCol + 1));
+            serviceCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 3, origPatchCol + 1));
+            serviceCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 4, origPatchCol + 1));
             Main.grocerySimulator.getGrocery().getServiceCounterFields().add(ServiceCounterField.serviceCounterFieldFactory.create(serviceCounterFieldPatches, serviceCounterToAdd, 1));
         }
     }

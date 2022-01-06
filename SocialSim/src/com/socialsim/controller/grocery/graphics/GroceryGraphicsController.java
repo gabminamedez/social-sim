@@ -4,8 +4,8 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.Controller;
 import com.socialsim.controller.generic.graphics.agent.AgentGraphicLocation;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
+import com.socialsim.controller.grocery.graphics.agent.GroceryAgentGraphic;
 import com.socialsim.controller.grocery.graphics.amenity.GroceryAmenityGraphic;
-import com.socialsim.controller.office.graphics.agent.OfficeAgentGraphic;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.grocery.GroceryAgent;
 import com.socialsim.model.core.environment.generic.Patch;
@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
 public class GroceryGraphicsController extends Controller {
 
     private static final Image AMENITY_SPRITES = new Image(GroceryAmenityGraphic.AMENITY_SPRITE_SHEET_URL);
-    private static final Image AGENT_SPRITES_1 = new Image(OfficeAgentGraphic.AGENTS_URL_1);
-    private static final Image AGENT_SPRITES_2 = new Image(OfficeAgentGraphic.AGENTS_URL_2);
-    private static final Image AGENT_SPRITES_3 = new Image(OfficeAgentGraphic.AGENTS_URL_3);
+    private static final Image AGENT_SPRITES_1 = new Image(GroceryAgentGraphic.AGENTS_URL_1);
+    private static final Image AGENT_SPRITES_2 = new Image(GroceryAgentGraphic.AGENTS_URL_2);
+    private static final Image AGENT_SPRITES_3 = new Image(GroceryAgentGraphic.AGENTS_URL_3);
     public static List<Amenity.AmenityBlock> firstPortalAmenityBlocks;
     public static double tileSize;
     private static boolean isDrawingStraightX;

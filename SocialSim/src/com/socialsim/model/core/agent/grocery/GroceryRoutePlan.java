@@ -266,6 +266,7 @@ public class GroceryRoutePlan {
         routePlan.add(new GroceryState(GroceryState.Name.GOING_HOME, this, agent, actions));
 
         this.currentRoutePlan = routePlan.listIterator();
+        setNextState();
     }
 
     public GroceryState setNextState() { // Set the next class in the route plan

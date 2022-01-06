@@ -77,27 +77,27 @@ public class GroceryAgentGraphic extends Graphic {
         for (int i = 0; i < 4; i++) { femaleDuo2.add(new AgentGraphicLocation(11, i)); }
 
         maleStaffAisle = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleComplete1.add(new AgentGraphicLocation(0, i)); }
+        for (int i = 0; i < 4; i++) { maleStaffAisle.add(new AgentGraphicLocation(0, i)); }
         femaleStaffAisle = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleComplete1.add(new AgentGraphicLocation(1, i)); }
+        for (int i = 0; i < 4; i++) { femaleStaffAisle.add(new AgentGraphicLocation(1, i)); }
         cashier = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleComplete2.add(new AgentGraphicLocation(2, i)); }
+        for (int i = 0; i < 4; i++) { cashier.add(new AgentGraphicLocation(2, i)); }
         bagger = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleComplete2.add(new AgentGraphicLocation(3, i)); }
+        for (int i = 0; i < 4; i++) { bagger.add(new AgentGraphicLocation(3, i)); }
         butcher = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleHelp1.add(new AgentGraphicLocation(4, i)); }
+        for (int i = 0; i < 4; i++) { butcher.add(new AgentGraphicLocation(4, i)); }
         maleStaffFood = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleHelp1.add(new AgentGraphicLocation(5, i)); }
+        for (int i = 0; i < 4; i++) { maleStaffFood.add(new AgentGraphicLocation(5, i)); }
         femaleStaffFood = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleHelp2.add(new AgentGraphicLocation(6, i)); }
+        for (int i = 0; i < 4; i++) { femaleStaffFood.add(new AgentGraphicLocation(6, i)); }
         maleCustomerService = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleHelp2.add(new AgentGraphicLocation(7, i)); }
+        for (int i = 0; i < 4; i++) { maleCustomerService.add(new AgentGraphicLocation(7, i)); }
         femaleCustomerService = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleDuo1.add(new AgentGraphicLocation(8, i)); }
+        for (int i = 0; i < 4; i++) { femaleCustomerService.add(new AgentGraphicLocation(8, i)); }
         maleGuard = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleDuo1.add(new AgentGraphicLocation(9, i)); }
+        for (int i = 0; i < 4; i++) { maleGuard.add(new AgentGraphicLocation(9, i)); }
         femaleGuard = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleDuo2.add(new AgentGraphicLocation(10, i)); }
+        for (int i = 0; i < 4; i++) { femaleGuard.add(new AgentGraphicLocation(10, i)); }
     }
 
     private final GroceryAgent agent;
