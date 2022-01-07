@@ -79,6 +79,14 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
         return headingDifference <= maximumHeadingChange;
     }
 
+    @Override
+    public String toString() {
+        return "Coordinates{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
+
     public static double headingDifference(double heading1, double heading2) {
         double headingDifference = Math.abs(heading1 - heading2);
 

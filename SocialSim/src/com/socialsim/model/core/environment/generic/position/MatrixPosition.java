@@ -1,7 +1,6 @@
 package com.socialsim.model.core.environment.generic.position;
 
 import com.socialsim.model.core.environment.Environment;
-import com.socialsim.model.core.environment.university.University;
 
 import java.util.Objects;
 
@@ -39,6 +38,11 @@ public class MatrixPosition extends Location {
     @Override
     public int hashCode() {
         return Objects.hash(row, column);
+    }
+
+    @Override
+    public String toString() {
+        return "(" + row + " " + column + ")";
     }
 
 }
