@@ -16,6 +16,8 @@ import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.university.patchfield.Bathroom;
 import com.socialsim.model.core.environment.university.patchfield.Classroom;
 import com.socialsim.model.core.environment.university.patchfield.StallField;
+import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.Chair;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Door;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Security;
 import com.socialsim.model.simulator.Simulator;
@@ -458,7 +460,10 @@ public class UniversityAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                path.push(goalPatch);
+                if(patchToExplore.getAmenityBlock() != null && patchToExplore.getAmenityBlock()
+                        .isPassable(patchToExplore.getAmenityBlock().getParent().getClass())){
+                    path.push(goalPatch);
+                }
                 double length = 0.0;
                 Patch currentPatch = goalPatch;
                 while (cameFrom.containsKey(currentPatch)) {
@@ -532,14 +537,15 @@ public class UniversityAgentMovement extends AgentMovement {
                     chosenAmenity =  candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
                     candidateAttractor.getPatch().getAgents().add(this.parent);
-
-                    this.goalAmenity = chosenAmenity;
-                    this.goalAttractor = chosenAttractor;
-                    return true;
+                    break;
                 }else if(temp == sortedDistances.size()){
                     return false;
                 }
             }
+
+            this.goalAmenity = chosenAmenity;
+            this.goalAttractor = chosenAttractor;
+            return true;
         }
 
         return false;
@@ -931,7 +937,8 @@ public class UniversityAgentMovement extends AgentMovement {
                 this.isStuck = true;
                 this.stuckCounter++;
             }
-            //if(this.currentPatch.getAmenityBlock() == null || !this.currentPatch.getAmenityBlock().getParent().equals(Door.class)){
+            if(currentPatch.getAmenityBlock() != null && currentPatch.getAmenityBlock().getParent().getClass()
+                    .equals(UniversityGate.class)){
                 // Only apply the social forces of a set number of agents and obstacles
                 int agentsProcessed = 0;
                 final int agentsProcessedLimit = 5;
@@ -978,8 +985,7 @@ public class UniversityAgentMovement extends AgentMovement {
                         }
                     }
                 }
-           // }
-
+            }
             // Get the attractive force of this agent to the new position
             this.attractiveForce = this.computeAttractiveForce(new Coordinates(this.position), this.proposedHeading, proposedNewPosition, this.preferredWalkingDistance);
             vectorsToAdd.add(attractiveForce);
@@ -1162,21 +1168,27 @@ public class UniversityAgentMovement extends AgentMovement {
     }
 
     private double computeRepulsionMagnitudeFactor(final double distance, final double maximumDistance, final double minimumRepulsionFactor, final double minimumDistance, final double maximumRepulsionFactor) {
-        // Formula: for the inverse square law equation y = a / x ^ 2 + b,
-        // a = (d_max ^ 2 * (r_min * d_max ^ 2 - r_min * d_min ^ 2 + r_max ^ 2 * d_min ^ 2)) / (d_max ^ 2 - d_min ^ 2)
-        // b = -((r_max ^ 2 * d_min ^ 2) / (d_max ^ 2 - d_min ^ 2))
-        double differenceOfSquaredDistances = Math.pow(maximumDistance, 2.0) - Math.pow(minimumDistance, 2.0);
-        double productOfMaximumRepulsionAndMinimumDistance = Math.pow(maximumRepulsionFactor, 2.0) * Math.pow(minimumDistance, 2.0);
+        /*if(currentPatch.getPatchField() != null && currentPatch.getPatchField().getKey().getClass() == Classroom.class
+                || this.currentPatch.getAmenityBlock() != null && !this.currentPatch.getAmenityBlock().getParent()
+                .equals(Door.class)){
+            return 2;
+        }else{*/
+            // Formula: for the inverse square law equation y = a / x ^ 2 + b,
+            // a = (d_max ^ 2 * (r_min * d_max ^ 2 - r_min * d_min ^ 2 + r_max ^ 2 * d_min ^ 2)) / (d_max ^ 2 - d_min ^ 2)
+            // b = -((r_max ^ 2 * d_min ^ 2) / (d_max ^ 2 - d_min ^ 2))
+            double differenceOfSquaredDistances = Math.pow(maximumDistance, 2.0) - Math.pow(minimumDistance, 2.0);
+            double productOfMaximumRepulsionAndMinimumDistance = Math.pow(maximumRepulsionFactor, 2.0) * Math.pow(minimumDistance, 2.0);
 
-        double a = (Math.pow(maximumDistance, 2.0) * (minimumRepulsionFactor * Math.pow(maximumDistance, 2.0) - minimumRepulsionFactor * Math.pow(minimumDistance, 2.0) + productOfMaximumRepulsionAndMinimumDistance)) / differenceOfSquaredDistances;
-        double b = -(productOfMaximumRepulsionAndMinimumDistance / differenceOfSquaredDistances);
+            double a = (Math.pow(maximumDistance, 2.0) * (minimumRepulsionFactor * Math.pow(maximumDistance, 2.0) - minimumRepulsionFactor * Math.pow(minimumDistance, 2.0) + productOfMaximumRepulsionAndMinimumDistance)) / differenceOfSquaredDistances;
+            double b = -(productOfMaximumRepulsionAndMinimumDistance / differenceOfSquaredDistances);
 
-        double repulsion = a / Math.pow(distance, 2.0) + b;
-        if (repulsion <= 0.0) { // The repulsion value should always be greater or equal to zero
-            repulsion = 0.0;
-        }
+            double repulsion = a / Math.pow(distance, 2.0) + b;
+            if (repulsion <= 0.0) { // The repulsion value should always be greater or equal to zero
+                repulsion = 0.0;
+            }
 
-        return repulsion;
+            return repulsion;
+        //}
     }
 
     private Vector computeSocialForceFromAgent(UniversityAgent agent, final double distanceToOtherAgent, final double maximumDistance, final double minimumDistance, final double maximumMagnitude) {
@@ -1241,7 +1253,16 @@ public class UniversityAgentMovement extends AgentMovement {
 
         Coordinates repulsionVectorStartingPosition = wallPatch.getPatchCenterCoordinates();
 
-        double modifiedDistanceToObstacle = Math.max(distanceToObstacle, minimumDistance); // If this agent is closer than the minimum distance specified, apply a force as if the distance is just at that minimum
+        double modifiedDistanceToObstacle;
+        /*if(currentPatch.getPatchField() != null && currentPatch.getPatchField().getKey().getClass() == Classroom.class
+        || this.currentPatch.getAmenityBlock() != null && !this.currentPatch.getAmenityBlock().getParent()
+                .equals(Door.class)){*/
+            modifiedDistanceToObstacle = Math.max(distanceToObstacle, minimumDistance);
+        /*}else{
+            modifiedDistanceToObstacle = Math.max(distanceToObstacle, minimumDistance);
+        }*/
+        // If this agent is closer than the minimum distance specified, apply a force as if the distance is just at
+        // that minimum
         double repulsionMagnitudeCoefficient;
         double repulsionMagnitude;
 

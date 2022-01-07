@@ -20,6 +20,7 @@ import com.socialsim.model.simulator.Simulator;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
@@ -975,7 +976,11 @@ public class UniversitySimulator extends Simulator {
                             }
                         }
                     }
+                    if(agentMovement.getCurrentPatch() != null){
+                        System.out.println("Action: " + action.getName());
+                    }
                     break;
+
 
                 case PROFESSOR:
 
@@ -1486,6 +1491,7 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
                                 System.out.println("DONE CLASSROOM_STAY_PUT");
+                                agentMovement.getCurrentPatch().getAgents().remove(Collections.singleton(agentMovement.getParent()));
                             }
                         }
                         else if(action.getName()==UniversityAction.Name.LEAVE_CLASSROOM){

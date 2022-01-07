@@ -81,6 +81,47 @@ public abstract class Amenity extends PatchObject {
             return hasGraphic;
         }
 
+        public boolean isPassable(Class<? extends Amenity> amenityClass){
+            if (amenityClass == UniversityGate.class) {
+                return false;
+            }
+            if (amenityClass == Bench.class) {
+                return false;
+            }
+            else if (amenityClass == Board.class) {
+                return false;
+            }
+            else if (amenityClass == Bulletin.class) {
+                return false;
+            }
+            else if (amenityClass == Chair.class) {
+                return true;
+            }
+            else if (amenityClass == Door.class) {
+                return true;
+            }
+            else if (amenityClass == Fountain.class) {
+                return false;
+            }
+            else if (amenityClass == LabTable.class) {
+                return false;
+            }
+            else if (amenityClass == ProfTable.class) {
+                return false;
+            }
+            else if (amenityClass == Security.class) {
+                return false;
+            }
+            else if (amenityClass == Staircase.class) {
+                return true;
+            }
+            else if (amenityClass == Trash.class) {
+                return false;
+            }else{
+                return false;
+            }
+        }
+
         private static AmenityBlockFactory getAmenityBlockFactory(Class<? extends Amenity> amenityClass) {
             if (amenityClass == UniversityGate.class) {
                 return UniversityGate.UniversityGateBlock.universityGateBlockFactory;
