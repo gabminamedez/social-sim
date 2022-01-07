@@ -167,7 +167,7 @@ public class OfficeSimulator extends Simulator {
                     agent.getAgentMovement().resetGoal();
                 }
 
-                moveOne(agent, currentTick);
+                moveOne(agent);
                 agent.getAgentGraphic().change();
             } catch (Throwable ex) {
                 ex.printStackTrace();
@@ -175,7 +175,7 @@ public class OfficeSimulator extends Simulator {
         }
     }
 
-    private static void moveOne(OfficeAgent agent, long currentTick) throws Throwable {
+    private static void moveOne(OfficeAgent agent) throws Throwable {
         OfficeAgentMovement agentMovement = agent.getAgentMovement();
 
         OfficeAgent.Type type = agent.getType();

@@ -16,11 +16,13 @@ import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.core.environment.grocery.patchfield.CashierCounterField;
 import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterField;
 import com.socialsim.model.core.environment.grocery.patchfield.StallField;
-import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Security;
+import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GroceryAgentMovement extends AgentMovement {
 
@@ -76,7 +78,7 @@ public class GroceryAgentMovement extends AgentMovement {
     private Vector attractiveForce;
     private Vector motivationForce;
 
-    public GroceryAgentMovement(Patch spawnPatch, GroceryAgent parent, GroceryAgent leaderAgent, double baseWalkingDistance, Coordinates coordinates) { // For inOnStart agents
+    public GroceryAgentMovement(Patch spawnPatch, GroceryAgent parent, GroceryAgent leaderAgent, double baseWalkingDistance, Coordinates coordinates, long tickEntered) { // For inOnStart agents
         this.parent = parent;
         this.position = new Coordinates(coordinates.getX(), coordinates.getY());
 
@@ -437,7 +439,9 @@ public class GroceryAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                path.push(goalPatch);
+                if (goalAmenity.getClass() == Table.class) {
+                    path.push(goalPatch);
+                }
                 double length = 0.0;
                 Patch currentPatch = goalPatch;
                 while (cameFrom.containsKey(currentPatch)) {
@@ -515,6 +519,28 @@ public class GroceryAgentMovement extends AgentMovement {
 
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
+        }
+    }
+
+    public void chooseRandomAisle() { // Set the nearest goal to this agent
+        if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
+            List<? extends Amenity> freshProducts = this.grocery.getAmenityList(FreshProducts.class);
+            List<? extends Amenity> frozenProducts = this.grocery.getAmenityList(FrozenProducts.class);
+            List<? extends Amenity> frozenWall = this.grocery.getAmenityList(FrozenWall.class);
+            List<? extends Amenity> productAisle = this.grocery.getAmenityList(ProductAisle.class);
+            List<? extends Amenity> productShelf = this.grocery.getAmenityList(ProductShelf.class);
+            List<? extends Amenity> productWall = this.grocery.getAmenityList(ProductWall.class);
+            List<? extends Amenity> amenities1 = Stream.concat(freshProducts.stream(), frozenProducts.stream()).collect(Collectors.toList());
+            List<? extends Amenity> amenities2 = Stream.concat(amenities1.stream(), frozenWall.stream()).collect(Collectors.toList());
+            List<? extends Amenity> amenities3 = Stream.concat(amenities2.stream(), productAisle.stream()).collect(Collectors.toList());
+            List<? extends Amenity> amenities4 = Stream.concat(amenities3.stream(), productShelf.stream()).collect(Collectors.toList());
+            List<? extends Amenity> amenityListInFloor = Stream.concat(amenities4.stream(), productWall.stream()).collect(Collectors.toList());
+            Amenity chosenAmenity = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+
+            this.goalAmenity = amenityListInFloor.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(amenityListInFloor.size()));
+            this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
         }
     }
 

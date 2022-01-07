@@ -35,7 +35,7 @@ public class GroceryAgent extends Agent {
         agentFactory = new GroceryAgent.GroceryAgentFactory();
     }
 
-    private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, GroceryAgent leaderAgent) {
+    private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, GroceryAgent leaderAgent, long currentTick) {
         this.id = agentCount;
         this.type = type;
         this.inOnStart = inOnStart;
@@ -106,7 +106,7 @@ public class GroceryAgent extends Agent {
         }
 
         this.agentGraphic = new GroceryAgentGraphic(this);
-        this.agentMovement = new GroceryAgentMovement(spawnPatch, this, leaderAgent, 1.27, spawnPatch.getPatchCenterCoordinates());
+        this.agentMovement = new GroceryAgentMovement(spawnPatch, this, leaderAgent, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick);
     }
 
     public int getId() {
@@ -142,8 +142,8 @@ public class GroceryAgent extends Agent {
     }
 
     public static class GroceryAgentFactory extends Agent.AgentFactory {
-        public static GroceryAgent create(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, GroceryAgent leaderAgent) {
-            return new GroceryAgent(type, persona, gender, ageGroup, spawnPatch, inOnStart, leaderAgent);
+        public static GroceryAgent create(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, GroceryAgent leaderAgent, long currentTick) {
+            return new GroceryAgent(type, persona, gender, ageGroup, spawnPatch, inOnStart, leaderAgent, currentTick);
         }
     }
 

@@ -19,7 +19,6 @@ public class GroceryRoutePlan {
     private ListIterator<GroceryState> currentRoutePlan; // Denotes the current route plan of the agent which owns this
     private GroceryState currentState; // Denotes the current class of the amenity/patchfield in the route plan
 
-    //TODO: Maybe move this into another class that is static
     private static final int MIN_AISLE_ORGANIZE = 10;
     private static final int MAX_BUTCHER_STATION = 10;
     private static final int MIN_PRODUCTS = 2;
@@ -48,10 +47,7 @@ public class GroceryRoutePlan {
         }
         else if (agent.getPersona() == GroceryAgent.Persona.STAFF_AISLE){
             actions = new ArrayList<>();
-            for (int i = 0; i < MIN_AISLE_ORGANIZE; i++){
-                actions.add(new GroceryAction(GroceryAction.Name.STAFF_AISLE_ORGANIZE, spawnPatch, 0));
-            }
-            //TODO Note condition if the aisles are all completed, add more aisles to organize throughout the simulation
+            actions.add(new GroceryAction(GroceryAction.Name.STAFF_AISLE_ORGANIZE, 60, 120));
             routePlan.add(new GroceryState(GroceryState.Name.STAFF_AISLE, this, agent, actions));
         }
         else if (agent.getPersona() == GroceryAgent.Persona.BUTCHER){
