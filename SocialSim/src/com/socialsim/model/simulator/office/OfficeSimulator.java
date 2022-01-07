@@ -1010,7 +1010,7 @@ public class OfficeSimulator extends Simulator {
         OfficeGate gate = office.getOfficeGates().get(1);
         OfficeAgent agent = null;
 
-        for (int i = 0; i < 4; i++){ // 4 gates
+        for (int i = 0; i < 4; i++) { // 4 gates
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             int spawnChance = (int) gate.getChancePerTick();
             int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);

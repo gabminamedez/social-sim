@@ -8,10 +8,15 @@ import com.socialsim.model.core.agent.grocery.GroceryAction;
 import com.socialsim.model.core.agent.grocery.GroceryAgent;
 import com.socialsim.model.core.agent.grocery.GroceryAgentMovement;
 import com.socialsim.model.core.agent.grocery.GroceryState;
+import com.socialsim.model.core.agent.grocery.GroceryAgent;
+import com.socialsim.model.core.agent.grocery.GroceryAction;
+import com.socialsim.model.core.agent.grocery.GroceryState;
+import com.socialsim.model.core.agent.office.OfficeAction;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.Couch;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
@@ -71,9 +76,12 @@ public class GrocerySimulator extends Simulator {
     }
 
     public void spawnInitialAgents(Grocery grocery) {
-        GroceryAgent guard = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, null, null, null, grocery.getPatch(57,52), true, null, -1);
-        grocery.getAgents().add(guard);
-        grocery.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
+        GroceryAgent guard1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, null, null, null, grocery.getPatch(57,52), true, null, -1);
+        grocery.getAgents().add(guard1);
+        grocery.getAgentPatchSet().add(guard1.getAgentMovement().getCurrentPatch());
+        GroceryAgent guard2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, null, null, null, grocery.getPatch(57,47), true, null, -1);
+        grocery.getAgents().add(guard2);
+        grocery.getAgentPatchSet().add(guard2.getAgentMovement().getCurrentPatch());
 
         GroceryAgent cashier1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, grocery.getPatch(44,20), true, null, -1);
         grocery.getAgents().add(cashier1);
@@ -302,11 +310,194 @@ public class GrocerySimulator extends Simulator {
                 }
 
                 break;
+
+            case CUSTOMER:
+                if (state.getName() == GroceryState.Name.GOING_TO_SECURITY) {
+                    if (action.getName() == GroceryAction.Name.GOING_TO_SECURITY_QUEUE) {
+                        if (agentMovement.getGoalQueueingPatchField() == null) {
+                            agentMovement.setGoalQueueingPatchField(Main.grocerySimulator.getGrocery().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
+                            agentMovement.setGoalAmenity(Main.grocerySimulator.getGrocery().getSecurities().get(0));
+                            if (agentMovement.getFollowers() != null) {
+                                for (int i = 0; i < agentMovement.getFollowers().size(); i++) {
+                                    agentMovement.getFollowers().get(i).getAgentMovement().setGoalQueueingPatchField(Main.grocerySimulator.getGrocery().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
+                                    agentMovement.getFollowers().get(i).getAgentMovement().setGoalAmenity(Main.grocerySimulator.getGrocery().getSecurities().get(0));
+                                }
+                            }
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.joinQueue();
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == GroceryAction.Name.GO_THROUGH_SCANNER) {
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                            }
+                        }
+                        else {
+                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
+                            if (agentMovement.getDuration() <= 0) {
+                                agentMovement.leaveQueue();
+                                agentMovement.setNextState();
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }
+                        }
+                    }
+                }
+                else if (state.getName() == GroceryState.Name.GOING_CART) {
+                    if (agentMovement.getGoalAmenity() == null) {
+                        if (action.getName() == GroceryAction.Name.GET_CART) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+
+                            if (agentMovement.getFollowers() != null) {
+                                for (int i = 0; i < agentMovement.getFollowers().size(); i++) {
+                                    agentMovement.getFollowers().get(i).getAgentMovement().setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                                    agentMovement.getFollowers().get(i).getAgentMovement().setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                                }
+                            }
+                        }
+                    }
+
+                    if (agentMovement.chooseNextPatchInPath()) {
+                        agentMovement.faceNextPosition();
+                        agentMovement.moveSocialForce();
+                        if (agentMovement.hasReachedNextPatchInPath()) {
+                            agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                        }
+                    }
+                    else {
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            if (agentMovement.getActionIndex() >= agentMovement.getCurrentState().getActions().size()) {
+                                agentMovement.setNextState();
+                                agentMovement.setActionIndex(0);
+                            }
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
+                        }
+                    }
+                }
+
+                break;
         }
     }
 
     private void spawnAgent(Grocery grocery, long currentTick) {
         GroceryGate gate = grocery.getGroceryGates().get(1);
-        GroceryAgent agent = null;
+        GroceryAgent agent1 = null;
+        GroceryAgent agent2 = null;
+        GroceryAgent agent3 = null;
+        GroceryAgent agent4 = null;
+
+        Gate.GateBlock spawner1 = gate.getSpawners().get(0);
+        Gate.GateBlock spawner2 = gate.getSpawners().get(1);
+        Gate.GateBlock spawner3 = gate.getSpawners().get(2);
+        Gate.GateBlock spawner4 = gate.getSpawners().get(3);
+
+        int spawnChance = (int) gate.getChancePerTick();
+        int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+        boolean isFamily = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+
+        if (CHANCE > spawnChance) {
+            if (isFamily) {
+                int num = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3);
+
+                if (num == 0) { // Complete Family
+                    GroceryAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
+                    GroceryAgent.Gender gender2;
+                    if (gender1 == GroceryAgent.Gender.MALE) {
+                        gender2 = GroceryAgent.Gender.FEMALE;
+                    }
+                    else {
+                        gender2 = GroceryAgent.Gender.MALE;
+                    }
+                    GroceryAgent.Gender gender3 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
+                    GroceryAgent.Gender gender4 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
+
+                    agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner1.getPatch(), false, null, currentTick);
+                    grocery.getAgents().add(agent1);
+                    grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
+
+                    agent2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender2, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner2.getPatch(), false, agent1, currentTick);
+                    grocery.getAgents().add(agent2);
+                    grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+
+                    agent3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender3, GroceryAgent.AgeGroup.FROM_15_TO_24, spawner3.getPatch(), false, agent1, currentTick);
+                    grocery.getAgents().add(agent3);
+                    grocery.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
+
+                    agent4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender4, GroceryAgent.AgeGroup.FROM_15_TO_24, spawner4.getPatch(), false, agent1, currentTick);
+                    grocery.getAgents().add(agent4);
+                    grocery.getAgentPatchSet().add(agent4.getAgentMovement().getCurrentPatch());
+
+                    agent1.getAgentMovement().getFollowers().add(agent2);
+                    agent1.getAgentMovement().getFollowers().add(agent3);
+                    agent1.getAgentMovement().getFollowers().add(agent4);
+                }
+                else if (num == 1) { // Help Family
+                    GroceryAgent.Gender gender3 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
+
+                    agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, GroceryAgent.Gender.FEMALE, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner1.getPatch(), false, null, currentTick);
+                    grocery.getAgents().add(agent1);
+                    grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
+
+                    agent2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, GroceryAgent.Gender.FEMALE, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner2.getPatch(), false, agent1, currentTick);
+                    grocery.getAgents().add(agent2);
+                    grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+
+                    agent3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, gender3, GroceryAgent.AgeGroup.FROM_15_TO_24, spawner3.getPatch(), false, agent1, currentTick);
+                    grocery.getAgents().add(agent3);
+                    grocery.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
+
+                    agent1.getAgentMovement().getFollowers().add(agent2);
+                    agent1.getAgentMovement().getFollowers().add(agent3);
+                }
+                else { // Duo Family
+                    GroceryAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
+                    GroceryAgent.Gender gender2 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
+
+                    agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.DUO_FAMILY_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner1.getPatch(), false, null, currentTick);
+                    grocery.getAgents().add(agent1);
+                    grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
+
+                    agent2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.DUO_FAMILY_CUSTOMER, gender2, GroceryAgent.AgeGroup.FROM_15_TO_24, spawner2.getPatch(), false, agent1, currentTick);
+                    grocery.getAgents().add(agent2);
+                    grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+
+                    agent1.getAgentMovement().getFollowers().add(agent2);
+                }
+            }
+            else {
+                boolean isSttp = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+                GroceryAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
+
+                if (isSttp) {
+                    agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.STTP_ALONE_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner1.getPatch(), false, null, currentTick);
+                }
+                else {
+                    agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner1.getPatch(), false, null, currentTick);
+                }
+                grocery.getAgents().add(agent1);
+                grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
+            }
+        }
     }
 }

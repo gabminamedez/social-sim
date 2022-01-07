@@ -28,6 +28,8 @@ public class GroceryAgentMovement extends AgentMovement {
 
     private final GroceryAgent parent;
     private final Coordinates position; // Denotes the position of the agent
+    private GroceryAgent leaderAgent;
+    private List<GroceryAgent> followers;
     private final Grocery grocery;
     private final double baseWalkingDistance; // Denotes the distance (m) the agent walks in one second
     private double preferredWalkingDistance;
@@ -81,6 +83,8 @@ public class GroceryAgentMovement extends AgentMovement {
     public GroceryAgentMovement(Patch spawnPatch, GroceryAgent parent, GroceryAgent leaderAgent, double baseWalkingDistance, Coordinates coordinates, long tickEntered) { // For inOnStart agents
         this.parent = parent;
         this.position = new Coordinates(coordinates.getX(), coordinates.getY());
+        this.leaderAgent = leaderAgent;
+        this.followers = new ArrayList<>();
 
         final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
         this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
@@ -162,6 +166,14 @@ public class GroceryAgentMovement extends AgentMovement {
         else {
             updateRecentPatches(null, timeElapsedExpiration); // Update the recent patch list
         }
+    }
+
+    public GroceryAgent getLeaderAgent() {
+        return leaderAgent;
+    }
+
+    public List<GroceryAgent> getFollowers() {
+        return followers;
     }
 
     public Grocery getGrocery() {
