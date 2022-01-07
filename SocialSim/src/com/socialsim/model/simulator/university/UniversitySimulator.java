@@ -133,7 +133,6 @@ public class UniversitySimulator extends Simulator {
                         try {
                             updateAgentsInUniversity(university);
                             spawnAgent(university, currentTick);
-                            System.out.println(currentTick);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
