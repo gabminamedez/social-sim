@@ -926,32 +926,34 @@ public class GroceryAgentMovement extends AgentMovement {
                 }
             }
 
-            for (Agent otherAgent : patch.getAgents()) { // Inspect each agent in each patch in the patches in the field of view
-                GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
-                if (agentsProcessed == agentsProcessedLimit) {
-                    break;
-                }
+            if (this.currentState.getName() != GroceryState.Name.GOING_TO_SECURITY) {
+                for (Agent otherAgent : patch.getAgents()) { // Inspect each agent in each patch in the patches in the field of view
+                    GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
+                    if (agentsProcessed == agentsProcessedLimit) {
+                        break;
+                    }
 
-                if (!otherAgent.equals(this.getParent())) { // Make sure that the agent discovered isn't itself
-                    numberOfAgents++; // Take note of the agent density in this area
+                    if (!otherAgent.equals(this.getParent())) { // Make sure that the agent discovered isn't itself
+                        numberOfAgents++; // Take note of the agent density in this area
 
-                    // Get the distance between this agent and the other agent
-                    double distanceToOtherAgent = Coordinates.distance(this.position, groceryAgent.getAgentMovement().getPosition());
+                        // Get the distance between this agent and the other agent
+                        double distanceToOtherAgent = Coordinates.distance(this.position, groceryAgent.getAgentMovement().getPosition());
 
-                    if (distanceToOtherAgent <= slowdownStartDistance) { // If the distance is less than or equal to the distance when repulsion is supposed to kick in, compute for the magnitude of that repulsion force
-                        final int maximumAgentCountTolerated = 5;
+                        if (distanceToOtherAgent <= slowdownStartDistance) { // If the distance is less than or equal to the distance when repulsion is supposed to kick in, compute for the magnitude of that repulsion force
+                            final int maximumAgentCountTolerated = 5;
 
-                        // The distance by which the repulsion starts to kick in will depend on the density of the agent's surroundings
-                        final int minimumAgentCount = 1;
-                        final double maximumDistance = 2.0;
-                        final int maximumAgentCount = 5;
-                        final double minimumDistance = 0.7;
+                            // The distance by which the repulsion starts to kick in will depend on the density of the agent's surroundings
+                            final int minimumAgentCount = 1;
+                            final double maximumDistance = 2.0;
+                            final int maximumAgentCount = 5;
+                            final double minimumDistance = 0.7;
 
-                        double computedMaximumDistance = computeMaximumRepulsionDistance(numberOfObstacles, maximumAgentCountTolerated, minimumAgentCount, maximumDistance, maximumAgentCount, minimumDistance);
-                        Vector agentRepulsiveForce = computeSocialForceFromAgent(groceryAgent, distanceToOtherAgent, computedMaximumDistance, minimumAgentStopDistance, this.preferredWalkingDistance);
-                        this.repulsiveForceFromAgents.add(agentRepulsiveForce); // Add the computed vector to the list of vectors
+                            double computedMaximumDistance = computeMaximumRepulsionDistance(numberOfObstacles, maximumAgentCountTolerated, minimumAgentCount, maximumDistance, maximumAgentCount, minimumDistance);
+                            Vector agentRepulsiveForce = computeSocialForceFromAgent(groceryAgent, distanceToOtherAgent, computedMaximumDistance, minimumAgentStopDistance, this.preferredWalkingDistance);
+                            this.repulsiveForceFromAgents.add(agentRepulsiveForce); // Add the computed vector to the list of vectors
 
-                        agentsProcessed++;
+                            agentsProcessed++;
+                        }
                     }
                 }
             }
