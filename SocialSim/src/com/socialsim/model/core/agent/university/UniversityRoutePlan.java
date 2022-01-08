@@ -1120,16 +1120,21 @@ public class UniversityRoutePlan {
                         case 0 -> {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
                             int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             while (CLASSROOM_SIZES_PROF[0][classroomID] == 0){
                                 classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             }
                             CLASSROOM_SIZES_PROF[0][classroomID]--;
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 720, classroomID);
-                            //TODO: Randomized actions
-                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 720, classroomID,actions);
+                            //TODO: Change SIT_PROF_TABLE DURATION
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, 15));
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent,actions);
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 15));
+                            actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent,actions);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
@@ -1137,16 +1142,21 @@ public class UniversityRoutePlan {
                         case 1 -> {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
                             int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             while (CLASSROOM_SIZES_PROF[1][classroomID] == 0){
                                 classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             }
                             CLASSROOM_SIZES_PROF[1][classroomID]--;
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 1980, classroomID);
-                            //TODO: Randomized actions
-                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 1980, classroomID,actions);
+                            //TODO: Change SIT_PROF_TABLE DURATION
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, 15));
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent,actions);
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 15));
+                            actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent,actions);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
@@ -1154,16 +1164,21 @@ public class UniversityRoutePlan {
                         case 2 -> {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
                             int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             while (CLASSROOM_SIZES_PROF[2][classroomID] == 0){
                                 classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             }
                             CLASSROOM_SIZES_PROF[2][classroomID]--;
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 3240, classroomID);
-                            //TODO: Randomized actions
-                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 3240, classroomID,actions);
+                            //TODO: Change SIT_PROF_TABLE DURATION
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, 15));
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent,actions);
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 15));
+                            actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent,actions);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
@@ -1171,16 +1186,21 @@ public class UniversityRoutePlan {
                         case 3 -> {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
                             int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             while (CLASSROOM_SIZES_PROF[3][classroomID] == 0){
                                 classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             }
                             CLASSROOM_SIZES_PROF[3][classroomID]--;
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 4500, classroomID);
-                            //TODO: Randomized actions
-                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 4500, classroomID,actions);
+                            //TODO: Change SIT_PROF_TABLE DURATION
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, 15));
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent,actions);
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 15));
+                            actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent,actions);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
@@ -1188,16 +1208,21 @@ public class UniversityRoutePlan {
                         case 4 -> {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
                             int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             while (CLASSROOM_SIZES_PROF[4][classroomID] == 0){
                                 classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             }
                             CLASSROOM_SIZES_PROF[4][classroomID]--;
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 5760, classroomID);
-                            //TODO: Randomized actions
-                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 5760, classroomID,actions);
+                            //TODO: Change SIT_PROF_TABLE DURATION
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, 15));
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent,actions);
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 15));
+                            actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent,actions);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
@@ -1205,16 +1230,21 @@ public class UniversityRoutePlan {
                         default -> {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM, null, 0));
-                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, null, 0));
                             int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             while (CLASSROOM_SIZES_PROF[5][classroomID] == 0){
                                 classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                             }
                             CLASSROOM_SIZES_PROF[5][classroomID]--;
-                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 7020, classroomID);
-                            //TODO: Randomized actions
-                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent);
-                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent);
+                            newClass = new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, 7020, classroomID,actions);
+                            //TODO: Change SIT_PROF_TABLE DURATION
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CLASSROOM));
+                            actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, 15));
+                            newWaitClass = new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent,actions);
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 15));
+                            actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
+                            newInClass = new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent,actions);
                             routePlan.add(newClass);
                             routePlan.add(newWaitClass);
                             routePlan.add(newInClass);
