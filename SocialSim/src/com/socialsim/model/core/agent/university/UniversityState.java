@@ -111,4 +111,13 @@ public class UniversityState {
     public int getTickClassStart() {
         return tickClassStart;
     }
+
+    @Override
+    public String toString(){
+        StringBuilder s = new StringBuilder();
+        s.append("State " + name.name() + "\n");
+        for (UniversityAction action: actions)
+            s.append(action.getName().name() + "\n");
+        return s.toString();
+    }
 }
