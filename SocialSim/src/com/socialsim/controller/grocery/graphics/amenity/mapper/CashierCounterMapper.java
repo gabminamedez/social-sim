@@ -23,18 +23,20 @@ public class CashierCounterMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock);
             patch.setAmenityBlock(amenityBlock);
 
-            for (int i = 1; i < 4; i++) {
-                Patch patchBack = Main.grocerySimulator.getGrocery().getPatch(origPatchRow + i, origPatchCol);
-                Amenity.AmenityBlock amenityBlockBack = null;
-                if (i % 2 == 0) {
-                    amenityBlockBack = amenityBlockFactory.create(patchBack, false, true);
-                }
-                else {
-                    amenityBlockBack = amenityBlockFactory.create(patchBack, false, false);
-                }
-                amenityBlocks.add(amenityBlockBack);
-                patchBack.setAmenityBlock(amenityBlockBack);
-            }
+            Patch patchLeft1 = Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 1, origPatchCol);
+            Amenity.AmenityBlock amenityBlockLeft1 = amenityBlockFactory.create(patchLeft1, false, false);
+            amenityBlocks.add(amenityBlockLeft1);
+            patchLeft1.setAmenityBlock(amenityBlockLeft1);
+
+            Patch patchLeft2 = Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 2, origPatchCol);
+            Amenity.AmenityBlock amenityBlockLeft2 = amenityBlockFactory.create(patchLeft2, false, true);
+            amenityBlocks.add(amenityBlockLeft2);
+            patchLeft2.setAmenityBlock(amenityBlockLeft2);
+
+            Patch patchLeft3 = Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 3, origPatchCol);
+            Amenity.AmenityBlock amenityBlockLeft3 = amenityBlockFactory.create(patchLeft3, false, false);
+            amenityBlocks.add(amenityBlockLeft3);
+            patchLeft3.setAmenityBlock(amenityBlockLeft3);
 
             CashierCounter cashierCounterToAdd = CashierCounter.CashierCounterFactory.create(amenityBlocks, true, 20);
             Main.grocerySimulator.getGrocery().getCashierCounters().add(cashierCounterToAdd);

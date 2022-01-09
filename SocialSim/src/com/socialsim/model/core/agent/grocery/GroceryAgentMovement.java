@@ -118,6 +118,9 @@ public class GroceryAgentMovement extends AgentMovement {
         resetGoal(); // Set the agent goal
 
         this.routePlan = new GroceryRoutePlan(parent, leaderAgent, grocery, currentPatch);
+        if (parent.getType() == GroceryAgent.Type.CUSTOMER) {
+            System.out.println(parent.getPersona());
+        }
         this.stateIndex = 0;
         this.actionIndex = 0;
         this.currentState = this.routePlan.getCurrentState();

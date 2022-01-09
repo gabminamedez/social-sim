@@ -28,6 +28,7 @@ public class GroceryAction {
 
         GO_TO_CHECKOUT,
         QUEUE_CHECKOUT,
+        QUEUE_SERVICE,
         CHECKOUT,
         TALK_TO_CASHIER,
         TALK_TO_BAGGER,
