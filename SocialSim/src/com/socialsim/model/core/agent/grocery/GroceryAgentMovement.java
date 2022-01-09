@@ -87,7 +87,12 @@ public class GroceryAgentMovement extends AgentMovement {
         this.followers = new ArrayList<>();
 
         final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
-        this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
+        if (this.parent.getAgeGroup() == GroceryAgent.AgeGroup.FROM_15_TO_24) {
+            this.baseWalkingDistance = (baseWalkingDistance - 0.08) + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
+        }
+        else {
+            this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
+        }
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
@@ -118,9 +123,6 @@ public class GroceryAgentMovement extends AgentMovement {
         resetGoal(); // Set the agent goal
 
         this.routePlan = new GroceryRoutePlan(parent, leaderAgent, grocery, currentPatch);
-        if (parent.getType() == GroceryAgent.Type.CUSTOMER) {
-            System.out.println(parent.getPersona());
-        }
         this.stateIndex = 0;
         this.actionIndex = 0;
         this.currentState = this.routePlan.getCurrentState();
@@ -673,6 +675,76 @@ public class GroceryAgentMovement extends AgentMovement {
         }
     }
 
+    public void chooseEatTable() { // Set the nearest goal to this agent
+        if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
+            List<? extends Amenity> amenityListInFloor = this.grocery.getTables();
+            Amenity chosenAmenity = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+
+            if (this.leaderAgent == null) {
+                for (Amenity amenity : amenityListInFloor) {
+                    for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                        double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                        distancesToAttractors.put(attractor, distanceToAttractor);
+                    }
+                }
+
+                // Sort amenity by distance, from nearest to furthest
+                List<Map.Entry<Amenity.AmenityBlock, Double> > list =
+                        new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+                Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                    public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
+                        return (o1.getValue()).compareTo(o2.getValue());
+                    }
+                });
+
+                HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+                for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                    sortedDistances.put(aa.getKey(), aa.getValue());
+                }
+
+                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
+                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                    List<Amenity.AmenityBlock> candidateAmenity = candidateAttractor.getParent().getAttractors();
+                    boolean isEmpty = true;
+                    for (Amenity.AmenityBlock anAttractor : candidateAmenity) {
+                        if (!anAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
+                            isEmpty = false;
+                            break;
+                        }
+                    }
+
+                    if (isEmpty) {
+                        chosenAmenity =  candidateAttractor.getParent();
+                        chosenAttractor = candidateAttractor;
+                        candidateAttractor.getPatch().getAgents().add(this.parent);
+                        break;
+                    }
+                }
+
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+            }
+            else {
+                for (Amenity amenity : amenityListInFloor) {
+                    for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                        if (!attractor.getPatch().getAgents().isEmpty() && attractor.getPatch().getAgents().contains(leaderAgent)) { //Break when first vacant amenity is found
+                            chosenAmenity =  attractor.getParent();
+                            chosenAttractor = attractor;
+                            attractor.getPatch().getAgents().add(this.parent);
+                            break;
+                        }
+                    }
+                }
+
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+            }
+        }
+    }
+
     private Coordinates getFuturePosition(double walkingDistance) {
         return getFuturePosition(this.goalAmenity, this.proposedHeading, walkingDistance);
     }
@@ -931,6 +1003,13 @@ public class GroceryAgentMovement extends AgentMovement {
 
             if (this.currentState.getName() != GroceryState.Name.GOING_TO_SECURITY) {
                 for (Agent otherAgent : patch.getAgents()) { // Inspect each agent in each patch in the patches in the field of view
+                    if (this.getLeaderAgent() == null && this.followers.contains(otherAgent)) {
+                        continue;
+                    }
+                    else if (this.getLeaderAgent() != null && otherAgent == this.getLeaderAgent()) {
+                        continue;
+                    }
+
                     GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
                     if (agentsProcessed == agentsProcessedLimit) {
                         break;

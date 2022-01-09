@@ -5,7 +5,7 @@ import com.socialsim.model.simulator.Simulator;
 
 public class GroceryAction {
 
-    public enum Name{
+    public enum Name {
         GREET_GUARD,
         GOING_TO_SECURITY_QUEUE,
         GO_THROUGH_SCANNER,

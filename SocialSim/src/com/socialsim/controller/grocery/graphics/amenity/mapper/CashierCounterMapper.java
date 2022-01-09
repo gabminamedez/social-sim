@@ -43,7 +43,6 @@ public class CashierCounterMapper extends AmenityMapper {
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
 
             List<Patch> cashierCounterFieldPatches = new ArrayList<>();
-            cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 2, origPatchCol));
             cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 2, origPatchCol - 1));
             cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 1, origPatchCol - 1));
             cashierCounterFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow, origPatchCol - 1));

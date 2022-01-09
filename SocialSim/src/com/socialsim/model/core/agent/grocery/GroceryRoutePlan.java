@@ -239,7 +239,7 @@ public class GroceryRoutePlan {
 
         if (leaderAgent == null) {
             actions = new ArrayList<>();
-            actions.add(new GroceryAction(GroceryAction.Name.CHECKOUT_GROCERIES_CUSTOMER));
+            // actions.add(new GroceryAction(GroceryAction.Name.CHECKOUT_GROCERIES_CUSTOMER));
             actions.add(new GroceryAction(GroceryAction.Name.LEAVE_BUILDING));
             routePlan.add(new GroceryState(GroceryState.Name.GOING_HOME, this, agent, actions));
         }
@@ -294,7 +294,7 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_PRODUCT_WALL, randomWall0));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.RIGHT_WALL_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_WALL, this, agent, actions, GroceryState.AisleCluster.RIGHT_WALL_CLUSTER));
                 }
                 case 1 -> {
@@ -303,7 +303,7 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_PRODUCT_WALL, randomWall1));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.TOP_WALL_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_WALL, this, agent, actions, GroceryState.AisleCluster.TOP_WALL_CLUSTER));
                 }
                 case 2 -> {
@@ -313,13 +313,13 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomAisle2A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomAisle2B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                 }
                 case 3 -> {
@@ -329,13 +329,13 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomAisle3A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomAisle3B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                 }
                 case 4 -> {
@@ -345,13 +345,13 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomAisle4A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomAisle4B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
 
                 }
@@ -362,13 +362,13 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomAisle5));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomShelf5));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                 }
                 case 6 -> {
@@ -377,7 +377,7 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FROZEN, randomFrozen6));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FROZEN_1_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 96));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FROZEN, this, agent, actions, GroceryState.AisleCluster.FROZEN_1_CLUSTER));
                 }
                 case 7 -> {
@@ -386,7 +386,7 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FROZEN, randomFrozen7));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FROZEN_2_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 96));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FROZEN, this, agent, actions, GroceryState.AisleCluster.FROZEN_2_CLUSTER));
                 }
                 case 8 -> {
@@ -404,12 +404,12 @@ public class GroceryRoutePlan {
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
                     if (frozen) {
                         actions = new ArrayList<>();
-                        actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 180));
+                        actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 96));
                         routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FROZEN, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
                     }
                     else {
                         actions = new ArrayList<>();
-                        actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 120));
+                        actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 96));
                         routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
                     }
                 }
@@ -419,7 +419,7 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, randomFresh9));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FRESH_1_2_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 120));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 96));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.FRESH_1_2_CLUSTER));
                 }
                 case 10 -> {
@@ -429,13 +429,13 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, randomFresh10));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FRESH_2_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 120));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 96));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.FRESH_2_FRONT_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomShelf10));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FRESH_2_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.FRESH_2_FRONT_CLUSTER));
                 }
                 default -> {
@@ -444,7 +444,7 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_MEAT, randomMeat11));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.MEAT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 120));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_MEAT, this, agent, actions, GroceryState.AisleCluster.MEAT_CLUSTER));
                 }
             }
@@ -491,7 +491,7 @@ public class GroceryRoutePlan {
                             actions.add(new GroceryAction(GroceryAction.Name.GO_TO_PRODUCT_WALL, walls0.get(i)));
                             routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
                             actions = new ArrayList<>();
-                            actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                            actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                             routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_WALL, this, agent, actions, route[routeIndex]));
                         }
                     }
@@ -501,7 +501,7 @@ public class GroceryRoutePlan {
                             actions.add(new GroceryAction(GroceryAction.Name.GO_TO_PRODUCT_WALL, walls0.get(i)));
                             routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
                             actions = new ArrayList<>();
-                            actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                            actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                             routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_WALL, this, agent, actions, route[routeIndex]));
                         }
                     }
@@ -518,7 +518,7 @@ public class GroceryRoutePlan {
                             actions.add(new GroceryAction(GroceryAction.Name.GO_TO_PRODUCT_WALL, walls1.get(i)));
                             routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
                             actions = new ArrayList<>();
-                            actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                            actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                             routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_WALL, this, agent, actions, route[routeIndex]));
                         }
                     }
@@ -528,7 +528,7 @@ public class GroceryRoutePlan {
                             actions.add(new GroceryAction(GroceryAction.Name.GO_TO_PRODUCT_WALL, walls1.get(i)));
                             routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
                             actions = new ArrayList<>();
-                            actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                            actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                             routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_WALL, this, agent, actions, route[routeIndex]));
                         }
                     }
@@ -544,31 +544,31 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelf2A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelf2B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2C));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_1_2_CLUSTER));
                 }
                 case 3 -> {
@@ -582,31 +582,31 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelf2A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelf2B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2C));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_2_3_CLUSTER));
                 }
                 case 4 -> {
@@ -620,31 +620,31 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelf2A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelf2B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2C));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_3_4_CLUSTER));
                 }
                 case 5 -> {
@@ -658,31 +658,31 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelf2A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelf2B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2C));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 360));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                 }
                 case 6 -> {
@@ -691,7 +691,7 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FROZEN, frozen6));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FROZEN_1_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 96));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FROZEN, this, agent, actions, GroceryState.AisleCluster.FROZEN_1_CLUSTER));
                 }
                 case 7 -> {
@@ -700,7 +700,7 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FROZEN, frozen7));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FROZEN_2_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 180));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 96));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FROZEN, this, agent, actions, GroceryState.AisleCluster.FROZEN_2_CLUSTER));
                 }
                 case 8 -> {
@@ -718,12 +718,12 @@ public class GroceryRoutePlan {
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
                     if (frozen) {
                         actions = new ArrayList<>();
-                        actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 180));
+                        actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 36, 96));
                         routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FROZEN, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
                     }
                     else {
                         actions = new ArrayList<>();
-                        actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 120));
+                        actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 96));
                         routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
                     }
                 }
@@ -734,13 +734,13 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, fresh9A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 120));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 96));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, route[routeIndex]));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, fresh9B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 120));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 96));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, route[routeIndex]));
                 }
                 case 10 -> {
@@ -754,8 +754,8 @@ public class GroceryRoutePlan {
                         actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelves10.get(i)));
                         routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
                         actions = new ArrayList<>();
-                        actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 30, 180));
-                        routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, route[routeIndex]));
+                        actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
+                        routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, route[routeIndex]));
                     }
                 }
                 default -> {
@@ -765,13 +765,13 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_MEAT, meat11A));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 120));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_MEAT, this, agent, actions, route[routeIndex]));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_MEAT, meat11B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 120));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 60, 120));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_MEAT, this, agent, actions, route[routeIndex]));
                 }
             }
