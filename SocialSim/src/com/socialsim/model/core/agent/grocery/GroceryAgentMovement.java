@@ -88,7 +88,7 @@ public class GroceryAgentMovement extends AgentMovement {
 
         final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
         if (this.parent.getAgeGroup() == GroceryAgent.AgeGroup.FROM_15_TO_24) {
-            this.baseWalkingDistance = (baseWalkingDistance - 0.08) + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
+            this.baseWalkingDistance = (baseWalkingDistance - 0.06) + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
         }
         else {
             this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
@@ -564,35 +564,42 @@ public class GroceryAgentMovement extends AgentMovement {
             Amenity chosenAmenity = null;
             Amenity.AmenityBlock chosenAttractor = null;
 
-            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-            for (CashierCounterField cashierCounterField : cashierCounterFields) {
-                Amenity.AmenityBlock attractor = cashierCounterField.getAssociatedPatches().get(0).getAmenityBlock();
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
-            }
-
-            double minimumAttractorScore = Double.MAX_VALUE;
-
-            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
-                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                Double candidateDistance = distancesToAttractorEntry.getValue();
-
-                Amenity currentAmenity = candidateAttractor.getParent();
-                QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
-
-                double agentPenalty = 25.0;
-                double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
-
-                if (attractorScore < minimumAttractorScore) {
-                    minimumAttractorScore = attractorScore;
-                    chosenAmenity = currentAmenity;
-                    chosenAttractor = candidateAttractor;
+            if (this.leaderAgent == null) {
+                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+                for (CashierCounterField cashierCounterField : cashierCounterFields) {
+                    Amenity.AmenityBlock attractor = cashierCounterField.getAssociatedPatches().get(0).getAmenityBlock();
+                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                    distancesToAttractors.put(attractor, distanceToAttractor);
                 }
-            }
 
-            this.goalAmenity = chosenAmenity;
-            this.goalAttractor = chosenAttractor;
-            this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                double minimumAttractorScore = Double.MAX_VALUE;
+
+                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
+                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                    Double candidateDistance = distancesToAttractorEntry.getValue();
+
+                    Amenity currentAmenity = candidateAttractor.getParent();
+                    QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
+
+                    double agentPenalty = 25.0;
+                    double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
+
+                    if (attractorScore < minimumAttractorScore) {
+                        minimumAttractorScore = attractorScore;
+                        chosenAmenity = currentAmenity;
+                        chosenAttractor = candidateAttractor;
+                    }
+                }
+
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+                this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+            }
+            else {
+                this.goalAmenity = leaderAgent.getAgentMovement().getGoalAmenity();
+                this.goalAttractor = leaderAgent.getAgentMovement().getGoalAttractor();
+                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getGoalQueueingPatchField();
+            }
         }
     }
 
@@ -602,35 +609,42 @@ public class GroceryAgentMovement extends AgentMovement {
             Amenity chosenAmenity = null;
             Amenity.AmenityBlock chosenAttractor = null;
 
-            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-            for (ServiceCounterField serviceCounterField : serviceCounterFields) {
-                Amenity.AmenityBlock attractor = serviceCounterField.getAssociatedPatches().get(0).getAmenityBlock();
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
-            }
-
-            double minimumAttractorScore = Double.MAX_VALUE;
-
-            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
-                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                Double candidateDistance = distancesToAttractorEntry.getValue();
-
-                Amenity currentAmenity = candidateAttractor.getParent();
-                QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
-
-                double agentPenalty = 25.0;
-                double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
-
-                if (attractorScore < minimumAttractorScore) {
-                    minimumAttractorScore = attractorScore;
-                    chosenAmenity = currentAmenity;
-                    chosenAttractor = candidateAttractor;
+            if (this.leaderAgent == null) {
+                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+                for (ServiceCounterField serviceCounterField : serviceCounterFields) {
+                    Amenity.AmenityBlock attractor = serviceCounterField.getAssociatedPatches().get(0).getAmenityBlock();
+                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                    distancesToAttractors.put(attractor, distanceToAttractor);
                 }
-            }
 
-            this.goalAmenity = chosenAmenity;
-            this.goalAttractor = chosenAttractor;
-            this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                double minimumAttractorScore = Double.MAX_VALUE;
+
+                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
+                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                    Double candidateDistance = distancesToAttractorEntry.getValue();
+
+                    Amenity currentAmenity = candidateAttractor.getParent();
+                    QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
+
+                    double agentPenalty = 25.0;
+                    double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
+
+                    if (attractorScore < minimumAttractorScore) {
+                        minimumAttractorScore = attractorScore;
+                        chosenAmenity = currentAmenity;
+                        chosenAttractor = candidateAttractor;
+                    }
+                }
+
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+                this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+            }
+            else {
+                this.goalAmenity = leaderAgent.getAgentMovement().getGoalAmenity();
+                this.goalAttractor = leaderAgent.getAgentMovement().getGoalAttractor();
+                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getGoalQueueingPatchField();
+            }
         }
     }
 
@@ -640,35 +654,42 @@ public class GroceryAgentMovement extends AgentMovement {
             Amenity chosenAmenity = null;
             Amenity.AmenityBlock chosenAttractor = null;
 
-            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-            for (StallField stallField : stallFields) {
-                Amenity.AmenityBlock attractor = stallField.getAssociatedPatches().get(0).getAmenityBlock();
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
-            }
-
-            double minimumAttractorScore = Double.MAX_VALUE;
-
-            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
-                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                Double candidateDistance = distancesToAttractorEntry.getValue();
-
-                Amenity currentAmenity = candidateAttractor.getParent();
-                QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
-
-                double agentPenalty = 25.0;
-                double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
-
-                if (attractorScore < minimumAttractorScore) {
-                    minimumAttractorScore = attractorScore;
-                    chosenAmenity = currentAmenity;
-                    chosenAttractor = candidateAttractor;
+            if (this.leaderAgent == null) {
+                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+                for (StallField stallField : stallFields) {
+                    Amenity.AmenityBlock attractor = stallField.getAssociatedPatches().get(0).getAmenityBlock();
+                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                    distancesToAttractors.put(attractor, distanceToAttractor);
                 }
-            }
 
-            this.goalAmenity = chosenAmenity;
-            this.goalAttractor = chosenAttractor;
-            this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                double minimumAttractorScore = Double.MAX_VALUE;
+
+                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
+                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                    Double candidateDistance = distancesToAttractorEntry.getValue();
+
+                    Amenity currentAmenity = candidateAttractor.getParent();
+                    QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
+
+                    double agentPenalty = 25.0;
+                    double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
+
+                    if (attractorScore < minimumAttractorScore) {
+                        minimumAttractorScore = attractorScore;
+                        chosenAmenity = currentAmenity;
+                        chosenAttractor = candidateAttractor;
+                    }
+                }
+
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+                this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+            }
+            else {
+                this.goalAmenity = leaderAgent.getAgentMovement().getGoalAmenity();
+                this.goalAttractor = leaderAgent.getAgentMovement().getGoalAttractor();
+                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getGoalQueueingPatchField();
+            }
         }
     }
 
@@ -1363,7 +1384,7 @@ public class GroceryAgentMovement extends AgentMovement {
             }
         }
         else {
-            for (int i = 0; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
+            for (int i = 1; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
                 path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
             }
         }

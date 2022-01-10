@@ -33,8 +33,8 @@ public class GrocerySimulator extends Simulator {
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
 
-    private int MAX_FAMILY = 0;
-    private int MAX_ALONE = 1;
+    private int MAX_FAMILY = 10;
+    private int MAX_ALONE = 10;
 
     public GrocerySimulator() {
         this.grocery = null;
@@ -431,15 +431,17 @@ public class GrocerySimulator extends Simulator {
                                 agentMovement.chooseStall();
                             }
                         }
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.joinQueue();
+                        if (agentMovement.getGoalQueueingPatchField() != null) {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.joinQueue();
+                                    }
                                 }
                             }
                         }
@@ -462,7 +464,7 @@ public class GrocerySimulator extends Simulator {
                         if (agentMovement.getGoalAmenity() != null) {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.leaveQueue();
                                 agentMovement.setNextState();
                                 agentMovement.setActionIndex(0);
@@ -477,17 +479,18 @@ public class GrocerySimulator extends Simulator {
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.chooseEatTable();
                         }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                                    agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }
                                 }
                             }
                         }
@@ -610,7 +613,7 @@ public class GrocerySimulator extends Simulator {
                     grocery.getAgents().add(agent3);
                     grocery.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
 
-                    agent4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender4, GroceryAgent.AgeGroup.FROM_15_TO_24, spawner4.getPatch(), false, agent1, currentTick);
+                    agent4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender4, GroceryAgent.AgeGroup.FROM_15_TO_24, spawner3.getPatch(), false, agent1, currentTick);
                     grocery.getAgents().add(agent4);
                     grocery.getAgentPatchSet().add(agent4.getAgentMovement().getCurrentPatch());
 

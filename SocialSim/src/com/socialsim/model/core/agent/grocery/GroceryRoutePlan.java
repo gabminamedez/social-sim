@@ -16,7 +16,7 @@ public class GroceryRoutePlan {
     private static final int MIN_AISLE_ORGANIZE = 10;
     private static final int MAX_BUTCHER_STATION = 10;
     private static final int MIN_PRODUCTS = 2;
-    private static final int MAX_PRODUCTS = 6;
+    private static final int MAX_PRODUCTS = 20;
     private static final int CART_THRESHOLD = 5;
 
     public static final int STTP_ALL_AISLE_CHANCE = 20, STTP_CHANCE_SERVICE = 0, STTP_CHANCE_FOOD = 20, STTP_CHANCE_EAT_TABLE = 10;
@@ -467,18 +467,17 @@ public class GroceryRoutePlan {
         actions.add(new GroceryAction(GroceryAction.Name.GOING_TO_SECURITY_QUEUE));
         actions.add(new GroceryAction(GroceryAction.Name.GO_THROUGH_SCANNER, (GroceryAgent) null, 2));
         routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SECURITY, this, agent, actions));
-        int numProducts = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_PRODUCTS - MIN_PRODUCTS) + MIN_PRODUCTS;
         int routeIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4); // 4 Routes available
         int routeIndexFinal = routeIndex;
         GroceryState.AisleCluster[] route = GroceryState.createRoute(routeIndex);
         routeIndex = 0;
+
         actions = new ArrayList<>();
-        if (numProducts >= CART_THRESHOLD) {
-            Patch randomCart = grocery.getCartRepos().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3)).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2)).getPatch();
-            actions.add(new GroceryAction(GroceryAction.Name.GET_CART, randomCart, 2));
-            routePlan.add(new GroceryState(GroceryState.Name.GOING_CART, this, agent, actions));
-        }
-        while (numProducts > 0) {
+        Patch randomCart = grocery.getCartRepos().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3)).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2)).getPatch();
+        actions.add(new GroceryAction(GroceryAction.Name.GET_CART, randomCart, 2));
+        routePlan.add(new GroceryState(GroceryState.Name.GOING_CART, this, agent, actions));
+
+        while (routeIndex < route.length) {
             switch (route[routeIndex].getID()) {
                 case 0 -> {
                     List<Patch> walls0 = new ArrayList<>();
@@ -776,9 +775,8 @@ public class GroceryRoutePlan {
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_MEAT, this, agent, actions, route[routeIndex]));
                 }
             }
-            if (routeIndex + 1 < GroceryState.NUM_CLUSTERS)
-                routeIndex++;
-            numProducts--;
+
+            routeIndex++;
         }
 
         actions = new ArrayList<>();
