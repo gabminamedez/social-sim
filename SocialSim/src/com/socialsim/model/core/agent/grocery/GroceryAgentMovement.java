@@ -17,6 +17,7 @@ import com.socialsim.model.core.environment.grocery.patchfield.CashierCounterFie
 import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterField;
 import com.socialsim.model.core.environment.grocery.patchfield.StallField;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.*;
@@ -47,6 +48,10 @@ public class GroceryAgentMovement extends AgentMovement {
     private PatchField goalPatchField;
     private QueueingPatchField goalQueueingPatchField; // Denotes the patch field of the agent goal
     private Patch goalNearestQueueingPatch; // Denotes the patch with the nearest queueing patch
+    private CashierCounterField chosenCashierField = null;
+    private ServiceCounterField chosenServiceField = null;
+    private StallField chosenStallField = null;
+    private EatTable chosenEatTable = null;
 
     private GroceryRoutePlan routePlan;
     private AgentPath currentPath; // Denotes the current path followed by this agent, if any
@@ -87,12 +92,7 @@ public class GroceryAgentMovement extends AgentMovement {
         this.followers = new ArrayList<>();
 
         final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
-        if (this.parent.getAgeGroup() == GroceryAgent.AgeGroup.FROM_15_TO_24) {
-            this.baseWalkingDistance = (baseWalkingDistance - 0.06) + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
-        }
-        else {
-            this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
-        }
+        this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
@@ -267,6 +267,22 @@ public class GroceryAgentMovement extends AgentMovement {
 
     public Patch getGoalPatch() {
         return goalPatch;
+    }
+
+    public CashierCounterField getChosenCashierField() {
+        return chosenCashierField;
+    }
+
+    public ServiceCounterField getChosenServiceField() {
+        return chosenServiceField;
+    }
+
+    public StallField getChosenStallField() {
+        return chosenStallField;
+    }
+
+    public EatTable getChosenEatTable() {
+        return chosenEatTable;
     }
 
     public Amenity.AmenityBlock getGoalAttractor() {
@@ -594,11 +610,12 @@ public class GroceryAgentMovement extends AgentMovement {
                 this.goalAmenity = chosenAmenity;
                 this.goalAttractor = chosenAttractor;
                 this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                this.chosenCashierField = (CashierCounterField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
             }
             else {
-                this.goalAmenity = leaderAgent.getAgentMovement().getGoalAmenity();
-                this.goalAttractor = leaderAgent.getAgentMovement().getGoalAttractor();
-                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getGoalQueueingPatchField();
+                this.goalAmenity = leaderAgent.getAgentMovement().getChosenCashierField().getTarget();
+                this.goalAttractor = leaderAgent.getAgentMovement().getChosenCashierField().getAssociatedPatches().get(0).getAmenityBlock();
+                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenCashierField();
             }
         }
     }
@@ -639,11 +656,12 @@ public class GroceryAgentMovement extends AgentMovement {
                 this.goalAmenity = chosenAmenity;
                 this.goalAttractor = chosenAttractor;
                 this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                this.chosenServiceField = (ServiceCounterField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
             }
             else {
-                this.goalAmenity = leaderAgent.getAgentMovement().getGoalAmenity();
-                this.goalAttractor = leaderAgent.getAgentMovement().getGoalAttractor();
-                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getGoalQueueingPatchField();
+                this.goalAmenity = leaderAgent.getAgentMovement().getChosenServiceField().getTarget();
+                this.goalAttractor = leaderAgent.getAgentMovement().getChosenServiceField().getAssociatedPatches().get(0).getAmenityBlock();
+                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenServiceField();
             }
         }
     }
@@ -684,11 +702,12 @@ public class GroceryAgentMovement extends AgentMovement {
                 this.goalAmenity = chosenAmenity;
                 this.goalAttractor = chosenAttractor;
                 this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                this.chosenStallField = (StallField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
             }
             else {
-                this.goalAmenity = leaderAgent.getAgentMovement().getGoalAmenity();
-                this.goalAttractor = leaderAgent.getAgentMovement().getGoalAttractor();
-                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getGoalQueueingPatchField();
+                this.goalAmenity = leaderAgent.getAgentMovement().getChosenStallField().getTarget();
+                this.goalAttractor = leaderAgent.getAgentMovement().getChosenStallField().getAssociatedPatches().get(0).getAmenityBlock();
+                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenStallField();
             }
         }
     }
@@ -744,21 +763,11 @@ public class GroceryAgentMovement extends AgentMovement {
 
                 this.goalAmenity = chosenAmenity;
                 this.goalAttractor = chosenAttractor;
+                this.chosenEatTable = (EatTable) chosenAmenity;
             }
             else {
-                for (Amenity amenity : amenityListInFloor) {
-                    for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
-                        if (!attractor.getPatch().getAgents().isEmpty() && attractor.getPatch().getAgents().contains(leaderAgent)) { //Break when first vacant amenity is found
-                            chosenAmenity =  attractor.getParent();
-                            chosenAttractor = attractor;
-                            attractor.getPatch().getAgents().add(this.parent);
-                            break;
-                        }
-                    }
-                }
-
-                this.goalAmenity = chosenAmenity;
-                this.goalAttractor = chosenAttractor;
+                this.goalAmenity = leaderAgent.getAgentMovement().getChosenEatTable();
+                this.goalAttractor = leaderAgent.getAgentMovement().getChosenEatTable().getAttractors().get(0);
             }
         }
     }
@@ -1019,7 +1028,10 @@ public class GroceryAgentMovement extends AgentMovement {
                 }
             }
 
-            if (this.currentState.getName() != GroceryState.Name.GOING_TO_SECURITY) {
+            if (this.currentState.getName() != GroceryState.Name.GOING_TO_SECURITY && this.currentState.getName() != GroceryState.Name.GOING_HOME
+                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_SERVICE && this.currentAction.getName() != GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE
+                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_FOOD && this.currentAction.getName() != GroceryAction.Name.BUY_FOOD
+                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_CHECKOUT && this.currentAction.getName() != GroceryAction.Name.CHECKOUT) {
                 for (Agent otherAgent : patch.getAgents()) { // Inspect each agent in each patch in the patches in the field of view
                     if (this.getLeaderAgent() == null && this.followers.contains(otherAgent)) {
                         continue;
@@ -1196,6 +1208,29 @@ public class GroceryAgentMovement extends AgentMovement {
         this.movementCounter = 0;
         this.timeSinceLeftPreviousGoal++;
         this.ticksAcceleratedOrMaintainedSpeed = 0;
+    }
+
+    public void checkIfStuck() {
+        if (this.currentAmenity == null) {
+            if (this.currentPatch.getAmenityBlock() != null) {
+                List<Patch> candidatePatches = this.currentPatch.getNeighbors();
+                for (Patch candidate: candidatePatches) {
+                    if (candidate.getAmenityBlock() == null && (candidate.getPatchField() == null || (candidate.getPatchField() != null && candidate.getPatchField().getKey().getClass() != Wall.class))) {
+                        this.setPosition(candidate.getPatchCenterCoordinates());
+                        break;
+                    }
+                }
+            }
+            else if (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() == Wall.class) {
+                List<Patch> candidatePatches = this.currentPatch.getNeighbors();
+                for (Patch candidate: candidatePatches) {
+                    if (candidate.getAmenityBlock() == null && (candidate.getPatchField() == null || (candidate.getPatchField() != null && candidate.getPatchField().getKey().getClass() != Wall.class))) {
+                        this.setPosition(candidate.getPatchCenterCoordinates());
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     private boolean hasNoAgent(Patch patch) {
