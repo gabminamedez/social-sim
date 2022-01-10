@@ -43,6 +43,7 @@ public class GroceryAction {
         FIND_SEAT_FOOD_COURT,
         EATING_FOOD,
 
+        GO_TO_RECEIPT,
         CHECKOUT_GROCERIES_CUSTOMER,
         CHECKOUT_GROCERIES_GUARD,
 

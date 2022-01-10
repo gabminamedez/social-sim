@@ -552,9 +552,6 @@ public class GroceryAgentMovement extends AgentMovement {
             List<? extends Amenity> amenities3 = Stream.concat(amenities2.stream(), productAisle.stream()).collect(Collectors.toList());
             List<? extends Amenity> amenities4 = Stream.concat(amenities3.stream(), productShelf.stream()).collect(Collectors.toList());
             List<? extends Amenity> amenityListInFloor = Stream.concat(amenities4.stream(), productWall.stream()).collect(Collectors.toList());
-            Amenity chosenAmenity = null;
-            Amenity.AmenityBlock chosenAttractor = null;
-            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
 
             this.goalAmenity = amenityListInFloor.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(amenityListInFloor.size()));
             this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
@@ -1360,8 +1357,15 @@ public class GroceryAgentMovement extends AgentMovement {
 //        }
 
         Stack<Patch> path = new Stack<>(); // Manually set the patch to
-        for (int i = 0; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
-            path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
+        if (this.goalQueueingPatchField.getClass() == CashierCounterField.class) {
+            for (int i = 1; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
+                path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
+            }
+        }
+        else {
+            for (int i = 0; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
+                path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
+            }
         }
         this.currentPath = new AgentPath(0, path);
         this.duration = currentAction.getDuration();

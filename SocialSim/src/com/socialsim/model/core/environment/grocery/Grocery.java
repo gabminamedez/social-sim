@@ -6,10 +6,7 @@ import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
-import com.socialsim.model.core.environment.grocery.patchfield.CashierCounterField;
-import com.socialsim.model.core.environment.grocery.patchfield.SecurityField;
-import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterField;
-import com.socialsim.model.core.environment.grocery.patchfield.StallField;
+import com.socialsim.model.core.environment.grocery.patchfield.*;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
 
@@ -39,6 +36,7 @@ public class Grocery extends Environment {
 
     private final List<Wall> walls;
     private final List<CashierCounterField> cashierCounterFields;
+    private final List<GroceryGateField> groceryGateFields;
     private final List<SecurityField> securityFields;
     private final List<ServiceCounterField> serviceCounterFields;
     private final List<StallField> stallFields;
@@ -74,6 +72,7 @@ public class Grocery extends Environment {
 
         this.walls = Collections.synchronizedList(new ArrayList<>());
         this.cashierCounterFields = Collections.synchronizedList(new ArrayList<>());
+        this.groceryGateFields = Collections.synchronizedList(new ArrayList<>());
         this.securityFields = Collections.synchronizedList(new ArrayList<>());
         this.serviceCounterFields = Collections.synchronizedList(new ArrayList<>());
         this.stallFields = Collections.synchronizedList(new ArrayList<>());
@@ -155,6 +154,10 @@ public class Grocery extends Environment {
 
     public List<CashierCounterField> getCashierCounterFields() {
         return cashierCounterFields;
+    }
+
+    public List<GroceryGateField> getGroceryGateFields() {
+        return groceryGateFields;
     }
 
     public List<SecurityField> getSecurityFields() {
