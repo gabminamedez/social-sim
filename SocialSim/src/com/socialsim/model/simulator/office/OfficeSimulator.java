@@ -6,7 +6,6 @@ import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.agent.office.OfficeAction;
 import com.socialsim.model.core.agent.office.OfficeAgentMovement;
 import com.socialsim.model.core.agent.office.OfficeState;
-import com.socialsim.model.core.agent.university.UniversityAction;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
@@ -33,7 +32,7 @@ public class OfficeSimulator extends Simulator {
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
 
-    private final int MAX_BOSSES = 0;//1
+    private final int MAX_BOSSES = 1;
     public static List<Integer> MANAGERS_1 = new LinkedList<Integer>(List.of(11));
     public static List<Integer> MANAGERS_2 = new LinkedList<Integer>(List.of(19));
     public static List<Integer> MANAGERS_3 = new LinkedList<Integer>(List.of(27));
@@ -50,10 +49,27 @@ public class OfficeSimulator extends Simulator {
     public static List<Integer> TECHNICAL_2 = new LinkedList<Integer>(List.of(43));
     public static List<Integer> TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
     public static List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
-    private final int MAX_SECRETARIES = 0;//1
-    private final int MAX_CLIENTS = 0;//6
-    private final int MAX_DRIVERS = 0;//3
-    private final int MAX_VISITORS = 0;//1
+
+    private final int MAX_SECRETARIES = 1;
+    private final int MAX_CLIENTS = 6;
+    private final int MAX_DRIVERS = 3;
+    private final int MAX_VISITORS = 1;
+
+    public static int currentManagerCount = 0;
+    public static int currentBusinessCount = 0;
+    public static int currentResearchCount = 0;
+    public static int currentTechnicalCount = 0;
+    public static int currentSecretaryCount = 0;
+    public static int currentClientCount = 0;
+    public static int currentDriverCount = 0;
+    public static int currentVisitorCount = 0;
+    public static int currentNonverbalCount = 0;
+    public static int currentCooperativeCount = 0;
+    public static int currentExchangeCount = 0;
+
+    public static int averageNonverbalDuration = 0;
+    public static int averageCooperativeDuration = 0;
+    public static int averageExchangeDuration = 0;
 
     public OfficeSimulator() {
         this.office = null;
@@ -98,16 +114,17 @@ public class OfficeSimulator extends Simulator {
     }
 
     public void spawnInitialAgents(Office office) {
-        OfficeAgent guard = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.GUARD, office.getPatch(57,35), true, -1, 0, null);
-        office.getAgents().add(guard);
-        office.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
-
-        OfficeAgent janitor = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.JANITOR, office.getPatch(6,23), true, -1, 0, null);
-        office.getAgents().add(janitor);
+        office.createInitialAgentDemographics(MAX_CLIENTS, MAX_DRIVERS, MAX_VISITORS);
+        OfficeAgent janitor = office.getAgents().get(0); // 0
+        janitor.setAgentMovement(new OfficeAgentMovement(office.getPatch(6,23), janitor, 1.27, office.getPatch(6,23).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(janitor.getAgentMovement().getCurrentPatch());
 
-        OfficeAgent receptionist = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RECEPTIONIST, office.getPatch(46,37), true, -1, 0, null);
-        office.getAgents().add(receptionist);
+        OfficeAgent guard = office.getAgents().get(1); // 1
+        guard.setAgentMovement(new OfficeAgentMovement(office.getPatch(57,35), guard, 1.27, office.getPatch(57,35).getPatchCenterCoordinates(), -1, 0, null));
+        office.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
+
+        OfficeAgent receptionist = office.getAgents().get(2); // 2
+        receptionist.setAgentMovement(new OfficeAgentMovement(office.getPatch(46,37), receptionist, 1.27, office.getPatch(46,37).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(receptionist.getAgentMovement().getCurrentPatch());
     }
 
@@ -1389,131 +1406,112 @@ public class OfficeSimulator extends Simulator {
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             int spawnChance = (int) gate.getChancePerTick();
             int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-            int type = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(9); // 0 = Boss; 1 = Manager; 2 = Business; 3 = Researcher; 4 = Technical; 5 = Secretary; 6 = Client; 7 = Driver; 8 = Visitor
             int team = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
 
             if (CHANCE > spawnChance) {
-                if (type == 0 && OfficeAgent.bossCount != this.MAX_BOSSES) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.BOSS, spawner.getPatch(), false, currentTick, 0, null);
-                    office.getAgents().add(agent);
+                agent = office.getUnspawnedWorkingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedWorkingAgents().size()));
+                if (agent.getType() == OfficeAgent.Type.BOSS && OfficeAgent.bossCount != MAX_BOSSES) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+//                    currentStudentCount++;
                 }
-                else if (type == 1 && team == 1 && MANAGERS_1.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.MANAGER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(MANAGERS_1.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 1 && MANAGERS_1.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_1.remove(0);
                 }
-                else if (type == 2 && team == 1 && BUSINESS_1.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.BUSINESS, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(BUSINESS_1.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 1 && BUSINESS_1.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_1.remove(0);
                 }
-                else if (type == 3 && team == 1 && RESEARCH_1.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RESEARCHER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(RESEARCH_1.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 1 && RESEARCH_1.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_1.remove(0);
                 }
-                else if (type == 4 && team == 1 && TECHNICAL_1.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.TECHNICAL, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(TECHNICAL_1.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 1 && TECHNICAL_1.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_1.remove(0);
                 }
-                else if (type == 1 && team == 2 && MANAGERS_2.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.MANAGER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(MANAGERS_2.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 2 && MANAGERS_2.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_2.remove(0);
                 }
-                else if (type == 2 && team == 2 && BUSINESS_2.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.BUSINESS, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(BUSINESS_2.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 2 && BUSINESS_2.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_2.remove(0);
                 }
-                else if (type == 3 && team == 2 && RESEARCH_2.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RESEARCHER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(RESEARCH_2.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 2 && RESEARCH_2.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_2.remove(0);
                 }
-                else if (type == 4 && team == 2 && TECHNICAL_2.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.TECHNICAL, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(TECHNICAL_2.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 2 && TECHNICAL_2.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_2.remove(0);
                 }
-                else if (type == 1 && team == 3 && MANAGERS_3.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.MANAGER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(MANAGERS_3.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 3 && MANAGERS_3.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_3.remove(0);
                 }
-                else if (type == 2 && team == 3 && BUSINESS_3.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.BUSINESS, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(BUSINESS_3.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 3 && BUSINESS_3.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_3.remove(0);
                 }
-                else if (type == 3 && team == 3 && RESEARCH_3.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RESEARCHER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(RESEARCH_3.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 3 && RESEARCH_3.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_3.remove(0);
                 }
-                else if (type == 4 && team == 3 && TECHNICAL_3.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.TECHNICAL, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(TECHNICAL_3.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 3 && TECHNICAL_3.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_3.remove(0);
                 }
-                else if (type == 1 && team == 4 && MANAGERS_4.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.MANAGER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(MANAGERS_4.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 4 && MANAGERS_4.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_4.remove(0);
                 }
-                else if (type == 2 && team == 4 && BUSINESS_4.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.BUSINESS, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(BUSINESS_4.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 4 && BUSINESS_4.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_4.remove(0);
                 }
-                else if (type == 3 && team == 4 && RESEARCH_4.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RESEARCHER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(RESEARCH_4.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 4 && RESEARCH_4.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_4.remove(0);
                 }
-                else if (type == 4 && team == 4 && TECHNICAL_4.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.TECHNICAL, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(TECHNICAL_4.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 4 && TECHNICAL_4.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_4.remove(0);
                 }
-                else if (type == 5 && OfficeAgent.secretaryCount != this.MAX_SECRETARIES) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.SECRETARY, spawner.getPatch(), false, currentTick, 0, null);
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.SECRETARY && OfficeAgent.secretaryCount != MAX_SECRETARIES) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                 }
             }
             else {
-                if (((currentTick >= 720 && currentTick < 1800) ||  (currentTick >= 2880 && currentTick < 4320)) && OfficeAgent.clientCount != this.MAX_CLIENTS) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.CLIENT, spawner.getPatch(), false, currentTick, 0, null);
-                    office.getAgents().add(agent);
+                agent = office.getUnspawnedVisitingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedVisitingAgents().size()));
+                if (agent.getType() == OfficeAgent.Type.CLIENT && ((currentTick >= 720 && currentTick < 1800) ||  (currentTick >= 2880 && currentTick < 4320)) && OfficeAgent.clientCount != MAX_CLIENTS) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                 }
-                else if (OfficeAgent.driverCount != this.MAX_DRIVERS) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.DRIVER, spawner.getPatch(), false, currentTick, 0, null);
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.DRIVER && OfficeAgent.driverCount != MAX_DRIVERS) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                 }
-                else if (currentTick >= 3600 && currentTick < 5040 && OfficeAgent.visitorCount != this.MAX_VISITORS) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.VISITOR, spawner.getPatch(), false, currentTick, 0, null);
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.VISITOR && currentTick >= 3600 && currentTick < 5040 && OfficeAgent.visitorCount != MAX_VISITORS) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                 }
             }

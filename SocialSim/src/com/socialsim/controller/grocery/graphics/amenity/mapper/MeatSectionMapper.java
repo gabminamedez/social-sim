@@ -97,6 +97,26 @@ public class MeatSectionMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlockRight7);
             patchRight7.setAmenityBlock(amenityBlockRight7);
 
+            Patch patchExtra11 = Main.grocerySimulator.getGrocery().getPatch(origPatchRow - 1, origPatchCol);
+            Amenity.AmenityBlock amenityBlockExtra11 = amenityBlockFactory.create(patchExtra11, false, false);
+            amenityBlocks.add(amenityBlockExtra11);
+            patchExtra11.setAmenityBlock(amenityBlockExtra11);
+
+            Patch patchExtra12 = Main.grocerySimulator.getGrocery().getPatch(origPatchRow - 1, origPatchCol + 1);
+            Amenity.AmenityBlock amenityBlockExtra12 = amenityBlockFactory.create(patchExtra12, false, false);
+            amenityBlocks.add(amenityBlockExtra12);
+            patchExtra12.setAmenityBlock(amenityBlockExtra12);
+
+            Patch patchExtra21 = Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 8, origPatchCol);
+            Amenity.AmenityBlock amenityBlockExtra21 = amenityBlockFactory.create(patchExtra21, false, false);
+            amenityBlocks.add(amenityBlockExtra21);
+            patchExtra21.setAmenityBlock(amenityBlockExtra21);
+
+            Patch patchExtra22 = Main.grocerySimulator.getGrocery().getPatch(origPatchRow + 8, origPatchCol + 1);
+            Amenity.AmenityBlock amenityBlockExtra22 = amenityBlockFactory.create(patchExtra22, false, false);
+            amenityBlocks.add(amenityBlockExtra22);
+            patchExtra22.setAmenityBlock(amenityBlockExtra22);
+
             MeatSection meatSectionToAdd = MeatSection.MeatSectionFactory.create(amenityBlocks, true);
             Main.grocerySimulator.getGrocery().getMeatSections().add(meatSectionToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));

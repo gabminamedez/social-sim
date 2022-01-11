@@ -16,8 +16,11 @@ import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.core.environment.grocery.patchfield.CashierCounterField;
 import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterField;
 import com.socialsim.model.core.environment.grocery.patchfield.StallField;
+import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable;
 import com.socialsim.model.simulator.Simulator;
+import com.socialsim.model.simulator.grocery.GrocerySimulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,6 +50,10 @@ public class GroceryAgentMovement extends AgentMovement {
     private PatchField goalPatchField;
     private QueueingPatchField goalQueueingPatchField; // Denotes the patch field of the agent goal
     private Patch goalNearestQueueingPatch; // Denotes the patch with the nearest queueing patch
+    private CashierCounterField chosenCashierField = null;
+    private ServiceCounterField chosenServiceField = null;
+    private StallField chosenStallField = null;
+    private EatTable chosenEatTable = null;
 
     private GroceryRoutePlan routePlan;
     private AgentPath currentPath; // Denotes the current path followed by this agent, if any
@@ -74,6 +81,18 @@ public class GroceryAgentMovement extends AgentMovement {
     private boolean isReadyToFree; // Denotes whether the agent is ready to be freed from being stuck
     private final ConcurrentHashMap<Patch, Integer> recentPatches; // Denotes the recent patches this agent has been in
 
+    // Interaction parameters
+    private boolean isInteracting; // Denotes whether the agent is currently interacting with another agent
+    private boolean isSimultaneousInteractionAllowed; // Denotes whether an interaction is allowed while an action is being done simultaneously
+    private int interactionDuration;
+    private GroceryAgentMovement.InteractionType interactionType;
+
+    public enum InteractionType {
+        NON_VERBAL,
+        COOPERATIVE,
+        EXCHANGE
+    }
+
     // The vectors of this agent
     private final List<Vector> repulsiveForceFromAgents;
     private final List<Vector> repulsiveForcesFromObstacles;
@@ -87,12 +106,7 @@ public class GroceryAgentMovement extends AgentMovement {
         this.followers = new ArrayList<>();
 
         final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
-        if (this.parent.getAgeGroup() == GroceryAgent.AgeGroup.FROM_15_TO_24) {
-            this.baseWalkingDistance = (baseWalkingDistance - 0.08) + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
-        }
-        else {
-            this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
-        }
+        this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
@@ -136,6 +150,8 @@ public class GroceryAgentMovement extends AgentMovement {
         if (this.currentAction.getDuration() != 0) {
             this.duration = this.currentAction.getDuration();
         }
+
+        this.isInteracting = false;
     }
 
     public GroceryAgent getParent() {
@@ -267,6 +283,22 @@ public class GroceryAgentMovement extends AgentMovement {
 
     public Patch getGoalPatch() {
         return goalPatch;
+    }
+
+    public CashierCounterField getChosenCashierField() {
+        return chosenCashierField;
+    }
+
+    public ServiceCounterField getChosenServiceField() {
+        return chosenServiceField;
+    }
+
+    public StallField getChosenStallField() {
+        return chosenStallField;
+    }
+
+    public EatTable getChosenEatTable() {
+        return chosenEatTable;
     }
 
     public Amenity.AmenityBlock getGoalAttractor() {
@@ -456,7 +488,7 @@ public class GroceryAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                if (goalAmenity.getClass() == Table.class) {
+                if (goalAmenity.getClass() == Table.class || goalAmenity.getClass() == GroceryGate.class) {
                     path.push(goalPatch);
                 }
                 double length = 0.0;
@@ -564,35 +596,45 @@ public class GroceryAgentMovement extends AgentMovement {
             Amenity chosenAmenity = null;
             Amenity.AmenityBlock chosenAttractor = null;
 
-            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-            for (CashierCounterField cashierCounterField : cashierCounterFields) {
-                Amenity.AmenityBlock attractor = cashierCounterField.getAssociatedPatches().get(0).getAmenityBlock();
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
+            if (this.leaderAgent == null) {
+                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+                for (CashierCounterField cashierCounterField : cashierCounterFields) {
+                    Amenity.AmenityBlock attractor = cashierCounterField.getAssociatedPatches().get(0).getAmenityBlock();
+                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                    distancesToAttractors.put(attractor, distanceToAttractor);
+                }
+
+                double minimumAttractorScore = Double.MAX_VALUE;
+
+                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
+                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                    Double candidateDistance = distancesToAttractorEntry.getValue();
+
+                    Amenity currentAmenity = candidateAttractor.getParent();
+                    QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
+
+                    double agentPenalty = 25.0;
+                    double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
+
+                    if (attractorScore < minimumAttractorScore) {
+                        minimumAttractorScore = attractorScore;
+                        chosenAmenity = currentAmenity;
+                        chosenAttractor = candidateAttractor;
+                    }
+                }
+
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+                this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                this.chosenCashierField = (CashierCounterField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
             }
-
-            double minimumAttractorScore = Double.MAX_VALUE;
-
-            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
-                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                Double candidateDistance = distancesToAttractorEntry.getValue();
-
-                Amenity currentAmenity = candidateAttractor.getParent();
-                QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
-
-                double agentPenalty = 25.0;
-                double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
-
-                if (attractorScore < minimumAttractorScore) {
-                    minimumAttractorScore = attractorScore;
-                    chosenAmenity = currentAmenity;
-                    chosenAttractor = candidateAttractor;
+            else {
+                if (leaderAgent.getAgentMovement().getChosenCashierField() != null) {
+                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenCashierField().getTarget();
+                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenCashierField().getAssociatedPatches().get(0).getAmenityBlock();
+                    this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenCashierField();
                 }
             }
-
-            this.goalAmenity = chosenAmenity;
-            this.goalAttractor = chosenAttractor;
-            this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
         }
     }
 
@@ -602,35 +644,45 @@ public class GroceryAgentMovement extends AgentMovement {
             Amenity chosenAmenity = null;
             Amenity.AmenityBlock chosenAttractor = null;
 
-            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-            for (ServiceCounterField serviceCounterField : serviceCounterFields) {
-                Amenity.AmenityBlock attractor = serviceCounterField.getAssociatedPatches().get(0).getAmenityBlock();
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
+            if (this.leaderAgent == null) {
+                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+                for (ServiceCounterField serviceCounterField : serviceCounterFields) {
+                    Amenity.AmenityBlock attractor = serviceCounterField.getAssociatedPatches().get(0).getAmenityBlock();
+                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                    distancesToAttractors.put(attractor, distanceToAttractor);
+                }
+
+                double minimumAttractorScore = Double.MAX_VALUE;
+
+                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
+                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                    Double candidateDistance = distancesToAttractorEntry.getValue();
+
+                    Amenity currentAmenity = candidateAttractor.getParent();
+                    QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
+
+                    double agentPenalty = 25.0;
+                    double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
+
+                    if (attractorScore < minimumAttractorScore) {
+                        minimumAttractorScore = attractorScore;
+                        chosenAmenity = currentAmenity;
+                        chosenAttractor = candidateAttractor;
+                    }
+                }
+
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+                this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                this.chosenServiceField = (ServiceCounterField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
             }
-
-            double minimumAttractorScore = Double.MAX_VALUE;
-
-            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
-                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                Double candidateDistance = distancesToAttractorEntry.getValue();
-
-                Amenity currentAmenity = candidateAttractor.getParent();
-                QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
-
-                double agentPenalty = 25.0;
-                double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
-
-                if (attractorScore < minimumAttractorScore) {
-                    minimumAttractorScore = attractorScore;
-                    chosenAmenity = currentAmenity;
-                    chosenAttractor = candidateAttractor;
+            else {
+                if (leaderAgent.getAgentMovement().getChosenServiceField() != null) {
+                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenServiceField().getTarget();
+                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenServiceField().getAssociatedPatches().get(0).getAmenityBlock();
+                    this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenServiceField();
                 }
             }
-
-            this.goalAmenity = chosenAmenity;
-            this.goalAttractor = chosenAttractor;
-            this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
         }
     }
 
@@ -640,35 +692,45 @@ public class GroceryAgentMovement extends AgentMovement {
             Amenity chosenAmenity = null;
             Amenity.AmenityBlock chosenAttractor = null;
 
-            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-            for (StallField stallField : stallFields) {
-                Amenity.AmenityBlock attractor = stallField.getAssociatedPatches().get(0).getAmenityBlock();
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
+            if (this.leaderAgent == null) {
+                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+                for (StallField stallField : stallFields) {
+                    Amenity.AmenityBlock attractor = stallField.getAssociatedPatches().get(0).getAmenityBlock();
+                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                    distancesToAttractors.put(attractor, distanceToAttractor);
+                }
+
+                double minimumAttractorScore = Double.MAX_VALUE;
+
+                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
+                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                    Double candidateDistance = distancesToAttractorEntry.getValue();
+
+                    Amenity currentAmenity = candidateAttractor.getParent();
+                    QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
+
+                    double agentPenalty = 25.0;
+                    double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
+
+                    if (attractorScore < minimumAttractorScore) {
+                        minimumAttractorScore = attractorScore;
+                        chosenAmenity = currentAmenity;
+                        chosenAttractor = candidateAttractor;
+                    }
+                }
+
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+                this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                this.chosenStallField = (StallField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
             }
-
-            double minimumAttractorScore = Double.MAX_VALUE;
-
-            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
-                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                Double candidateDistance = distancesToAttractorEntry.getValue();
-
-                Amenity currentAmenity = candidateAttractor.getParent();
-                QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
-
-                double agentPenalty = 25.0;
-                double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
-
-                if (attractorScore < minimumAttractorScore) {
-                    minimumAttractorScore = attractorScore;
-                    chosenAmenity = currentAmenity;
-                    chosenAttractor = candidateAttractor;
+            else {
+                if (leaderAgent.getAgentMovement().getChosenStallField() != null) {
+                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenStallField().getTarget();
+                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenStallField().getAssociatedPatches().get(0).getAmenityBlock();
+                    this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenStallField();
                 }
             }
-
-            this.goalAmenity = chosenAmenity;
-            this.goalAttractor = chosenAttractor;
-            this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
         }
     }
 
@@ -723,21 +785,13 @@ public class GroceryAgentMovement extends AgentMovement {
 
                 this.goalAmenity = chosenAmenity;
                 this.goalAttractor = chosenAttractor;
+                this.chosenEatTable = (EatTable) chosenAmenity;
             }
             else {
-                for (Amenity amenity : amenityListInFloor) {
-                    for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
-                        if (!attractor.getPatch().getAgents().isEmpty() && attractor.getPatch().getAgents().contains(leaderAgent)) { //Break when first vacant amenity is found
-                            chosenAmenity =  attractor.getParent();
-                            chosenAttractor = attractor;
-                            attractor.getPatch().getAgents().add(this.parent);
-                            break;
-                        }
-                    }
+                if (leaderAgent.getAgentMovement().getChosenEatTable() != null) {
+                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenEatTable();
+                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenEatTable().getAttractors().get(0);
                 }
-
-                this.goalAmenity = chosenAmenity;
-                this.goalAttractor = chosenAttractor;
             }
         }
     }
@@ -998,7 +1052,10 @@ public class GroceryAgentMovement extends AgentMovement {
                 }
             }
 
-            if (this.currentState.getName() != GroceryState.Name.GOING_TO_SECURITY) {
+            if (this.currentState.getName() != GroceryState.Name.GOING_TO_SECURITY && this.currentState.getName() != GroceryState.Name.GOING_HOME
+                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_SERVICE && this.currentAction.getName() != GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE
+                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_FOOD && this.currentAction.getName() != GroceryAction.Name.BUY_FOOD
+                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_CHECKOUT && this.currentAction.getName() != GroceryAction.Name.CHECKOUT) {
                 for (Agent otherAgent : patch.getAgents()) { // Inspect each agent in each patch in the patches in the field of view
                     if (this.getLeaderAgent() == null && this.followers.contains(otherAgent)) {
                         continue;
@@ -1175,6 +1232,29 @@ public class GroceryAgentMovement extends AgentMovement {
         this.movementCounter = 0;
         this.timeSinceLeftPreviousGoal++;
         this.ticksAcceleratedOrMaintainedSpeed = 0;
+    }
+
+    public void checkIfStuck() {
+        if (this.currentAmenity == null) {
+            if (this.currentPatch.getAmenityBlock() != null) {
+                List<Patch> candidatePatches = this.currentPatch.getNeighbors();
+                for (Patch candidate: candidatePatches) {
+                    if (candidate.getAmenityBlock() == null && (candidate.getPatchField() == null || (candidate.getPatchField() != null && candidate.getPatchField().getKey().getClass() != Wall.class))) {
+                        this.setPosition(candidate.getPatchCenterCoordinates());
+                        break;
+                    }
+                }
+            }
+            else if (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() == Wall.class) {
+                List<Patch> candidatePatches = this.currentPatch.getNeighbors();
+                for (Patch candidate: candidatePatches) {
+                    if (candidate.getAmenityBlock() == null && (candidate.getPatchField() == null || (candidate.getPatchField() != null && candidate.getPatchField().getKey().getClass() != Wall.class))) {
+                        this.setPosition(candidate.getPatchCenterCoordinates());
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     private boolean hasNoAgent(Patch patch) {
@@ -1363,7 +1443,7 @@ public class GroceryAgentMovement extends AgentMovement {
             }
         }
         else {
-            for (int i = 0; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
+            for (int i = 1; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
                 path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
             }
         }
@@ -1768,4 +1848,181 @@ public class GroceryAgentMovement extends AgentMovement {
         this.duration = getDuration() - 1;
     }
 
+    public void forceActionInteraction(GroceryAgent agent, GroceryAgentMovement.InteractionType interactionType, int duration, GrocerySimulator GrocerySimulator){
+        //TODO: Statistics in interaction
+
+        // set own agent interaction parameters
+        this.isInteracting = true;
+        this.interactionType = interactionType;
+        // set other agent interaction parameters
+        agent.getAgentMovement().setInteracting(true);
+        agent.getAgentMovement().setInteractionType(interactionType);
+        double interactionStdDeviation, interactionMean;
+
+        if (interactionType == GroceryAgentMovement.InteractionType.NON_VERBAL){
+            interactionStdDeviation = 1;
+            interactionMean = 2;
+        }
+        else if (interactionType == GroceryAgentMovement.InteractionType.COOPERATIVE){
+
+            interactionStdDeviation = 5;
+            interactionMean = 19;
+        }
+        else if (interactionType == GroceryAgentMovement.InteractionType.EXCHANGE){
+
+            interactionStdDeviation = 5;
+            interactionMean = 19;
+        }
+        else{
+            interactionStdDeviation = 0;
+            interactionMean = 0;
+        }
+        if (duration == -1)
+            this.interactionDuration = (int) Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean);
+        else
+            this.interactionDuration = duration;
+
+    }
+    public void rollAgentInteraction(GroceryAgent agent){
+        //TODO: Statistics in interaction
+
+        double IOS1 = grocery.getIOS().get(this.getParent().getId()).get(agent.getId());
+        double IOS2 = grocery.getIOS().get(agent.getId()).get(this.getParent().getId());
+        // roll if possible interaction
+        double CHANCE1 = Simulator.roll();
+        double CHANCE2 = Simulator.roll();
+        double interactionStdDeviation, interactionMean;
+        if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
+            // set own agent interaction parameters
+            this.isInteracting = true;
+            // set other agent interaction parameters
+            agent.getAgentMovement().setInteracting(true);
+
+//            if (this.parent.getType() == GroceryAgent.Type.STUDENT){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentStudentCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentStudentProfCount++;
+//                    case GUARD -> GrocerySimulator.currentStudentGuardCount++;
+//                    case JANITOR -> GrocerySimulator.currentStudentJanitorCount++;
+//                }
+//            }
+//            else if (this.parent.getType() == GroceryAgent.Type.PROFESSOR){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentProfCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentProfProfCount++;
+//                    case GUARD -> GrocerySimulator.currentProfGuardCount++;
+//                    case JANITOR -> GrocerySimulator.currentProfJanitorCount++;
+//                }
+//            }
+//            else if (this.parent.getType() == GroceryAgent.Type.GUARD){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentGuardCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentProfGuardCount++;
+//                    case JANITOR -> GrocerySimulator.currentGuardJanitorCount++;
+//                }
+//            }
+//            else if (this.parent.getType() == GroceryAgent.Type.JANITOR){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentJanitorCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentProfJanitorCount++;
+//                    case GUARD -> GrocerySimulator.currentGuardJanitorCount++;
+//                    case JANITOR -> GrocerySimulator.currentJanitorJanitorCount++;
+//                }
+//            }
+
+            // roll if what kind of interaction
+            CHANCE1 = Simulator.roll() * IOS1;
+            CHANCE2 = Simulator.roll() * IOS2;
+            double CHANCE = (CHANCE1 + CHANCE2) / 2;
+//            double CHANCE_NONVERBAL1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
+//                    CHANCE_COOPERATIVE1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
+//                    CHANCE_EXCHANGE1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
+//                    CHANCE_NONVERBAL2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
+//                    CHANCE_COOPERATIVE2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
+//                    CHANCE_EXCHANGE2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
+            double CHANCE_NONVERBAL1 = 0.34, CHANCE_COOPERATIVE1 = 0.33, CHANCE_EXCHANGE1 = 0.33, CHANCE_NONVERBAL2 = 0.34, CHANCE_COOPERATIVE2 = 0.33, CHANCE_EXCHANGE2 = 0.33;
+            if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
+                GrocerySimulator.currentNonverbalCount++;
+                this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.NON_VERBAL);
+                agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.NON_VERBAL);
+                interactionStdDeviation = 1;
+                interactionMean = 2;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
+                GrocerySimulator.currentCooperativeCount++;
+                this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.COOPERATIVE);
+                agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.COOPERATIVE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
+                GrocerySimulator.currentExchangeCount++;
+                this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.EXCHANGE);
+                agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.EXCHANGE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else{
+                interactionStdDeviation = 0;
+                interactionMean = 0;
+            }
+            // roll duration (NOTE GAUSSIAN)
+            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+            if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.NON_VERBAL)
+                GrocerySimulator.averageNonverbalDuration = (GrocerySimulator.averageNonverbalDuration * (GrocerySimulator.currentNonverbalCount - 1) + this.interactionDuration) / GrocerySimulator.currentNonverbalCount;
+            else if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.COOPERATIVE)
+                GrocerySimulator.averageCooperativeDuration = (GrocerySimulator.averageCooperativeDuration * (GrocerySimulator.currentCooperativeCount - 1) + this.interactionDuration) / GrocerySimulator.currentCooperativeCount;
+            else if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.EXCHANGE)
+                GrocerySimulator.averageExchangeDuration = (GrocerySimulator.averageExchangeDuration * (GrocerySimulator.currentExchangeCount - 1) + this.interactionDuration) / GrocerySimulator.currentExchangeCount;
+        }
+    }
+    public void interact(){
+        //TODO: Statistics in interaction
+
+        // if 0 na, remove interacting phase for agent
+        if (this.interactionDuration == 0){
+            this.isInteracting = false;
+            this.interactionType = null;
+        }
+        // -- interaction
+        else{
+            this.interactionDuration--;
+        }
+    }
+
+    public boolean isInteracting() {
+        return isInteracting;
+    }
+
+    public void setInteracting(boolean interacting) {
+        isInteracting = interacting;
+    }
+
+    public boolean isSimultaneousInteractionAllowed() {
+        return isSimultaneousInteractionAllowed;
+    }
+
+    public void setSimultaneousInteractionAllowed(boolean simultaneousInteractionAllowed) {
+        isSimultaneousInteractionAllowed = simultaneousInteractionAllowed;
+    }
+
+    public int getInteractionDuration() {
+        return interactionDuration;
+    }
+
+    public void setInteractionDuration(int interactionDuration) {
+        this.interactionDuration = interactionDuration;
+    }
+
+    public InteractionType getInteractionType() {
+        return interactionType;
+    }
+
+    public void setInteractionType(InteractionType interactionType) {
+        this.interactionType = interactionType;
+    }
 }
