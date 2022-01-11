@@ -14,7 +14,6 @@ import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.Vector;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.university.patchfield.Bathroom;
-import com.socialsim.model.core.environment.university.patchfield.Classroom;
 import com.socialsim.model.core.environment.university.patchfield.StallField;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Door;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Security;
@@ -1400,6 +1399,11 @@ public class UniversityAgentMovement extends AgentMovement {
             if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
                 currentPatchSet.remove(this.currentPatch);
             }
+            switch (this.getParent().getType()){
+                case STUDENT -> UniversitySimulator.currentStudentCount--;
+                case PROFESSOR -> UniversitySimulator.currentProfessorCount--;
+            }
+             //TODO: decrement based on type
         }
     }
 
@@ -1699,7 +1703,7 @@ public class UniversityAgentMovement extends AgentMovement {
         }
     }
 
-    public void forceActionInteraction(UniversityAgent agent, InteractionType interactionType, int duration){
+    public void forceActionInteraction(UniversityAgent agent, InteractionType interactionType, int duration, UniversitySimulator UniversitySimulator){
         //TODO: Statistics in interaction
 
         // set own agent interaction parameters

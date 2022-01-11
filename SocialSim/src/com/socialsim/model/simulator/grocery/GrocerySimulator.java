@@ -33,8 +33,10 @@ public class GrocerySimulator extends Simulator {
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
 
-    private int MAX_FAMILY = 10;
-    private int MAX_ALONE = 10;
+    public static final int MAX_FAMILY = 20; //250
+    public static final int MAX_ALONE = 20;
+    public static final int MAX_CUURENT_FAMILY = 10; //250
+    public static final int MAX_CURRENT_ALONE = 10;
 
     public GrocerySimulator() {
         this.grocery = null;
@@ -660,7 +662,6 @@ public class GrocerySimulator extends Simulator {
                     agent1.getAgentMovement().setNextState();
                 }
 
-                MAX_FAMILY -= 1;
             }
             else if (!isFamily && MAX_ALONE != 0) {
                 boolean isSttp = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
@@ -675,7 +676,6 @@ public class GrocerySimulator extends Simulator {
                 grocery.getAgents().add(agent1);
                 grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
 
-                MAX_ALONE -= 1;
             }
         }
     }

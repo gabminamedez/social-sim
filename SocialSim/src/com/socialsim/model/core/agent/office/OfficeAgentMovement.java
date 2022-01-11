@@ -15,6 +15,7 @@ import com.socialsim.model.core.environment.generic.position.Vector;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
+import com.socialsim.model.simulator.office.OfficeSimulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -77,6 +78,18 @@ public class OfficeAgentMovement extends AgentMovement {
     private Vector attractiveForce;
     private Vector motivationForce;
 
+    // Interaction parameters
+    private boolean isInteracting; // Denotes whether the agent is currently interacting with another agent
+    private boolean isSimultaneousInteractionAllowed; // Denotes whether an interaction is allowed while an action is being done simultaneously
+    private int interactionDuration;
+    private OfficeAgentMovement.InteractionType interactionType;
+
+    public enum InteractionType {
+        NON_VERBAL,
+        COOPERATIVE,
+        EXCHANGE
+    }
+
     public OfficeAgentMovement(Patch spawnPatch, OfficeAgent parent, double baseWalkingDistance, Coordinates coordinates, long tickEntered, int team, Cubicle assignedCubicle) { // For inOnStart agents
         this.parent = parent;
         this.position = new Coordinates(coordinates.getX(), coordinates.getY());
@@ -128,6 +141,8 @@ public class OfficeAgentMovement extends AgentMovement {
         if (this.currentAction.getDuration() != 0) {
             this.duration = this.currentAction.getDuration();
         }
+
+        this.isInteracting = false;
     }
 
     public OfficeAgent getParent() {
@@ -1588,4 +1603,211 @@ public class OfficeAgentMovement extends AgentMovement {
         this.duration = getDuration() - 1;
     }
 
+    public void forceActionInteraction(OfficeAgent agent, OfficeAgentMovement.InteractionType interactionType, int duration){
+        //TODO: Statistics in interaction
+
+        // set own agent interaction parameters
+        this.isInteracting = true;
+        this.interactionType = interactionType;
+        // set other agent interaction parameters
+        agent.getAgentMovement().setInteracting(true);
+        agent.getAgentMovement().setInteractionType(interactionType);
+        double interactionStdDeviation, interactionMean;
+
+        if (interactionType == OfficeAgentMovement.InteractionType.NON_VERBAL){
+            interactionStdDeviation = 1;
+            interactionMean = 2;
+        }
+        else if (interactionType == OfficeAgentMovement.InteractionType.COOPERATIVE){
+
+            interactionStdDeviation = 5;
+            interactionMean = 19;
+        }
+        else if (interactionType == OfficeAgentMovement.InteractionType.EXCHANGE){
+
+            interactionStdDeviation = 5;
+            interactionMean = 19;
+        }
+        else{
+            interactionStdDeviation = 0;
+            interactionMean = 0;
+        }
+        if (duration == -1)
+            this.interactionDuration = (int) Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean);
+        else
+            this.interactionDuration = duration;
+
+    }
+    public void rollAgentInteraction(OfficeAgent agent){
+        //TODO: Statistics in interaction
+
+        double IOS1 = office.getIOS().get(this.getParent().getId()).get(agent.getId());
+        double IOS2 = office.getIOS().get(agent.getId()).get(this.getParent().getId());
+        // roll if possible interaction
+        double CHANCE1 = Simulator.roll();
+        double CHANCE2 = Simulator.roll();
+        double interactionStdDeviation, interactionMean;
+        if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
+            // set own agent interaction parameters
+            this.isInteracting = true;
+            // set other agent interaction parameters
+            agent.getAgentMovement().setInteracting(true);
+            //TODO: Identify which statistics are needed
+            if (this.parent.getType() == OfficeAgent.Type.BOSS){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentStudentStudentCount++;
+                    case MANAGER -> OfficeSimulator.currentStudentProfCount++;
+                    case BUSINESS -> OfficeSimulator.currentStudentGuardCount++;
+                    case RESEARCHER -> OfficeSimulator.currentStudentJanitorCount++;
+                    case JANITOR -> OfficeSimulator.currentStudentJanitorCount++;
+                    case TECHNICAL -> OfficeSimulator.currentStudentJanitorCount++;
+                    case CLIENT -> OfficeSimulator.currentStudentJanitorCount++;
+                    case DRIVER -> OfficeSimulator.currentStudentJanitorCount++;
+                    case VISITOR -> OfficeSimulator.currentStudentJanitorCount++;
+                    case GUARD -> OfficeSimulator.currentStudentJanitorCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentStudentJanitorCount++;
+                    case SECRETARY -> OfficeSimulator.currentStudentJanitorCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.MANAGER){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentStudentStudentCount++;
+                    case MANAGER -> OfficeSimulator.currentStudentProfCount++;
+                    case BUSINESS -> OfficeSimulator.currentStudentGuardCount++;
+                    case RESEARCHER -> OfficeSimulator.currentStudentJanitorCount++;
+                    case JANITOR -> OfficeSimulator.currentStudentJanitorCount++;
+                    case TECHNICAL -> OfficeSimulator.currentStudentJanitorCount++;
+                    case CLIENT -> OfficeSimulator.currentStudentJanitorCount++;
+                    case DRIVER -> OfficeSimulator.currentStudentJanitorCount++;
+                    case VISITOR -> OfficeSimulator.currentStudentJanitorCount++;
+                    case GUARD -> OfficeSimulator.currentStudentJanitorCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentStudentJanitorCount++;
+                    case SECRETARY -> OfficeSimulator.currentStudentJanitorCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.GUARD){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentStudentStudentCount++;
+                    case MANAGER -> OfficeSimulator.currentStudentProfCount++;
+                    case BUSINESS -> OfficeSimulator.currentStudentGuardCount++;
+                    case RESEARCHER -> OfficeSimulator.currentStudentJanitorCount++;
+                    case JANITOR -> OfficeSimulator.currentStudentJanitorCount++;
+                    case TECHNICAL -> OfficeSimulator.currentStudentJanitorCount++;
+                    case CLIENT -> OfficeSimulator.currentStudentJanitorCount++;
+                    case DRIVER -> OfficeSimulator.currentStudentJanitorCount++;
+                    case VISITOR -> OfficeSimulator.currentStudentJanitorCount++;
+                    case GUARD -> OfficeSimulator.currentStudentJanitorCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentStudentJanitorCount++;
+                    case SECRETARY -> OfficeSimulator.currentStudentJanitorCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.JANITOR){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentStudentStudentCount++;
+                    case MANAGER -> OfficeSimulator.currentStudentProfCount++;
+                    case BUSINESS -> OfficeSimulator.currentStudentGuardCount++;
+                    case RESEARCHER -> OfficeSimulator.currentStudentJanitorCount++;
+                    case JANITOR -> OfficeSimulator.currentStudentJanitorCount++;
+                    case TECHNICAL -> OfficeSimulator.currentStudentJanitorCount++;
+                    case CLIENT -> OfficeSimulator.currentStudentJanitorCount++;
+                    case DRIVER -> OfficeSimulator.currentStudentJanitorCount++;
+                    case VISITOR -> OfficeSimulator.currentStudentJanitorCount++;
+                    case GUARD -> OfficeSimulator.currentStudentJanitorCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentStudentJanitorCount++;
+                    case SECRETARY -> OfficeSimulator.currentStudentJanitorCount++;
+                }
+            }
+
+            // roll if what kind of interaction
+            CHANCE1 = Simulator.roll() * IOS1;
+            CHANCE2 = Simulator.roll() * IOS2;
+            double CHANCE = (CHANCE1 + CHANCE2) / 2;
+//            double CHANCE_NONVERBAL1 = OfficeAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
+//                    CHANCE_COOPERATIVE1 = OfficeAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
+//                    CHANCE_EXCHANGE1 = OfficeAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
+//                    CHANCE_NONVERBAL2 = OfficeAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
+//                    CHANCE_COOPERATIVE2 = OfficeAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
+//                    CHANCE_EXCHANGE2 = OfficeAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
+            double CHANCE_NONVERBAL1 = 0.34, CHANCE_COOPERATIVE1 = 0.33, CHANCE_EXCHANGE1 = 0.33, CHANCE_NONVERBAL2 = 0.34, CHANCE_COOPERATIVE2 = 0.33, CHANCE_EXCHANGE2 = 0.33;
+            if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
+                OfficeSimulator.currentNonverbalCount++;
+                this.getParent().getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.NON_VERBAL);
+                agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.NON_VERBAL);
+                interactionStdDeviation = 1;
+                interactionMean = 2;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
+                OfficeSimulator.currentCooperativeCount++;
+                this.getParent().getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.COOPERATIVE);
+                agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.COOPERATIVE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
+                OfficeSimulator.currentExchangeCount++;
+                this.getParent().getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.EXCHANGE);
+                agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.EXCHANGE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else{
+                interactionStdDeviation = 0;
+                interactionMean = 0;
+            }
+            // roll duration (NOTE GAUSSIAN)
+            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+            OfficeSimulator.averageNonverbalDuration = (OfficeSimulator.averageNonverbalDuration * (OfficeSimulator.currentNonverbalCount - 1) + this.interactionDuration) / OfficeSimulator.currentNonverbalCount;
+            OfficeSimulator.averageCooperativeDuration = (OfficeSimulator.averageCooperativeDuration * (OfficeSimulator.currentCooperativeCount - 1) + this.interactionDuration) / OfficeSimulator.currentCooperativeCount;
+            OfficeSimulator.averageExchangeDuration = (OfficeSimulator.averageExchangeDuration * (OfficeSimulator.currentExchangeCount - 1) + this.interactionDuration) / OfficeSimulator.currentExchangeCount;
+        }
+    }
+    public void interact(){
+        //TODO: Statistics in interaction
+
+        // if 0 na, remove interacting phase for agent
+        if (this.interactionDuration == 0){
+            this.isInteracting = false;
+            this.interactionType = null;
+        }
+        // -- interaction
+        else{
+            this.interactionDuration--;
+        }
+    }
+
+    public boolean isInteracting() {
+        return isInteracting;
+    }
+
+    public void setInteracting(boolean interacting) {
+        isInteracting = interacting;
+    }
+
+    public boolean isSimultaneousInteractionAllowed() {
+        return isSimultaneousInteractionAllowed;
+    }
+
+    public void setSimultaneousInteractionAllowed(boolean simultaneousInteractionAllowed) {
+        isSimultaneousInteractionAllowed = simultaneousInteractionAllowed;
+    }
+
+    public int getInteractionDuration() {
+        return interactionDuration;
+    }
+
+    public void setInteractionDuration(int interactionDuration) {
+        this.interactionDuration = interactionDuration;
+    }
+
+    public InteractionType getInteractionType() {
+        return interactionType;
+    }
+
+    public void setInteractionType(InteractionType interactionType) {
+        this.interactionType = interactionType;
+    }
 }
