@@ -344,8 +344,8 @@ public class GroceryScreenController extends ScreenController {
 
     @FXML
     public void resetAction() {
-        initializeAction();
         Main.grocerySimulator.reset();
+        GroceryAgent.clearGroceryAgentCounts();
         clearGrocery(Main.grocerySimulator.getGrocery());
         Main.universitySimulator.spawnInitialAgents(Main.universitySimulator.getUniversity());
         drawGroceryViewForeground(Main.grocerySimulator.getGrocery(), false); // Redraw the canvas

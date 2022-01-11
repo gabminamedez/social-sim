@@ -9,15 +9,15 @@ import java.util.Objects;
 
 public class GroceryAgent extends Agent {
 
-    private static int agentCount = 0;
-    private static int customerCount = 0;
-    private static int staffAisleCount = 0;
-    private static int cashierCount = 0;
-    private static int baggerCount = 0;
-    private static int guardCount = 0;
-    private static int butcherCount = 0;
-    private static int customerServiceCount = 0;
-    private static int staffFoodCount = 0;
+    public static int agentCount = 0;
+    public static int customerCount = 0;
+    public static int staffAisleCount = 0;
+    public static int cashierCount = 0;
+    public static int baggerCount = 0;
+    public static int guardCount = 0;
+    public static int butcherCount = 0;
+    public static int customerServiceCount = 0;
+    public static int staffFoodCount = 0;
 
     private final int id;
     private final GroceryAgent.Type type;
@@ -145,6 +145,18 @@ public class GroceryAgent extends Agent {
         public static GroceryAgent create(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, GroceryAgent leaderAgent, long currentTick) {
             return new GroceryAgent(type, persona, gender, ageGroup, spawnPatch, inOnStart, leaderAgent, currentTick);
         }
+    }
+
+    public static void clearGroceryAgentCounts() {
+        agentCount = 0;
+        customerCount = 0;
+        staffAisleCount = 0;
+        cashierCount = 0;
+        baggerCount = 0;
+        guardCount = 0;
+        butcherCount = 0;
+        customerServiceCount = 0;
+        staffFoodCount = 0;
     }
 
     @Override
