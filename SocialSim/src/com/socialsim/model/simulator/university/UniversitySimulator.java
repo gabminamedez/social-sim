@@ -179,11 +179,6 @@ public class UniversitySimulator extends Simulator {
         UniversityState state = agentMovement.getCurrentState();
         UniversityAction action = agentMovement.getCurrentAction();
 
-        //System.out.println(" Amenity: " + agentMovement.getGoalAmenity() + " Path: " + agentMovement.getCurrentPath()
-        //+ " Action: " + action.getName() + " Attractor: " + agentMovement.getGoalAttractor());
-
-        boolean isFull = false; //to check if all amenities are not occupied
-
         // TODO: If interacting, then call functions. If not interacting, move
         if (!agentMovement.isInteracting() || agentMovement.isSimultaneousInteractionAllowed()){
             switch (type) {
@@ -226,7 +221,7 @@ public class UniversitySimulator extends Simulator {
                             }
                             else {
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
-                                if (agentMovement.getDuration() == 0) {
+                                if (agentMovement.getDuration() <= 0) {
                                     agentMovement.setNextState();
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -274,7 +269,7 @@ public class UniversitySimulator extends Simulator {
                             else {
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
-                                if (agentMovement.getDuration() == 0) {
+                                if (agentMovement.getDuration() <= 0) {
                                     agentMovement.setPreviousState();
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -303,7 +298,6 @@ public class UniversitySimulator extends Simulator {
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                         agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                        agentMovement.setDuration(agent.getAgentMovement().getDuration());
                                         agentMovement.joinQueue();
                                     }
                                 }
@@ -321,7 +315,7 @@ public class UniversitySimulator extends Simulator {
                             else {
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                                if (agentMovement.getCurrentAction().getDuration() == 0) {
+                                if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                     agentMovement.leaveQueue();
                                     agentMovement.setNextState();
                                     agentMovement.setActionIndex(0);
@@ -332,11 +326,25 @@ public class UniversitySimulator extends Simulator {
                         }
                     }
                     else if (state.getName() == UniversityState.Name.WANDERING_AROUND) {
-                        if (action.getName() == UniversityAction.Name.RANDOM_ACTION) {
+                        if (action.getName() == UniversityAction.Name.FIND_BENCH || action.getName() == UniversityAction.Name.FIND_BULLETIN) {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                                if (action.getName() == UniversityAction.Name.FIND_BENCH) {
+                                    if(!agentMovement.chooseGoal(Bench.class)) {
+                                        agentMovement.setNextState();
+                                        agentMovement.setActionIndex(0);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.resetGoal();
+                                    }
+                                }
+                                else {
+                                    if(!agentMovement.chooseGoal(Bulletin.class)) {
+                                        agentMovement.setNextState();
+                                        agentMovement.setActionIndex(0);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.resetGoal();
+                                    }
+                                }
                             }
 
                             if (agentMovement.chooseNextPatchInPath()) {
@@ -345,97 +353,25 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                        agentMovement.setDuration(agent.getAgentMovement().getDuration());
                                     }
                                 }
                             }
                         }
-                        else if (action.getName()==UniversityAction.Name.FIND_BENCH){
-                            agentMovement.setSimultaneousInteractionAllowed(false);
-                            if (agentMovement.getGoalAmenity() == null) {
-                                if(!agentMovement.chooseGoal(Bench.class)){
-                                    isFull = true;
-                                    agentMovement.setNextState();
-                                    agentMovement.setActionIndex(0);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
-                                            get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
-                                }
-                            }
-
-                            if(isFull){
-                                isFull = false;
-                            }else{
-                                //normal code
-                                if (agentMovement.chooseNextPatchInPath()) {
-                                    agentMovement.faceNextPosition();
-                                    agentMovement.moveSocialForce();
-                                    if (agentMovement.hasReachedNextPatchInPath()) {
-                                        agentMovement.reachPatchInPath();
-                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
-                                            //System.out.println("Transition to SIT ON BENCH");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (action.getName()==UniversityAction.Name.SIT_ON_BENCH){
+                        else if (action.getName() == UniversityAction.Name.SIT_ON_BENCH || action.getName() == UniversityAction.Name.VIEW_BULLETIN) {
                             agentMovement.setSimultaneousInteractionAllowed(true);
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setNextState();
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
                             }
                         }
-                        else if(action.getName()==UniversityAction.Name.FIND_BULLETIN){
-                            agentMovement.setSimultaneousInteractionAllowed(false);
-                            if (agentMovement.getGoalAmenity() == null) {
-                                if(!agentMovement.chooseGoal(Bulletin.class)){
-                                    agentMovement.setNextState();
-                                    agentMovement.setActionIndex(0);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
-                                    //System.out.println("CANCEL VIEWING BULLETIN");
-                                    isFull = true;
-                                }
-                            }
-                            if(isFull){
-                                isFull = false;
-                            }else{
-                                if (agentMovement.chooseNextPatchInPath()) {
-                                    agentMovement.faceNextPosition();
-                                    agentMovement.moveSocialForce();
-                                    if (agentMovement.hasReachedNextPatchInPath()) {
-                                        agentMovement.reachPatchInPath();
-                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
-                                            //transition to VIEW_BULLETIN
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if(action.getName()==UniversityAction.Name.VIEW_BULLETIN){
-                            agentMovement.setSimultaneousInteractionAllowed(true);
-                            // System.out.println("VIEWING BULLETING");
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
-                                agentMovement.setNextState();
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                                //System.out.println("DONE VIEWING BULLETING");
-                            }
-                        }
-                        else if(action.getName()==UniversityAction.Name.LEAVE_BUILDING){
+                        else if(action.getName() == UniversityAction.Name.LEAVE_BUILDING){
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getUniversityGates().get(0));
@@ -454,7 +390,6 @@ public class UniversitySimulator extends Simulator {
                                 }
                             }
                         }
-
                     }
                     else if (state.getName()== UniversityState.Name.NEEDS_BATHROOM) {
 
@@ -514,7 +449,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.setDuration(agent.getAgentMovement().getDuration());
@@ -539,7 +474,7 @@ public class UniversitySimulator extends Simulator {
                             else{
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                                if (agentMovement.getCurrentAction().getDuration() == 0) {
+                                if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.setDuration(agent.getAgentMovement().getDuration());
@@ -613,7 +548,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 //System.out.println(agentMovement.getParent().getId() + " = im done queueing");
                                 agentMovement.leaveQueue();
                                 agentMovement.setNextState();
@@ -683,7 +618,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -766,7 +701,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setNextState();
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -787,7 +722,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -909,7 +844,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 //System.out.println(agentMovement.getParent().getId() + " = im done queueing");
                                 agentMovement.leaveQueue();
                                 agentMovement.setNextState();
@@ -943,7 +878,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setNextState();
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -1015,7 +950,7 @@ public class UniversitySimulator extends Simulator {
                             else {
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                                if (agentMovement.getCurrentAction().getDuration() == 0) {
+                                if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                     agentMovement.leaveQueue();
                                     agentMovement.setNextState();
                                     agentMovement.setActionIndex(0);
@@ -1026,24 +961,7 @@ public class UniversitySimulator extends Simulator {
                         }
                     }
                     else if (state.getName() == UniversityState.Name.WANDERING_AROUND) {
-                        if (action.getName() == UniversityAction.Name.RANDOM_ACTION) {
-                            agentMovement.setSimultaneousInteractionAllowed(false);
-                            if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                            }
-
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath();
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    }
-                                }
-                            }
-                        }
-                        else if(action.getName()==UniversityAction.Name.FIND_BENCH){
+                        if(action.getName()==UniversityAction.Name.FIND_BENCH){
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if(!agentMovement.chooseGoal(Bench.class)){
@@ -1079,7 +997,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setNextState();
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -1124,7 +1042,7 @@ public class UniversitySimulator extends Simulator {
                             // System.out.println("VIEWING BULLETING");
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setNextState();
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -1212,7 +1130,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1298,7 +1216,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.setDuration(agent.getAgentMovement().getDuration());
@@ -1323,7 +1241,7 @@ public class UniversitySimulator extends Simulator {
                             else{
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                                if (agentMovement.getCurrentAction().getDuration() == 0) {
+                                if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.setDuration(agent.getAgentMovement().getDuration());
@@ -1397,7 +1315,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 //System.out.println(agentMovement.getParent().getId() + " = im done queueing");
                                 agentMovement.leaveQueue();
                                 agentMovement.setNextState();
@@ -1462,7 +1380,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setNextState();
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -1483,7 +1401,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1604,7 +1522,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 //System.out.println(agentMovement.getParent().getId() + " = im done queueing");
                                 agentMovement.leaveQueue();
                                 agentMovement.setNextState();
@@ -1638,7 +1556,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
                                 agentMovement.setNextState();
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -1675,7 +1593,7 @@ public class UniversitySimulator extends Simulator {
             // cases: early termination of interaction
             //reducing of interaction duration
             // termination of interaction
-            if (agentMovement.getDuration() == 0){
+            if (agentMovement.getDuration() <= 0){
                 agentMovement.setInteracting(false);
                 agentMovement.setInteractionType(null);
             }
