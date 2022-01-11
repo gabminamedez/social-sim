@@ -20,6 +20,7 @@ import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.Gr
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable;
 import com.socialsim.model.simulator.Simulator;
+import com.socialsim.model.simulator.grocery.GrocerySimulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -80,6 +81,18 @@ public class GroceryAgentMovement extends AgentMovement {
     private boolean isReadyToFree; // Denotes whether the agent is ready to be freed from being stuck
     private final ConcurrentHashMap<Patch, Integer> recentPatches; // Denotes the recent patches this agent has been in
 
+    // Interaction parameters
+    private boolean isInteracting; // Denotes whether the agent is currently interacting with another agent
+    private boolean isSimultaneousInteractionAllowed; // Denotes whether an interaction is allowed while an action is being done simultaneously
+    private int interactionDuration;
+    private GroceryAgentMovement.InteractionType interactionType;
+
+    public enum InteractionType {
+        NON_VERBAL,
+        COOPERATIVE,
+        EXCHANGE
+    }
+
     // The vectors of this agent
     private final List<Vector> repulsiveForceFromAgents;
     private final List<Vector> repulsiveForcesFromObstacles;
@@ -137,6 +150,8 @@ public class GroceryAgentMovement extends AgentMovement {
         if (this.currentAction.getDuration() != 0) {
             this.duration = this.currentAction.getDuration();
         }
+
+        this.isInteracting = false;
     }
 
     public GroceryAgent getParent() {
@@ -1833,4 +1848,181 @@ public class GroceryAgentMovement extends AgentMovement {
         this.duration = getDuration() - 1;
     }
 
+    public void forceActionInteraction(GroceryAgent agent, GroceryAgentMovement.InteractionType interactionType, int duration, GrocerySimulator GrocerySimulator){
+        //TODO: Statistics in interaction
+
+        // set own agent interaction parameters
+        this.isInteracting = true;
+        this.interactionType = interactionType;
+        // set other agent interaction parameters
+        agent.getAgentMovement().setInteracting(true);
+        agent.getAgentMovement().setInteractionType(interactionType);
+        double interactionStdDeviation, interactionMean;
+
+        if (interactionType == GroceryAgentMovement.InteractionType.NON_VERBAL){
+            interactionStdDeviation = 1;
+            interactionMean = 2;
+        }
+        else if (interactionType == GroceryAgentMovement.InteractionType.COOPERATIVE){
+
+            interactionStdDeviation = 5;
+            interactionMean = 19;
+        }
+        else if (interactionType == GroceryAgentMovement.InteractionType.EXCHANGE){
+
+            interactionStdDeviation = 5;
+            interactionMean = 19;
+        }
+        else{
+            interactionStdDeviation = 0;
+            interactionMean = 0;
+        }
+        if (duration == -1)
+            this.interactionDuration = (int) Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean);
+        else
+            this.interactionDuration = duration;
+
+    }
+    public void rollAgentInteraction(GroceryAgent agent){
+        //TODO: Statistics in interaction
+
+        double IOS1 = grocery.getIOS().get(this.getParent().getId()).get(agent.getId());
+        double IOS2 = grocery.getIOS().get(agent.getId()).get(this.getParent().getId());
+        // roll if possible interaction
+        double CHANCE1 = Simulator.roll();
+        double CHANCE2 = Simulator.roll();
+        double interactionStdDeviation, interactionMean;
+        if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
+            // set own agent interaction parameters
+            this.isInteracting = true;
+            // set other agent interaction parameters
+            agent.getAgentMovement().setInteracting(true);
+
+//            if (this.parent.getType() == GroceryAgent.Type.STUDENT){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentStudentCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentStudentProfCount++;
+//                    case GUARD -> GrocerySimulator.currentStudentGuardCount++;
+//                    case JANITOR -> GrocerySimulator.currentStudentJanitorCount++;
+//                }
+//            }
+//            else if (this.parent.getType() == GroceryAgent.Type.PROFESSOR){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentProfCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentProfProfCount++;
+//                    case GUARD -> GrocerySimulator.currentProfGuardCount++;
+//                    case JANITOR -> GrocerySimulator.currentProfJanitorCount++;
+//                }
+//            }
+//            else if (this.parent.getType() == GroceryAgent.Type.GUARD){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentGuardCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentProfGuardCount++;
+//                    case JANITOR -> GrocerySimulator.currentGuardJanitorCount++;
+//                }
+//            }
+//            else if (this.parent.getType() == GroceryAgent.Type.JANITOR){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentJanitorCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentProfJanitorCount++;
+//                    case GUARD -> GrocerySimulator.currentGuardJanitorCount++;
+//                    case JANITOR -> GrocerySimulator.currentJanitorJanitorCount++;
+//                }
+//            }
+
+            // roll if what kind of interaction
+            CHANCE1 = Simulator.roll() * IOS1;
+            CHANCE2 = Simulator.roll() * IOS2;
+            double CHANCE = (CHANCE1 + CHANCE2) / 2;
+//            double CHANCE_NONVERBAL1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
+//                    CHANCE_COOPERATIVE1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
+//                    CHANCE_EXCHANGE1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
+//                    CHANCE_NONVERBAL2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
+//                    CHANCE_COOPERATIVE2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
+//                    CHANCE_EXCHANGE2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
+            double CHANCE_NONVERBAL1 = 0.34, CHANCE_COOPERATIVE1 = 0.33, CHANCE_EXCHANGE1 = 0.33, CHANCE_NONVERBAL2 = 0.34, CHANCE_COOPERATIVE2 = 0.33, CHANCE_EXCHANGE2 = 0.33;
+            if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
+                GrocerySimulator.currentNonverbalCount++;
+                this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.NON_VERBAL);
+                agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.NON_VERBAL);
+                interactionStdDeviation = 1;
+                interactionMean = 2;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
+                GrocerySimulator.currentCooperativeCount++;
+                this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.COOPERATIVE);
+                agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.COOPERATIVE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
+                GrocerySimulator.currentExchangeCount++;
+                this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.EXCHANGE);
+                agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.EXCHANGE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else{
+                interactionStdDeviation = 0;
+                interactionMean = 0;
+            }
+            // roll duration (NOTE GAUSSIAN)
+            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+            if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.NON_VERBAL)
+                GrocerySimulator.averageNonverbalDuration = (GrocerySimulator.averageNonverbalDuration * (GrocerySimulator.currentNonverbalCount - 1) + this.interactionDuration) / GrocerySimulator.currentNonverbalCount;
+            else if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.COOPERATIVE)
+                GrocerySimulator.averageCooperativeDuration = (GrocerySimulator.averageCooperativeDuration * (GrocerySimulator.currentCooperativeCount - 1) + this.interactionDuration) / GrocerySimulator.currentCooperativeCount;
+            else if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.EXCHANGE)
+                GrocerySimulator.averageExchangeDuration = (GrocerySimulator.averageExchangeDuration * (GrocerySimulator.currentExchangeCount - 1) + this.interactionDuration) / GrocerySimulator.currentExchangeCount;
+        }
+    }
+    public void interact(){
+        //TODO: Statistics in interaction
+
+        // if 0 na, remove interacting phase for agent
+        if (this.interactionDuration == 0){
+            this.isInteracting = false;
+            this.interactionType = null;
+        }
+        // -- interaction
+        else{
+            this.interactionDuration--;
+        }
+    }
+
+    public boolean isInteracting() {
+        return isInteracting;
+    }
+
+    public void setInteracting(boolean interacting) {
+        isInteracting = interacting;
+    }
+
+    public boolean isSimultaneousInteractionAllowed() {
+        return isSimultaneousInteractionAllowed;
+    }
+
+    public void setSimultaneousInteractionAllowed(boolean simultaneousInteractionAllowed) {
+        isSimultaneousInteractionAllowed = simultaneousInteractionAllowed;
+    }
+
+    public int getInteractionDuration() {
+        return interactionDuration;
+    }
+
+    public void setInteractionDuration(int interactionDuration) {
+        this.interactionDuration = interactionDuration;
+    }
+
+    public InteractionType getInteractionType() {
+        return interactionType;
+    }
+
+    public void setInteractionType(InteractionType interactionType) {
+        this.interactionType = interactionType;
+    }
 }

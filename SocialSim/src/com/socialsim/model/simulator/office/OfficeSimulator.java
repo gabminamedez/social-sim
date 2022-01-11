@@ -6,6 +6,8 @@ import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.agent.office.OfficeAction;
 import com.socialsim.model.core.agent.office.OfficeAgentMovement;
 import com.socialsim.model.core.agent.office.OfficeState;
+import com.socialsim.model.core.agent.university.UniversityAgent;
+import com.socialsim.model.core.agent.university.UniversityAgentMovement;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
@@ -67,15 +69,16 @@ public class OfficeSimulator extends Simulator {
     public static int averageCooperativeDuration = 0;
     public static int averageExchangeDuration = 0;
 
-    public static int currentStudentStudentCount = 0;
-    public static int currentStudentProfCount = 0;
-    public static int currentStudentGuardCount = 0;
-    public static int currentStudentJanitorCount = 0;
-    public static int currentProfProfCount = 0;
-    public static int currentProfGuardCount = 0;
-    public static int currentProfJanitorCount = 0;
-    public static int currentGuardJanitorCount = 0;
-    public static int currentJanitorJanitorCount = 0;
+//    public static int currentStudentStudentCount = 0;
+//    public static int currentStudentProfCount = 0;
+//    public static int currentStudentGuardCount = 0;
+//    public static int currentStudentJanitorCount = 0;
+//    public static int currentProfProfCount = 0;
+//    public static int currentProfGuardCount = 0;
+//    public static int currentProfJanitorCount = 0;
+//    public static int currentGuardJanitorCount = 0;
+//    public static int currentJanitorJanitorCount = 0;
+    //TODO: monitors for type-type interactions
 
 
     public OfficeSimulator() {
@@ -121,16 +124,17 @@ public class OfficeSimulator extends Simulator {
     }
 
     public void spawnInitialAgents(Office office) {
-        OfficeAgent guard = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.GUARD, office.getPatch(57,35), true, -1, 0, null);
-        office.getAgents().add(guard);
-        office.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
-
-        OfficeAgent janitor = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.JANITOR, office.getPatch(6,23), true, -1, 0, null);
-        office.getAgents().add(janitor);
+        office.createInitialAgentDemographics(MAX_CLIENTS, MAX_DRIVERS, MAX_VISITORS);
+        OfficeAgent janitor = office.getAgents().get(0); // 0
+        janitor.setAgentMovement(new OfficeAgentMovement(office.getPatch(6,23), janitor, 1.27, office.getPatch(6,23).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(janitor.getAgentMovement().getCurrentPatch());
 
-        OfficeAgent receptionist = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RECEPTIONIST, office.getPatch(46,37), true, -1, 0, null);
-        office.getAgents().add(receptionist);
+        OfficeAgent guard = office.getAgents().get(1); // 1
+        guard.setAgentMovement(new OfficeAgentMovement(office.getPatch(57,35), guard, 1.27, office.getPatch(57,35).getPatchCenterCoordinates(), -1, 0, null));
+        office.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
+
+        OfficeAgent receptionist = office.getAgents().get(2); // 2
+        receptionist.setAgentMovement(new OfficeAgentMovement(office.getPatch(46,37), receptionist, 1.27, office.getPatch(46,37).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(receptionist.getAgentMovement().getCurrentPatch());
     }
 

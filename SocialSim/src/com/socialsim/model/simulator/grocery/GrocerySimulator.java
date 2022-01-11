@@ -38,6 +38,28 @@ public class GrocerySimulator extends Simulator {
     public static final int MAX_CUURENT_FAMILY = 10; //250
     public static final int MAX_CURRENT_ALONE = 10;
 
+    public static int currentFamilyCount = 0;
+    public static int currentAloneCustomerCount = 0;
+    public static int currentCustomerCount = 0;
+    public static int currentNonverbalCount = 0;
+    public static int currentCooperativeCount = 0;
+    public static int currentExchangeCount = 0;
+
+    public static int averageNonverbalDuration = 0;
+    public static int averageCooperativeDuration = 0;
+    public static int averageExchangeDuration = 0;
+
+//    public static int currentStudentStudentCount = 0;
+//    public static int currentStudentProfCount = 0;
+//    public static int currentStudentGuardCount = 0;
+//    public static int currentStudentJanitorCount = 0;
+//    public static int currentProfProfCount = 0;
+//    public static int currentProfGuardCount = 0;
+//    public static int currentProfJanitorCount = 0;
+//    public static int currentGuardJanitorCount = 0;
+//    public static int currentJanitorJanitorCount = 0;
+    //TODO: monitors for type-type interactions
+
     public GrocerySimulator() {
         this.grocery = null;
         this.running = new AtomicBoolean(false);

@@ -284,6 +284,18 @@ public class Office extends Environment {
     }
 
     public void createInitialAgentDemographics(int MAX_CLIENTS, int MAX_DRIVERS, int MAX_VISITORS){
+        //Janitor
+        OfficeAgent janitor = OfficeAgent.OfficeAgentFactory.create(Type.JANITOR, true);
+        this.getAgents().add(janitor);
+
+        //Guard
+        OfficeAgent guard = OfficeAgent.OfficeAgentFactory.create(Type.GUARD, true);
+        this.getAgents().add(guard);
+
+        // Receptionist
+        OfficeAgent receptionist = OfficeAgent.OfficeAgentFactory.create(Type.RECEPTIONIST, true);
+        this.getAgents().add(receptionist);
+
         //Boss
         OfficeAgent boss = OfficeAgent.OfficeAgentFactory.create(Type.BOSS, true);
         this.getAgents().add(boss);
@@ -355,18 +367,6 @@ public class Office extends Environment {
             OfficeAgent researcher_4 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true);
             this.getAgents().add(researcher_4);
         }
-
-        //Janitor
-        OfficeAgent janitor = OfficeAgent.OfficeAgentFactory.create(Type.JANITOR, true);
-        this.getAgents().add(janitor);
-
-        //Guard
-        OfficeAgent guard = OfficeAgent.OfficeAgentFactory.create(Type.GUARD, true);
-        this.getAgents().add(guard);
-
-        // Receptionist
-        OfficeAgent receptionist = OfficeAgent.OfficeAgentFactory.create(Type.RECEPTIONIST, true);
-        this.getAgents().add(receptionist);
 
         // Secretary
         OfficeAgent secretary = OfficeAgent.OfficeAgentFactory.create(Type.SECRETARY, true);
