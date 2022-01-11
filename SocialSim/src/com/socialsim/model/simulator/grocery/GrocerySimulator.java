@@ -205,21 +205,21 @@ public class GrocerySimulator extends Simulator {
         GroceryAgent aisle10 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(24,29), true, null, -1);
         grocery.getAgents().add(aisle10);
         grocery.getAgentPatchSet().add(aisle10.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle11 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(30,29), true, null, -1);
-        grocery.getAgents().add(aisle11);
-        grocery.getAgentPatchSet().add(aisle11.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle12 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(32,31), true, null, -1);
-        grocery.getAgents().add(aisle12);
-        grocery.getAgentPatchSet().add(aisle12.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle13 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(32,70), true, null, -1);
-        grocery.getAgents().add(aisle13);
-        grocery.getAgentPatchSet().add(aisle13.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle14 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(14,14), true, null, -1);
-        grocery.getAgents().add(aisle14);
-        grocery.getAgentPatchSet().add(aisle14.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle15 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(26,14), true, null, -1);
-        grocery.getAgents().add(aisle15);
-        grocery.getAgentPatchSet().add(aisle15.getAgentMovement().getCurrentPatch());
+//        GroceryAgent aisle11 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(30,29), true, null, -1);
+//        grocery.getAgents().add(aisle11);
+//        grocery.getAgentPatchSet().add(aisle11.getAgentMovement().getCurrentPatch());
+//        GroceryAgent aisle12 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(32,31), true, null, -1);
+//        grocery.getAgents().add(aisle12);
+//        grocery.getAgentPatchSet().add(aisle12.getAgentMovement().getCurrentPatch());
+//        GroceryAgent aisle13 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(32,70), true, null, -1);
+//        grocery.getAgents().add(aisle13);
+//        grocery.getAgentPatchSet().add(aisle13.getAgentMovement().getCurrentPatch());
+//        GroceryAgent aisle14 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(14,14), true, null, -1);
+//        grocery.getAgents().add(aisle14);
+//        grocery.getAgentPatchSet().add(aisle14.getAgentMovement().getCurrentPatch());
+//        GroceryAgent aisle15 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(26,14), true, null, -1);
+//        grocery.getAgents().add(aisle15);
+//        grocery.getAgentPatchSet().add(aisle15.getAgentMovement().getCurrentPatch());
     }
 
     public void reset() {

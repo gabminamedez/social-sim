@@ -16,6 +16,7 @@ import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.core.environment.grocery.patchfield.CashierCounterField;
 import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterField;
 import com.socialsim.model.core.environment.grocery.patchfield.StallField;
+import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable;
 import com.socialsim.model.simulator.Simulator;
@@ -472,7 +473,7 @@ public class GroceryAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                if (goalAmenity.getClass() == Table.class) {
+                if (goalAmenity.getClass() == Table.class || goalAmenity.getClass() == GroceryGate.class) {
                     path.push(goalPatch);
                 }
                 double length = 0.0;
@@ -613,9 +614,11 @@ public class GroceryAgentMovement extends AgentMovement {
                 this.chosenCashierField = (CashierCounterField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
             }
             else {
-                this.goalAmenity = leaderAgent.getAgentMovement().getChosenCashierField().getTarget();
-                this.goalAttractor = leaderAgent.getAgentMovement().getChosenCashierField().getAssociatedPatches().get(0).getAmenityBlock();
-                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenCashierField();
+                if (leaderAgent.getAgentMovement().getChosenCashierField() != null) {
+                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenCashierField().getTarget();
+                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenCashierField().getAssociatedPatches().get(0).getAmenityBlock();
+                    this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenCashierField();
+                }
             }
         }
     }
@@ -659,9 +662,11 @@ public class GroceryAgentMovement extends AgentMovement {
                 this.chosenServiceField = (ServiceCounterField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
             }
             else {
-                this.goalAmenity = leaderAgent.getAgentMovement().getChosenServiceField().getTarget();
-                this.goalAttractor = leaderAgent.getAgentMovement().getChosenServiceField().getAssociatedPatches().get(0).getAmenityBlock();
-                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenServiceField();
+                if (leaderAgent.getAgentMovement().getChosenServiceField() != null) {
+                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenServiceField().getTarget();
+                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenServiceField().getAssociatedPatches().get(0).getAmenityBlock();
+                    this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenServiceField();
+                }
             }
         }
     }
@@ -705,9 +710,11 @@ public class GroceryAgentMovement extends AgentMovement {
                 this.chosenStallField = (StallField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
             }
             else {
-                this.goalAmenity = leaderAgent.getAgentMovement().getChosenStallField().getTarget();
-                this.goalAttractor = leaderAgent.getAgentMovement().getChosenStallField().getAssociatedPatches().get(0).getAmenityBlock();
-                this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenStallField();
+                if (leaderAgent.getAgentMovement().getChosenStallField() != null) {
+                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenStallField().getTarget();
+                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenStallField().getAssociatedPatches().get(0).getAmenityBlock();
+                    this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenStallField();
+                }
             }
         }
     }
@@ -766,8 +773,10 @@ public class GroceryAgentMovement extends AgentMovement {
                 this.chosenEatTable = (EatTable) chosenAmenity;
             }
             else {
-                this.goalAmenity = leaderAgent.getAgentMovement().getChosenEatTable();
-                this.goalAttractor = leaderAgent.getAgentMovement().getChosenEatTable().getAttractors().get(0);
+                if (leaderAgent.getAgentMovement().getChosenEatTable() != null) {
+                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenEatTable();
+                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenEatTable().getAttractors().get(0);
+                }
             }
         }
     }
