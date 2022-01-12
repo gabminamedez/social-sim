@@ -8,6 +8,7 @@ import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.agent.university.UniversityAgentMovement;
 import com.socialsim.model.core.agent.university.UniversityState;
 import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.university.University;
@@ -54,8 +55,8 @@ public class UniversitySimulator extends Simulator {
     public static int currentProfJanitorCount = 0;
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
-    private final int MAX_STUDENTS = 100; //250
-    private final int MAX_PROFESSORS = 10;
+    private final int MAX_STUDENTS = 20; //250
+    private final int MAX_PROFESSORS = 0;
     private final int NUM_AGENTS = 500;
 
     public UniversitySimulator() {
@@ -180,7 +181,7 @@ public class UniversitySimulator extends Simulator {
         UniversityAction action = agentMovement.getCurrentAction();
 
         // TODO: If interacting, then call functions. If not interacting, move
-        if (!agentMovement.isInteracting() || agentMovement.isSimultaneousInteractionAllowed()){
+        //if (!agentMovement.isInteracting() || agentMovement.isSimultaneousInteractionAllowed()){
             switch (type) {
                 case JANITOR:
                     if (state.getName() == UniversityState.Name.MAINTENANCE_BATHROOM) {
@@ -195,8 +196,16 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.faceNextPosition();
                                 agentMovement.moveSocialForce();
                                 if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) { // Check if there are still patches left in the path
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        List<Patch> nextStepPatches = agentMovement.getGoalAmenity().getAmenityBlocks().get(0).getPatch().getNeighbors();
+                                        for (Patch nextStepPatch : nextStepPatches) {
+                                            if (nextStepPatch.getAmenityBlock() == null && nextStepPatch.getPatchField() != null && nextStepPatch.getPatchField().getKey().getClass() != Wall.class && nextStepPatch.getWallsAround() == 0) {
+                                                agentMovement.setPosition(nextStepPatch.getNeighbors().get(0).getPatchCenterCoordinates());
+                                                break;
+                                            }
+                                        }
+
                                         agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -244,6 +253,14 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        List<Patch> nextStepPatches = agentMovement.getGoalAmenity().getAmenityBlocks().get(0).getPatch().getNeighbors();
+                                        for (Patch nextStepPatch : nextStepPatches) {
+                                            if (nextStepPatch.getAmenityBlock() == null && nextStepPatch.getPatchField() == null && nextStepPatch.getWallsAround() == 0) {
+                                                agentMovement.setPosition(nextStepPatch.getNeighbors().get(0).getPatchCenterCoordinates());
+                                                break;
+                                            }
+                                        }
+
                                         agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -386,6 +403,14 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        List<Patch> nextStepPatches = agentMovement.getGoalAmenity().getAmenityBlocks().get(0).getPatch().getNeighbors();
+                                        for (Patch nextStepPatch : nextStepPatches) {
+                                            if (nextStepPatch.getAmenityBlock() == null && nextStepPatch.getPatchField() != null && nextStepPatch.getPatchField().getKey().getClass() != Wall.class && nextStepPatch.getWallsAround() == 0) {
+                                                agentMovement.setPosition(nextStepPatch.getNeighbors().get(0).getPatchCenterCoordinates());
+                                                break;
+                                            }
+                                        }
+
                                         agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -463,6 +488,14 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        List<Patch> nextStepPatches = agentMovement.getGoalAmenity().getAmenityBlocks().get(0).getPatch().getNeighbors();
+                                        for (Patch nextStepPatch : nextStepPatches) {
+                                            if (nextStepPatch.getAmenityBlock() == null && nextStepPatch.getPatchField() == null && nextStepPatch.getWallsAround() == 0) {
+                                                agentMovement.setPosition(nextStepPatch.getNeighbors().get(0).getPatchCenterCoordinates());
+                                                break;
+                                            }
+                                        }
+
                                         agentMovement.setNextState();
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -535,6 +568,14 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        List<Patch> nextStepPatches = agentMovement.getGoalAmenity().getAmenityBlocks().get(0).getPatch().getNeighbors();
+                                        for (Patch nextStepPatch : nextStepPatches) {
+                                            if (nextStepPatch.getAmenityBlock() == null && nextStepPatch.getPatchField() != null && nextStepPatch.getPatchField().getKey().getClass() != Wall.class && nextStepPatch.getWallsAround() == 0) {
+                                                agentMovement.setPosition(nextStepPatch.getNeighbors().get(0).getPatchCenterCoordinates());
+                                                break;
+                                            }
+                                        }
+
                                         agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -592,15 +633,24 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        System.out.println(agent.getId() + " exited study area");
+                                        List<Patch> nextStepPatches = agentMovement.getGoalAmenity().getAmenityBlocks().get(0).getPatch().getNeighbors();
+                                        for (Patch nextStepPatch : nextStepPatches) {
+                                            if (nextStepPatch.getAmenityBlock() == null && nextStepPatch.getPatchField() == null && nextStepPatch.getWallsAround() == 0) {
+                                                agentMovement.setPosition(nextStepPatch.getNeighbors().get(0).getPatchCenterCoordinates());
+                                                break;
+                                            }
+                                        }
+
                                         agentMovement.setNextState();
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
+                                        System.out.println(agent.getId() + " " + agentMovement.getCurrentState().getName());
                                     }
                                 }
                             }
                         }
-
                     }
                     else if (state.getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT) {
                         if (action.getName() == UniversityAction.Name.GO_TO_CLASSROOM) {
@@ -615,6 +665,14 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        List<Patch> nextStepPatches = agentMovement.getGoalAmenity().getAmenityBlocks().get(0).getPatch().getNeighbors();
+                                        for (Patch nextStepPatch : nextStepPatches) {
+                                            if (nextStepPatch.getAmenityBlock() == null && nextStepPatch.getPatchField() != null && nextStepPatch.getPatchField().getKey().getClass() != Wall.class && nextStepPatch.getWallsAround() == 0) {
+                                                agentMovement.setPosition(nextStepPatch.getNeighbors().get(0).getPatchCenterCoordinates());
+                                                break;
+                                            }
+                                        }
+
                                         agentMovement.setNextState();
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -623,7 +681,6 @@ public class UniversitySimulator extends Simulator {
                                 }
                             }
                         }
-
                     }
                     else if (state.getName() == UniversityState.Name.WAIT_FOR_CLASS_STUDENT) {
                         if (action.getName() == UniversityAction.Name.FIND_SEAT_CLASSROOM) {
@@ -682,6 +739,14 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        List<Patch> nextStepPatches = agentMovement.getGoalAmenity().getAmenityBlocks().get(0).getPatch().getNeighbors();
+                                        for (Patch nextStepPatch : nextStepPatches) {
+                                            if (nextStepPatch.getAmenityBlock() == null && nextStepPatch.getPatchField() == null && nextStepPatch.getWallsAround() == 0) {
+                                                agentMovement.setPosition(nextStepPatch.getNeighbors().get(0).getPatchCenterCoordinates());
+                                                break;
+                                            }
+                                        }
+
                                         agentMovement.setNextState();
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -795,38 +860,38 @@ public class UniversitySimulator extends Simulator {
 
                     break;
             }
-        }
+        //}
 
-        if (agentMovement.isInteracting()) {
-            // cases: early termination of interaction
-            // reducing of interaction duration
-            // termination of interaction
-            if (agentMovement.getDuration() <= 0) {
-                agentMovement.setInteracting(false);
-                agentMovement.setInteractionType(null);
-            }
-            else {
-                agentMovement.interact();
-            }
-
-        }
-        else {
-            List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
-            for (Patch patch: patches) {
-                for (Agent otherAgent: patch.getAgents()) {
-                    UniversityAgent universityAgent = (UniversityAgent) otherAgent;
-                    if (!universityAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
-                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), universityAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
-                            if (Coordinates.isWithinFieldOfView(universityAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), universityAgent.getAgentMovement().getProposedHeading(), universityAgent.getAgentMovement().getFieldOfViewAngle()))
-                                agentMovement.rollAgentInteraction(universityAgent);
-                    if (agentMovement.isInteracting())
-                        break;
-                }
-
-                if (agentMovement.isInteracting())
-                    break;
-            }
-        }
+//        if (agentMovement.isInteracting()) {
+//            // cases: early termination of interaction
+//            // reducing of interaction duration
+//            // termination of interaction
+//            if (agentMovement.getDuration() <= 0) {
+//                agentMovement.setInteracting(false);
+//                agentMovement.setInteractionType(null);
+//            }
+//            else {
+//                agentMovement.interact();
+//            }
+//
+//        }
+//        else {
+//            List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
+//            for (Patch patch: patches) {
+//                for (Agent otherAgent: patch.getAgents()) {
+//                    UniversityAgent universityAgent = (UniversityAgent) otherAgent;
+//                    if (!universityAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
+//                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), universityAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
+//                            if (Coordinates.isWithinFieldOfView(universityAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), universityAgent.getAgentMovement().getProposedHeading(), universityAgent.getAgentMovement().getFieldOfViewAngle()))
+//                                agentMovement.rollAgentInteraction(universityAgent);
+//                    if (agentMovement.isInteracting())
+//                        break;
+//                }
+//
+//                if (agentMovement.isInteracting())
+//                    break;
+//            }
+//        }
     }
 
     private void spawnAgent(University university, long currentTick) {
