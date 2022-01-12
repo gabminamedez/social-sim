@@ -1284,9 +1284,6 @@ public class UniversityAgentMovement extends AgentMovement {
 
     public void joinQueue() { // Register this agent to its queueable goal patch field's queue
         this.goalQueueingPatchField.getQueueingAgents().add(this.parent);
-//        if (this.goalQueueingPatchField.getQueueingAgents().get(0) == this.parent) {
-//            this.goalQueueingPatchField.setCurrentAgent(this.parent);
-//        }
 
         Stack<Patch> path = new Stack<>(); // Manually set the patch to
         for (int i = 0; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
