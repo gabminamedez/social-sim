@@ -118,14 +118,20 @@ public class OfficeSimulator extends Simulator {
         OfficeAgent janitor = office.getAgents().get(0); // 0
         janitor.setAgentMovement(new OfficeAgentMovement(office.getPatch(6,23), janitor, 1.27, office.getPatch(6,23).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(janitor.getAgentMovement().getCurrentPatch());
+        OfficeAgent.janitorCount++;
+        OfficeAgent.agentCount++;
 
         OfficeAgent guard = office.getAgents().get(1); // 1
         guard.setAgentMovement(new OfficeAgentMovement(office.getPatch(57,35), guard, 1.27, office.getPatch(57,35).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
+        OfficeAgent.guardCount++;
+        OfficeAgent.agentCount++;
 
         OfficeAgent receptionist = office.getAgents().get(2); // 2
         receptionist.setAgentMovement(new OfficeAgentMovement(office.getPatch(46,37), receptionist, 1.27, office.getPatch(46,37).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(receptionist.getAgentMovement().getCurrentPatch());
+        OfficeAgent.receptionistCount++;
+        OfficeAgent.agentCount++;
     }
 
     public void reset() {
@@ -1413,106 +1419,147 @@ public class OfficeSimulator extends Simulator {
                 if (agent.getType() == OfficeAgent.Type.BOSS && OfficeAgent.bossCount != MAX_BOSSES) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-//                    currentStudentCount++;
+                    OfficeAgent.bossCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 1 && MANAGERS_1.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_1.remove(0);
+                    OfficeAgent.managerCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 1 && BUSINESS_1.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_1.remove(0);
+                    OfficeAgent.businessCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 1 && RESEARCH_1.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_1.remove(0);
+                    OfficeAgent.researcherCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 1 && TECHNICAL_1.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_1.remove(0);
+                    OfficeAgent.technicalCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 2 && MANAGERS_2.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_2.remove(0);
+                    OfficeAgent.managerCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 2 && BUSINESS_2.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_2.remove(0);
+                    OfficeAgent.businessCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 2 && RESEARCH_2.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_2.remove(0);
+                    OfficeAgent.researcherCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 2 && TECHNICAL_2.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_2.remove(0);
+                    OfficeAgent.technicalCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 3 && MANAGERS_3.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_3.remove(0);
+                    OfficeAgent.managerCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 3 && BUSINESS_3.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_3.remove(0);
+                    OfficeAgent.businessCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 3 && RESEARCH_3.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_3.remove(0);
+                    OfficeAgent.researcherCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 3 && TECHNICAL_3.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_3.remove(0);
+                    OfficeAgent.technicalCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 4 && MANAGERS_4.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_4.remove(0);
+                    OfficeAgent.managerCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 4 && BUSINESS_4.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_4.remove(0);
+                    OfficeAgent.businessCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 4 && RESEARCH_4.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_4.remove(0);
+                    OfficeAgent.researcherCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 4 && TECHNICAL_4.size() != 0) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_4.remove(0);
+                    OfficeAgent.technicalCount++;
+                    OfficeAgent.agentCount++;
                 }
                 else if (agent.getType() == OfficeAgent.Type.SECRETARY && OfficeAgent.secretaryCount != MAX_SECRETARIES) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    OfficeAgent.secretaryCount++;
+                    OfficeAgent.agentCount++;
                 }
             }
             else {
                 agent = office.getUnspawnedVisitingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedVisitingAgents().size()));
-                if (agent.getType() == OfficeAgent.Type.CLIENT && ((currentTick >= 720 && currentTick < 1800) ||  (currentTick >= 2880 && currentTick < 4320)) && OfficeAgent.clientCount != MAX_CLIENTS) {
+                if (agent.getType() == OfficeAgent.Type.CLIENT && ((currentTick >= 720 && currentTick < 1800) ||  (currentTick >= 2880 && currentTick < 4320)) && OfficeAgent.clientCount < MAX_CLIENTS) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    OfficeAgent.clientCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (agent.getType() == OfficeAgent.Type.DRIVER && OfficeAgent.driverCount != MAX_DRIVERS) {
+                else if (agent.getType() == OfficeAgent.Type.DRIVER && OfficeAgent.driverCount < MAX_DRIVERS) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    OfficeAgent.driverCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (agent.getType() == OfficeAgent.Type.VISITOR && currentTick >= 3600 && currentTick < 5040 && OfficeAgent.visitorCount != MAX_VISITORS) {
+                else if (agent.getType() == OfficeAgent.Type.VISITOR && currentTick >= 3600 && currentTick < 5040 && OfficeAgent.visitorCount < MAX_VISITORS) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    OfficeAgent.visitorCount++;
+                    OfficeAgent.agentCount++;
                 }
             }
         }

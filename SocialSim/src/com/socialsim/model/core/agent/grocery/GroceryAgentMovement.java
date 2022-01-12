@@ -21,6 +21,7 @@ import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable;
 import com.socialsim.model.simulator.Simulator;
 import com.socialsim.model.simulator.grocery.GrocerySimulator;
+import com.socialsim.model.simulator.university.UniversitySimulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -1544,6 +1545,13 @@ public class GroceryAgentMovement extends AgentMovement {
             SortedSet<Patch> currentPatchSet = this.getGrocery().getAgentPatchSet();
             if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
                 currentPatchSet.remove(this.currentPatch);
+            }
+            switch (this.getParent().getPersona()){
+                case COMPLETE_FAMILY_CUSTOMER, HELP_FAMILY_CUSTOMER, DUO_FAMILY_CUSTOMER -> {
+                    if (this.getParent().isLeader())
+                        GrocerySimulator.currentFamilyCount--;
+                }
+                case STTP_ALONE_CUSTOMER, MODERATE_ALONE_CUSTOMER -> GrocerySimulator.currentAloneCustomerCount--;
             }
         }
     }

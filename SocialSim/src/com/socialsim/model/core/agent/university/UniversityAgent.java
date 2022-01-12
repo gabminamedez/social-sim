@@ -154,20 +154,6 @@ public class UniversityAgent extends Agent {
         this.type = type;
         this.inOnStart = inOnStart;
 
-        if (type == UniversityAgent.Type.GUARD) {
-            UniversityAgent.guardCount++;
-        }
-        else if (type == UniversityAgent.Type.JANITOR) {
-            UniversityAgent.janitorCount++;
-        }
-        else if (type == UniversityAgent.Type.PROFESSOR) {
-            UniversityAgent.professorCount++;
-        }
-        else if (type == UniversityAgent.Type.STUDENT) {
-            UniversityAgent.studentCount++;
-        }
-        UniversityAgent.agentCount++;
-
         this.gender = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? Gender.FEMALE : Gender.MALE;
 
         if (this.type == Type.GUARD) {
@@ -286,9 +272,9 @@ public class UniversityAgent extends Agent {
     }
 
     public static class UniversityAgentFactory extends Agent.AgentFactory {
-        public static UniversityAgent create(UniversityAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick) {
-            return new UniversityAgent(type, spawnPatch, inOnStart, currentTick);
-        }
+//        public static UniversityAgent create(UniversityAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick) {
+//            return new UniversityAgent(type, spawnPatch, inOnStart, currentTick);
+//        }
         public static UniversityAgent create(UniversityAgent.Type type, boolean inOnStart) {
             return new UniversityAgent(type, inOnStart);
         }

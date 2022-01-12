@@ -35,6 +35,7 @@ public class GroceryAgent extends Agent {
     private GroceryAgent.Gender gender;
     private GroceryAgent.AgeGroup ageGroup = null;
     private GroceryAgent.Persona persona = null;
+    private boolean leader;
     private final boolean inOnStart;
 
     private final GroceryAgentGraphic agentGraphic;
@@ -46,9 +47,10 @@ public class GroceryAgent extends Agent {
         agentFactory = new GroceryAgent.GroceryAgentFactory();
     }
 
-    private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, GroceryAgent leaderAgent, long currentTick) {
+    private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean leader, boolean inOnStart, GroceryAgent leaderAgent, long currentTick) {
         this.id = agentCount;
         this.type = type;
+        this.leader = leader;
         this.inOnStart = inOnStart;
 
         if (type == Type.CUSTOMER) {
@@ -120,36 +122,37 @@ public class GroceryAgent extends Agent {
         this.agentMovement = new GroceryAgentMovement(spawnPatch, this, leaderAgent, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick);
     }
 
-    private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, boolean inOnStart) {
+    private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, boolean leader, boolean inOnStart) {
         this.id = agentCount;
         this.type = type;
+        this.leader = leader;
         this.inOnStart = inOnStart;
 
-        if (type == Type.CUSTOMER) {
-            GroceryAgent.customerCount++;
-        }
-        else if (type == Type.STAFF_AISLE) {
-            GroceryAgent.staffAisleCount++;
-        }
-        else if (type == Type.CASHIER) {
-            GroceryAgent.cashierCount++;
-        }
-        else if (type == Type.BAGGER) {
-            GroceryAgent.baggerCount++;
-        }
-        else if (type == GroceryAgent.Type.GUARD) {
-            GroceryAgent.guardCount++;
-        }
-        else if (type == Type.BUTCHER) {
-            GroceryAgent.butcherCount++;
-        }
-        else if (type == Type.CUSTOMER_SERVICE) {
-            GroceryAgent.customerServiceCount++;
-        }
-        else if (type == Type.STAFF_FOOD) {
-            GroceryAgent.staffFoodCount++;
-        }
-        GroceryAgent.agentCount++;
+//        if (type == Type.CUSTOMER) {
+//            GroceryAgent.customerCount++;
+//        }
+//        else if (type == Type.STAFF_AISLE) {
+//            GroceryAgent.staffAisleCount++;
+//        }
+//        else if (type == Type.CASHIER) {
+//            GroceryAgent.cashierCount++;
+//        }
+//        else if (type == Type.BAGGER) {
+//            GroceryAgent.baggerCount++;
+//        }
+//        else if (type == GroceryAgent.Type.GUARD) {
+//            GroceryAgent.guardCount++;
+//        }
+//        else if (type == Type.BUTCHER) {
+//            GroceryAgent.butcherCount++;
+//        }
+//        else if (type == Type.CUSTOMER_SERVICE) {
+//            GroceryAgent.customerServiceCount++;
+//        }
+//        else if (type == Type.STAFF_FOOD) {
+//            GroceryAgent.staffFoodCount++;
+//        }
+//        GroceryAgent.agentCount++;
 
         this.gender = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.FEMALE : GroceryAgent.Gender.MALE;
 
@@ -206,6 +209,10 @@ public class GroceryAgent extends Agent {
         return gender;
     }
 
+    public boolean isLeader() {
+        return leader;
+    }
+
     public boolean getInOnStart() {
         return inOnStart;
     }
@@ -231,11 +238,11 @@ public class GroceryAgent extends Agent {
     }
 
     public static class GroceryAgentFactory extends Agent.AgentFactory {
-        public static GroceryAgent create(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, GroceryAgent leaderAgent, long currentTick) {
-            return new GroceryAgent(type, persona, gender, ageGroup, spawnPatch, inOnStart, leaderAgent, currentTick);
-        }
-        public static GroceryAgent create(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, boolean inOnStart) {
-            return new GroceryAgent(type, persona, gender, ageGroup, inOnStart);
+//        public static GroceryAgent create(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean leader, boolean inOnStart, GroceryAgent leaderAgent, long currentTick) {
+//            return new GroceryAgent(type, persona, gender, ageGroup, spawnPatch, leader, inOnStart, leaderAgent, currentTick);
+//        }
+        public static GroceryAgent create(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, boolean leader, boolean inOnStart) {
+            return new GroceryAgent(type, persona, gender, ageGroup, leader, inOnStart);
         }
     }
 

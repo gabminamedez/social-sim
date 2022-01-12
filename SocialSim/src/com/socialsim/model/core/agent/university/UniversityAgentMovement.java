@@ -1403,7 +1403,6 @@ public class UniversityAgentMovement extends AgentMovement {
                 case STUDENT -> UniversitySimulator.currentStudentCount--;
                 case PROFESSOR -> UniversitySimulator.currentProfessorCount--;
             }
-             //TODO: decrement based on type
         }
     }
 

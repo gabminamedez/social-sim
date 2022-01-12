@@ -35,11 +35,13 @@ public class GrocerySimulator extends Simulator {
 
     public static final int MAX_FAMILY = 20; //250
     public static final int MAX_ALONE = 20;
-    public static final int MAX_CUURENT_FAMILY = 10; //250
+    public static final int MAX_CURRENT_FAMILY = 10; //250
     public static final int MAX_CURRENT_ALONE = 10;
 
     public static int currentFamilyCount = 0;
     public static int currentAloneCustomerCount = 0;
+    public static int totalFamilyCount = 0;
+    public static int totalAloneCustomerCount = 0;
     public static int currentCustomerCount = 0;
     public static int currentNonverbalCount = 0;
     public static int currentCooperativeCount = 0;
@@ -103,132 +105,214 @@ public class GrocerySimulator extends Simulator {
     }
 
     public void spawnInitialAgents(Grocery grocery) {
-        GroceryAgent guard1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, null, null, null, grocery.getPatch(57,52), true, null, -1);
-        grocery.getAgents().add(guard1);
+        grocery.createInitialAgentDemographics(MAX_FAMILY, MAX_ALONE);
+        GroceryAgent guard1 = grocery.getAgents().get(0);
+        guard1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(57,52), guard1, null, 1.27, grocery.getPatch(57,52).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(guard1.getAgentMovement().getCurrentPatch());
-        GroceryAgent guard2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, null, null, null, grocery.getPatch(57,47), true, null, -1);
+        GroceryAgent.guardCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent guard2 = grocery.getAgents().get(1);
+        guard2.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(57,47), guard2, null, 1.27, grocery.getPatch(57,47).getPatchCenterCoordinates(), -1));
         grocery.getAgents().add(guard2);
         grocery.getAgentPatchSet().add(guard2.getAgentMovement().getCurrentPatch());
+        GroceryAgent.guardCount++;
+        GroceryAgent.agentCount++;
 
-        GroceryAgent cashier1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, grocery.getPatch(44,20), true, null, -1);
-        grocery.getAgents().add(cashier1);
+        GroceryAgent cashier1 = grocery.getAgents().get(2);
+        cashier1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,20), cashier1, null, 1.27, grocery.getPatch(44,20).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(cashier1.getAgentMovement().getCurrentPatch());
-        GroceryAgent cashier2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, grocery.getPatch(44,26), true, null, -1);
-        grocery.getAgents().add(cashier2);
+        GroceryAgent.guardCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent cashier2 = grocery.getAgents().get(3);
+        cashier2.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,26), cashier2, null, 1.27, grocery.getPatch(44,26).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(cashier2.getAgentMovement().getCurrentPatch());
-        GroceryAgent cashier3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, grocery.getPatch(44,32), true, null, -1);
-        grocery.getAgents().add(cashier3);
+        GroceryAgent.cashierCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent cashier3 = grocery.getAgents().get(4);
+        cashier3.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,32), cashier3, null, 1.27, grocery.getPatch(44,32).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(cashier3.getAgentMovement().getCurrentPatch());
-        GroceryAgent cashier4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, grocery.getPatch(44,38), true, null, -1);
-        grocery.getAgents().add(cashier4);
+        GroceryAgent.cashierCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent cashier4 = grocery.getAgents().get(5);
+        cashier4.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,38), cashier4, null, 1.27, grocery.getPatch(44,38).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(cashier4.getAgentMovement().getCurrentPatch());
-        GroceryAgent cashier5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, grocery.getPatch(44,44), true, null, -1);
-        grocery.getAgents().add(cashier5);
+        GroceryAgent.cashierCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent cashier5 = grocery.getAgents().get(6);
+        cashier5.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,44), cashier5, null, 1.27, grocery.getPatch(44,44).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(cashier5.getAgentMovement().getCurrentPatch());
-        GroceryAgent cashier6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, grocery.getPatch(44,50), true, null, -1);
-        grocery.getAgents().add(cashier6);
+        GroceryAgent.cashierCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent cashier6 = grocery.getAgents().get(7);
+        cashier6.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,50), cashier6, null, 1.27, grocery.getPatch(44,50).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(cashier6.getAgentMovement().getCurrentPatch());
-        GroceryAgent cashier7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, grocery.getPatch(44,56), true, null, -1);
-        grocery.getAgents().add(cashier7);
+        GroceryAgent.cashierCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent cashier7 = grocery.getAgents().get(8);
+        cashier7.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,56), cashier7, null, 1.27, grocery.getPatch(44,56).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(cashier7.getAgentMovement().getCurrentPatch());
-        GroceryAgent cashier8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, grocery.getPatch(44,62), true, null, -1);
-        grocery.getAgents().add(cashier8);
+        GroceryAgent.cashierCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent cashier8 = grocery.getAgents().get(9);
+        cashier8.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,62), cashier8, null, 1.27, grocery.getPatch(44,62).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(cashier8.getAgentMovement().getCurrentPatch());
+        GroceryAgent.cashierCount++;
+        GroceryAgent.agentCount++;
 
-        GroceryAgent bagger1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, grocery.getPatch(45,20), true, null, -1);
-        grocery.getAgents().add(bagger1);
+        GroceryAgent bagger1 = grocery.getAgents().get(10);
+        bagger1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(45,20), bagger1, null, 1.27, grocery.getPatch(45,20).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(bagger1.getAgentMovement().getCurrentPatch());
-        GroceryAgent bagger2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, grocery.getPatch(45,26), true, null, -1);
-        grocery.getAgents().add(bagger2);
+        GroceryAgent.baggerCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent bagger2 = grocery.getAgents().get(11);
+        bagger2.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(45,26), bagger2, null, 1.27, grocery.getPatch(45,26).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(bagger2.getAgentMovement().getCurrentPatch());
-        GroceryAgent bagger3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, grocery.getPatch(45,32), true, null, -1);
-        grocery.getAgents().add(bagger3);
+        GroceryAgent.baggerCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent bagger3 = grocery.getAgents().get(12);
+        bagger3.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(45,32), bagger3, null, 1.27, grocery.getPatch(45,32).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(bagger3.getAgentMovement().getCurrentPatch());
-        GroceryAgent bagger4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, grocery.getPatch(45,38), true, null, -1);
-        grocery.getAgents().add(bagger4);
+        GroceryAgent.baggerCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent bagger4 = grocery.getAgents().get(13);
+        bagger4.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(45,38), bagger4, null, 1.27, grocery.getPatch(45,38).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(bagger4.getAgentMovement().getCurrentPatch());
-        GroceryAgent bagger5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, grocery.getPatch(45,44), true, null, -1);
-        grocery.getAgents().add(bagger5);
+        GroceryAgent.baggerCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent bagger5 = grocery.getAgents().get(14);
+        bagger5.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(45,44), bagger5, null, 1.27, grocery.getPatch(45,44).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(bagger5.getAgentMovement().getCurrentPatch());
-        GroceryAgent bagger6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, grocery.getPatch(45,50), true, null, -1);
-        grocery.getAgents().add(bagger6);
+        GroceryAgent.baggerCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent bagger6 = grocery.getAgents().get(15);
+        bagger6.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(45,50), bagger6, null, 1.27, grocery.getPatch(45,50).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(bagger6.getAgentMovement().getCurrentPatch());
-        GroceryAgent bagger7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, grocery.getPatch(45,56), true, null, -1);
-        grocery.getAgents().add(bagger7);
+        GroceryAgent.baggerCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent bagger7 = grocery.getAgents().get(16);
+        bagger7.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(45,56), bagger7, null, 1.27, grocery.getPatch(45,56).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(bagger7.getAgentMovement().getCurrentPatch());
-        GroceryAgent bagger8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, grocery.getPatch(45,62), true, null, -1);
-        grocery.getAgents().add(bagger8);
+        GroceryAgent.baggerCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent bagger8 = grocery.getAgents().get(17);
+        bagger8.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(45,62), bagger8, null, 1.27, grocery.getPatch(45,62).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(bagger8.getAgentMovement().getCurrentPatch());
+        GroceryAgent.baggerCount++;
+        GroceryAgent.agentCount++;
 
-        GroceryAgent service1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, null, null, null, grocery.getPatch(44,4), true, null, -1);
-        grocery.getAgents().add(service1);
+        GroceryAgent service1 = grocery.getAgents().get(18);
+        service1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,4), service1, null, 1.27, grocery.getPatch(44,4).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(service1.getAgentMovement().getCurrentPatch());
-        GroceryAgent service2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, null, null, null, grocery.getPatch(44,8), true, null, -1);
-        grocery.getAgents().add(service2);
+        GroceryAgent.customerServiceCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent service2 = grocery.getAgents().get(19);
+        service2.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,8), service2, null, 1.27, grocery.getPatch(44,8).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(service2.getAgentMovement().getCurrentPatch());
-        GroceryAgent service3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, null, null, null, grocery.getPatch(44,12), true, null, -1);
-        grocery.getAgents().add(service3);
+        GroceryAgent.customerServiceCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent service3 = grocery.getAgents().get(20);
+        service3.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,12), service3, null, 1.27, grocery.getPatch(44,12).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(service3.getAgentMovement().getCurrentPatch());
+        GroceryAgent.customerServiceCount++;
+        GroceryAgent.agentCount++;
 
-        GroceryAgent food1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, grocery.getPatch(58,8), true, null, -1);
-        grocery.getAgents().add(food1);
+        GroceryAgent food1 = grocery.getAgents().get(21);
+        food1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(58,8), food1, null, 1.27, grocery.getPatch(58,8).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(food1.getAgentMovement().getCurrentPatch());
-        GroceryAgent food2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, grocery.getPatch(58,17), true, null, -1);
-        grocery.getAgents().add(food2);
+        GroceryAgent.staffFoodCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent food2 = grocery.getAgents().get(22);
+        food2.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(58,17), food2, null, 1.27, grocery.getPatch(58,17).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(food2.getAgentMovement().getCurrentPatch());
-        GroceryAgent food3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, grocery.getPatch(58,26), true, null, -1);
-        grocery.getAgents().add(food3);
+        GroceryAgent.staffFoodCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent food3 = grocery.getAgents().get(23);
+        food3.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(58,26), food3, null, 1.27, grocery.getPatch(58,26).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(food3.getAgentMovement().getCurrentPatch());
-        GroceryAgent food4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, grocery.getPatch(58,35), true, null, -1);
-        grocery.getAgents().add(food4);
+        GroceryAgent.staffFoodCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent food4 = grocery.getAgents().get(24);
+        food4.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(58,35), food4, null, 1.27, grocery.getPatch(58,35).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(food4.getAgentMovement().getCurrentPatch());
-        GroceryAgent food5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, grocery.getPatch(58,63), true, null, -1);
-        grocery.getAgents().add(food5);
+        GroceryAgent.staffFoodCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent food5 = grocery.getAgents().get(25);
+        food5.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(58,44), food5, null, 1.27, grocery.getPatch(58,44).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(food5.getAgentMovement().getCurrentPatch());
-        GroceryAgent food6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, grocery.getPatch(58,72), true, null, -1);
-        grocery.getAgents().add(food6);
+        GroceryAgent.staffFoodCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent food6 = grocery.getAgents().get(26);
+        food6.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(58,53), food6, null, 1.27, grocery.getPatch(58,53).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(food6.getAgentMovement().getCurrentPatch());
-        GroceryAgent food7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, grocery.getPatch(58,81), true, null, -1);
-        grocery.getAgents().add(food7);
+        GroceryAgent.staffFoodCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent food7 = grocery.getAgents().get(27);
+        food7.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(58,62), food7, null, 1.27, grocery.getPatch(58,62).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(food7.getAgentMovement().getCurrentPatch());
-        GroceryAgent food8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, grocery.getPatch(58,90), true, null, -1);
-        grocery.getAgents().add(food8);
+        GroceryAgent.staffFoodCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent food8 = grocery.getAgents().get(28);
+        food8.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(58,71), food8, null, 1.27, grocery.getPatch(58,71).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(food8.getAgentMovement().getCurrentPatch());
+        GroceryAgent.staffFoodCount++;
+        GroceryAgent.agentCount++;
 
-        GroceryAgent butcher1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BUTCHER, null, null, null, grocery.getPatch(29,1), true, null, -1);
-        grocery.getAgents().add(butcher1);
+        GroceryAgent butcher1 = grocery.getAgents().get(29);
+        butcher1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(29,1), butcher1, null, 1.27, grocery.getPatch(29,1).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(butcher1.getAgentMovement().getCurrentPatch());
-        GroceryAgent butcher2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BUTCHER, null, null, null, grocery.getPatch(37,1), true, null, -1);
-        grocery.getAgents().add(butcher2);
+        GroceryAgent.butcherCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent butcher2 = grocery.getAgents().get(30);
+        butcher2.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(37,1), butcher2, null, 1.27, grocery.getPatch(37,1).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(butcher2.getAgentMovement().getCurrentPatch());
+        GroceryAgent.butcherCount++;
+        GroceryAgent.agentCount++;
 
-        GroceryAgent aisle1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(3,15), true, null, -1);
-        grocery.getAgents().add(aisle1);
+        GroceryAgent aisle1 = grocery.getAgents().get(31);
+        aisle1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(3,15), aisle1, null, 1.27, grocery.getPatch(3,15).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(aisle1.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(3,42), true, null, -1);
-        grocery.getAgents().add(aisle2);
+        GroceryAgent.staffAisleCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent aisle2 = grocery.getAgents().get(32);
+        aisle2.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(3,42), aisle2, null, 1.27, grocery.getPatch(3,42).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(aisle2.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(3,69), true, null, -1);
-        grocery.getAgents().add(aisle3);
+        GroceryAgent.staffAisleCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent aisle3 = grocery.getAgents().get(33);
+        aisle3.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(3,69), aisle3, null, 1.27, grocery.getPatch(3,69).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(aisle3.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(18,95), true, null, -1);
-        grocery.getAgents().add(aisle4);
+        GroceryAgent.staffAisleCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent aisle4 = grocery.getAgents().get(34);
+        aisle4.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(18,95), aisle4, null, 1.27, grocery.getPatch(18,95).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(aisle4.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(44,95), true, null, -1);
-        grocery.getAgents().add(aisle5);
+        GroceryAgent.staffAisleCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent aisle5 = grocery.getAgents().get(35);
+        aisle5.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,95), aisle5, null, 1.27, grocery.getPatch(44,95).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(aisle5.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(10,4), true, null, -1);
-        grocery.getAgents().add(aisle6);
+        GroceryAgent.staffAisleCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent aisle6 = grocery.getAgents().get(36);
+        aisle6.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(10,4), aisle6, null, 1.27, grocery.getPatch(10,4).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(aisle6.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(12,29), true, null, -1);
-        grocery.getAgents().add(aisle8);
+        GroceryAgent.staffAisleCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent aisle7 = grocery.getAgents().get(37);
+        aisle7.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(12,29), aisle7, null, 1.27, grocery.getPatch(12,29).getPatchCenterCoordinates(), -1));
+        grocery.getAgentPatchSet().add(aisle7.getAgentMovement().getCurrentPatch());
+        GroceryAgent.staffAisleCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent aisle8 = grocery.getAgents().get(38);
+        aisle8.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(18,29), aisle8, null, 1.27, grocery.getPatch(18,29).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(aisle8.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle9 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(18,29), true, null, -1);
-        grocery.getAgents().add(aisle9);
+        GroceryAgent.staffAisleCount++;
+        GroceryAgent.agentCount++;
+        GroceryAgent aisle9 = grocery.getAgents().get(39);
+        aisle9.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(24,29), aisle9, null, 1.27, grocery.getPatch(24,29).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(aisle9.getAgentMovement().getCurrentPatch());
-        GroceryAgent aisle10 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(24,29), true, null, -1);
-        grocery.getAgents().add(aisle10);
-        grocery.getAgentPatchSet().add(aisle10.getAgentMovement().getCurrentPatch());
+        GroceryAgent.staffAisleCount++;
+        GroceryAgent.agentCount++;
 //        GroceryAgent aisle11 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, grocery.getPatch(30,29), true, null, -1);
 //        grocery.getAgents().add(aisle11);
 //        grocery.getAgentPatchSet().add(aisle11.getAgentMovement().getCurrentPatch());
@@ -613,91 +697,89 @@ public class GrocerySimulator extends Simulator {
         boolean isFamily = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
 
         if (CHANCE > spawnChance) {
-            if (isFamily && MAX_FAMILY != 0) {
-                int num = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3);
+            if (isFamily && totalAloneCustomerCount < MAX_FAMILY && currentFamilyCount < MAX_CURRENT_FAMILY) {
+                GroceryAgent leaderAgent = grocery.getUnspawnedFamilyAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedFamilyAgents().size()));
 
-                if (num == 0) { // Complete Family
-                    GroceryAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
-                    GroceryAgent.Gender gender2;
-                    if (gender1 == GroceryAgent.Gender.MALE) {
-                        gender2 = GroceryAgent.Gender.FEMALE;
-                    }
-                    else {
-                        gender2 = GroceryAgent.Gender.MALE;
-                    }
-                    GroceryAgent.Gender gender3 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
-                    GroceryAgent.Gender gender4 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
-
-                    agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner2.getPatch(), false, null, currentTick);
-                    grocery.getAgents().add(agent1);
+                if (leaderAgent.getPersona() == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER) { // Complete Family
+                    agent1 = leaderAgent;
+                    agent1.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), agent1, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
                     grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
+                    GroceryAgent.customerCount++;
+                    GroceryAgent.agentCount++;
 
-                    agent2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender2, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner1.getPatch(), false, agent1, currentTick);
-                    grocery.getAgents().add(agent2);
+                    agent2 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 1);
+                    agent2.setAgentMovement(new GroceryAgentMovement(spawner1.getPatch(), agent2, agent1, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick));
                     grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+                    GroceryAgent.customerCount++;
+                    GroceryAgent.agentCount++;
 
-                    agent3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender3, GroceryAgent.AgeGroup.FROM_15_TO_24, spawner3.getPatch(), false, agent1, currentTick);
-                    grocery.getAgents().add(agent3);
+                    agent3 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 2);
+                    agent3.setAgentMovement(new GroceryAgentMovement(spawner3.getPatch(), agent3, agent1, 1.27, spawner3.getPatch().getPatchCenterCoordinates(), currentTick));
                     grocery.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
+                    GroceryAgent.customerCount++;
+                    GroceryAgent.agentCount++;
 
-                    agent4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender4, GroceryAgent.AgeGroup.FROM_15_TO_24, spawner3.getPatch(), false, agent1, currentTick);
-                    grocery.getAgents().add(agent4);
+                    agent4 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 3);
+                    agent4.setAgentMovement(new GroceryAgentMovement(spawner4.getPatch(), agent4, agent1, 1.27, spawner4.getPatch().getPatchCenterCoordinates(), currentTick));
                     grocery.getAgentPatchSet().add(agent4.getAgentMovement().getCurrentPatch());
+                    GroceryAgent.customerCount++;
+                    GroceryAgent.agentCount++;
 
                     agent1.getAgentMovement().getFollowers().add(agent2);
                     agent1.getAgentMovement().getFollowers().add(agent3);
                     agent1.getAgentMovement().getFollowers().add(agent4);
                     agent1.getAgentMovement().setNextState();
                 }
-                else if (num == 1) { // Help Family
-                    GroceryAgent.Gender gender3 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
-
-                    agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, GroceryAgent.Gender.FEMALE, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner2.getPatch(), false, null, currentTick);
-                    grocery.getAgents().add(agent1);
+                else if (leaderAgent.getPersona() == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER) { // Help Family
+                    agent1 = leaderAgent;
+                    agent1.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), agent1, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
                     grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
+                    GroceryAgent.customerCount++;
+                    GroceryAgent.agentCount++;
 
-                    agent2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, GroceryAgent.Gender.FEMALE, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner1.getPatch(), false, agent1, currentTick);
-                    grocery.getAgents().add(agent2);
+                    agent2 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 1);
+                    agent2.setAgentMovement(new GroceryAgentMovement(spawner1.getPatch(), agent2, agent1, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick));
                     grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+                    GroceryAgent.customerCount++;
+                    GroceryAgent.agentCount++;
 
-                    agent3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, gender3, GroceryAgent.AgeGroup.FROM_15_TO_24, spawner3.getPatch(), false, agent1, currentTick);
-                    grocery.getAgents().add(agent3);
+                    agent3 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 2);
+                    agent3.setAgentMovement(new GroceryAgentMovement(spawner3.getPatch(), agent3, agent1, 1.27, spawner3.getPatch().getPatchCenterCoordinates(), currentTick));
                     grocery.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
+                    GroceryAgent.customerCount++;
+                    GroceryAgent.agentCount++;
 
                     agent1.getAgentMovement().getFollowers().add(agent2);
                     agent1.getAgentMovement().getFollowers().add(agent3);
                     agent1.getAgentMovement().setNextState();
                 }
                 else { // Duo Family
-                    GroceryAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
-                    GroceryAgent.Gender gender2 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
-
-                    agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.DUO_FAMILY_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner2.getPatch(), false, null, currentTick);
-                    grocery.getAgents().add(agent1);
+                    agent1 = leaderAgent;
+                    agent1.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), agent1, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
                     grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
+                    GroceryAgent.customerCount++;
+                    GroceryAgent.agentCount++;
 
-                    agent2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.DUO_FAMILY_CUSTOMER, gender2, GroceryAgent.AgeGroup.FROM_15_TO_24, spawner1.getPatch(), false, agent1, currentTick);
-                    grocery.getAgents().add(agent2);
+                    agent2 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 1);
+                    agent2.setAgentMovement(new GroceryAgentMovement(spawner1.getPatch(), agent2, agent1, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick));
                     grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+                    GroceryAgent.customerCount++;
+                    GroceryAgent.agentCount++;
 
                     agent1.getAgentMovement().getFollowers().add(agent2);
                     agent1.getAgentMovement().setNextState();
                 }
-
+                currentFamilyCount++;
+                totalFamilyCount++;
             }
-            else if (!isFamily && MAX_ALONE != 0) {
-                boolean isSttp = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-                GroceryAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
-
-                if (isSttp) {
-                    agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.STTP_ALONE_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner2.getPatch(), false, null, currentTick);
-                }
-                else {
-                    agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, spawner2.getPatch(), false, null, currentTick);
-                }
-                grocery.getAgents().add(agent1);
-                grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
-
+            else if (!isFamily && totalAloneCustomerCount < MAX_ALONE && currentAloneCustomerCount < MAX_CURRENT_ALONE) {
+                GroceryAgent aloneAgent = grocery.getUnspawnedAloneAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedAloneAgents().size()));
+                aloneAgent.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), aloneAgent, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
+                grocery.getAgentPatchSet().add(aloneAgent.getAgentMovement().getCurrentPatch());
+                currentAloneCustomerCount++;
+                totalAloneCustomerCount++;
+                GroceryAgent.customerCount++;
+                GroceryAgent.agentCount++;
             }
         }
     }

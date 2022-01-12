@@ -187,44 +187,44 @@ public class OfficeAgent extends Agent {
         this.id = agentCount;
         this.type = type;
         this.inOnStart = inOnStart;
-
-        if (type == Type.BOSS) {
-            OfficeAgent.bossCount++;
-        }
-        else if (type == Type.MANAGER) {
-            OfficeAgent.managerCount++;
-        }
-        else if (type == Type.BUSINESS) {
-            OfficeAgent.businessCount++;
-        }
-        else if (type == Type.RESEARCHER) {
-            OfficeAgent.researcherCount++;
-        }
-        else if (type == Type.JANITOR) {
-            OfficeAgent.janitorCount++;
-        }
-        else if (type == Type.CLIENT) {
-            OfficeAgent.clientCount++;
-        }
-        else if (type == Type.DRIVER) {
-            OfficeAgent.driverCount++;
-        }
-        else if (type == Type.TECHNICAL) {
-            OfficeAgent.technicalCount++;
-        }
-        else if (type == Type.VISITOR) {
-            OfficeAgent.visitorCount++;
-        }
-        else if (type == Type.GUARD) {
-            OfficeAgent.guardCount++;
-        }
-        else if (type == Type.RECEPTIONIST) {
-            OfficeAgent.receptionistCount++;
-        }
-        else if (type == Type.SECRETARY) {
-            OfficeAgent.secretaryCount++;
-        }
-        OfficeAgent.agentCount++;
+//
+//        if (type == Type.BOSS) {
+//            OfficeAgent.bossCount++;
+//        }
+//        else if (type == Type.MANAGER) {
+//            OfficeAgent.managerCount++;
+//        }
+//        else if (type == Type.BUSINESS) {
+//            OfficeAgent.businessCount++;
+//        }
+//        else if (type == Type.RESEARCHER) {
+//            OfficeAgent.researcherCount++;
+//        }
+//        else if (type == Type.JANITOR) {
+//            OfficeAgent.janitorCount++;
+//        }
+//        else if (type == Type.CLIENT) {
+//            OfficeAgent.clientCount++;
+//        }
+//        else if (type == Type.DRIVER) {
+//            OfficeAgent.driverCount++;
+//        }
+//        else if (type == Type.TECHNICAL) {
+//            OfficeAgent.technicalCount++;
+//        }
+//        else if (type == Type.VISITOR) {
+//            OfficeAgent.visitorCount++;
+//        }
+//        else if (type == Type.GUARD) {
+//            OfficeAgent.guardCount++;
+//        }
+//        else if (type == Type.RECEPTIONIST) {
+//            OfficeAgent.receptionistCount++;
+//        }
+//        else if (type == Type.SECRETARY) {
+//            OfficeAgent.secretaryCount++;
+//        }
+//        OfficeAgent.agentCount++;
 
         this.gender = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? OfficeAgent.Gender.FEMALE : OfficeAgent.Gender.MALE;
 
@@ -352,9 +352,9 @@ public class OfficeAgent extends Agent {
     }
 
     public static class OfficeAgentFactory extends Agent.AgentFactory {
-        public static OfficeAgent create(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick, int team, Cubicle assignedCubicle) {
-            return new OfficeAgent(type, spawnPatch, inOnStart, currentTick, team, assignedCubicle);
-        }
+//        public static OfficeAgent create(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick, int team, Cubicle assignedCubicle) {
+//            return new OfficeAgent(type, spawnPatch, inOnStart, currentTick, team, assignedCubicle);
+//        }
         public static OfficeAgent create(OfficeAgent.Type type, boolean inOnStart) {
             return new OfficeAgent(type, inOnStart);
         }
