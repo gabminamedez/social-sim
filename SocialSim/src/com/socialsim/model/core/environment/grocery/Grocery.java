@@ -435,18 +435,18 @@ public class Grocery extends Environment {
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.GUARD_EXIT){
@@ -454,18 +454,18 @@ public class Grocery extends Environment {
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.STAFF_AISLE){
@@ -473,18 +473,18 @@ public class Grocery extends Environment {
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                             case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.BUTCHER){
@@ -492,18 +492,18 @@ public class Grocery extends Environment {
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.CASHIER){
@@ -511,18 +511,18 @@ public class Grocery extends Environment {
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.BAGGER){
@@ -530,18 +530,18 @@ public class Grocery extends Environment {
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.CUSTOMER_SERVICE){
@@ -549,18 +549,18 @@ public class Grocery extends Environment {
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.STAFF_FOOD){
@@ -568,113 +568,137 @@ public class Grocery extends Environment {
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.STTP_ALONE_CUSTOMER){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case STTP_ALONE_CUSTOMER -> IOSScales.add(1);
+                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(1);
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case STTP_ALONE_CUSTOMER -> IOSScales.add(1);
+                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(1);
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case COMPLETE_FAMILY_CUSTOMER -> {
+                                GroceryAgent agent = agents.get(i), otherAgent = agents.get(j);
+                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 3 >= otherAgent.getId()) // leader of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 3 >= agent.getId()) // follower of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case HELP_FAMILY_CUSTOMER -> {
+                                GroceryAgent agent = agents.get(i), otherAgent = agents.get(j);
+                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 2 >= otherAgent.getId()) // leader of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 2 >= agent.getId()) // follower of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                         }
                     }
                     else if (agent1 == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case DUO_FAMILY_CUSTOMER -> {
+                                GroceryAgent agent = agents.get(i), otherAgent = agents.get(j);
+                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 1 >= otherAgent.getId()) // leader of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 1 >= agent.getId()) // follower of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
                         }
                     }
                 }

@@ -285,116 +285,116 @@ public class Office extends Environment {
 
     public void createInitialAgentDemographics(int MAX_CLIENTS, int MAX_DRIVERS, int MAX_VISITORS){
         //Janitor
-        OfficeAgent janitor = OfficeAgent.OfficeAgentFactory.create(Type.JANITOR, true);
+        OfficeAgent janitor = OfficeAgent.OfficeAgentFactory.create(Type.JANITOR, true, 0);
         this.getAgents().add(janitor);
 
         //Guard
-        OfficeAgent guard = OfficeAgent.OfficeAgentFactory.create(Type.GUARD, true);
+        OfficeAgent guard = OfficeAgent.OfficeAgentFactory.create(Type.GUARD, true, 0);
         this.getAgents().add(guard);
 
         // Receptionist
-        OfficeAgent receptionist = OfficeAgent.OfficeAgentFactory.create(Type.RECEPTIONIST, true);
+        OfficeAgent receptionist = OfficeAgent.OfficeAgentFactory.create(Type.RECEPTIONIST, true, 0);
         this.getAgents().add(receptionist);
 
         //Boss
-        OfficeAgent boss = OfficeAgent.OfficeAgentFactory.create(Type.BOSS, true);
+        OfficeAgent boss = OfficeAgent.OfficeAgentFactory.create(Type.BOSS, true, 0);
         this.getAgents().add(boss);
 
         //Team 1
-        OfficeAgent manager_1 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true);
+        OfficeAgent manager_1 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 1);
         this.getAgents().add(manager_1);
 
-        OfficeAgent technical_1 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true);
+        OfficeAgent technical_1 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 1);
         this.getAgents().add(technical_1);
 
         for (int i = 0; i < 4; i++){
-            OfficeAgent business_1 = OfficeAgent.OfficeAgentFactory.create(Type.BUSINESS, true);
+            OfficeAgent business_1 = OfficeAgent.OfficeAgentFactory.create(Type.BUSINESS, true, 1);
             this.getAgents().add(business_1);
         }
 
         for (int i = 0; i < 4; i++){
-            OfficeAgent researcher_1 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true);
+            OfficeAgent researcher_1 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true, 1);
             this.getAgents().add(researcher_1);
         }
 
         //Team 2
-        OfficeAgent manager_2 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true);
+        OfficeAgent manager_2 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 2);
         this.getAgents().add(manager_2);
 
-        OfficeAgent technical_2 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true);
+        OfficeAgent technical_2 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 2);
         this.getAgents().add(technical_2);
 
         for (int i = 0; i < 4; i++){
-            OfficeAgent business_2 = OfficeAgent.OfficeAgentFactory.create(Type.BUSINESS, true);
+            OfficeAgent business_2 = OfficeAgent.OfficeAgentFactory.create(Type.BUSINESS, true, 2);
             this.getAgents().add(business_2);
         }
 
         for (int i = 0; i < 4; i++){
-            OfficeAgent researcher_2 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true);
+            OfficeAgent researcher_2 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true, 2);
             this.getAgents().add(researcher_2);
         }
 
         //Team 3
-        OfficeAgent manager_3 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true);
+        OfficeAgent manager_3 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 3);
         this.getAgents().add(manager_3);
 
-        OfficeAgent technical_3 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true);
+        OfficeAgent technical_3 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 3);
         this.getAgents().add(technical_3);
 
         for (int i = 0; i < 4; i++){
-            OfficeAgent business_3 = OfficeAgent.OfficeAgentFactory.create(Type.BUSINESS, true);
+            OfficeAgent business_3 = OfficeAgent.OfficeAgentFactory.create(Type.BUSINESS, true, 3);
             this.getAgents().add(business_3);
         }
 
         for (int i = 0; i < 4; i++){
-            OfficeAgent researcher_3 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true);
+            OfficeAgent researcher_3 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true, 3);
             this.getAgents().add(researcher_3);
         }
 
         //Team 4
-        OfficeAgent manager_4 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true);
+        OfficeAgent manager_4 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 4);
         this.getAgents().add(manager_4);
 
-        OfficeAgent technical_4 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true);
+        OfficeAgent technical_4 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 4);
         this.getAgents().add(technical_4);
 
         for (int i = 0; i < 7; i++){
-            OfficeAgent business_4 = OfficeAgent.OfficeAgentFactory.create(Type.BUSINESS, true);
+            OfficeAgent business_4 = OfficeAgent.OfficeAgentFactory.create(Type.BUSINESS, true, 4);
             this.getAgents().add(business_4);
         }
 
         for (int i = 0; i < 7; i++){
-            OfficeAgent researcher_4 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true);
+            OfficeAgent researcher_4 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true, 4);
             this.getAgents().add(researcher_4);
         }
 
         // Secretary
-        OfficeAgent secretary = OfficeAgent.OfficeAgentFactory.create(Type.SECRETARY, true);
+        OfficeAgent secretary = OfficeAgent.OfficeAgentFactory.create(Type.SECRETARY, true, 0);
         this.getAgents().add(secretary);
 
 
         int ctr = 0;
 
         while (ctr < MAX_CLIENTS){
-            OfficeAgent newAgent = OfficeAgent.OfficeAgentFactory.create(Type.CLIENT, true);
+            OfficeAgent newAgent = OfficeAgent.OfficeAgentFactory.create(Type.CLIENT, true, 0);
             ctr++;
             this.getAgents().add(newAgent);
         }
         ctr = 0;
         while (ctr < MAX_DRIVERS){
-            OfficeAgent newAgent = OfficeAgent.OfficeAgentFactory.create(Type.DRIVER, true);
+            OfficeAgent newAgent = OfficeAgent.OfficeAgentFactory.create(Type.DRIVER, true, 0);
             ctr++;
             this.getAgents().add(newAgent);
         }
         ctr = 0;
         while (ctr < MAX_VISITORS){
-            OfficeAgent newAgent = OfficeAgent.OfficeAgentFactory.create(Type.VISITOR, true);
+            OfficeAgent newAgent = OfficeAgent.OfficeAgentFactory.create(Type.VISITOR, true, 0);
             ctr++;
             this.getAgents().add(newAgent);
         }
 //        ctr = 0;
 //        while (ctr < OfficeSimulator.MAX_SECRETARIES){
-//            OfficeAgent newAgent = OfficeAgent.OfficeAgentFactory.create(Type.SECRETARY, true);
+//            OfficeAgent newAgent = OfficeAgent.OfficeAgentFactory.create(Type.SECRETARY, true, 0);
 //            ctr++;
 //            this.getAgents().add(newAgent);
 //        }
@@ -414,351 +414,675 @@ public class Office extends Environment {
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
+                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
                         }
                     }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
+                    else if (agent1 == Persona.APPROACHABLE_BOSS){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
+                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
+                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
+                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
                         }
                     }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
+                    else if (agent1 == Persona.MANAGER){
+                        //1. Get IOS Scale of each agent then put in an array
+                        //2. Place in convert function and replace IOS
+                        switch (agent2){
+                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                            case MANAGER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            }
+                            case INT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                        }
+                    }
+                    else if (agent1 == Persona.INT_BUSINESS){
+                        //1. Get IOS Scale of each agent then put in an array
+                        //2. Place in convert function and replace IOS
+                        switch (agent2){
+                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case MANAGER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    int[] listIOS = new int[]{1, 2, 5, 6};
+                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case INT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    int[] listIOS = new int[]{1, 2, 5, 6};
+                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case EXT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    int[] listIOS = new int[]{1, 2, 5, 6};
+                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case INT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case EXT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case INT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case EXT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_BUSINESS){
+                        //1. Get IOS Scale of each agent then put in an array
+                        //2. Place in convert function and replace IOS
+                        switch (agent2){
+                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case MANAGER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                        }
+                    }
+                    else if (agent1 == Persona.INT_RESEARCHER){
+                        //1. Get IOS Scale of each agent then put in an array
+                        //2. Place in convert function and replace IOS
+                        switch (agent2){
+                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case MANAGER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    int[] listIOS = new int[]{1, 2, 5, 6};
+                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case INT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case EXT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case INT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    int[] listIOS = new int[]{1, 2, 5, 6};
+                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case EXT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    int[] listIOS = new int[]{1, 2, 5, 6};
+                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case INT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case EXT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_RESEARCHER){
+                        //1. Get IOS Scale of each agent then put in an array
+                        //2. Place in convert function and replace IOS
+                        switch (agent2){
+                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case MANAGER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                        }
+                    }
+                    else if (agent1 == Persona.INT_TECHNICAL){
+                        //1. Get IOS Scale of each agent then put in an array
+                        //2. Place in convert function and replace IOS
+                        switch (agent2){
+                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case MANAGER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    int[] listIOS = new int[]{1, 2, 5, 6};
+                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case INT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case EXT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case INT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case EXT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case INT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    int[] listIOS = new int[]{1, 2, 5, 6};
+                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case EXT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent){
+                                    int[] listIOS = new int[]{1, 2, 5, 6};
+                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+                                }
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                        }
+                    }
+                    else if (agent1 == Persona.EXT_TECHNICAL){
+                        //1. Get IOS Scale of each agent then put in an array
+                        //2. Place in convert function and replace IOS
+                        switch (agent2){
+                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case MANAGER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_BUSINESS -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_RESEARCHER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case INT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case EXT_TECHNICAL -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                        }
+                    }
+                    else if (agent1 == Persona.JANITOR){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
+                    else if (agent1 == Persona.CLIENT){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
+                    else if (agent1 == Persona.DRIVER){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
+                    else if (agent1 == Persona.VISITOR){
+                        //1. Get IOS Scale of each agent then put in an array
+                        //2. Place in convert function and replace IOS
+                        switch (agent2){
+                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                        }
+                    }
+                    else if (agent1 == Persona.GUARD){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
+                    else if (agent1 == Persona.RECEPTIONIST){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
                             case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
+                    else if (agent1 == Persona.SECRETARY){
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.PROFESSIONAL_BOSS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
                         }
                     }
                 }

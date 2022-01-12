@@ -1412,10 +1412,11 @@ public class OfficeSimulator extends Simulator {
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             int spawnChance = (int) gate.getChancePerTick();
             int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-            int team = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
+//            int team = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
 
             if (CHANCE > spawnChance) {
                 agent = office.getUnspawnedWorkingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedWorkingAgents().size()));
+                int team = agent.getTeam();
                 if (agent.getType() == OfficeAgent.Type.BOSS && OfficeAgent.bossCount != MAX_BOSSES) {
                     agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());

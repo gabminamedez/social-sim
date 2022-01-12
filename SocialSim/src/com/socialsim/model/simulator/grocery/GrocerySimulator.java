@@ -42,7 +42,6 @@ public class GrocerySimulator extends Simulator {
     public static int currentAloneCustomerCount = 0;
     public static int totalFamilyCount = 0;
     public static int totalAloneCustomerCount = 0;
-    public static int currentCustomerCount = 0;
     public static int currentNonverbalCount = 0;
     public static int currentCooperativeCount = 0;
     public static int currentExchangeCount = 0;

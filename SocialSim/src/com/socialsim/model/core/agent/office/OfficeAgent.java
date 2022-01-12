@@ -38,6 +38,7 @@ public class OfficeAgent extends Agent {
     private final int id;
     private final OfficeAgent.Type type;
     private OfficeAgent.Gender gender;
+    private int team;
     private OfficeAgent.AgeGroup ageGroup = null;
     private OfficeAgent.Persona persona = null;
     private boolean inOnStart;
@@ -183,7 +184,7 @@ public class OfficeAgent extends Agent {
         this.agentMovement = new OfficeAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick, team, assignedCubicle);
     }
 
-    private OfficeAgent(OfficeAgent.Type type, boolean inOnStart) {
+    private OfficeAgent(OfficeAgent.Type type, boolean inOnStart, int team) {
         this.id = agentCount;
         this.type = type;
         this.inOnStart = inOnStart;
@@ -339,6 +340,10 @@ public class OfficeAgent extends Agent {
         return inOnStart;
     }
 
+    public int getTeam() {
+        return team;
+    }
+
     public OfficeAgentGraphic getAgentGraphic() {
         return agentGraphic;
     }
@@ -355,8 +360,8 @@ public class OfficeAgent extends Agent {
 //        public static OfficeAgent create(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick, int team, Cubicle assignedCubicle) {
 //            return new OfficeAgent(type, spawnPatch, inOnStart, currentTick, team, assignedCubicle);
 //        }
-        public static OfficeAgent create(OfficeAgent.Type type, boolean inOnStart) {
-            return new OfficeAgent(type, inOnStart);
+        public static OfficeAgent create(OfficeAgent.Type type, boolean inOnStart, int team) {
+            return new OfficeAgent(type, inOnStart, team);
         }
     }
 
