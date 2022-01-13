@@ -237,12 +237,11 @@ public class UniversityAgentMovement extends AgentMovement {
         return currentState;
     }
 
-    public void setNextState() {
-        this.currentState = this.currentState.getRoutePlan().setNextState();
+    public void setNextState(int i) {
+        this.currentState = this.currentState.getRoutePlan().setNextState(i);
     }
-
-    public void setPreviousState() {
-        this.currentState = this.currentState.getRoutePlan().setPreviousState();
+    public void setPreviousState(int i) {
+        this.currentState = this.currentState.getRoutePlan().setPreviousState(i);
     }
 
     public UniversityAction getCurrentAction() {

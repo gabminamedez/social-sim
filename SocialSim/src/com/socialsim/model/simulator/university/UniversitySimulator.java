@@ -54,7 +54,7 @@ public class UniversitySimulator extends Simulator {
     public static int currentProfJanitorCount = 0;
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
-    private final int MAX_STUDENTS = 100; //250
+    private final int MAX_STUDENTS = 10; //250
     private final int MAX_PROFESSORS = 10;
     private final int NUM_AGENTS = 500;
 
@@ -173,17 +173,18 @@ public class UniversitySimulator extends Simulator {
 
     private static void moveOne(UniversityAgent agent) throws Throwable {
         UniversityAgentMovement agentMovement = agent.getAgentMovement();
-
         UniversityAgent.Type type = agent.getType();
         UniversityAgent.Persona persona = agent.getPersona();
         UniversityState state = agentMovement.getCurrentState();
         UniversityAction action = agentMovement.getCurrentAction();
-
+        //System.out.println("State Index: "+ agentMovement.getStateIndex());
         //System.out.println(" Amenity: " + agentMovement.getGoalAmenity() + " Path: " + agentMovement.getCurrentPath()
         //+ " Action: " + action.getName() + " Attractor: " + agentMovement.getGoalAttractor());
 
         boolean isFull = false; //to check if all amenities are not occupied
 
+//        agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getRoutePlan().addUrgentRoute("BATHROOM",agent,agentMovement.getUniversity()));
+//        System.out.println(agentMovement.getRoutePlan().toString());
         // TODO: If interacting, then call functions. If not interacting, move
         if (!agentMovement.isInteracting() || agentMovement.isSimultaneousInteractionAllowed()){
             switch (type) {
@@ -227,7 +228,8 @@ public class UniversitySimulator extends Simulator {
                             else {
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() == 0) {
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
@@ -275,7 +277,8 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() == 0) {
-                                    agentMovement.setPreviousState();
+                                    agentMovement.setPreviousState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex()-1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
@@ -287,6 +290,7 @@ public class UniversitySimulator extends Simulator {
                     break;
 
                 case STUDENT:
+
                     if (state.getName() == UniversityState.Name.GOING_TO_SECURITY) {
                         if (action.getName() == UniversityAction.Name.GOING_TO_SECURITY_QUEUE) {
                             agentMovement.setSimultaneousInteractionAllowed(false);
@@ -323,7 +327,8 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                                 if (agentMovement.getCurrentAction().getDuration() == 0) {
                                     agentMovement.leaveQueue();
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
@@ -354,7 +359,8 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getGoalAmenity() == null) {
                                 if(!agentMovement.chooseGoal(Bench.class)){
                                     isFull = true;
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
                                             get(agentMovement.getActionIndex()));
@@ -386,7 +392,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -396,7 +403,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if(!agentMovement.chooseGoal(Bulletin.class)){
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
@@ -428,7 +436,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -562,7 +571,8 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
                                         // agentMovement.resetGoal();
-                                        agentMovement.setNextState();
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -616,7 +626,8 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
                                 //System.out.println(agentMovement.getParent().getId() + " = im done queueing");
                                 agentMovement.leaveQueue();
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 //System.out.println("Done DRINKING");
@@ -651,7 +662,8 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getGoalAmenity() == null) {
                                 if(!agentMovement.chooseGoal(StudyTable.class)){
                                     isFull = true;
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.setDuration(agent.getAgentMovement().getDuration());
@@ -668,7 +680,8 @@ public class UniversitySimulator extends Simulator {
                                     if (agentMovement.hasReachedNextPatchInPath()) {
                                         agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                         if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                            agentMovement.setNextState();
+                                            agentMovement.setNextState(agentMovement.getStateIndex());
+                                            agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                             agentMovement.setActionIndex(0);
                                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                             //System.out.println("Find_seat_studyroom to Studying");
@@ -702,7 +715,8 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
-                                        agentMovement.setNextState();
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -729,7 +743,8 @@ public class UniversitySimulator extends Simulator {
                                     if (agentMovement.hasReachedNextPatchInPath()) {
                                         agentMovement.reachPatchInPath();
                                         if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                            agentMovement.setNextState();
+                                            agentMovement.setNextState(agentMovement.getStateIndex());
+                                            agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                             agentMovement.setActionIndex(0);
                                             agentMovement.resetGoal();
                                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -767,7 +782,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -805,7 +821,8 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
-                                        agentMovement.setNextState();
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -837,7 +854,8 @@ public class UniversitySimulator extends Simulator {
                                     if (agentMovement.hasReachedNextPatchInPath()) {
                                         agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                         if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
-                                            agentMovement.setNextState();
+                                            agentMovement.setNextState(agentMovement.getStateIndex());
+                                            agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                             agentMovement.setActionIndex(0);
                                             agentMovement.resetGoal();
                                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -912,7 +930,8 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
                                 //System.out.println(agentMovement.getParent().getId() + " = im done queueing");
                                 agentMovement.leaveQueue();
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 //System.out.println("Done Checkout");
@@ -944,7 +963,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1017,7 +1037,8 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                                 if (agentMovement.getCurrentAction().getDuration() == 0) {
                                     agentMovement.leaveQueue();
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
@@ -1048,7 +1069,8 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getGoalAmenity() == null) {
                                 if(!agentMovement.chooseGoal(Bench.class)){
                                     isFull = true;
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
                                             get(agentMovement.getActionIndex()));
@@ -1080,7 +1102,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1090,7 +1113,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if(!agentMovement.chooseGoal(Bulletin.class)){
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
@@ -1125,7 +1149,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1180,7 +1205,8 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getGoalAmenity() == null) {
                                 if(!agentMovement.chooseGoal(StudyTable.class)){
                                     isFull = true;
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.setDuration(agent.getAgentMovement().getDuration());
@@ -1197,7 +1223,8 @@ public class UniversitySimulator extends Simulator {
                                     if (agentMovement.hasReachedNextPatchInPath()) {
                                         agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                         if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                            agentMovement.setNextState();
+                                            agentMovement.setNextState(agentMovement.getStateIndex());
+                                            agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                             agentMovement.setActionIndex(0);
                                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                             //System.out.println("Find_seat_studyroom to Studying");
@@ -1230,7 +1257,8 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
-                                        agentMovement.setNextState();
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -1346,7 +1374,8 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
                                         // agentMovement.resetGoal();
-                                        agentMovement.setNextState();
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -1400,7 +1429,8 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
                                 //System.out.println(agentMovement.getParent().getId() + " = im done queueing");
                                 agentMovement.leaveQueue();
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 //System.out.println("Done DRINKING");
@@ -1425,7 +1455,8 @@ public class UniversitySimulator extends Simulator {
                                     if (agentMovement.hasReachedNextPatchInPath()) {
                                         agentMovement.reachPatchInPath();
                                         if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                            agentMovement.setNextState();
+                                            agentMovement.setNextState(agentMovement.getStateIndex());
+                                            agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                             agentMovement.setActionIndex(0);
                                             agentMovement.resetGoal();
                                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -1463,7 +1494,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1502,11 +1534,11 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
-                                        agentMovement.setNextState();
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
-                                        //System.out.println("LEFT THE CLASSROOM");
                                     }
                                 }
                             }
@@ -1607,7 +1639,8 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
                                 //System.out.println(agentMovement.getParent().getId() + " = im done queueing");
                                 agentMovement.leaveQueue();
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 //System.out.println("Done Checkout");
@@ -1639,7 +1672,8 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
