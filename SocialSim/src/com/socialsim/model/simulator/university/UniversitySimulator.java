@@ -18,10 +18,7 @@ import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,8 +51,8 @@ public class UniversitySimulator extends Simulator {
     public static int currentProfJanitorCount = 0;
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
-    private final int MAX_STUDENTS = 10; //250
-    private final int MAX_PROFESSORS = 10;
+    private final int MAX_STUDENTS = 20; //250
+    private final int MAX_PROFESSORS = 0;
     private final int NUM_AGENTS = 500;
 
     public UniversitySimulator() {
@@ -570,14 +567,43 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
-                                        // agentMovement.resetGoal();
-                                        agentMovement.setNextState(agentMovement.getStateIndex());
-                                        agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
-                                        agentMovement.setActionIndex(0);
-                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                        agentMovement.resetGoal();
-                                        //System.out.println("Transition to NEXT STATE LEFT BATHROOM");
-                                        //TODO:Return to previous state.
+                                        if(agentMovement.getRoutePlan().isFromStudying()){
+                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+                                            agentMovement.setNextState(agentMovement.getReturnIndex());
+                                            agentMovement.setStateIndex(agentMovement.getReturnIndex());
+                                            agentMovement.setActionIndex(0);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.resetGoal();
+                                            agentMovement.getRoutePlan().setFromStudying(false);
+                                            System.out.println("Going back to studying");
+                                            //TODO:ASDFASDF
+                                            System.out.println("Action: " + action.getName());
+                                        }
+                                        else if(agentMovement.getRoutePlan().isFromClass()){
+                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+                                            agentMovement.setNextState(agentMovement.getReturnIndex()-1);
+                                            agentMovement.setStateIndex(agentMovement.getReturnIndex()-1);
+                                            agentMovement.setActionIndex(0);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.resetGoal();
+                                            agentMovement.getRoutePlan().setFromClass(false);
+                                        }
+//                                        else if(agentMovement.getRoutePlan().isFromLunch()){ TODO: Ask about lunch in between states
+//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex());
+//                                            agentMovement.setActionIndex(0);
+//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                            agentMovement.resetGoal();
+//                                            agentMovement.getRoutePlan().setFromClass(false);
+//                                        }
+                                        else{
+                                            agentMovement.setNextState(agentMovement.getStateIndex());
+                                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                            agentMovement.setActionIndex(0);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.resetGoal();
+                                        }
                                     }
                                 }
                             }
@@ -692,15 +718,33 @@ public class UniversitySimulator extends Simulator {
                         }
                     }
                     else if (state.getName()== UniversityState.Name.STUDYING) {
+                        System.out.println("Im studying");
                         if (action.getName()==UniversityAction.Name.STUDY_AREA_STAY_PUT){
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                             if (agentMovement.getCurrentAction().getDuration() == 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
-                                //System.out.println("DONE STUDYING");
+                                System.out.println("DONE STUDYING");
+                            }
+                            else{
+                                agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                                Random rd = new Random();
+                                int min = 0;
+                                int max = 100;
+                                int x = min + rd.nextInt(max);
+                                //ystem.out.println(x);
+                                if( x >95) //TODO: Urgent route here
+                                {
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex()-1); //Need -1 because need to go through the go to study room index
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex()+1,agentMovement.getRoutePlan().addUrgentRoute("BATHROOM",agent,agentMovement.getUniversity()));
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setFromStudying(true);
+                                    System.out.println(agentMovement.getRoutePlan().isFromStudying());
+                                }
                             }
                         }
                         else if(action.getName()==UniversityAction.Name.LEAVE_STUDY_AREA){
@@ -732,7 +776,7 @@ public class UniversitySimulator extends Simulator {
                         if (action.getName()==UniversityAction.Name.GO_TO_CLASSROOM){
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.chooseClassroomDoor(3);
+                                agentMovement.chooseClassroomDoor(agentMovement.getCurrentState().getClassroomID()); //TODO
                                 if(agentMovement.getGoalAttractor() == null && agentMovement.getGoalAmenity() == null){
                                     agentMovement.stop();
                                 }
@@ -813,7 +857,7 @@ public class UniversitySimulator extends Simulator {
                         else if(action.getName()==UniversityAction.Name.LEAVE_CLASSROOM){
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.chooseClassroomDoor(3); // TODO classroom id hardcoded
+                                agentMovement.chooseClassroomDoor(agentMovement.getCurrentState().getClassroomID()); // TODO classroom id hardcoded
                             }
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();
@@ -993,9 +1037,15 @@ public class UniversitySimulator extends Simulator {
                             }
                         }
                     }
-//                    if(agentMovement.getCurrentPatch() != null){
-//                        System.out.println("Action: " + action.getName());
-//                    }
+                    if(agentMovement.getCurrentPatch() != null){
+
+//                        int i;
+//                        for(i=0; i<5;i++)
+//                        {
+//                            System.out.print(agentMovement.getRoutePlan().getCurrentRoutePlan().get(i));
+//                        }
+                        System.out.println("Action: " + action.getName());
+                    }
                     break;
 
 
@@ -1373,14 +1423,41 @@ public class UniversitySimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) { // If agent has reached the QueueuingPatchField
-                                        // agentMovement.resetGoal();
-                                        agentMovement.setNextState(agentMovement.getStateIndex());
-                                        agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
-                                        agentMovement.setActionIndex(0);
-                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                        agentMovement.resetGoal();
-                                        //System.out.println("Transition to NEXT STATE LEFT BATHROOM");
-                                        //TODO:Return to previous state.
+                                        if(agentMovement.getRoutePlan().isFromStudying()){
+                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+                                            agentMovement.setNextState(agentMovement.getReturnIndex()-1);
+                                            agentMovement.setStateIndex(agentMovement.getReturnIndex()-1);
+                                            agentMovement.setActionIndex(0);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.resetGoal();
+                                            agentMovement.getRoutePlan().setFromStudying(false);
+                                            System.out.println("Going back to studying");
+                                        }
+                                        else if(agentMovement.getRoutePlan().isFromClass()){
+                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+                                            agentMovement.setNextState(agentMovement.getReturnIndex()-1);
+                                            agentMovement.setStateIndex(agentMovement.getReturnIndex()-1);
+                                            agentMovement.setActionIndex(0);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.resetGoal();
+                                            agentMovement.getRoutePlan().setFromClass(false);
+                                        }
+//                                        else if(agentMovement.getRoutePlan().isFromLunch()){ TODO: Ask about lunch in between states
+//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex());
+//                                            agentMovement.setActionIndex(0);
+//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                            agentMovement.resetGoal();
+//                                            agentMovement.getRoutePlan().setFromClass(false);
+//                                        }
+                                        else{
+                                            agentMovement.setNextState(agentMovement.getStateIndex());
+                                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                            agentMovement.setActionIndex(0);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.resetGoal();
+                                        }
                                     }
                                 }
                             }
@@ -1444,7 +1521,7 @@ public class UniversitySimulator extends Simulator {
                         if (action.getName()==UniversityAction.Name.GO_TO_CLASSROOM){
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.chooseClassroomDoor(3);
+                                agentMovement.chooseClassroomDoor(3/*agentMovement.getCurrentState().getClassroomID()*/);//TODO
                                 if(agentMovement.getGoalAttractor() == null && agentMovement.getGoalAmenity() == null){
                                     agentMovement.stop();
                                 }
@@ -1526,7 +1603,7 @@ public class UniversitySimulator extends Simulator {
                         else if(action.getName()==UniversityAction.Name.LEAVE_CLASSROOM){
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.chooseClassroomDoor(3); // TODO classroom id hardcoded
+                                agentMovement.chooseClassroomDoor(3/*agentMovement.getCurrentState().getClassroomID()*/); // TODO classroom id hardcoded
                             }
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();

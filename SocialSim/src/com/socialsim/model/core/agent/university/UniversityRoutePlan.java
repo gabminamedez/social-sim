@@ -3,7 +3,6 @@ package com.socialsim.model.core.agent.university;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.university.patchfield.Bathroom;
-import com.socialsim.model.core.environment.university.patchfield.Cafeteria;
 import com.socialsim.model.core.environment.university.patchfield.StudyArea;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Door;
 import com.socialsim.model.simulator.Simulator;
@@ -15,7 +14,7 @@ public class UniversityRoutePlan {
     private ListIterator<UniversityState> currentRoutePlan; // Denotes the current route plan of the agent which owns this
     private UniversityState currentState; // Denotes the state in the route plan
     private ArrayList<UniversityState> routePlan;
-
+    private boolean fromStudying, fromClass, fromLunch;
     private static final int MAX_CLASSES = 6;
     private static final int MAX_CLASSROOMS = 6;
     private static final int MAX_JANITOR_ROUNDS = 6;
@@ -55,26 +54,29 @@ public class UniversityRoutePlan {
             routePlan.add(new UniversityState(UniversityState.Name.GUARD, this, agent, actions));
         }
         else if (agent.getPersona() == UniversityAgent.Persona.JANITOR) {
-            actions = new ArrayList<>();
-            Patch randomToilet = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
-            List<Door> allDoors = university.getDoors();
-            Patch doorPatch = null;
-            for (Door door : allDoors) {
-                if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == Bathroom.class && door.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == randomToilet.getPatchField().getValue()) {
-                    doorPatch = door.getAmenityBlocks().get(0).getPatch();
-                    break;
-                }
-            }
-            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, doorPatch));
-            // actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, randomToilet));
-            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 10));
-            routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
-            actions = new ArrayList<>();
-            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_FOUNTAIN, doorPatch));
-            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 10));
-            routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
+//            actions = new ArrayList<>();
+//            Patch randomToilet = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
+//            List<Door> allDoors = university.getDoors();
+//            Patch doorPatch = null;
+//            for (Door door : allDoors) {
+//                if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == Bathroom.class && door.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == randomToilet.getPatchField().getValue()) {
+//                    doorPatch = door.getAmenityBlocks().get(0).getPatch();
+//                    break;
+//                }
+//            }
+//            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, doorPatch));
+//            // actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, randomToilet));
+//            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 10));
+//            routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
+//            actions = new ArrayList<>();
+//            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_FOUNTAIN, doorPatch));
+//            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 10));
+//            routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
         }
         else {
+            setFromClass(false);
+            setFromLunch(false);
+            setFromStudying(false);
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.GOING_TO_SECURITY_QUEUE));
             actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2));
@@ -95,6 +97,19 @@ public class UniversityRoutePlan {
                     break;
                 }
             }
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM,StudydoorPatch));
+            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_STUDY_ROOM));
+            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY,this,agent,actions));
+
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT,100));
+            actions.add(new UniversityAction(UniversityAction.Name.LEAVE_STUDY_AREA,StudydoorPatch));
+            routePlan.add(new UniversityState(UniversityState.Name.STUDYING,this,agent,actions));
+
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.LEAVE_BUILDING));
+            routePlan.add(new UniversityState(UniversityState.Name.GOING_HOME, this, agent, actions));
 /*
             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM,BathroomDoorPatch));
             actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
@@ -299,7 +314,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 1 -> {
                             actions = new ArrayList<>();
@@ -319,7 +334,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 2 -> {
                             actions = new ArrayList<>();
@@ -339,7 +354,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 3 -> {
                             actions = new ArrayList<>();
@@ -359,7 +374,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 4 -> {
                             actions = new ArrayList<>();
@@ -379,7 +394,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         default -> {
                             actions = new ArrayList<>();
@@ -399,7 +414,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                     }
                     if (i == LUNCH_TIME) {
@@ -475,7 +490,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 1 -> {
                             actions = new ArrayList<>();
@@ -495,7 +510,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 2 -> {
                             actions = new ArrayList<>();
@@ -515,7 +530,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 3 -> {
                             actions = new ArrayList<>();
@@ -535,7 +550,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 4 -> {
                             actions = new ArrayList<>();
@@ -555,7 +570,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         default -> {
                             actions = new ArrayList<>();
@@ -575,7 +590,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                     }
                     if (i == LUNCH_TIME) {
@@ -651,7 +666,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 1 -> {
                             actions = new ArrayList<>();
@@ -671,7 +686,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 2 -> {
                             actions = new ArrayList<>();
@@ -691,7 +706,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 3 -> {
                             actions = new ArrayList<>();
@@ -711,7 +726,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 4 -> {
                             actions = new ArrayList<>();
@@ -731,7 +746,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         default -> {
                             actions = new ArrayList<>();
@@ -751,7 +766,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                     }
                     if (i == LUNCH_TIME) {
@@ -827,7 +842,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 1 -> {
                             actions = new ArrayList<>();
@@ -847,7 +862,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 2 -> {
                             actions = new ArrayList<>();
@@ -867,7 +882,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 3 -> {
                             actions = new ArrayList<>();
@@ -887,7 +902,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         case 4 -> {
                             actions = new ArrayList<>();
@@ -907,7 +922,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                         default -> {
                             actions = new ArrayList<>();
@@ -927,7 +942,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                             actions.add(new UniversityAction(UniversityAction.Name.ASK_PROFESSOR_QUESTION));
                             actions.add(new UniversityAction(UniversityAction.Name.LEAVE_CLASSROOM));
-                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this, agent,actions));
+                            routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_STUDENT, this,classroomID, agent,actions));
                         }
                     }
                     if (i == LUNCH_TIME) {
@@ -1105,6 +1120,7 @@ public class UniversityRoutePlan {
         routePlan.add(new UniversityState(UniversityState.Name.GOING_HOME, this, agent, actions));
         //this.currentRoutePlan = routePlan.listIterator();
         setNextState(-1);
+        System.out.println("Reached the end");
     }
 
     public void resetClassroomSizes() {
@@ -1123,16 +1139,38 @@ public class UniversityRoutePlan {
         this.currentState = this.routePlan.get(i-1);
         return this.currentState;
     }
+    public boolean isFromStudying()
+    {
+        return fromStudying;
+    }
+    public boolean isFromLunch()
+    {
+        return fromLunch;
+    }
+    public boolean isFromClass()
+    {
+        return fromClass;
+    }
+    public void setFromStudying(boolean b){
+        this.fromStudying  = b;
+    }
+    public void setFromClass(boolean b){
+        this.fromClass = b;
+    }
+    public void setFromLunch(boolean b){
+        this.fromLunch = b;
+    }
 
-    public ListIterator<UniversityState> getCurrentRoutePlan() {
-        return currentRoutePlan;
+    public ArrayList<UniversityState> getCurrentRoutePlan() {
+        return routePlan;
     }
 
     public UniversityState getCurrentState() {
         return currentState;
     }
 
-    public UniversityState addUrgentRoute(String s,UniversityAgent agent, University university){
+    public UniversityState addUrgentRoute(String s, UniversityAgent agent, University university){
+        System.out.println("Adding urgent route");
         List<Door> allDoors = university.getDoors();
         Patch BathroomDoorPatch = null;
         for (Door door : allDoors) {

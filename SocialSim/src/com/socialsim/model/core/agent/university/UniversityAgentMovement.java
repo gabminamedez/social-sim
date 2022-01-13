@@ -52,6 +52,7 @@ public class UniversityAgentMovement extends AgentMovement {
     private AgentPath currentPath; // Denotes the current path followed by this agent, if any
     private int stateIndex;
     private int actionIndex;
+    private int returnIndex;
     private UniversityState currentState;
     private UniversityAction currentAction; // Low-level description of what the agent is doing
 
@@ -215,6 +216,14 @@ public class UniversityAgentMovement extends AgentMovement {
 
     public void setCurrentPath(AgentPath currentPath) {
         this.currentPath = currentPath;
+    }
+
+    public int getReturnIndex() {
+        return returnIndex;
+    }
+
+    public void setReturnIndex(int stateIndex) {
+        this.stateIndex = stateIndex;
     }
 
     public int getStateIndex() {
@@ -1395,9 +1404,9 @@ public class UniversityAgentMovement extends AgentMovement {
         }
     }
 
-    public boolean hasReachedFinalGoal() { // Check if this agent has reached its final goal
-        return !this.routePlan.getCurrentRoutePlan().hasNext();
-    }
+//    public boolean hasReachedFinalGoal() { // Check if this agent has reached its final goal
+//        return !this.routePlan.getCurrentRoutePlan().hasNext();
+//    }
 
     public boolean hasAgentReachedFinalPatchInPath() { // Check if this agent has reached the final patch in its current path
         return this.currentPath.getPath().isEmpty();
@@ -1864,6 +1873,7 @@ public class UniversityAgentMovement extends AgentMovement {
             this.interactionDuration--;
         }
     }
+
 
     public void decrementDuration(){
         this.duration = getDuration() - 1;
