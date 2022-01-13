@@ -13,9 +13,7 @@ import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Qu
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.Vector;
 import com.socialsim.model.core.environment.university.University;
-import com.socialsim.model.core.environment.university.patchfield.Bathroom;
-import com.socialsim.model.core.environment.university.patchfield.Classroom;
-import com.socialsim.model.core.environment.university.patchfield.StallField;
+import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
@@ -477,7 +475,8 @@ public class UniversityAgentMovement extends AgentMovement {
             List<Patch> patchToExploreNeighbors = patchToExplore.getNeighbors();
             for (Patch patchToExploreNeighbor : patchToExploreNeighbors) {
                 if ((patchToExploreNeighbor.getAmenityBlock() == null && patchToExploreNeighbor.getPatchField() == null)
-                        || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getPatchField() == null && patchToExploreNeighbor.getAmenityBlock().getParent().getClass() == goalAmenity.getClass())
+                        || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getPatchField() == null && patchToExploreNeighbor.getAmenityBlock().getParent() == goalAmenity)
+                        || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getPatchField() != null && patchToExploreNeighbor.getAmenityBlock().getParent() == goalAmenity)
                         || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getAmenityBlock().getParent().getClass() == Door.class)
                         || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getAmenityBlock().getParent().getClass() == Security.class)
                         || (patchToExploreNeighbor.getPatchField() != null && patchToExploreNeighbor.getPatchField().getKey().getClass() != Wall.class)
@@ -530,10 +529,10 @@ public class UniversityAgentMovement extends AgentMovement {
 
             for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
                 Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                if (candidateAttractor.getPatch().getAgents().isEmpty()) { // Break when first vacant amenity is found
+                if (!candidateAttractor.getPatch().getAmenityBlock().getIsReserved()) { // Break when first vacant amenity is found
                     chosenAmenity = candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
-                    candidateAttractor.getPatch().getAgents().add(this.parent);
+                    candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
                     break;
                 }
             }
@@ -552,43 +551,27 @@ public class UniversityAgentMovement extends AgentMovement {
         return true;
     }
 
-    public void chooseClassroomDoor(int classID) {
-        if (this.goalAmenity == null) {
+    public void chooseClassroomGoal(Class<? extends Amenity> nextAmenityClass, int classKey) { // Set the nearest goal to this agent
+        if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
+            List<? extends Amenity> amenityListInFloor = this.university.getAmenityList(nextAmenityClass);
             Amenity chosenAmenity = null;
-            Amenity temp1 = null;
-            Amenity temp2 = null;
             Amenity.AmenityBlock chosenAttractor = null;
-
-            switch(classID) {
-                case 1: temp1 = this.university.getDoors().get(0); temp2 = this.university.getDoors().get(1); break;
-                case 2: temp1 = this.university.getDoors().get(2); temp2 = this.university.getDoors().get(3); break;
-                case 3: temp1 = this.university.getDoors().get(5); temp2 = this.university.getDoors().get(6); break;
-                case 4: temp1 = this.university.getDoors().get(7); temp2 = this.university.getDoors().get(8); break;
-                case 5: temp1 = this.university.getDoors().get(9); temp2 = this.university.getDoors().get(10); break;
-                case 6: temp1 = this.university.getDoors().get(11); temp2 = this.university.getDoors().get(12); break;
-                case 7: temp1 = this.university.getDoors().get(13); break;
-            }
-
             HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
 
-            for (Amenity.AmenityBlock attractor : temp1.getAttractors()) { // Compute the distance to each attractor
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
-            }
-
-            for (Amenity.AmenityBlock attractor : temp2.getAttractors()) { // Compute the distance to each attractor
-                double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                distancesToAttractors.put(attractor, distanceToAttractor);
+            for (Amenity amenity : amenityListInFloor) {
+                if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == classKey) {
+                    for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                        double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                        distancesToAttractors.put(attractor, distanceToAttractor);
+                    }
+                }
             }
 
             // Sort amenity by distance, from nearest to furthest
-            List<Map.Entry<Amenity.AmenityBlock, Double> > list =
-                    new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+            List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
 
             Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
-                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1,
-                                   Map.Entry<Amenity.AmenityBlock, Double> o2)
-                {
+                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
                     return (o1.getValue()).compareTo(o2.getValue());
                 }
             });
@@ -600,16 +583,81 @@ public class UniversityAgentMovement extends AgentMovement {
 
             for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
                 Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                if (!candidateAttractor.getPatch().getAmenityBlock().getIsReserved()) { // Break when first vacant amenity is found
+                    chosenAmenity = candidateAttractor.getParent();
+                    chosenAttractor = candidateAttractor;
+                    candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
+                    break;
+                }
+            }
 
-                chosenAmenity =  candidateAttractor.getParent();
-                chosenAttractor = candidateAttractor;
+            this.goalAmenity = chosenAmenity;
+            this.goalAttractor = chosenAttractor;
+        }
+    }
 
+    public boolean chooseBathroomGoal(Class<? extends Amenity> nextAmenityClass) { // Set the nearest goal to this agent
+        if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
+            List<? extends Amenity> amenityListInFloor = this.university.getAmenityList(nextAmenityClass);
+            Amenity chosenAmenity = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+
+            for (Amenity amenity : amenityListInFloor) {
+                if (parent.getGender() == UniversityAgent.Gender.MALE) {
+                    if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == 2) {
+                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                            distancesToAttractors.put(attractor, distanceToAttractor);
+                        }
+                    }
+                }
+                else {
+                    if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == 1) {
+                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                            distancesToAttractors.put(attractor, distanceToAttractor);
+                        }
+                    }
+                }
+            }
+
+            // Sort amenity by distance, from nearest to furthest
+            List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                sortedDistances.put(aa.getKey(), aa.getValue());
+            }
+
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
+                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                if (!candidateAttractor.getPatch().getAmenityBlock().getIsReserved()) { // Break when first vacant amenity is found
+                    chosenAmenity = candidateAttractor.getParent();
+                    chosenAttractor = candidateAttractor;
+                    candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
+                    break;
+                }
+            }
+
+            if (chosenAmenity != null) {
                 this.goalAmenity = chosenAmenity;
                 this.goalAttractor = chosenAttractor;
 
-                break;
+                return true;
+            }
+            else {
+                return false;
             }
         }
+
+        return true;
     }
 
     public void chooseStall() {
@@ -906,7 +954,9 @@ public class UniversityAgentMovement extends AgentMovement {
             if(this.currentState.getName() != UniversityState.Name.GOING_TO_SECURITY && this.currentState.getName() != UniversityState.Name.GOING_HOME
                     && this.currentAction.getName() != UniversityAction.Name.QUEUE_VENDOR && this.currentAction.getName() != UniversityAction.Name.CHECKOUT
                     && this.currentAction.getName() != UniversityAction.Name.QUEUE_FOUNTAIN && this.currentAction.getName() != UniversityAction.Name.DRINK_FOUNTAIN
-                    && this.currentState.getName() != UniversityState.Name.GOING_TO_STUDY) {
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Bathroom.class)
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != StudyArea.class)
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Cafeteria.class)) {
                 for (Agent otherAgent : patch.getAgents()) { // Inspect each agent in each patch in the patches in the field of view
                     UniversityAgent universityAgent = (UniversityAgent) otherAgent;
                     if (agentsProcessed == agentsProcessedLimit) {
@@ -1080,7 +1130,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
     public void checkIfStuck() {
         if (this.currentAmenity == null) {
-            if (this.currentPatch.getAmenityBlock() != null) {
+            if (this.currentPatch.getAmenityBlock() != null && this.currentPatch.getAmenityBlock().getParent().getClass() != Door.class &&  this.currentPatch.getAmenityBlock().getParent() != this.goalAmenity) {
                 List<Patch> candidatePatches = this.currentPatch.getNeighbors();
                 for (Patch candidate: candidatePatches) {
                     if (candidate.getAmenityBlock() == null && (candidate.getPatchField() == null || (candidate.getPatchField() != null && candidate.getPatchField().getKey().getClass() != Wall.class))) {
@@ -1354,7 +1404,7 @@ public class UniversityAgentMovement extends AgentMovement {
             else {
                 break;
             }
-        } while (!this.currentPath.getPath().isEmpty() && nextPatch.getAmenityBlocksAround() == 0 && nextPatch.getWallsAround() == 0
+        } while (!this.currentPath.getPath().isEmpty() && nextPatch.getAmenityBlocksAround() == 0/* && nextPatch.getWallsAround() == 0*/
                 && this.isOnOrCloseToPatch(nextPatch) && this.hasClearLineOfSight(this.position, nextPatch.getPatchCenterCoordinates(), true));
     }
 
@@ -1516,7 +1566,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
             while (true) {
                 nextPatchInPath = this.currentPath.getPath().peek();
-                if (!(this.currentPath.getPath().size() > 1 && nextPatchInPath.getAmenityBlocksAround() == 0
+                if (!(this.currentPath.getPath().size() > 1/* && nextPatchInPath.getAmenityBlocksAround() == 0*/
                         && this.isOnOrCloseToPatch(nextPatchInPath)
                         && this.hasClearLineOfSight(this.position, nextPatchInPath.getPatchCenterCoordinates(), true))) {
                     break;
@@ -1634,7 +1684,7 @@ public class UniversityAgentMovement extends AgentMovement {
             return true;
         }
         else if (patch.getAmenityBlock() != null && !patch.getAmenityBlock().getParent().equals(amenity)) {
-            if (patch.getAmenityBlock().getParent().getClass() == Door.class || patch.getAmenityBlock().getParent().getClass() == Security.class || patch.getAmenityBlock().getParent().getClass() == Chair.class) {
+            if (patch.getAmenityBlock().getParent().getClass() == Door.class || patch.getAmenityBlock().getParent().getClass() == Security.class || patch.getAmenityBlock().getParent().getClass() == Chair.class || patch.getAmenityBlock().getParent().getClass() == Toilet.class || patch.getAmenityBlock().getParent().getClass() == StudyTable.class || patch.getAmenityBlock().getParent().getClass() == EatTable.class || patch.getAmenityBlock().getParent().getClass() == Bench.class) {
                 return false;
             }
             else {

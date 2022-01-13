@@ -31,7 +31,9 @@ public abstract class Amenity extends PatchObject {
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.StudyTable.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.LabTable.class
-                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Chair.class) {
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Chair.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Sink.class) {
                     amenityBlock.getPatch().signalAddAmenityBlock();
                 }
 
@@ -58,11 +60,13 @@ public abstract class Amenity extends PatchObject {
         private final Patch patch;
         private final boolean attractor;
         private final boolean hasGraphic;
+        private boolean isReserved;
 
         protected AmenityBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             this.patch = patch;
             this.attractor = attractor;
             this.hasGraphic = hasGraphic;
+            this.isReserved = false;
         }
 
         public Amenity getParent() {
@@ -83,6 +87,14 @@ public abstract class Amenity extends PatchObject {
 
         public boolean hasGraphic() {
             return hasGraphic;
+        }
+
+        public boolean getIsReserved() {
+            return isReserved;
+        }
+
+        public void setIsReserved(boolean isReserved) {
+            this.isReserved = isReserved;
         }
 
         public boolean isPassable(Class<? extends Amenity> amenityClass){
