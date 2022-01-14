@@ -534,7 +534,7 @@ public class UniversitySimulator extends Simulator {
                         if (action.getName() == UniversityAction.Name.GO_TO_CLASSROOM) {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.chooseClassroomGoal(Chair.class, 3);
+                                agentMovement.chooseClassroomGoal(Chair.class, agentMovement.getCurrentState().getClassroomID());
                             }
 
                             if (agentMovement.chooseNextPatchInPath()) {
