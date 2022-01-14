@@ -956,7 +956,9 @@ public class UniversityAgentMovement extends AgentMovement {
                     && this.currentAction.getName() != UniversityAction.Name.QUEUE_FOUNTAIN && this.currentAction.getName() != UniversityAction.Name.DRINK_FOUNTAIN
                     && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Bathroom.class)
                     && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != StudyArea.class)
-                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Cafeteria.class)) {
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Cafeteria.class)
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Classroom.class)
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Laboratory.class)) {
                 for (Agent otherAgent : patch.getAgents()) { // Inspect each agent in each patch in the patches in the field of view
                     UniversityAgent universityAgent = (UniversityAgent) otherAgent;
                     if (agentsProcessed == agentsProcessedLimit) {

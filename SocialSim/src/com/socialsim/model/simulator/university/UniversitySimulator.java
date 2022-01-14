@@ -435,7 +435,6 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();
                                 agentMovement.moveSocialForce();
-                                agentMovement.checkIfStuck();
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
