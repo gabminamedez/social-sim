@@ -771,8 +771,6 @@ public class UniversitySimulator extends Simulator {
                         }
 
                     } else if (state.getName()== UniversityState.Name.GOING_TO_CLASS_STUDENT) {
-                        /*Insert Action*/
-//                    STATE_INDEX = 3;
                         if (action.getName()==UniversityAction.Name.GO_TO_CLASSROOM){
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {

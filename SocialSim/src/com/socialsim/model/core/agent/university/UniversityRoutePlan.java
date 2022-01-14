@@ -54,24 +54,24 @@ public class UniversityRoutePlan {
             routePlan.add(new UniversityState(UniversityState.Name.GUARD, this, agent, actions));
         }
         else if (agent.getPersona() == UniversityAgent.Persona.JANITOR) {
-//            actions = new ArrayList<>();
-//            Patch randomToilet = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
-//            List<Door> allDoors = university.getDoors();
-//            Patch doorPatch = null;
-//            for (Door door : allDoors) {
-//                if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == Bathroom.class && door.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == randomToilet.getPatchField().getValue()) {
-//                    doorPatch = door.getAmenityBlocks().get(0).getPatch();
-//                    break;
-//                }
-//            }
-//            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, doorPatch));
-//            // actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, randomToilet));
-//            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 10));
-//            routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
-//            actions = new ArrayList<>();
-//            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_FOUNTAIN, doorPatch));
-//            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 10));
-//            routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
+            actions = new ArrayList<>();
+            Patch randomToilet = university.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getAmenityBlocks().get(0).getPatch();
+            List<Door> allDoors = university.getDoors();
+            Patch doorPatch = null;
+            for (Door door : allDoors) {
+                if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == Bathroom.class && door.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == randomToilet.getPatchField().getValue()) {
+                    doorPatch = door.getAmenityBlocks().get(0).getPatch();
+                    break;
+                }
+            }
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, doorPatch));
+            // actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_TOILET, randomToilet));
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 10));
+            routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_GO_FOUNTAIN, doorPatch));
+            actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 10));
+            routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
         }
         else {
             setFromClass(false);
@@ -1120,7 +1120,7 @@ public class UniversityRoutePlan {
         routePlan.add(new UniversityState(UniversityState.Name.GOING_HOME, this, agent, actions));
         //this.currentRoutePlan = routePlan.listIterator();
         setNextState(-1);
-        System.out.println("Reached the end");
+//        System.out.println("Reached the end");
     }
 
     public void resetClassroomSizes() {
