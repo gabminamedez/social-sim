@@ -74,6 +74,101 @@ public class OfficeSimulator extends Simulator {
     public static int averageCooperativeDuration = 0;
     public static int averageExchangeDuration = 0;
 
+    public static int currentTeam1Count = 0;
+    public static int currentTeam2Count = 0;
+    public static int currentTeam3Count = 0;
+    public static int currentTeam4Count = 0;
+
+    public static int currentBossManagerCount = 0;
+    public static int currentBossBusinessCount = 0;
+    public static int currentBossResearcherCount = 0;
+    public static int currentBossTechnicalCount = 0;
+    public static int currentBossJanitorCount = 0;
+    public static int currentBossClientCount = 0;
+    public static int currentBossDriverCount = 0;
+    public static int currentBossVisitorCount = 0;
+    public static int currentBossGuardCount = 0;
+    public static int currentBossReceptionistCount = 0;
+    public static int currentBossSecretaryCount = 0;
+
+    public static int currentManagerManagerCount = 0;
+    public static int currentManagerBusinessCount = 0;
+    public static int currentManagerResearcherCount = 0;
+    public static int currentManagerTechnicalCount = 0;
+    public static int currentManagerJanitorCount = 0;
+    public static int currentManagerClientCount = 0;
+    public static int currentManagerDriverCount = 0;
+    public static int currentManagerVisitorCount = 0;
+    public static int currentManagerGuardCount = 0;
+    public static int currentManagerReceptionistCount = 0;
+    public static int currentManagerSecretaryCount = 0;
+
+    public static int currentBusinessBusinessCount = 0;
+    public static int currentBusinessResearcherCount = 0;
+    public static int currentBusinessTechnicalCount = 0;
+    public static int currentBusinessJanitorCount = 0;
+    public static int currentBusinessClientCount = 0;
+    public static int currentBusinessDriverCount = 0;
+    public static int currentBusinessVisitorCount = 0;
+    public static int currentBusinessGuardCount = 0;
+    public static int currentBusinessReceptionistCount = 0;
+    public static int currentBusinessSecretaryCount = 0;
+
+    public static int currentResearcherResearcherCount = 0;
+    public static int currentResearcherTechnicalCount = 0;
+    public static int currentResearcherJanitorCount = 0;
+    public static int currentResearcherClientCount = 0;
+    public static int currentResearcherDriverCount = 0;
+    public static int currentResearcherVisitorCount = 0;
+    public static int currentResearcherGuardCount = 0;
+    public static int currentResearcherReceptionistCount = 0;
+    public static int currentResearcherSecretaryCount = 0;
+
+    public static int currentTechnicalTechnicalCount = 0;
+    public static int currentTechnicalJanitorCount = 0;
+    public static int currentTechnicalClientCount = 0;
+    public static int currentTechnicalDriverCount = 0;
+    public static int currentTechnicalVisitorCount = 0;
+    public static int currentTechnicalGuardCount = 0;
+    public static int currentTechnicalReceptionistCount = 0;
+    public static int currentTechnicalSecretaryCount = 0;
+
+    public static int currentJanitorJanitorCount = 0;
+    public static int currentJanitorClientCount = 0;
+    public static int currentJanitorDriverCount = 0;
+    public static int currentJanitorVisitorCount = 0;
+    public static int currentJanitorGuardCount = 0;
+    public static int currentJanitorReceptionistCount = 0;
+    public static int currentJanitorSecretaryCount = 0;
+
+    public static int currentClientClientCount = 0;
+    public static int currentClientDriverCount = 0;
+    public static int currentClientVisitorCount = 0;
+    public static int currentClientGuardCount = 0;
+    public static int currentClientReceptionistCount = 0;
+    public static int currentClientSecretaryCount = 0;
+
+    public static int currentDriverDriverCount = 0;
+    public static int currentDriverVisitorCount = 0;
+    public static int currentDriverGuardCount = 0;
+    public static int currentDriverReceptionistCount = 0;
+    public static int currentDriverSecretaryCount = 0;
+
+    public static int currentVisitorVisitorCount = 0;
+    public static int currentVisitorGuardCount = 0;
+    public static int currentVisitorReceptionistCount = 0;
+    public static int currentVisitorSecretaryCount = 0;
+
+    public static int currentGuardGuardCount = 0;
+    public static int currentGuardReceptionistCount = 0;
+    public static int currentGuardSecretaryCount = 0;
+
+    public static int currentReceptionistReceptionistCount = 0;
+    public static int currentReceptionistSecretaryCount = 0;
+
+    public static int currentSecretarySecretaryCount = 0;
+
+
     public OfficeSimulator() {
         this.office = null;
         this.running = new AtomicBoolean(false);

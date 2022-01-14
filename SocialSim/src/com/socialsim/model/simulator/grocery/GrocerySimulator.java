@@ -46,16 +46,52 @@ public class GrocerySimulator extends Simulator {
     public static int averageCooperativeDuration = 0;
     public static int averageExchangeDuration = 0;
 
-//    public static int currentStudentStudentCount = 0;
-//    public static int currentStudentProfCount = 0;
-//    public static int currentStudentGuardCount = 0;
-//    public static int currentStudentJanitorCount = 0;
-//    public static int currentProfProfCount = 0;
-//    public static int currentProfGuardCount = 0;
-//    public static int currentProfJanitorCount = 0;
-//    public static int currentGuardJanitorCount = 0;
-//    public static int currentJanitorJanitorCount = 0;
     //TODO: monitors for type-type interactions
+    public static int currentFamilyToFamilyCount = 0;
+
+    public static int currentCustomerCustomerCount = 0;
+    public static int currentCustomerAisleCount = 0;
+    public static int currentCustomerCashierCount = 0;
+    public static int currentCustomerBaggerCount = 0;
+    public static int currentCustomerGuardCount = 0;
+    public static int currentCustomerButcherCount = 0;
+    public static int currentCustomerServiceCount = 0;
+    public static int currentCustomerFoodCount = 0;
+
+    public static int currentAisleAisleCount = 0;
+    public static int currentAisleCashierCount = 0;
+    public static int currentAisleBaggerCount = 0;
+    public static int currentAisleGuardCount = 0;
+    public static int currentAisleButcherCount = 0;
+    public static int currentAisleServiceCount = 0;
+    public static int currentAisleFoodCount = 0;
+
+    public static int currentCashierCashierCount = 0;
+    public static int currentCashierBaggerCount = 0;
+    public static int currentCashierGuardCount = 0;
+    public static int currentCashierButcherCount = 0;
+    public static int currentCashierServiceCount = 0;
+    public static int currentCashierFoodCount = 0;
+
+    public static int currentBaggerBaggerCount = 0;
+    public static int currentBaggerGuardCount = 0;
+    public static int currentBaggerButcherCount = 0;
+    public static int currentBaggerServiceCount = 0;
+    public static int currentBaggerFoodCount = 0;
+
+    public static int currentGuardGuardCount = 0;
+    public static int currentGuardButcherCount = 0;
+    public static int currentGuardServiceCount = 0;
+    public static int currentGuardFoodCount = 0;
+
+    public static int currentButcherButcherCount = 0;
+    public static int currentButcherServiceCount = 0;
+    public static int currentButcherFoodCount = 0;
+
+    public static int currentServiceServiceCount = 0;
+    public static int currentServiceFoodCount = 0;
+
+    public static int currentFoodFoodCount = 0;
 
     public GrocerySimulator() {
         this.grocery = null;
