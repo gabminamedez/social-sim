@@ -530,9 +530,7 @@ public class UniversityRoutePlan {
         actions = new ArrayList<>();
         actions.add(new UniversityAction(UniversityAction.Name.LEAVE_BUILDING));
         routePlan.add(new UniversityState(UniversityState.Name.GOING_HOME, this, agent, actions));
-        //this.currentRoutePlan = routePlan.listIterator();
         setNextState(-1);
-//        System.out.println("Reached the end");
     }
 
     public void resetClassroomSizes() {

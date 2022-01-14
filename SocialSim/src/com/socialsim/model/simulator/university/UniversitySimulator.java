@@ -251,7 +251,6 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.setGoalQueueingPatchField(Main.universitySimulator.getUniversity().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
                                 agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getSecurities().get(0));
                             }
-
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();
                                 agentMovement.moveSocialForce();
@@ -294,7 +293,7 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (action.getName() == UniversityAction.Name.FIND_BENCH) {
                                     if(!agentMovement.chooseGoal(Bench.class)) {
-                                        agentMovement.setNextState();
+                                        agentMovement.setNextState(agentMovement.getStateIndex()+1);
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -302,7 +301,7 @@ public class UniversitySimulator extends Simulator {
                                 }
                                 else {
                                     if(!agentMovement.chooseGoal(Bulletin.class)) {
-                                        agentMovement.setNextState();
+                                        agentMovement.setNextState(agentMovement.getStateIndex()+1);
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -357,7 +356,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (!agentMovement.chooseBathroomGoal(Toilet.class)) {
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex()+1);
                                     agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -394,7 +393,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (!agentMovement.chooseBathroomGoal(Sink.class)) {
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex()+1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
@@ -457,8 +456,8 @@ public class UniversitySimulator extends Simulator {
                                     }
                                     else if(agentMovement.getRoutePlan().isFromClass()){
                                         agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
-                                        agentMovement.setNextState(agentMovement.getReturnIndex()-1);
-                                        agentMovement.setStateIndex(agentMovement.getReturnIndex()-1);
+                                        agentMovement.setNextState(agentMovement.getReturnIndex());
+                                        agentMovement.setStateIndex(agentMovement.getReturnIndex());
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -567,7 +566,7 @@ public class UniversitySimulator extends Simulator {
                                                 agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
                                                 agentMovement.reachPatchInPath();
                                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                                    agentMovement.setNextState();
+                                                    agentMovement.setNextState(agentMovement.getStateIndex()+1);
                                                     agentMovement.setActionIndex(0);
                                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                                     agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
@@ -585,7 +584,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.getGoalAttractor().setIsReserved(false);
@@ -637,7 +636,7 @@ public class UniversitySimulator extends Simulator {
                                             agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
                                             agentMovement.reachPatchInPath();
                                             if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                                agentMovement.setNextState();
+                                                agentMovement.setNextState(agentMovement.getStateIndex()+1);
                                                 agentMovement.setActionIndex(0);
                                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                                 agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
@@ -669,7 +668,7 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex()+1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.getGoalAttractor().setIsReserved(false);
@@ -780,165 +779,10 @@ public class UniversitySimulator extends Simulator {
                             }
                         }
                     }
-//                     if(agentMovement.getCurrentPatch() != null){
-
-// //                        int i;
-// //                        for(i=0; i<5;i++)
-// //                        {
-// //                            System.out.print(agentMovement.getRoutePlan().getCurrentRoutePlan().get(i));
-// //                        }
-//                         System.out.println("Action: " + action.getName());
-//                     }
                     break;
 
 
                 case PROFESSOR:
-
-                    if (state.getName() == UniversityState.Name.GOING_TO_SECURITY) {
-                        if (action.getName() == UniversityAction.Name.GOING_TO_SECURITY_QUEUE) {
-                            agentMovement.setSimultaneousInteractionAllowed(false);
-                            if (agentMovement.getGoalQueueingPatchField() == null) {
-                                agentMovement.setGoalQueueingPatchField(Main.universitySimulator.getUniversity().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
-                                agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getSecurities().get(0));
-                            }
-
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath();
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                        agentMovement.setDuration(agent.getAgentMovement().getDuration());
-                                        agentMovement.joinQueue();
-                                    }
-                                }
-                            }
-                        }
-                        else if (action.getName() == UniversityAction.Name.GO_THROUGH_SCANNER) {
-                            agentMovement.setSimultaneousInteractionAllowed(false);
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath();
-                                }
-                            }
-                            else {
-                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                                agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                                if (agentMovement.getCurrentAction().getDuration() == 0) {
-                                    agentMovement.leaveQueue();
-                                    agentMovement.setNextState(agentMovement.getStateIndex());
-                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
-                                if (!agentMovement.chooseGoal(EatTable.class)) {
-                                    agentMovement.setNextState();
-                                    agentMovement.setActionIndex(0);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
-                                }
-                            }
-                        }
-                    }
-                    else if (state.getName() == UniversityState.Name.WANDERING_AROUND) {
-                        if (action.getName() == UniversityAction.Name.RANDOM_ACTION) {
-                            agentMovement.setSimultaneousInteractionAllowed(false);
-                            if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                            }
-
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath();
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    }
-                                }
-                            }
-                        }
-                        else if(action.getName()==UniversityAction.Name.FIND_BENCH){
-                            agentMovement.setSimultaneousInteractionAllowed(false);
-                            if (agentMovement.getGoalAmenity() == null) {
-                                if(!agentMovement.chooseGoal(Bench.class)){
-                                    isFull = true;
-                                    agentMovement.setNextState(agentMovement.getStateIndex());
-                                    agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
-                                    agentMovement.setActionIndex(0);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
-                                            get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
-                                }
-                            }
-
-                            if(isFull){
-                                isFull = false;
-                            }else{
-                                //normal code
-                            else {
-                                if (agentMovement.chooseNextPatchInPath()) {
-                                    agentMovement.faceNextPosition();
-                                    agentMovement.moveSocialForce();
-                                    if (agentMovement.hasReachedNextPatchInPath()) {
-                                        agentMovement.reachPatchInPath();
-                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                                        }
-                                    }
-                                    else {
-                                        if (agentMovement.getCurrentPath().getPath().size() <= 3) {
-                                            while(!agentMovement.getCurrentPath().getPath().isEmpty()) {
-                                                agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
-                                                agentMovement.reachPatchInPath();
-                                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                                    agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (action.getName() == UniversityAction.Name.LUNCH_STAY_PUT) {
-                            agentMovement.setSimultaneousInteractionAllowed(true);
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.setNextState(agentMovement.getStateIndex());
-                                agentMovement.setStateIndex(agentMovement.getStateIndex()+1);
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.getGoalAttractor().setIsReserved(false);
-                                agentMovement.resetGoal();
-                            }
-                        }
-                    }
-                    else if (state.getName() == UniversityState.Name.GOING_HOME) {
-                        if (action.getName() == UniversityAction.Name.LEAVE_BUILDING) {
-                            agentMovement.setSimultaneousInteractionAllowed(false);
-                            if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getUniversityGates().get(0));
-                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                            }
-
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath();
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                        agentMovement.despawn();
-                                    }
-                                }
-                            }
-                        }
-                    }
 
                     break;
             }
