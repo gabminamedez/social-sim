@@ -354,6 +354,10 @@ public class OfficeAgentMovement extends AgentMovement {
         this.tickEntered = tickEntered;
     }
 
+    public double getFieldOfViewAngle() {
+        return fieldOfViewAngle;
+    }
+
     public int getNoMovementCounter() {
         return noMovementCounter;
     }
@@ -1701,6 +1705,46 @@ public class OfficeAgentMovement extends AgentMovement {
         double CHANCE2 = Simulator.roll();
         double interactionStdDeviation, interactionMean;
         if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
+            // roll if what kind of interaction
+            CHANCE1 = Simulator.roll() * IOS1;
+            CHANCE2 = Simulator.roll() * IOS2;
+            double CHANCE = (CHANCE1 + CHANCE2) / 2;
+//            double CHANCE_NONVERBAL1 = OfficeAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
+//                    CHANCE_COOPERATIVE1 = OfficeAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
+//                    CHANCE_EXCHANGE1 = OfficeAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
+//                    CHANCE_NONVERBAL2 = OfficeAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
+//                    CHANCE_COOPERATIVE2 = OfficeAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
+//                    CHANCE_EXCHANGE2 = OfficeAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
+            double CHANCE_NONVERBAL1 = 0.34, CHANCE_COOPERATIVE1 = 0.33, CHANCE_EXCHANGE1 = 0.33, CHANCE_NONVERBAL2 = 0.34, CHANCE_COOPERATIVE2 = 0.33, CHANCE_EXCHANGE2 = 0.33;
+            if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
+                OfficeSimulator.currentNonverbalCount++;
+                this.getParent().getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.NON_VERBAL);
+                agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.NON_VERBAL);
+                interactionStdDeviation = 1;
+                interactionMean = 2;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
+                OfficeSimulator.currentCooperativeCount++;
+                this.getParent().getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.COOPERATIVE);
+                agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.COOPERATIVE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
+                OfficeSimulator.currentExchangeCount++;
+                this.getParent().getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.EXCHANGE);
+                agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.EXCHANGE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else{
+                return;
+            }
+
             // set own agent interaction parameters
             this.isInteracting = true;
             // set other agent interaction parameters
@@ -1771,46 +1815,6 @@ public class OfficeAgentMovement extends AgentMovement {
 //                }
 //            }
 
-            // roll if what kind of interaction
-            CHANCE1 = Simulator.roll() * IOS1;
-            CHANCE2 = Simulator.roll() * IOS2;
-            double CHANCE = (CHANCE1 + CHANCE2) / 2;
-//            double CHANCE_NONVERBAL1 = OfficeAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
-//                    CHANCE_COOPERATIVE1 = OfficeAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
-//                    CHANCE_EXCHANGE1 = OfficeAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
-//                    CHANCE_NONVERBAL2 = OfficeAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
-//                    CHANCE_COOPERATIVE2 = OfficeAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
-//                    CHANCE_EXCHANGE2 = OfficeAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
-            double CHANCE_NONVERBAL1 = 0.34, CHANCE_COOPERATIVE1 = 0.33, CHANCE_EXCHANGE1 = 0.33, CHANCE_NONVERBAL2 = 0.34, CHANCE_COOPERATIVE2 = 0.33, CHANCE_EXCHANGE2 = 0.33;
-            if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
-                OfficeSimulator.currentNonverbalCount++;
-                this.getParent().getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.NON_VERBAL);
-                agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.NON_VERBAL);
-                interactionStdDeviation = 1;
-                interactionMean = 2;
-            }
-            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
-                OfficeSimulator.currentCooperativeCount++;
-                this.getParent().getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.COOPERATIVE);
-                agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.COOPERATIVE);
-                CHANCE1 = Simulator.roll() * IOS1;
-                CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
-            }
-            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
-                OfficeSimulator.currentExchangeCount++;
-                this.getParent().getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.EXCHANGE);
-                agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.EXCHANGE);
-                CHANCE1 = Simulator.roll() * IOS1;
-                CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
-            }
-            else{
-                interactionStdDeviation = 0;
-                interactionMean = 0;
-            }
             // roll duration (NOTE GAUSSIAN)
             this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
             if (agent.getAgentMovement().getInteractionType() == OfficeAgentMovement.InteractionType.NON_VERBAL)

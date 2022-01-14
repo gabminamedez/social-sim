@@ -378,6 +378,10 @@ public class GroceryAgentMovement extends AgentMovement {
         this.tickEntered = tickEntered;
     }
 
+    public double getFieldOfViewAngle() {
+        return fieldOfViewAngle;
+    }
+
     public int getNoMovementCounter() {
         return noMovementCounter;
     }
@@ -1901,43 +1905,6 @@ public class GroceryAgentMovement extends AgentMovement {
         double CHANCE2 = Simulator.roll();
         double interactionStdDeviation, interactionMean;
         if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
-            // set own agent interaction parameters
-            this.isInteracting = true;
-            // set other agent interaction parameters
-            agent.getAgentMovement().setInteracting(true);
-
-//            if (this.parent.getType() == GroceryAgent.Type.STUDENT){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentStudentCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentStudentProfCount++;
-//                    case GUARD -> GrocerySimulator.currentStudentGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentStudentJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.PROFESSOR){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentProfCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfProfCount++;
-//                    case GUARD -> GrocerySimulator.currentProfGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentProfJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.GUARD){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentGuardCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentGuardJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.JANITOR){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentJanitorCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfJanitorCount++;
-//                    case GUARD -> GrocerySimulator.currentGuardJanitorCount++;
-//                    case JANITOR -> GrocerySimulator.currentJanitorJanitorCount++;
-//                }
-//            }
-
             // roll if what kind of interaction
             CHANCE1 = Simulator.roll() * IOS1;
             CHANCE2 = Simulator.roll() * IOS2;
@@ -1975,9 +1942,44 @@ public class GroceryAgentMovement extends AgentMovement {
                 interactionMean = 19;
             }
             else{
-                interactionStdDeviation = 0;
-                interactionMean = 0;
+                return;
             }
+            // set own agent interaction parameters
+            this.isInteracting = true;
+            // set other agent interaction parameters
+            agent.getAgentMovement().setInteracting(true);
+
+//            if (this.parent.getType() == GroceryAgent.Type.STUDENT){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentStudentCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentStudentProfCount++;
+//                    case GUARD -> GrocerySimulator.currentStudentGuardCount++;
+//                    case JANITOR -> GrocerySimulator.currentStudentJanitorCount++;
+//                }
+//            }
+//            else if (this.parent.getType() == GroceryAgent.Type.PROFESSOR){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentProfCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentProfProfCount++;
+//                    case GUARD -> GrocerySimulator.currentProfGuardCount++;
+//                    case JANITOR -> GrocerySimulator.currentProfJanitorCount++;
+//                }
+//            }
+//            else if (this.parent.getType() == GroceryAgent.Type.GUARD){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentGuardCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentProfGuardCount++;
+//                    case JANITOR -> GrocerySimulator.currentGuardJanitorCount++;
+//                }
+//            }
+//            else if (this.parent.getType() == GroceryAgent.Type.JANITOR){
+//                switch (agent.getType()){
+//                    case STUDENT -> GrocerySimulator.currentStudentJanitorCount++;
+//                    case PROFESSOR -> GrocerySimulator.currentProfJanitorCount++;
+//                    case GUARD -> GrocerySimulator.currentGuardJanitorCount++;
+//                    case JANITOR -> GrocerySimulator.currentJanitorJanitorCount++;
+//                }
+//            }
             // roll duration (NOTE GAUSSIAN)
             this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
             if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.NON_VERBAL)

@@ -2,25 +2,21 @@ package com.socialsim.model.simulator.grocery;
 
 import com.socialsim.controller.Main;
 import com.socialsim.controller.grocery.controls.GroceryScreenController;
-import com.socialsim.controller.grocery.controls.GroceryScreenController;
+import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.grocery.GroceryAgent;
 import com.socialsim.model.core.agent.grocery.GroceryAction;
-import com.socialsim.model.core.agent.grocery.GroceryAgent;
 import com.socialsim.model.core.agent.grocery.GroceryAgentMovement;
 import com.socialsim.model.core.agent.grocery.GroceryState;
-import com.socialsim.model.core.agent.grocery.GroceryAgent;
-import com.socialsim.model.core.agent.grocery.GroceryAction;
-import com.socialsim.model.core.agent.grocery.GroceryState;
-import com.socialsim.model.core.agent.office.OfficeAction;
+import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
-import com.socialsim.model.core.environment.grocery.Grocery;
+import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
-import com.socialsim.model.core.environment.office.patchobject.passable.goal.Couch;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -392,159 +388,48 @@ public class GrocerySimulator extends Simulator {
         GroceryState state = agentMovement.getCurrentState();
         GroceryAction action = agentMovement.getCurrentAction();
 
-        switch (type) {
-            case STAFF_AISLE:
-                if (state.getName() == GroceryState.Name.STAFF_AISLE) {
-                    if (action.getName() == GroceryAction.Name.STAFF_AISLE_ORGANIZE) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.chooseRandomAisle();
-                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                        }
+        if (!agentMovement.isInteracting() || agentMovement.isSimultaneousInteractionAllowed()){
+            switch (type) {
+                case STAFF_AISLE:
+                    if (state.getName() == GroceryState.Name.STAFF_AISLE) {
+                        if (action.getName() == GroceryAction.Name.STAFF_AISLE_ORGANIZE) {
+                            if (agentMovement.getGoalAmenity() == null) {
+                                agentMovement.chooseRandomAisle();
+                                agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                            }
 
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            agentMovement.checkIfStuck();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
-                            }
-                        }
-                        else {
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                            }
-                        }
-                    }
-                }
-
-                break;
-
-            case CUSTOMER:
-                if (state.getName() == GroceryState.Name.GOING_TO_SECURITY) {
-                    if (action.getName() == GroceryAction.Name.GOING_TO_SECURITY_QUEUE) {
-                        if (agentMovement.getGoalQueueingPatchField() == null) {
-                            agentMovement.setGoalQueueingPatchField(Main.grocerySimulator.getGrocery().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
-                            agentMovement.setGoalAmenity(Main.grocerySimulator.getGrocery().getSecurities().get(0));
-                        }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.joinQueue();
-                                }
-                            }
-                        }
-                    }
-                    else if (action.getName() == GroceryAction.Name.GO_THROUGH_SCANNER) {
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
-                            }
-                        }
-                        else {
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.leaveQueue();
-                                agentMovement.setNextState();
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                            }
-                        }
-                    }
-                }
-                else if (state.getName() == GroceryState.Name.GOING_CART) {
-                    if (action.getName() == GroceryAction.Name.GET_CART) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                        }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                            }
-                        }
-                        else {
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.setNextState();
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                            }
-                        }
-                    }
-                }
-                else if (state.getName() == GroceryState.Name.GOING_TO_PRODUCTS) {
-                    if (action.getName() == GroceryAction.Name.GO_TO_PRODUCT_WALL || action.getName() == GroceryAction.Name.GO_TO_AISLE || action.getName() == GroceryAction.Name.GO_TO_FROZEN || action.getName() == GroceryAction.Name.GO_TO_FRESH || action.getName() == GroceryAction.Name.GO_TO_MEAT) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            agentMovement.setGoalAttractor(agentMovement.getCurrentAction().getDestination().getAmenityBlock());
-                        }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            agentMovement.checkIfStuck();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setNextState();
-                                    agentMovement.setActionIndex(0);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                                    agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (state.getName() == GroceryState.Name.IN_PRODUCTS_WALL || state.getName() == GroceryState.Name.IN_PRODUCTS_AISLE || state.getName() == GroceryState.Name.IN_PRODUCTS_FROZEN || state.getName() == GroceryState.Name.IN_PRODUCTS_FRESH || state.getName() == GroceryState.Name.IN_PRODUCTS_MEAT) {
-                    if (action.getName() == GroceryAction.Name.CHECK_PRODUCTS) {
-                        if (agentMovement.getGoalAmenity() != null) {
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.setNextState();
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                            }
-                        }
-                    }
-                }
-                else if (state.getName() == GroceryState.Name.GOING_TO_PAY || state.getName() == GroceryState.Name.GOING_TO_SERVICE || state.getName() == GroceryState.Name.GOING_TO_EAT) {
-                    if (action.getName() == GroceryAction.Name.GO_TO_CHECKOUT || action.getName() == GroceryAction.Name.GO_TO_CUSTOMER_SERVICE || action.getName() == GroceryAction.Name.GO_TO_FOOD_STALL) {
-                        if (agentMovement.getGoalQueueingPatchField() == null) {
-                            if (action.getName() == GroceryAction.Name.GO_TO_CHECKOUT) {
-                                agentMovement.chooseCashierCounter();
-                            }
-                            else if (action.getName() == GroceryAction.Name.GO_TO_CUSTOMER_SERVICE) {
-                                agentMovement.chooseServiceCounter();
-                            }
-                            else if (action.getName() == GroceryAction.Name.GO_TO_FOOD_STALL) {
-                                agentMovement.chooseStall();
-                            }
-                        }
-                        if (agentMovement.getGoalQueueingPatchField() != null) {
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();
                                 agentMovement.moveSocialForce();
                                 agentMovement.checkIfStuck();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                }
+                            }
+                            else {
+                                agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                if (agentMovement.getDuration() <= 0) {
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+
+                case CUSTOMER:
+                    if (state.getName() == GroceryState.Name.GOING_TO_SECURITY) {
+                        if (action.getName() == GroceryAction.Name.GOING_TO_SECURITY_QUEUE) {
+                            if (agentMovement.getGoalQueueingPatchField() == null) {
+                                agentMovement.setGoalQueueingPatchField(Main.grocerySimulator.getGrocery().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
+                                agentMovement.setGoalAmenity(Main.grocerySimulator.getGrocery().getSecurities().get(0));
+                            }
+
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
@@ -555,48 +440,69 @@ public class GrocerySimulator extends Simulator {
                                 }
                             }
                         }
-                    }
-                    else if (action.getName() == GroceryAction.Name.QUEUE_CHECKOUT || action.getName() == GroceryAction.Name.QUEUE_SERVICE || action.getName() == GroceryAction.Name.QUEUE_FOOD) {
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
-                            }
-                        }
-                        else {
-                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
-                        }
-                    }
-                    else if (action.getName() == GroceryAction.Name.CHECKOUT || action.getName() == GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE || action.getName() == GroceryAction.Name.BUY_FOOD) {
-                        if (agentMovement.getGoalAmenity() != null) {
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
-                                agentMovement.leaveQueue();
-                                agentMovement.setNextState();
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                            }
-                        }
-                    }
-                }
-                else if (state.getName() == GroceryState.Name.EATING) {
-                    if (action.getName() == GroceryAction.Name.FIND_SEAT_FOOD_COURT) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.chooseEatTable();
-                        }
-                        else {
+                        else if (action.getName() == GroceryAction.Name.GO_THROUGH_SCANNER) {
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();
                                 agentMovement.moveSocialForce();
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath();
+                                }
+                            }
+                            else {
+                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                if (agentMovement.getDuration() <= 0) {
+                                    agentMovement.leaveQueue();
+                                    agentMovement.setNextState();
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                        }
+                    }
+                    else if (state.getName() == GroceryState.Name.GOING_CART) {
+                        if (action.getName() == GroceryAction.Name.GET_CART) {
+                            if (agentMovement.getGoalAmenity() == null) {
+                                agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            }
+
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                }
+                            }
+                            else {
+                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                if (agentMovement.getDuration() <= 0) {
+                                    agentMovement.setNextState();
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                        }
+                    }
+                    else if (state.getName() == GroceryState.Name.GOING_TO_PRODUCTS) {
+                        if (action.getName() == GroceryAction.Name.GO_TO_PRODUCT_WALL || action.getName() == GroceryAction.Name.GO_TO_AISLE || action.getName() == GroceryAction.Name.GO_TO_FROZEN || action.getName() == GroceryAction.Name.GO_TO_FRESH || action.getName() == GroceryAction.Name.GO_TO_MEAT) {
+                            if (agentMovement.getGoalAmenity() == null) {
+                                agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                                agentMovement.setGoalAttractor(agentMovement.getCurrentAction().getDestination().getAmenityBlock());
+                            }
+
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                agentMovement.checkIfStuck();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setNextState();
+                                        agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                         agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
@@ -605,77 +511,198 @@ public class GrocerySimulator extends Simulator {
                             }
                         }
                     }
-                    else if (action.getName() == GroceryAction.Name.EATING_FOOD) {
-                        if (agentMovement.getGoalAmenity() != null) {
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.setNextState();
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                            }
-                        }
-                    }
-                }
-                else if (state.getName() == GroceryState.Name.GOING_HOME) {
-                    if (action.getName() == GroceryAction.Name.GO_TO_RECEIPT) {
-                        if (agentMovement.getGoalQueueingPatchField() == null) {
-                            agentMovement.setGoalQueueingPatchField(Main.grocerySimulator.getGrocery().getGroceryGateFields().get(0));
-                            agentMovement.setGoalAmenity(Main.grocerySimulator.getGrocery().getGroceryGates().get(0));
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                        }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                    else if (state.getName() == GroceryState.Name.IN_PRODUCTS_WALL || state.getName() == GroceryState.Name.IN_PRODUCTS_AISLE || state.getName() == GroceryState.Name.IN_PRODUCTS_FROZEN || state.getName() == GroceryState.Name.IN_PRODUCTS_FRESH || state.getName() == GroceryState.Name.IN_PRODUCTS_MEAT) {
+                        if (action.getName() == GroceryAction.Name.CHECK_PRODUCTS) {
+                            if (agentMovement.getGoalAmenity() != null) {
+                                agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                if (agentMovement.getDuration() <= 0) {
+                                    agentMovement.setNextState();
+                                    agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.joinQueue();
+                                    agentMovement.resetGoal();
                                 }
                             }
                         }
                     }
-                    else if (action.getName() == GroceryAction.Name.CHECKOUT_GROCERIES_CUSTOMER) {
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
+                    else if (state.getName() == GroceryState.Name.GOING_TO_PAY || state.getName() == GroceryState.Name.GOING_TO_SERVICE || state.getName() == GroceryState.Name.GOING_TO_EAT) {
+                        if (action.getName() == GroceryAction.Name.GO_TO_CHECKOUT || action.getName() == GroceryAction.Name.GO_TO_CUSTOMER_SERVICE || action.getName() == GroceryAction.Name.GO_TO_FOOD_STALL) {
+                            if (agentMovement.getGoalQueueingPatchField() == null) {
+                                if (action.getName() == GroceryAction.Name.GO_TO_CHECKOUT) {
+                                    agentMovement.chooseCashierCounter();
+                                }
+                                else if (action.getName() == GroceryAction.Name.GO_TO_CUSTOMER_SERVICE) {
+                                    agentMovement.chooseServiceCounter();
+                                }
+                                else if (action.getName() == GroceryAction.Name.GO_TO_FOOD_STALL) {
+                                    agentMovement.chooseStall();
+                                }
+                            }
+                            if (agentMovement.getGoalQueueingPatchField() != null) {
+                                if (agentMovement.chooseNextPatchInPath()) {
+                                    agentMovement.faceNextPosition();
+                                    agentMovement.moveSocialForce();
+                                    agentMovement.checkIfStuck();
+                                    if (agentMovement.hasReachedNextPatchInPath()) {
+                                        agentMovement.reachPatchInPath();
+                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.joinQueue();
+                                        }
+                                    }
+                                }
                             }
                         }
-                        else {
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.leaveQueue();
+                        else if (action.getName() == GroceryAction.Name.QUEUE_CHECKOUT || action.getName() == GroceryAction.Name.QUEUE_SERVICE || action.getName() == GroceryAction.Name.QUEUE_FOOD) {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                }
+                            }
+                            else {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
+                                agentMovement.setDuration(agent.getAgentMovement().getDuration());
                             }
                         }
-                    }
-                    else if (action.getName() == GroceryAction.Name.LEAVE_BUILDING) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(Main.grocerySimulator.getGrocery().getGroceryGates().get(0));
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                        }
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.despawn();
+                        else if (action.getName() == GroceryAction.Name.CHECKOUT || action.getName() == GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE || action.getName() == GroceryAction.Name.BUY_FOOD) {
+                            if (agentMovement.getGoalAmenity() != null) {
+                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                                if (agentMovement.getCurrentAction().getDuration() <= 0) {
+                                    agentMovement.leaveQueue();
+                                    agentMovement.setNextState();
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
                                 }
                             }
                         }
                     }
-                }
+                    else if (state.getName() == GroceryState.Name.EATING) {
+                        if (action.getName() == GroceryAction.Name.FIND_SEAT_FOOD_COURT) {
+                            if (agentMovement.getGoalAmenity() == null) {
+                                agentMovement.chooseEatTable();
+                            }
+                            else {
+                                if (agentMovement.chooseNextPatchInPath()) {
+                                    agentMovement.faceNextPosition();
+                                    agentMovement.moveSocialForce();
+                                    if (agentMovement.hasReachedNextPatchInPath()) {
+                                        agentMovement.reachPatchInPath();
+                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (action.getName() == GroceryAction.Name.EATING_FOOD) {
+                            if (agentMovement.getGoalAmenity() != null) {
+                                agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                if (agentMovement.getDuration() <= 0) {
+                                    agentMovement.setNextState();
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                        }
+                    }
+                    else if (state.getName() == GroceryState.Name.GOING_HOME) {
+                        if (action.getName() == GroceryAction.Name.GO_TO_RECEIPT) {
+                            if (agentMovement.getGoalQueueingPatchField() == null) {
+                                agentMovement.setGoalQueueingPatchField(Main.grocerySimulator.getGrocery().getGroceryGateFields().get(0));
+                                agentMovement.setGoalAmenity(Main.grocerySimulator.getGrocery().getGroceryGates().get(0));
+                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            }
 
-                break;
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.joinQueue();
+                                    }
+                                }
+                            }
+                        }
+                        else if (action.getName() == GroceryAction.Name.CHECKOUT_GROCERIES_CUSTOMER) {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                }
+                            }
+                            else {
+                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                if (agentMovement.getDuration() <= 0) {
+                                    agentMovement.leaveQueue();
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                        }
+                        else if (action.getName() == GroceryAction.Name.LEAVE_BUILDING) {
+                            if (agentMovement.getGoalAmenity() == null) {
+                                agentMovement.setGoalAmenity(Main.grocerySimulator.getGrocery().getGroceryGates().get(0));
+                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            }
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.despawn();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+            }
+        }
+        if (agentMovement.isInteracting()){
+            // cases: early termination of interaction
+            //reducing of interaction duration
+            // termination of interaction
+            if (agentMovement.getDuration() == 0){
+                agentMovement.setInteracting(false);
+                agentMovement.setInteractionType(null);
+            }
+            else{
+                agentMovement.interact();
+            }
+
+        }
+        else{
+            List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
+            for (Patch patch: patches){
+                for (Agent otherAgent: patch.getAgents()){
+                    GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
+                    if (!groceryAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
+                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), groceryAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
+                            if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), groceryAgent.getAgentMovement().getFieldOfViewAngle()))
+                                agentMovement.rollAgentInteraction(groceryAgent);
+                    if (agentMovement.isInteracting())
+                        break;
+                }
+                if (agentMovement.isInteracting())
+                    break;
+            }
         }
     }
 
