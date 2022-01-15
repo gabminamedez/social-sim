@@ -579,24 +579,14 @@ public class UniversityRoutePlan {
         return currentState;
     }
 
-    public UniversityState addUrgentRoute(String s, UniversityAgent agent, University university){
+    public UniversityState addUrgentRoute(String s, UniversityAgent agent){
         System.out.println("Adding urgent route");
-        List<Door> allDoors = university.getDoors();
-        Patch BathroomDoorPatch = null;
-        for (Door door : allDoors) {
-            if (door.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == Bathroom.class) {
-                BathroomDoorPatch = door.getAmenityBlocks().get(0).getPatch();
-                break;
-            }
-        }
         ArrayList<UniversityAction> actions;
         if(s.equals("BATHROOM")){
             actions = new ArrayList<>();
-            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM,BathroomDoorPatch));
-            actions.add(new UniversityAction(UniversityAction.Name.FIND_CUBICLE));
+            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM));
             actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE,5));
             actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK,5));
-            actions.add(new UniversityAction(UniversityAction.Name.LEAVE_BATHROOM,BathroomDoorPatch));
             return new UniversityState(UniversityState.Name.NEEDS_BATHROOM,this,agent,actions);
         }
         else
