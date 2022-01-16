@@ -219,7 +219,7 @@ public class UniversityAgentMovement extends AgentMovement {
     }
 
     public void setReturnIndex(int stateIndex) {
-        this.stateIndex = stateIndex;
+        this.returnIndex = stateIndex;
     }
 
     public int getStateIndex() {
