@@ -39,8 +39,8 @@ public class Mall extends Environment {
     private final List<Showcase> showcases;
     private final List<Store> stores;
     private final List<Wall> walls;
-
-    List<MallAgent> agentBacklogs;
+    private final List<SecurityField> securityFields;
+    private final List<KioskField> kioskFields;
 
     private static final Mall.MallFactory mallFactory;
 
@@ -75,8 +75,8 @@ public class Mall extends Environment {
         this.showcases = Collections.synchronizedList(new ArrayList<>());
         this.stores = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
-
-        this.agentBacklogs = Collections.synchronizedList(new ArrayList<>());
+        this.securityFields = Collections.synchronizedList(new ArrayList<>());
+        this.kioskFields = Collections.synchronizedList(new ArrayList<>());
     }
 
     public CopyOnWriteArrayList<MallAgent> getAgents() {
@@ -165,8 +165,12 @@ public class Mall extends Environment {
         return walls;
     }
 
-    public List<MallAgent> getAgentBacklogs() {
-        return agentBacklogs;
+    public List<SecurityField> getSecurityFields() {
+        return securityFields;
+    }
+
+    public List<KioskField> getKioskFields() {
+        return kioskFields;
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {

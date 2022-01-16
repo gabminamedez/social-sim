@@ -5,6 +5,7 @@ import com.socialsim.controller.generic.graphics.amenity.AmenityMapper;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.Kiosk;
+import com.socialsim.model.core.environment.mall.patchfield.KioskField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,14 @@ public class KioskMapper extends AmenityMapper {
             Kiosk kioskToAdd = Kiosk.KioskFactory.create(amenityBlocks, true, 15);
             Main.mallSimulator.getMall().getKiosks().add(kioskToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
+
+            List<Patch> kioskFieldPatches = new ArrayList<>();
+            kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow, origPatchCol + 1));
+            kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 1, origPatchCol + 1));
+            kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 2, origPatchCol + 1));
+            kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 3, origPatchCol + 1));
+            kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 4, origPatchCol + 1));
+            Main.mallSimulator.getMall().getKioskFields().add(KioskField.kioskFieldFactory.create(kioskFieldPatches, kioskToAdd, 1));
         }
     }
 

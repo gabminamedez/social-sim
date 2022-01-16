@@ -114,32 +114,6 @@ public class MallGate extends Gate {
         return patchesFree;
     }
 
-    public MallAgent spawnAgentFromBacklogs(boolean forceEntry) { // Spawn an agent from the backlogs
-        Mall mall = (Mall) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
-
-        if (mall != null) {
-            List<MallAgent> mallGateQueue = mall.getAgentBacklogs();
-
-            if (!mallGateQueue.isEmpty()) { // If the backlog queue isn't empty, check if this gate is free from agents
-                if (forceEntry || this.isGateFree()) { // If this gate is free from other agents, get one from the backlog queue
-                    MallAgent agent = mallGateQueue.remove(0);
-                    Patch spawnPatch = this.getSpawners().get(0).getPatch();
-
-                    return agent;
-                }
-                else {
-                    return null;
-                }
-            }
-            else {
-                return null;
-            }
-        }
-        else {
-            return null;
-        }
-    }
-
     public enum MallGateMode {
         ENTRANCE("Entrance"), EXIT("Exit"), ENTRANCE_AND_EXIT("Entrance and Exit");
 

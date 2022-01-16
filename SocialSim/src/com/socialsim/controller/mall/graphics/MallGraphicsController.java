@@ -7,6 +7,7 @@ import com.socialsim.controller.mall.graphics.amenity.MallAmenityGraphic;
 import com.socialsim.controller.office.graphics.amenity.OfficeAmenityGraphic;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
+import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.generic.patchobject.Drawable;
@@ -126,6 +127,7 @@ public class MallGraphicsController extends Controller {
             // Draw graphics corresponding to whatever is in the content of the patch; If the patch has no amenity on it, just draw a blank patch
             Amenity.AmenityBlock patchAmenityBlock = currentPatch.getAmenityBlock();
             Pair<PatchField, Integer> patchNumPair = currentPatch.getPatchField();
+            Pair<QueueingPatchField, Integer> patchNumPair2 = currentPatch.getQueueingPatchField();
             Color patchColor;
 
             if (patchAmenityBlock == null) {
@@ -211,6 +213,12 @@ public class MallGraphicsController extends Controller {
                     backgroundGraphicsContext.setFill(patchColor);
                     backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }
+            }
+
+            if (patchNumPair2 != null) { // TODO: FOR VISUALIZATION ONLY; DELETE LATER
+                patchColor = Color.rgb(0, 0, 0);
+                backgroundGraphicsContext.setFill(patchColor);
+                backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
             }
 
             if (!background) { // Draw each agent in this patch, if the foreground is to be drawn

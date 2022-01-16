@@ -5,6 +5,7 @@ import com.socialsim.controller.generic.graphics.amenity.AmenityMapper;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.Security;
+import com.socialsim.model.core.environment.mall.patchfield.SecurityField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,11 @@ public class SecurityMapper extends AmenityMapper {
             Security securityToAdd = Security.SecurityFactory.create(amenityBlocks, true, 5);
             Main.mallSimulator.getMall().getSecurities().add(securityToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
+
+            List<Patch> securityFieldPatches = new ArrayList<>();
+            securityFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 1, origPatchCol));
+            securityFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 1, origPatchCol - 1));
+            Main.mallSimulator.getMall().getSecurityFields().add(SecurityField.securityFieldFactory.create(securityFieldPatches, securityToAdd, 1));
         }
     }
 
