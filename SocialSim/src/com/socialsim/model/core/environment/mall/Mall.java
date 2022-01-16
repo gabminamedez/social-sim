@@ -28,6 +28,10 @@ public class Mall extends Environment {
     private final List<StoreCounter> storeCounters;
     private final List<Table> tables;
     private final List<Trash> trashes;
+    private final List<Toilet> toilets;
+    private final List<Sink> sinks;
+    private final List<StoreAisle> storeAisles;
+
 
     private final List<Bathroom> bathrooms;
     private final List<Dining> dinings;
@@ -61,6 +65,9 @@ public class Mall extends Environment {
         this.storeCounters = Collections.synchronizedList(new ArrayList<>());
         this.tables = Collections.synchronizedList(new ArrayList<>());
         this.trashes = Collections.synchronizedList(new ArrayList<>());
+        this.toilets = Collections.synchronizedList(new ArrayList<>());
+        this.sinks = Collections.synchronizedList(new ArrayList<>());
+        this.storeAisles = Collections.synchronizedList(new ArrayList<>());
 
         this.bathrooms = Collections.synchronizedList(new ArrayList<>());
         this.dinings = Collections.synchronizedList(new ArrayList<>());
@@ -120,6 +127,18 @@ public class Mall extends Environment {
 
     public List<Trash> getTrashes() {
         return trashes;
+    }
+
+    public List<Toilet> getToilets() {
+        return toilets;
+    }
+
+    public List<Sink> getSinks() {
+        return sinks;
+    }
+
+    public List<StoreAisle> getStoreAisles() {
+        return storeAisles;
     }
 
     public List<Bathroom> getBathrooms() {
