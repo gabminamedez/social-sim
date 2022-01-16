@@ -1909,13 +1909,12 @@ public class GroceryAgentMovement extends AgentMovement {
             CHANCE1 = Simulator.roll() * IOS1;
             CHANCE2 = Simulator.roll() * IOS2;
             double CHANCE = (CHANCE1 + CHANCE2) / 2;
-//            double CHANCE_NONVERBAL1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
-//                    CHANCE_COOPERATIVE1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
-//                    CHANCE_EXCHANGE1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
-//                    CHANCE_NONVERBAL2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
-//                    CHANCE_COOPERATIVE2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
-//                    CHANCE_EXCHANGE2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
-            double CHANCE_NONVERBAL1 = 0.34, CHANCE_COOPERATIVE1 = 0.33, CHANCE_EXCHANGE1 = 0.33, CHANCE_NONVERBAL2 = 0.34, CHANCE_COOPERATIVE2 = 0.33, CHANCE_EXCHANGE2 = 0.33;
+            double CHANCE_NONVERBAL1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
+                    CHANCE_COOPERATIVE1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
+                    CHANCE_EXCHANGE1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
+                    CHANCE_NONVERBAL2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
+                    CHANCE_COOPERATIVE2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
+                    CHANCE_EXCHANGE2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
             if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
                 GrocerySimulator.currentNonverbalCount++;
                 this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.NON_VERBAL);

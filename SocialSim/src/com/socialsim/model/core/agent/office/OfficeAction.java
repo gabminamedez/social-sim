@@ -6,63 +6,75 @@ import com.socialsim.model.simulator.Simulator;
 public class OfficeAction {
 
     public enum Name {
-        LEAVE_OFFICE,
-        GO_TO_LUNCH,
-        EAT_LUNCH,
-        EXIT_LUNCH,
+        LEAVE_OFFICE(),
+        GO_TO_LUNCH(),
+        EAT_LUNCH(),
+        EXIT_LUNCH(),
 
-        GOING_TO_SECURITY_QUEUE,
-        GO_THROUGH_SCANNER,
-        GUARD_STAY_PUT,
+        GOING_TO_SECURITY_QUEUE(),
+        GO_THROUGH_SCANNER(),
+        GUARD_STAY_PUT(),
+        GREET_PERSON(),
 
-        JANITOR_GO_TOILET,
-        JANITOR_CLEAN_TOILET,
-        JANITOR_GO_PLANT,
-        JANITOR_WATER_PLANT,
+        JANITOR_GO_TOILET(),
+        JANITOR_CLEAN_TOILET(),
+        JANITOR_GO_PLANT(),
+        JANITOR_WATER_PLANT(),
 
-        CLIENT_GO_RECEPTIONIST,
-        CLIENT_GO_COUCH,
-        CLIENT_GO_OFFICE,
+        CLIENT_GO_RECEPTIONIST(),
+        CLIENT_GO_COUCH(),
+        CLIENT_GO_OFFICE(),
 
-        DRIVER_GO_RECEPTIONIST,
-        DRIVER_GO_COUCH,
+        DRIVER_GO_RECEPTIONIST(),
+        DRIVER_GO_COUCH(),
 
-        VISITOR_GO_RECEPTIONIST,
-        VISITOR_GO_OFFICE,
+        VISITOR_GO_RECEPTIONIST(),
+        VISITOR_GO_OFFICE(),
 
-        RECEPTIONIST_STAY_PUT,
+        RECEPTIONIST_STAY_PUT(),
 
-        SECRETARY_STAY_PUT,
-        SECRETARY_CHECK_CABINET,
-        SECRETARY_GO_BOSS,
+        SECRETARY_STAY_PUT(),
+        SECRETARY_CHECK_CABINET(),
+        SECRETARY_GO_BOSS(),
 
-        GO_TO_STATION,
-        GO_TO_OFFICE_ROOM,
+        GO_TO_STATION(),
+        GO_TO_OFFICE_ROOM(),
 
-        GO_TO_BATHROOM,
-        FIND_CUBICLE,
-        RELIEVE_IN_CUBICLE,
-        WASH_IN_SINK,
-        LEAVE_BATHROOM,
+        GO_TO_BATHROOM(),
+        FIND_CUBICLE(),
+        RELIEVE_IN_CUBICLE(),
+        WASH_IN_SINK(),
+        LEAVE_BATHROOM(),
 
-        GO_TO_PRINTER,
-        QUEUE_PRINTER,
-        PRINTING,
+        GO_TO_PRINTER(),
+        QUEUE_PRINTER(),
+        PRINTING(),
 
-        GO_TO_COLLAB,
-        WAIT_FOR_COLLAB,
-        COLLABORATE,
+        GO_TO_COLLAB(),
+        WAIT_FOR_COLLAB(),
+        COLLABORATE(),
 
-        TECHNICAL_GO_PRINTER,
-        FIX_PRINTER,
+        TECHNICAL_GO_PRINTER(),
+        FIX_PRINTER(),
 
-        TECHNICAL_GO_CUBICLE,
-        FIX_CUBICLE,
+        TECHNICAL_GO_CUBICLE(),
+        FIX_CUBICLE(),
 
-        GO_MEETING,
-        WAIT_MEETING,
-        MEETING,
-        LEAVE_MEETING
+        GO_MEETING(),
+        WAIT_MEETING(),
+        MEETING(),
+        LEAVE_MEETING();
+
+        final int ID;
+        Name(int ID){
+            this.ID = ID;
+        }
+        Name(){
+            this.ID = this.ordinal();
+        }
+        public int getID() {
+            return ID;
+        }
     }
 
     private Name name;

@@ -10,20 +10,20 @@ import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet;
 import com.socialsim.model.simulator.SimulationTime;
+import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class UniversityScreenController extends ScreenController {
 
@@ -608,6 +608,20 @@ public class UniversityScreenController extends ScreenController {
     public void drawUniversityViewForeground(University university, boolean speedAware) { // Draw the university view foreground
         UniversityGraphicsController.requestDrawUniversityView(stackPane, university, UniversityGraphicsController.tileSize, false, speedAware);
         requestUpdateInterfaceSimulationElements();
+    }
+
+    public void generateHeatMap() {
+        int[][] currentPatchCount = UniversitySimulator.currentPatchCount;
+        int maxPatchCount = Arrays.stream(currentPatchCount).flatMapToInt(Arrays::stream).max().getAsInt();
+        for(int i = 0; i < currentPatchCount.length; i++){
+            for (int j = 0; j < currentPatchCount[0].length; j++){
+                System.out.println(currentPatchCount.length);
+                System.out.println(currentPatchCount[0].length);
+                int patchRGBCount = 255 - currentPatchCount[i][j] * 255 / maxPatchCount;
+                foregroundCanvas.getGraphicsContext2D().setFill(Color.rgb(255, patchRGBCount, patchRGBCount));
+                foregroundCanvas.getGraphicsContext2D().fillRect(i * UniversityGraphicsController.tileSize, j * UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize);
+            }
+        }
     }
 
     private void requestUpdateInterfaceSimulationElements() { // Update the interface elements pertinent to the simulation

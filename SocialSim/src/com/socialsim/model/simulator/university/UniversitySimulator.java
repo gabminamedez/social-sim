@@ -17,6 +17,7 @@ import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -49,6 +50,7 @@ public class UniversitySimulator extends Simulator {
     public static int currentProfJanitorCount = 0;
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
+    public static int[][] currentPatchCount;
     public static final int MAX_STUDENTS = 50; //250
     public static final int MAX_PROFESSORS = 0;
     public static final int MAX_CURRENT_STUDENTS = 3; //250
@@ -94,6 +96,9 @@ public class UniversitySimulator extends Simulator {
         this.university = university;
         this.time.reset();
         this.running.set(false);
+        currentPatchCount = new int[university.getRows()][university.getColumns()];
+//        for (int j = 0; j < university.getRows(); j++)
+//            Arrays.setAll(currentPatchCount[j], i -> Simulator.RANDOM_NUMBER_GENERATOR.nextInt(255));
     }
 
     public void spawnInitialAgents(University university) {
@@ -1691,8 +1696,13 @@ public class UniversitySimulator extends Simulator {
                     UniversityAgent universityAgent = (UniversityAgent) otherAgent;
                     if (!universityAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
                         if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), universityAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
-                            if (Coordinates.isWithinFieldOfView(universityAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), universityAgent.getAgentMovement().getProposedHeading(), universityAgent.getAgentMovement().getFieldOfViewAngle()))
+                            if (Coordinates.isWithinFieldOfView(universityAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), universityAgent.getAgentMovement().getProposedHeading(), universityAgent.getAgentMovement().getFieldOfViewAngle())){
                                 agentMovement.rollAgentInteraction(universityAgent);
+                                if (agentMovement.isInteracting()){ // interaction was successful
+                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                    currentPatchCount[universityAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][universityAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                }
+                            }
                     if (agentMovement.isInteracting())
                         break;
                 }
