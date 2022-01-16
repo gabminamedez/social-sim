@@ -770,6 +770,26 @@ public class UniversitySimulator extends Simulator {
                             }
                         }
                     }
+                    else if (state.getName() == UniversityState.Name.GOING_HOME) {
+                        if (action.getName() == UniversityAction.Name.LEAVE_BUILDING) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
+                            if (agentMovement.getGoalAmenity() == null) {
+                                agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getUniversityGates().get(0));
+                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            }
+
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.despawn();
+                                    }
+                                }
+                            }
+                        }
+                    }
                     
 
 
