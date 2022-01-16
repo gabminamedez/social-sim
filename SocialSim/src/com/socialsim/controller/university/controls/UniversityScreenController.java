@@ -619,7 +619,7 @@ public class UniversityScreenController extends ScreenController {
                 System.out.println(currentPatchCount[0].length);
                 int patchRGBCount = 255 - currentPatchCount[i][j] * 255 / maxPatchCount;
                 foregroundCanvas.getGraphicsContext2D().setFill(Color.rgb(255, patchRGBCount, patchRGBCount));
-                foregroundCanvas.getGraphicsContext2D().fillRect(i * UniversityGraphicsController.tileSize, j * UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize);
+                foregroundCanvas.getGraphicsContext2D().fillRect(j * UniversityGraphicsController.tileSize, i * UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize);
             }
         }
     }
