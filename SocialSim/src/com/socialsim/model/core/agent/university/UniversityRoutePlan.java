@@ -230,7 +230,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 720));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         }
                         else if (x < INT_CHANCE_WANDERING_AROUND + INT_CHANCE_GOING_TO_STUDY + INT_NEED_BATHROOM_NO_CLASSES) {
@@ -296,7 +296,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 720));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         }
                         else if (x < INT_ORG_CHANCE_WANDERING_AROUND + INT_ORG_CHANCE_GOING_TO_STUDY + INT_ORG_NEED_BATHROOM_NO_CLASSES) {
@@ -362,7 +362,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 720));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         }
                         else if (x < EXT_CHANCE_WANDERING_AROUND + EXT_CHANCE_GOING_TO_STUDY + EXT_NEED_BATHROOM_NO_CLASSES) {
@@ -428,7 +428,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 720));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         }
                         else if (x < EXT_ORG_CHANCE_WANDERING_AROUND + EXT_ORG_CHANCE_GOING_TO_STUDY + EXT_ORG_NEED_BATHROOM_NO_CLASSES) {
@@ -494,7 +494,7 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STUDY, this, agent, actions));
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 1440));
+                            actions.add(new UniversityAction(UniversityAction.Name.STUDY_AREA_STAY_PUT, 120, 720));
                             routePlan.add(new UniversityState(UniversityState.Name.STUDYING, this, agent, actions));
                         }
                         else if (x < PROF_CHANCE_WANDERING_AROUND + PROF_CHANCE_GOING_TO_STUDY + PROF_NEED_BATHROOM_NO_CLASSES) {
