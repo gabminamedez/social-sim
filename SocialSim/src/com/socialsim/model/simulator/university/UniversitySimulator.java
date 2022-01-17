@@ -539,38 +539,38 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 if (agentMovement.getRoutePlan().isFromStudying()) {
+                                    agentMovement.leaveQueue();
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
                                     agentMovement.setNextState(agentMovement.getReturnIndex());
                                     agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromStudying(false);
                                 } else if (agentMovement.getRoutePlan().isFromClass()) {
+                                    agentMovement.leaveQueue();
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
                                     agentMovement.setNextState(agentMovement.getReturnIndex());
                                     agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromClass(false);
                                 } else if (agentMovement.getRoutePlan().isFromLunch()) {
+                                    agentMovement.leaveQueue();
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
                                     agentMovement.setNextState(agentMovement.getReturnIndex());
                                     agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromLunch(false);
                                 } else {
+                                    agentMovement.leaveQueue();
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
                                 }
                             }
@@ -1245,33 +1245,34 @@ public class UniversitySimulator extends Simulator {
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 if (agentMovement.getRoutePlan().isFromStudying()) {
+                                    agentMovement.leaveQueue();
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
                                     agentMovement.setNextState(agentMovement.getReturnIndex());
                                     agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromStudying(false);
                                 } else if (agentMovement.getRoutePlan().isFromClass()) {
+                                    agentMovement.leaveQueue();
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
                                     agentMovement.setNextState(agentMovement.getReturnIndex());
                                     agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromClass(false);
                                 } else if (agentMovement.getRoutePlan().isFromLunch()) {
+                                    agentMovement.leaveQueue();
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
                                     agentMovement.setNextState(agentMovement.getReturnIndex());
                                     agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromLunch(false);
                                 } else {
+                                    agentMovement.leaveQueue();
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
