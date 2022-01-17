@@ -2,9 +2,13 @@ package com.socialsim.controller.mall.graphics;
 
 import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.Controller;
+import com.socialsim.controller.generic.graphics.agent.AgentGraphicLocation;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
+import com.socialsim.controller.mall.graphics.agent.MallAgentGraphic;
 import com.socialsim.controller.mall.graphics.amenity.MallAmenityGraphic;
 import com.socialsim.controller.office.graphics.amenity.OfficeAmenityGraphic;
+import com.socialsim.model.core.agent.Agent;
+import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
@@ -36,6 +40,7 @@ public class MallGraphicsController extends Controller {
 
     private static final Image AMENITY_SPRITES = new Image(MallAmenityGraphic.AMENITY_SPRITE_SHEET_URL);
     private static final Image AMENITY_SPRITES2 = new Image(OfficeAmenityGraphic.AMENITY_SPRITE_SHEET_URL2);
+    private static final Image AGENT_SPRITES = new Image(MallAgentGraphic.AGENTS_URL);
     public static List<Amenity.AmenityBlock> firstPortalAmenityBlocks;
     public static double tileSize;
     private static boolean isDrawingStraightX;
@@ -48,14 +53,14 @@ public class MallGraphicsController extends Controller {
     private static long millisecondsLastCanvasRefresh;
 
     static {
-        firstPortalAmenityBlocks = null;
-        isDrawingStraightX = false;
-        isDrawingStraightY = false;
-        lockedX = null;
-        lockedY = null;
-        drawMeasurement = false;
-        measurementStartPatch = null;
-        willPeek = false;
+        MallGraphicsController.firstPortalAmenityBlocks = null;
+        MallGraphicsController.isDrawingStraightX = false;
+        MallGraphicsController.isDrawingStraightY = false;
+        MallGraphicsController.lockedX = null;
+        MallGraphicsController.lockedY = null;
+        MallGraphicsController.drawMeasurement = false;
+        MallGraphicsController.measurementStartPatch = null;
+        MallGraphicsController.willPeek = false;
         millisecondsLastCanvasRefresh = 0;
     }
 
@@ -92,7 +97,19 @@ public class MallGraphicsController extends Controller {
         final double canvasWidth = backgroundCanvas.getWidth();
         final double canvasHeight = backgroundCanvas.getHeight();
 
+        clearCanvases(mall, background, backgroundGraphicsContext, foregroundGraphicsContext, tileSize, canvasWidth, canvasHeight);
         drawMallObjects(mall, background, backgroundGraphicsContext, foregroundGraphicsContext, tileSize);
+    }
+
+    private static void clearCanvases(Mall mall, boolean background, GraphicsContext backgroundGraphicsContext, GraphicsContext foregroundGraphicsContext, double tileSize, double canvasWidth, double canvasHeight) {
+        if (!background) {
+            foregroundGraphicsContext.clearRect(0, 0, mall.getColumns() * tileSize, mall.getRows() * tileSize);
+        }
+        else {
+            foregroundGraphicsContext.clearRect(0, 0, mall.getColumns() * tileSize, mall.getRows() * tileSize);
+            backgroundGraphicsContext.setFill(Color.rgb(244, 244, 244));
+            backgroundGraphicsContext.fillRect(0, 0, canvasWidth, canvasHeight);
+        }
     }
 
     private static void drawMallObjects(Mall mall, boolean background, GraphicsContext backgroundGraphicsContext, GraphicsContext foregroundGraphicsContext, double tileSize) {
@@ -222,32 +239,18 @@ public class MallGraphicsController extends Controller {
             }
 
             if (!background) { // Draw each agent in this patch, if the foreground is to be drawn
-//                for (Agent agent : patch.getAgents()) {
-//                    MallAgent mallAgent = (MallAgent) agent;
-//                    AgentGraphicLocation agentGraphicLocation = mallAgent.getAgentGraphic().getGraphicLocation();
-//
-//                    Image CURRENT_URL = null;
-//                    if (mallAgent.getType() == MallAgent.Type.GUARD || mallAgent.getType() == MallAgent.Type.JANITOR || mallAgent.getType() == MallAgent.Type.OFFICER) {
-//                        CURRENT_URL = AGENT_SPRITES_4;
-//                    }
-//                    else if (mallAgent.getType() == MallAgent.Type.PROFESSOR) {
-//                        CURRENT_URL = AGENT_SPRITES_3;
-//                    }
-//                    else if (mallAgent.getType() == MallAgent.Type.STUDENT && mallAgent.getGender() == MallAgent.Gender.MALE) {
-//                        CURRENT_URL = AGENT_SPRITES_1;
-//                    }
-//                    else if (mallAgent.getType() == MallAgent.Type.STUDENT && mallAgent.getGender() == MallAgent.Gender.FEMALE) {
-//                        CURRENT_URL = AGENT_SPRITES_2;
-//                    }
-//
-//                    foregroundGraphicsContext.drawImage(
-//                            CURRENT_URL,
-//                            agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
-//                            agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
-//                            MallGraphicsController.getScaledAgentCoordinates(mallAgent).getX() * tileSize - tileSize,
-//                            MallGraphicsController.getScaledAgentCoordinates(mallAgent).getY() * tileSize - tileSize * 2,
-//                            tileSize * 2, tileSize * 2 + tileSize * 0.25);
-//                }
+                for (Agent agent : patch.getAgents()) {
+                    MallAgent mallAgent = (MallAgent) agent;
+                    AgentGraphicLocation agentGraphicLocation = mallAgent.getAgentGraphic().getGraphicLocation();
+
+                    foregroundGraphicsContext.drawImage(
+                            AGENT_SPRITES,
+                            agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
+                            agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
+                            getScaledAgentCoordinates(mallAgent).getX() * tileSize,
+                            getScaledAgentCoordinates(mallAgent).getY() * tileSize,
+                            tileSize * 0.7, tileSize * 0.7);
+                }
             }
         }
     }
@@ -290,11 +293,11 @@ public class MallGraphicsController extends Controller {
         }
     }
 
-//    public static Coordinates getScaledAgentCoordinates(Agent agent) {
-//        Coordinates agentPosition = agent.getAgentMovement().getPosition();
-//
-//        return MallGraphicsController.getScaledCoordinates(agentPosition);
-//    }
+    public static Coordinates getScaledAgentCoordinates(MallAgent agent) {
+        Coordinates agentPosition = agent.getAgentMovement().getPosition();
+
+        return MallGraphicsController.getScaledCoordinates(agentPosition);
+    }
 
     public static Coordinates getScaledCoordinates(Coordinates coordinates) {
         return new Coordinates(coordinates.getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS, coordinates.getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);

@@ -4,6 +4,7 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.mall.graphics.MallGraphicsController;
 import com.socialsim.controller.mall.graphics.amenity.mapper.*;
+import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.mall.Mall;
@@ -62,6 +63,11 @@ public class MallScreenController extends ScreenController {
 
     @FXML
     public void initializeAction() {
+        if (Main.mallSimulator.isRunning()) {
+            playAction();
+            playButton.setSelected(false);
+        }
+
         int width = 60; // Value may be from 25-100
         int length = 130; // Value may be from 106-220
         int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
@@ -75,6 +81,7 @@ public class MallScreenController extends ScreenController {
         Main.mallSimulator.resetToDefaultConfiguration(mall);
         MallGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.mallSimulator.getMall().getRows();
         mapMall();
+        Main.mallSimulator.spawnInitialAgents(mall);
         drawInterface();
     }
 
@@ -556,7 +563,7 @@ public class MallScreenController extends ScreenController {
         long elapsedTime = Main.mallSimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS);
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
-        elapsedTimeText.setText("Elapsed time: " + timeString + " (" + elapsedTime + " s)");
+        elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
     }
 
     public void setElements() {
@@ -595,16 +602,26 @@ public class MallScreenController extends ScreenController {
     @FXML
     public void resetAction() {
         Main.mallSimulator.reset();
-
-        // Clear all agents
-//        clearMall(Main.simulator.getMall());
-
+        MallAgent.clearMallAgentCounts();
+        clearMall(Main.mallSimulator.getMall());
+        Main.mallSimulator.spawnInitialAgents(Main.mallSimulator.getMall());
         drawMallViewForeground(Main.mallSimulator.getMall(), false); // Redraw the canvas
-
         if (Main.mallSimulator.isRunning()) { // If the simulator is running, stop it
             playAction();
             playButton.setSelected(false);
         }
+    }
+
+    public static void clearMall(Mall mall) {
+        for (MallAgent agent : mall.getAgents()) { // Remove the relationship between the patch and the agents
+            agent.getAgentMovement().getCurrentPatch().getAgents().clear();
+            agent.getAgentMovement().setCurrentPatch(null);
+        }
+
+        // Remove all the agents
+        mall.getAgents().removeAll(mall.getAgents());
+        mall.getAgents().clear();
+        mall.getAgentPatchSet().clear();
     }
 
     @Override

@@ -12,6 +12,7 @@ public class MallRoutePlan {
 
     private ListIterator<MallState> currentRoutePlan; // Denotes the current route plan of the agent which owns this
     private MallState currentState; // Denotes the current class of the amenity/patchfield in the route plan
+    private ArrayList<MallState> routePlan;
 
     private static final int MIN_PRODUCTS = 2;
     private static final int MAX_PRODUCTS = 20;
@@ -22,7 +23,7 @@ public class MallRoutePlan {
     public static final int HELP_FAMILY_ALL_AISLE_CHANCE = 50, HELP_FAMILY_CHANCE_SERVICE = 20, HELP_FAMILY_CHANCE_FOOD = 30, HELP_FAMILY_CHANCE_EAT_TABLE = 50;
     public static final int DUO_FAMILY_ALL_AISLE_CHANCE = 50, DUO_FAMILY_CHANCE_SERVICE = 20, DUO_FAMILY_CHANCE_FOOD = 30, DUO_FAMILY_CHANCE_EAT_TABLE = 50;
 
-    public MallRoutePlan(MallAgent agent, MallAgent leaderAgent, Mall mall, Patch spawnPatch) { //leaderAgent is only for agents that follow and deviate
+    public MallRoutePlan(MallAgent agent, MallAgent leaderAgent, Mall mall, Patch spawnPatch, int tickEntered) { //leaderAgent is only for agents that follow and deviate
         List<MallState> routePlan = new ArrayList<>();
         ArrayList<MallAction> actions;
 
@@ -46,14 +47,13 @@ public class MallRoutePlan {
             actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, spawnPatch));
             routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
         }
-        else if (agent.getPersona() == MallAgent.Persona.STAFF_STORE_CASHIER){
+        else if (agent.getPersona() == MallAgent.Persona.STAFF_STORE_CASHIER) {
             actions = new ArrayList<>();
             actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, spawnPatch));
             routePlan.add(new MallState(MallState.Name.STAFF_STORE_CASHIER, this, agent, actions));
         }
         else {
-            // Customers
-            if (agent.getPersona() == MallAgent.Persona.STTP_ALONE_CUSTOMER){
+            if (agent.getPersona() == MallAgent.Persona.STTP_ALONE_CUSTOMER) {
                 routePlan = createSTTPRoute(agent, spawnPatch, mall);
                 int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                 if (x < STTP_CHANCE_SERVICE) {
@@ -225,32 +225,31 @@ public class MallRoutePlan {
             routePlan.add(new MallState(MallState.Name.GOING_HOME, this, agent, actions));
         }
 
-        this.currentRoutePlan = routePlan.listIterator();
-        setNextState();
-    }
-
-    public MallState setNextState() { // Set the next class in the route plan
-        this.currentState = this.currentRoutePlan.next();
-
-        return this.currentState;
-    }
-
-    public MallState setPreviousState(){
-        this.currentState = this.currentRoutePlan.previous();
-
-        return this.currentState;
-    }
-
-    public ListIterator<MallState> getCurrentRoutePlan() {
-        return currentRoutePlan;
-    }
-
-    public MallState getCurrentState() {
-        return currentState;
+        setNextState(-1);
     }
 
     public void addUrgentRoute(MallState s){
         this.currentState = s;
+    }
+
+    public MallState setNextState(int i) { // Set the next class in the route plan
+        // this.currentState = this.currentRoutePlan.next();
+        this.currentState = this.routePlan.get(i+1);
+        return this.currentState;
+    }
+
+    public MallState setPreviousState(int i) {
+        // this.currentState = this.currentRoutePlan.previous();
+        this.currentState = this.routePlan.get(i-1);
+        return this.currentState;
+    }
+
+    public ArrayList<MallState> getCurrentRoutePlan() {
+        return routePlan;
+    }
+
+    public MallState getCurrentState() {
+        return currentState;
     }
 
     public ArrayList<MallState> createSTTPRoute(MallAgent agent, Patch spawnPatch, Mall mall) {
