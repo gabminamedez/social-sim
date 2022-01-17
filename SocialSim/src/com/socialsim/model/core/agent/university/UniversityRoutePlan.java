@@ -310,7 +310,7 @@ public class UniversityRoutePlan {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_DRINKING_FOUNTAIN));
                             actions.add(new UniversityAction(UniversityAction.Name.QUEUE_FOUNTAIN));
-                            actions.add(new UniversityAction(UniversityAction.Name.DRINK_FOUNTAIN, 5));
+                            actions.add(new UniversityAction(UniversityAction.Name.DRINK_FOUNTAIN, 6,12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_DRINK, this, agent, actions));
                         }
                     }
@@ -598,21 +598,22 @@ public class UniversityRoutePlan {
     }
 
     public UniversityState addUrgentRoute(String s, UniversityAgent agent){
-        System.out.println("Adding urgent route");
+        System.out.println("NEEDS_BATHROOM");
         ArrayList<UniversityAction> actions;
         if(s.equals("BATHROOM")){
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM));
-            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE,5));
-            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK,5));
+            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE,12,36));
+            actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK,12));
             return new UniversityState(UniversityState.Name.NEEDS_BATHROOM,this,agent,actions);
         }
-        else
+        else //TODO: Fountain add urgent
         {
+            System.out.println("NEEDS_DRINK");
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_DRINKING_FOUNTAIN));
             actions.add(new UniversityAction(UniversityAction.Name.QUEUE_FOUNTAIN));
-            actions.add(new UniversityAction(UniversityAction.Name.DRINK_FOUNTAIN, 5));
+            actions.add(new UniversityAction(UniversityAction.Name.DRINK_FOUNTAIN, 6,12));
             return new UniversityState(UniversityState.Name.NEEDS_DRINK,this,agent,actions);
         }
     }
