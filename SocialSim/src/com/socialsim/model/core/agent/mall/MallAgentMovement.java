@@ -229,6 +229,7 @@ public class MallAgentMovement extends AgentMovement {
     public void setNextState(int i) {
         this.currentState = this.currentState.getRoutePlan().setNextState(i);
     }
+
     public void setPreviousState(int i) {
         this.currentState = this.currentState.getRoutePlan().setPreviousState(i);
     }
