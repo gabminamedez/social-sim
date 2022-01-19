@@ -37,7 +37,7 @@ public class MallGateMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock4);
             patch4.setAmenityBlock(amenityBlock4);
 
-            MallGate mallGateToAdd = MallGate.MallGateFactory.create(amenityBlocks, true, 20.0, ugMode);
+            MallGate mallGateToAdd = MallGate.MallGateFactory.create(amenityBlocks, true, 95, ugMode);
             Main.mallSimulator.getMall().getMallGates().add(mallGateToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
         }

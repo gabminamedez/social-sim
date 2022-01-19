@@ -440,12 +440,10 @@ public class MallScreenController extends ScreenController {
         tableRightPatches.add(mall.getPatch(42,84)); // 42
         tableRightPatches.add(mall.getPatch(42,87)); // 43
         tableRightPatches.add(mall.getPatch(42,90)); // 44
-        tableRightPatches.add(mall.getPatch(31,97)); // 45
-        tableRightPatches.add(mall.getPatch(31,100)); // 46
-        tableRightPatches.add(mall.getPatch(31,103)); // 47
-        tableRightPatches.add(mall.getPatch(31,106)); // 48
-        tableRightPatches.add(mall.getPatch(31,109)); // 49
-        tableRightPatches.add(mall.getPatch(31,112)); // 50
+        tableRightPatches.add(mall.getPatch(31,103)); // 45
+        tableRightPatches.add(mall.getPatch(31,106)); // 46
+        tableRightPatches.add(mall.getPatch(31,109)); // 47
+        tableRightPatches.add(mall.getPatch(31,112)); // 58
         TableMapper.draw(tableRightPatches, "RIGHT");
 
         List<Patch> trashPatches = new ArrayList<>();

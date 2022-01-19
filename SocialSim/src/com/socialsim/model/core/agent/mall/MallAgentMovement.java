@@ -3,6 +3,7 @@ package com.socialsim.model.core.agent.mall;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentMovement;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
+import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
@@ -25,6 +26,8 @@ public class MallAgentMovement extends AgentMovement {
 
     private final MallAgent parent;
     private final Coordinates position; // Denotes the position of the agent
+    private MallAgent leaderAgent;
+    private List<MallAgent> followers;
     private final Mall mall;
     private final double baseWalkingDistance; // Denotes the distance (m) the agent walks in one second
     private double preferredWalkingDistance;
@@ -32,6 +35,7 @@ public class MallAgentMovement extends AgentMovement {
     private double proposedHeading;// Denotes the proposed heading of the agent in degrees where E = 0 degrees, N = 90 degrees, W = 180 degrees, S = 270 degrees
     private double heading;
     private double previousHeading;
+    private int team;
 
     private Patch currentPatch;
     private Amenity currentAmenity;
@@ -76,20 +80,37 @@ public class MallAgentMovement extends AgentMovement {
     private Vector attractiveForce;
     private Vector motivationForce;
 
-    public MallAgentMovement(Patch spawnPatch, MallAgent parent, MallAgent leaderAgent, double baseWalkingDistance, Coordinates coordinates, long tickEntered) { // For inOnStart agents
+    public MallAgentMovement(Patch spawnPatch, MallAgent parent, MallAgent leaderAgent, double baseWalkingDistance, Coordinates coordinates, long tickEntered, int team) { // For inOnStart agents
         this.parent = parent;
         this.position = new Coordinates(coordinates.getX(), coordinates.getY());
+        this.team = team;
+        this.leaderAgent = leaderAgent;
+        this.followers = new ArrayList<>();
 
         final double interQuartileRange = 0.12; // The walking speed values shall be in m/s
         this.baseWalkingDistance = baseWalkingDistance + Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interQuartileRange;
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
-        if (parent.getInOnStart()) { // All inOnStart agents will face the south by default
+        if (parent.getInOnStart() && parent.getType() != MallAgent.Type.STAFF_STORE_CASHIER) { // All inOnStart agents will face the south by default
             this.proposedHeading = Math.toRadians(270.0);
             this.heading = Math.toRadians(270.0);
             this.previousHeading = Math.toRadians(270.0);
             this.fieldOfViewAngle = Math.toRadians(30.0);
+        }
+        else if (parent.getInOnStart() && parent.getType() == MallAgent.Type.STAFF_STORE_CASHIER) {
+            if (team == 3 || team == 4 || team == 10 || team == 11) {
+                this.proposedHeading = Math.toRadians(90.0);
+                this.heading = Math.toRadians(90.0);
+                this.previousHeading = Math.toRadians(90.0);
+                this.fieldOfViewAngle = Math.toRadians(30.0);
+            }
+            else {
+                this.proposedHeading = Math.toRadians(270.0);
+                this.heading = Math.toRadians(270.0);
+                this.previousHeading = Math.toRadians(270.0);
+                this.fieldOfViewAngle = Math.toRadians(30.0);
+            }
         }
         else { // All newly generated agents will face the east by default
             this.proposedHeading = Math.toRadians(0);
@@ -111,7 +132,7 @@ public class MallAgentMovement extends AgentMovement {
         repulsiveForcesFromObstacles = new ArrayList<>();
         resetGoal(); // Set the agent goal
 
-        this.routePlan = new MallRoutePlan(parent, leaderAgent, mall, currentPatch, (int) tickEntered);
+        this.routePlan = new MallRoutePlan(parent, leaderAgent, mall, currentPatch, team);
         this.stateIndex = 0;
         this.actionIndex = 0;
         this.currentState = this.routePlan.getCurrentState();
@@ -176,6 +197,18 @@ public class MallAgentMovement extends AgentMovement {
 
     public double getHeading() {
         return heading;
+    }
+
+    public int getTeam() {
+        return team;
+    }
+
+    public List<MallAgent> getFollowers() {
+        return followers;
+    }
+
+    public MallAgent getLeaderAgent() {
+        return leaderAgent;
     }
 
     public double getFieldOfViewAngle() {

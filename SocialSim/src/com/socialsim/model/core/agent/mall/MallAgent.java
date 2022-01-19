@@ -34,7 +34,7 @@ public class MallAgent extends Agent {
         agentFactory = new MallAgent.MallAgentFactory();
     }
 
-    private MallAgent(MallAgent.Type type, MallAgent.Persona persona, MallAgent.Gender gender, MallAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, MallAgent leaderAgent, int currentTick) {
+    private MallAgent(MallAgent.Type type, MallAgent.Persona persona, MallAgent.Gender gender, MallAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, MallAgent leaderAgent, int currentTick, int team) {
         this.id = agentCount;
         this.type = type;
         this.inOnStart = inOnStart;
@@ -88,7 +88,7 @@ public class MallAgent extends Agent {
         }
 
         this.agentGraphic = new MallAgentGraphic(this);
-        this.agentMovement = new MallAgentMovement(spawnPatch, this, leaderAgent, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick);
+        this.agentMovement = new MallAgentMovement(spawnPatch, this, leaderAgent, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick, team);
     }
 
     public int getId() {
@@ -124,8 +124,8 @@ public class MallAgent extends Agent {
     }
 
     public static class MallAgentFactory extends Agent.AgentFactory {
-        public static MallAgent create(MallAgent.Type type, MallAgent.Persona persona, MallAgent.Gender gender, MallAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, MallAgent leaderAgent, int currentTick) {
-            return new MallAgent(type, persona, gender, ageGroup, spawnPatch, inOnStart, leaderAgent, currentTick);
+        public static MallAgent create(MallAgent.Type type, MallAgent.Persona persona, MallAgent.Gender gender, MallAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, MallAgent leaderAgent, int currentTick, int team) {
+            return new MallAgent(type, persona, gender, ageGroup, spawnPatch, inOnStart, leaderAgent, currentTick, team);
         }
     }
 

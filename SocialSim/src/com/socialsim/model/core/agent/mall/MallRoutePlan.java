@@ -4,6 +4,7 @@ import com.socialsim.controller.Main;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.mall.Mall;
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.StoreAisle;
+import com.socialsim.model.core.environment.mall.patchobject.passable.goal.Table;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.ArrayList;
@@ -39,6 +40,9 @@ public class MallRoutePlan {
     private static ArrayList<StoreAisle> aisles11 = new ArrayList<>();
     private static ArrayList<StoreAisle> aisles12 = new ArrayList<>();
     private static ArrayList<StoreAisle> aisles13 = new ArrayList<>();
+
+    private static ArrayList<Table> tables1 = new ArrayList<>();
+    private static ArrayList<Table> tables2 = new ArrayList<>();
 
     static {
         aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(0));
@@ -114,9 +118,23 @@ public class MallRoutePlan {
         aisles13.add(Main.mallSimulator.getMall().getStoreAisles().get(43));
         aisles13.add(Main.mallSimulator.getMall().getStoreAisles().get(44));
         aisles13.add(Main.mallSimulator.getMall().getStoreAisles().get(71));
+
+        for (int i = 0; i < 16; i++) {
+            tables1.add(Main.mallSimulator.getMall().getTables().get(i));
+        }
+        for (int i = 35; i < 40; i++) {
+            tables1.add(Main.mallSimulator.getMall().getTables().get(i));
+        }
+
+        for (int i = 16; i < 31; i++) {
+            tables2.add(Main.mallSimulator.getMall().getTables().get(i));
+        }
+        for (int i = 40; i < 44; i++) {
+            tables2.add(Main.mallSimulator.getMall().getTables().get(i));
+        }
     }
 
-    public MallRoutePlan(MallAgent agent, MallAgent leaderAgent, Mall mall, Patch spawnPatch, int tickEntered) { // leaderAgent is only for agents that follow and deviate
+    public MallRoutePlan(MallAgent agent, MallAgent leaderAgent, Mall mall, Patch spawnPatch, int team) { // leaderAgent is only for agents that follow and deviate
         this.routePlan = new ArrayList<>();
         ArrayList<MallAction> actions;
 
@@ -131,14 +149,128 @@ public class MallRoutePlan {
             routePlan.add(new MallState(MallState.Name.STAFF_KIOSK, this, agent, actions));
         }
         else if (agent.getPersona() == MallAgent.Persona.STAFF_RESTO) {
-            actions = new ArrayList<>();
-            actions.add(new MallAction(MallAction.Name.STAFF_RESTO_SERVE, 12, 24));
-            routePlan.add(new MallState(MallState.Name.STAFF_RESTO, this, agent, actions));
+            if (team == 1) {
+                for (int i = 0; i < tables1.size(); i++) {
+                    Patch randomPatch = tables1.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_RESTO_SERVE, randomPatch, 12, 24));
+                    routePlan.add(new MallState(MallState.Name.STAFF_RESTO, this, agent, actions));
+                }
+            }
+            else {
+                for (int i = 0; i < tables2.size(); i++) {
+                    Patch randomPatch = tables2.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_RESTO_SERVE, randomPatch, 12, 24));
+                    routePlan.add(new MallState(MallState.Name.STAFF_RESTO, this, agent, actions));
+                }
+            }
         }
         else if (agent.getPersona() == MallAgent.Persona.STAFF_STORE_SALES) {
-            actions = new ArrayList<>();
-            actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, spawnPatch));
-            routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+            if (team == 1) {
+                for (int i = 0; i < aisles1.size(); i++) {
+                    Patch randomPatch = aisles1.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 2) {
+                for (int i = 0; i < aisles2.size(); i++) {
+                    Patch randomPatch = aisles2.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 3) {
+                for (int i = 0; i < aisles3.size(); i++) {
+                    Patch randomPatch = aisles3.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 4) {
+                for (int i = 0; i < aisles4.size(); i++) {
+                    Patch randomPatch = aisles4.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 5) {
+                for (int i = 0; i < aisles5.size(); i++) {
+                    Patch randomPatch = aisles5.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 6) {
+                for (int i = 0; i < aisles6.size(); i++) {
+                    Patch randomPatch = aisles6.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 7) {
+                for (int i = 0; i < aisles7.size(); i++) {
+                    Patch randomPatch = aisles7.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 8) {
+                for (int i = 0; i < aisles8.size(); i++) {
+                    Patch randomPatch = aisles8.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 9) {
+                for (int i = 0; i < aisles9.size(); i++) {
+                    Patch randomPatch = aisles9.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 10) {
+                for (int i = 0; i < aisles10.size(); i++) {
+                    Patch randomPatch = aisles10.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 11) {
+                for (int i = 0; i < aisles11.size(); i++) {
+                    Patch randomPatch = aisles11.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 12) {
+                for (int i = 0; i < aisles12.size(); i++) {
+                    Patch randomPatch = aisles12.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
+            else if (team == 13) {
+                for (int i = 0; i < aisles13.size(); i++) {
+                    Patch randomPatch = aisles13.get(0).getAttractors().get(0).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
+                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
+                }
+            }
         }
         else if (agent.getPersona() == MallAgent.Persona.STAFF_STORE_CASHIER) {
             actions = new ArrayList<>();

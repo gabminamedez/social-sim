@@ -48,10 +48,10 @@ public class KioskMapper extends AmenityMapper {
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
 
             List<Patch> kioskFieldPatches = new ArrayList<>();
-            kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow, origPatchCol + 1));
             kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 1, origPatchCol + 1));
             kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 2, origPatchCol + 1));
             kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 3, origPatchCol + 1));
+            kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 4, origPatchCol + 1));
             kioskFieldPatches.add(Main.mallSimulator.getMall().getPatch(origPatchRow + 4, origPatchCol + 1));
             Main.mallSimulator.getMall().getKioskFields().add(KioskField.kioskFieldFactory.create(kioskFieldPatches, kioskToAdd, 1));
         }
