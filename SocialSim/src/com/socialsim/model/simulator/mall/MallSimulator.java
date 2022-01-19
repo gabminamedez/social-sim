@@ -287,6 +287,10 @@ public class MallSimulator extends Simulator {
 //        MallAgent.agentCount++;
     }
 
+    public void reset() {
+        this.time.reset();
+    }
+
     private void start() {
         new Thread(() -> {
             final int speedAwarenessLimitMilliseconds = 10; // For times shorter than this, speed awareness will be implemented

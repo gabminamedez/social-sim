@@ -271,97 +271,97 @@ public class MallScreenController extends ScreenController {
         Main.mallSimulator.getMall().getShowcases().add(Showcase.showcaseFactory.create(showcasePatches, 1));
 
         List<Patch> storeCounterPatches = new ArrayList<>();
-        storeCounterPatches.add(mall.getPatch(19,121)); // Store 12
-        storeCounterPatches.add(mall.getPatch(33,121)); // Store 13
-        storeCounterPatches.add(mall.getPatch(2,52)); // Store 5
-        storeCounterPatches.add(mall.getPatch(2,63)); // Store 6
-        storeCounterPatches.add(mall.getPatch(2,81)); // Store 7
-        storeCounterPatches.add(mall.getPatch(2,99)); // Store 8
-        storeCounterPatches.add(mall.getPatch(2,110)); // Store 9
-        storeCounterPatches.add(mall.getPatch(57,97)); // Store 10
-        storeCounterPatches.add(mall.getPatch(57,109)); // Store 11
-        storeCounterPatches.add(mall.getPatch(12,16)); // Store 1
-        storeCounterPatches.add(mall.getPatch(7,38)); // Store 2
-        storeCounterPatches.add(mall.getPatch(47,16)); // Store 3
-        storeCounterPatches.add(mall.getPatch(52,38)); // Store 4
+        storeCounterPatches.add(mall.getPatch(19,121)); // Store 12; 0
+        storeCounterPatches.add(mall.getPatch(33,121)); // Store 13; 1
+        storeCounterPatches.add(mall.getPatch(2,52)); // Store 5; 2
+        storeCounterPatches.add(mall.getPatch(2,63)); // Store 6; 3
+        storeCounterPatches.add(mall.getPatch(2,81)); // Store 7; 4
+        storeCounterPatches.add(mall.getPatch(2,99)); // Store 8; 5
+        storeCounterPatches.add(mall.getPatch(2,110)); // Store 9; 6
+        storeCounterPatches.add(mall.getPatch(57,97)); // Store 10; 7
+        storeCounterPatches.add(mall.getPatch(57,109)); // Store 11; 8
+        storeCounterPatches.add(mall.getPatch(12,16)); // Store 1; 9
+        storeCounterPatches.add(mall.getPatch(7,38)); // Store 2; 10
+        storeCounterPatches.add(mall.getPatch(47,16)); // Store 3; 11
+        storeCounterPatches.add(mall.getPatch(52,38)); // Store 4; 12
         StoreCounterMapper.draw(storeCounterPatches);
 
         List<Patch> aisleDownPatches = new ArrayList<>();
-        aisleDownPatches.add(mall.getPatch(16,19)); // Store 1
-        aisleDownPatches.add(mall.getPatch(19,19)); // Store 1
-        aisleDownPatches.add(mall.getPatch(11,38)); // Store 2
-        aisleDownPatches.add(mall.getPatch(11,43)); // Store 2
-        aisleDownPatches.add(mall.getPatch(14,38)); // Store 2
-        aisleDownPatches.add(mall.getPatch(14,43)); // Store 2
-        aisleDownPatches.add(mall.getPatch(17,38)); // Store 2
-        aisleDownPatches.add(mall.getPatch(17,43)); // Store 2
-        aisleDownPatches.add(mall.getPatch(40,12)); // Store 3
-        aisleDownPatches.add(mall.getPatch(40,18)); // Store 3
-        aisleDownPatches.add(mall.getPatch(40,24)); // Store 3
-        aisleDownPatches.add(mall.getPatch(43,12)); // Store 3
-        aisleDownPatches.add(mall.getPatch(43,18)); // Store 3
-        aisleDownPatches.add(mall.getPatch(43,24)); // Store 3
-        aisleDownPatches.add(mall.getPatch(43,38)); // Store 4
-        aisleDownPatches.add(mall.getPatch(46,38)); // Store 4
-        aisleDownPatches.add(mall.getPatch(49,38)); // Store 4
-        aisleDownPatches.add(mall.getPatch(43,43)); // Store 4
-        aisleDownPatches.add(mall.getPatch(46,43)); // Store 4
-        aisleDownPatches.add(mall.getPatch(49,43)); // Store 4
-        aisleDownPatches.add(mall.getPatch(6,54)); // Store 5
-        aisleDownPatches.add(mall.getPatch(9,54)); // Store 5
-        aisleDownPatches.add(mall.getPatch(12,54)); // Store 5
-        aisleDownPatches.add(mall.getPatch(6,65)); // Store 6
-        aisleDownPatches.add(mall.getPatch(9,65)); // Store 6
-        aisleDownPatches.add(mall.getPatch(12,65)); // Store 6
-        aisleDownPatches.add(mall.getPatch(6,83)); // Store 7
-        aisleDownPatches.add(mall.getPatch(9,83)); // Store 7
-        aisleDownPatches.add(mall.getPatch(12,83)); // Store 7
-        aisleDownPatches.add(mall.getPatch(6,101)); // Store 8
-        aisleDownPatches.add(mall.getPatch(9,101)); // Store 8
-        aisleDownPatches.add(mall.getPatch(12,101)); // Store 8
-        aisleDownPatches.add(mall.getPatch(6,112)); // Store 9
-        aisleDownPatches.add(mall.getPatch(9,112)); // Store 9
-        aisleDownPatches.add(mall.getPatch(12,112)); // Store 9
-        aisleDownPatches.add(mall.getPatch(47,99)); // Store 10
-        aisleDownPatches.add(mall.getPatch(50,99)); // Store 10
-        aisleDownPatches.add(mall.getPatch(53,99)); // Store 10
-        aisleDownPatches.add(mall.getPatch(47,111)); // Store 11
-        aisleDownPatches.add(mall.getPatch(50,111)); // Store 11
-        aisleDownPatches.add(mall.getPatch(53,111)); // Store 11
-        aisleDownPatches.add(mall.getPatch(23,121)); // Store 12
-        aisleDownPatches.add(mall.getPatch(26,121)); // Store 12
-        aisleDownPatches.add(mall.getPatch(37,121)); // Store 13
-        aisleDownPatches.add(mall.getPatch(40,121)); // Store 13
+        aisleDownPatches.add(mall.getPatch(16,19)); // Store 1; 0
+        aisleDownPatches.add(mall.getPatch(19,19)); // Store 1; 1
+        aisleDownPatches.add(mall.getPatch(11,38)); // Store 2; 2
+        aisleDownPatches.add(mall.getPatch(11,43)); // Store 2; 3
+        aisleDownPatches.add(mall.getPatch(14,38)); // Store 2; 4
+        aisleDownPatches.add(mall.getPatch(14,43)); // Store 2; 5
+        aisleDownPatches.add(mall.getPatch(17,38)); // Store 2; 6
+        aisleDownPatches.add(mall.getPatch(17,43)); // Store 2; 7
+        aisleDownPatches.add(mall.getPatch(40,12)); // Store 3; 8
+        aisleDownPatches.add(mall.getPatch(40,18)); // Store 3; 9
+        aisleDownPatches.add(mall.getPatch(40,24)); // Store 3; 10
+        aisleDownPatches.add(mall.getPatch(43,12)); // Store 3; 11
+        aisleDownPatches.add(mall.getPatch(43,18)); // Store 3; 12
+        aisleDownPatches.add(mall.getPatch(43,24)); // Store 3; 13
+        aisleDownPatches.add(mall.getPatch(43,38)); // Store 4; 14
+        aisleDownPatches.add(mall.getPatch(46,38)); // Store 4; 15
+        aisleDownPatches.add(mall.getPatch(49,38)); // Store 4; 16
+        aisleDownPatches.add(mall.getPatch(43,43)); // Store 4; 17
+        aisleDownPatches.add(mall.getPatch(46,43)); // Store 4; 18
+        aisleDownPatches.add(mall.getPatch(49,43)); // Store 4; 19
+        aisleDownPatches.add(mall.getPatch(6,54)); // Store 5; 20
+        aisleDownPatches.add(mall.getPatch(9,54)); // Store 5; 21
+        aisleDownPatches.add(mall.getPatch(12,54)); // Store 5; 22
+        aisleDownPatches.add(mall.getPatch(6,65)); // Store 6; 23
+        aisleDownPatches.add(mall.getPatch(9,65)); // Store 6; 24
+        aisleDownPatches.add(mall.getPatch(12,65)); // Store 6; 25
+        aisleDownPatches.add(mall.getPatch(6,83)); // Store 7; 26
+        aisleDownPatches.add(mall.getPatch(9,83)); // Store 7; 27
+        aisleDownPatches.add(mall.getPatch(12,83)); // Store 7; 28
+        aisleDownPatches.add(mall.getPatch(6,101)); // Store 8; 29
+        aisleDownPatches.add(mall.getPatch(9,101)); // Store 8; 30
+        aisleDownPatches.add(mall.getPatch(12,101)); // Store 8; 31
+        aisleDownPatches.add(mall.getPatch(6,112)); // Store 9; 32
+        aisleDownPatches.add(mall.getPatch(9,112)); // Store 9; 33
+        aisleDownPatches.add(mall.getPatch(12,112)); // Store 9; 34
+        aisleDownPatches.add(mall.getPatch(47,99)); // Store 10; 35
+        aisleDownPatches.add(mall.getPatch(50,99)); // Store 10; 36
+        aisleDownPatches.add(mall.getPatch(53,99)); // Store 10; 37
+        aisleDownPatches.add(mall.getPatch(47,111)); // Store 11; 38
+        aisleDownPatches.add(mall.getPatch(50,111)); // Store 11; 39
+        aisleDownPatches.add(mall.getPatch(53,111)); // Store 11; 40
+        aisleDownPatches.add(mall.getPatch(23,121)); // Store 12; 41
+        aisleDownPatches.add(mall.getPatch(26,121)); // Store 12; 42
+        aisleDownPatches.add(mall.getPatch(37,121)); // Store 13; 43
+        aisleDownPatches.add(mall.getPatch(40,121)); // Store 13; 44
         StoreAisleMapper.draw(aisleDownPatches, "DOWN");
 
         List<Patch> aisleRightPatches = new ArrayList<>();
-        aisleRightPatches.add(mall.getPatch(16,10)); // Store 1
-        aisleRightPatches.add(mall.getPatch(16,13)); // Store 1
-        aisleRightPatches.add(mall.getPatch(16,16)); // Store 1
-        aisleRightPatches.add(mall.getPatch(16,26)); // Store 1
-        aisleRightPatches.add(mall.getPatch(16,29)); // Store 1
-        aisleRightPatches.add(mall.getPatch(12,35)); // Store 2
-        aisleRightPatches.add(mall.getPatch(12,49)); // Store 2
-        aisleRightPatches.add(mall.getPatch(43,35)); // Store 4
-        aisleRightPatches.add(mall.getPatch(45,49)); // Store 4
-        aisleRightPatches.add(mall.getPatch(8,51)); // Store 5
-        aisleRightPatches.add(mall.getPatch(8,60)); // Store 5
-        aisleRightPatches.add(mall.getPatch(8,62)); // Store 6
-        aisleRightPatches.add(mall.getPatch(8,71)); // Store 6
-        aisleRightPatches.add(mall.getPatch(8,75)); // Store 7
-        aisleRightPatches.add(mall.getPatch(8,94)); // Store 7
-        aisleRightPatches.add(mall.getPatch(8,79)); // Store 7
-        aisleRightPatches.add(mall.getPatch(8,90)); // Store 7
-        aisleRightPatches.add(mall.getPatch(8,98)); // Store 8
-        aisleRightPatches.add(mall.getPatch(8,107)); // Store 8
-        aisleRightPatches.add(mall.getPatch(8,109)); // Store 9
-        aisleRightPatches.add(mall.getPatch(8,118)); // Store 9
-        aisleRightPatches.add(mall.getPatch(47,96)); // Store 10
-        aisleRightPatches.add(mall.getPatch(47,105)); // Store 10
-        aisleRightPatches.add(mall.getPatch(47,108)); // Store 11
-        aisleRightPatches.add(mall.getPatch(47,117)); // Store 11
-        aisleRightPatches.add(mall.getPatch(23,129)); // Store 12
-        aisleRightPatches.add(mall.getPatch(37,129)); // Store 13
+        aisleRightPatches.add(mall.getPatch(16,10)); // Store 1; 45
+        aisleRightPatches.add(mall.getPatch(16,13)); // Store 1; 46
+        aisleRightPatches.add(mall.getPatch(16,16)); // Store 1; 47
+        aisleRightPatches.add(mall.getPatch(16,26)); // Store 1; 48
+        aisleRightPatches.add(mall.getPatch(16,29)); // Store 1; 49
+        aisleRightPatches.add(mall.getPatch(12,35)); // Store 2; 50
+        aisleRightPatches.add(mall.getPatch(12,49)); // Store 2; 51
+        aisleRightPatches.add(mall.getPatch(43,35)); // Store 4; 52
+        aisleRightPatches.add(mall.getPatch(45,49)); // Store 4; 53
+        aisleRightPatches.add(mall.getPatch(8,51)); // Store 5; 54
+        aisleRightPatches.add(mall.getPatch(8,60)); // Store 5; 55
+        aisleRightPatches.add(mall.getPatch(8,62)); // Store 6; 56
+        aisleRightPatches.add(mall.getPatch(8,71)); // Store 6; 57
+        aisleRightPatches.add(mall.getPatch(8,75)); // Store 7; 58
+        aisleRightPatches.add(mall.getPatch(8,94)); // Store 7; 59
+        aisleRightPatches.add(mall.getPatch(8,79)); // Store 7; 60
+        aisleRightPatches.add(mall.getPatch(8,90)); // Store 7; 61
+        aisleRightPatches.add(mall.getPatch(8,98)); // Store 8; 62
+        aisleRightPatches.add(mall.getPatch(8,107)); // Store 8; 63
+        aisleRightPatches.add(mall.getPatch(8,109)); // Store 9; 64
+        aisleRightPatches.add(mall.getPatch(8,118)); // Store 9; 65
+        aisleRightPatches.add(mall.getPatch(47,96)); // Store 10; 66
+        aisleRightPatches.add(mall.getPatch(47,105)); // Store 10; 67
+        aisleRightPatches.add(mall.getPatch(47,108)); // Store 11; 68
+        aisleRightPatches.add(mall.getPatch(47,117)); // Store 11; 69
+        aisleRightPatches.add(mall.getPatch(23,129)); // Store 12; 70
+        aisleRightPatches.add(mall.getPatch(37,129)); // Store 13; 71
         StoreAisleMapper.draw(aisleRightPatches, "RIGHT");
 
         List<Patch> mallGateExitPatches = new ArrayList<>();
@@ -392,60 +392,60 @@ public class MallScreenController extends ScreenController {
         KioskMapper.draw(kioskPatches);
 
         List<Patch> tableUpPatches = new ArrayList<>();
-        tableUpPatches.add(mall.getPatch(47,52));
-        tableUpPatches.add(mall.getPatch(47,58));
-        tableUpPatches.add(mall.getPatch(47,64));
-        tableUpPatches.add(mall.getPatch(47,70));
-        tableUpPatches.add(mall.getPatch(50,52));
-        tableUpPatches.add(mall.getPatch(50,58));
-        tableUpPatches.add(mall.getPatch(50,64));
-        tableUpPatches.add(mall.getPatch(50,70));
-        tableUpPatches.add(mall.getPatch(53,52));
-        tableUpPatches.add(mall.getPatch(53,58));
-        tableUpPatches.add(mall.getPatch(53,64));
-        tableUpPatches.add(mall.getPatch(53,70));
-        tableUpPatches.add(mall.getPatch(56,52));
-        tableUpPatches.add(mall.getPatch(56,58));
-        tableUpPatches.add(mall.getPatch(56,64));
-        tableUpPatches.add(mall.getPatch(56,70));
-        tableUpPatches.add(mall.getPatch(47,74));
-        tableUpPatches.add(mall.getPatch(47,80));
-        tableUpPatches.add(mall.getPatch(47,86));
-        tableUpPatches.add(mall.getPatch(47,92));
-        tableUpPatches.add(mall.getPatch(50,74));
-        tableUpPatches.add(mall.getPatch(50,80));
-        tableUpPatches.add(mall.getPatch(50,86));
-        tableUpPatches.add(mall.getPatch(50,92));
-        tableUpPatches.add(mall.getPatch(53,74));
-        tableUpPatches.add(mall.getPatch(53,80));
-        tableUpPatches.add(mall.getPatch(53,86));
-        tableUpPatches.add(mall.getPatch(53,92));
-        tableUpPatches.add(mall.getPatch(56,74));
-        tableUpPatches.add(mall.getPatch(56,80));
-        tableUpPatches.add(mall.getPatch(56,86));
-        tableUpPatches.add(mall.getPatch(56,92));
-        tableUpPatches.add(mall.getPatch(27,103));
-        tableUpPatches.add(mall.getPatch(27,107));
-        tableUpPatches.add(mall.getPatch(27,111));
+        tableUpPatches.add(mall.getPatch(47,52)); // 0
+        tableUpPatches.add(mall.getPatch(47,58)); // 1
+        tableUpPatches.add(mall.getPatch(47,64)); // 2
+        tableUpPatches.add(mall.getPatch(47,70)); // 3
+        tableUpPatches.add(mall.getPatch(50,52)); // 4
+        tableUpPatches.add(mall.getPatch(50,58)); // 5
+        tableUpPatches.add(mall.getPatch(50,64)); // 6
+        tableUpPatches.add(mall.getPatch(50,70)); // 7
+        tableUpPatches.add(mall.getPatch(53,52)); // 8
+        tableUpPatches.add(mall.getPatch(53,58)); // 9
+        tableUpPatches.add(mall.getPatch(53,64)); // 10
+        tableUpPatches.add(mall.getPatch(53,70)); // 11
+        tableUpPatches.add(mall.getPatch(56,52)); // 12
+        tableUpPatches.add(mall.getPatch(56,58)); // 13
+        tableUpPatches.add(mall.getPatch(56,64)); // 14
+        tableUpPatches.add(mall.getPatch(56,70)); // 15
+        tableUpPatches.add(mall.getPatch(47,74)); // 16
+        tableUpPatches.add(mall.getPatch(47,80)); // 17
+        tableUpPatches.add(mall.getPatch(47,86)); // 18
+        tableUpPatches.add(mall.getPatch(47,92)); // 19
+        tableUpPatches.add(mall.getPatch(50,74)); // 20
+        tableUpPatches.add(mall.getPatch(50,80)); // 21
+        tableUpPatches.add(mall.getPatch(50,86)); // 22
+        tableUpPatches.add(mall.getPatch(50,92)); // 23
+        tableUpPatches.add(mall.getPatch(53,74)); // 24
+        tableUpPatches.add(mall.getPatch(53,80)); // 25
+        tableUpPatches.add(mall.getPatch(53,86)); // 26
+        tableUpPatches.add(mall.getPatch(53,92)); // 27
+        tableUpPatches.add(mall.getPatch(56,74)); // 28
+        tableUpPatches.add(mall.getPatch(56,80)); // 29
+        tableUpPatches.add(mall.getPatch(56,86)); // 30
+        tableUpPatches.add(mall.getPatch(56,92)); // 31
+        tableUpPatches.add(mall.getPatch(27,103)); // 32
+        tableUpPatches.add(mall.getPatch(27,107)); // 33
+        tableUpPatches.add(mall.getPatch(27,111)); // 34
         TableMapper.draw(tableUpPatches, "UP");
 
         List<Patch> tableRightPatches = new ArrayList<>();
-        tableRightPatches.add(mall.getPatch(42,56));
-        tableRightPatches.add(mall.getPatch(42,59));
-        tableRightPatches.add(mall.getPatch(42,62));
-        tableRightPatches.add(mall.getPatch(42,65));
-        tableRightPatches.add(mall.getPatch(42,68));
-        tableRightPatches.add(mall.getPatch(42,78));
-        tableRightPatches.add(mall.getPatch(42,81));
-        tableRightPatches.add(mall.getPatch(42,84));
-        tableRightPatches.add(mall.getPatch(42,87));
-        tableRightPatches.add(mall.getPatch(42,90));
-        tableRightPatches.add(mall.getPatch(31,97));
-        tableRightPatches.add(mall.getPatch(31,100));
-        tableRightPatches.add(mall.getPatch(31,103));
-        tableRightPatches.add(mall.getPatch(31,106));
-        tableRightPatches.add(mall.getPatch(31,109));
-        tableRightPatches.add(mall.getPatch(31,112));
+        tableRightPatches.add(mall.getPatch(42,56)); // 35
+        tableRightPatches.add(mall.getPatch(42,59)); // 36
+        tableRightPatches.add(mall.getPatch(42,62)); // 37
+        tableRightPatches.add(mall.getPatch(42,65)); // 38
+        tableRightPatches.add(mall.getPatch(42,68)); // 39
+        tableRightPatches.add(mall.getPatch(42,78)); // 40
+        tableRightPatches.add(mall.getPatch(42,81)); // 41
+        tableRightPatches.add(mall.getPatch(42,84)); // 42
+        tableRightPatches.add(mall.getPatch(42,87)); // 43
+        tableRightPatches.add(mall.getPatch(42,90)); // 44
+        tableRightPatches.add(mall.getPatch(31,97)); // 45
+        tableRightPatches.add(mall.getPatch(31,100)); // 46
+        tableRightPatches.add(mall.getPatch(31,103)); // 47
+        tableRightPatches.add(mall.getPatch(31,106)); // 48
+        tableRightPatches.add(mall.getPatch(31,109)); // 49
+        tableRightPatches.add(mall.getPatch(31,112)); // 50
         TableMapper.draw(tableRightPatches, "RIGHT");
 
         List<Patch> trashPatches = new ArrayList<>();
