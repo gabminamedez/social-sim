@@ -201,6 +201,12 @@ public class Mall extends Environment {
         else if (amenityClass == Trash.class) {
             return this.getTrashes();
         }
+        else if (amenityClass == Toilet.class) {
+            return this.getToilets();
+        }
+        else if (amenityClass == Sink.class) {
+            return this.getSinks();
+        }
         else {
             return null;
         }

@@ -27,7 +27,10 @@ public abstract class Amenity extends PatchObject {
                         && amenityBlock.getParent().getClass() != Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Security.class
-                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.Security.class) {
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.Security.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.StoreAisle.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.StoreCounter.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.Table.class) {
                     amenityBlock.getPatch().signalAddAmenityBlock();
                 }
 

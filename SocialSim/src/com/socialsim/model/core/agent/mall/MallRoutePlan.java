@@ -41,9 +41,6 @@ public class MallRoutePlan {
     private static ArrayList<StoreAisle> aisles12 = new ArrayList<>();
     private static ArrayList<StoreAisle> aisles13 = new ArrayList<>();
 
-    private static ArrayList<Table> tables1 = new ArrayList<>();
-    private static ArrayList<Table> tables2 = new ArrayList<>();
-
     static {
         aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(0));
         aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(1));
@@ -118,20 +115,6 @@ public class MallRoutePlan {
         aisles13.add(Main.mallSimulator.getMall().getStoreAisles().get(43));
         aisles13.add(Main.mallSimulator.getMall().getStoreAisles().get(44));
         aisles13.add(Main.mallSimulator.getMall().getStoreAisles().get(71));
-
-        for (int i = 0; i < 16; i++) {
-            tables1.add(Main.mallSimulator.getMall().getTables().get(i));
-        }
-        for (int i = 35; i < 40; i++) {
-            tables1.add(Main.mallSimulator.getMall().getTables().get(i));
-        }
-
-        for (int i = 16; i < 31; i++) {
-            tables2.add(Main.mallSimulator.getMall().getTables().get(i));
-        }
-        for (int i = 40; i < 44; i++) {
-            tables2.add(Main.mallSimulator.getMall().getTables().get(i));
-        }
     }
 
     public MallRoutePlan(MallAgent agent, MallAgent leaderAgent, Mall mall, Patch spawnPatch, int team) { // leaderAgent is only for agents that follow and deviate
@@ -149,128 +132,14 @@ public class MallRoutePlan {
             routePlan.add(new MallState(MallState.Name.STAFF_KIOSK, this, agent, actions));
         }
         else if (agent.getPersona() == MallAgent.Persona.STAFF_RESTO) {
-            if (team == 1) {
-                for (int i = 0; i < tables1.size(); i++) {
-                    Patch randomPatch = tables1.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_RESTO_SERVE, randomPatch, 12, 24));
-                    routePlan.add(new MallState(MallState.Name.STAFF_RESTO, this, agent, actions));
-                }
-            }
-            else {
-                for (int i = 0; i < tables2.size(); i++) {
-                    Patch randomPatch = tables2.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_RESTO_SERVE, randomPatch, 12, 24));
-                    routePlan.add(new MallState(MallState.Name.STAFF_RESTO, this, agent, actions));
-                }
-            }
+            actions = new ArrayList<>();
+            actions.add(new MallAction(MallAction.Name.STAFF_RESTO_SERVE, 12, 24));
+            routePlan.add(new MallState(MallState.Name.STAFF_RESTO, this, agent, actions));
         }
         else if (agent.getPersona() == MallAgent.Persona.STAFF_STORE_SALES) {
-            if (team == 1) {
-                for (int i = 0; i < aisles1.size(); i++) {
-                    Patch randomPatch = aisles1.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 2) {
-                for (int i = 0; i < aisles2.size(); i++) {
-                    Patch randomPatch = aisles2.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 3) {
-                for (int i = 0; i < aisles3.size(); i++) {
-                    Patch randomPatch = aisles3.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 4) {
-                for (int i = 0; i < aisles4.size(); i++) {
-                    Patch randomPatch = aisles4.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 5) {
-                for (int i = 0; i < aisles5.size(); i++) {
-                    Patch randomPatch = aisles5.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 6) {
-                for (int i = 0; i < aisles6.size(); i++) {
-                    Patch randomPatch = aisles6.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 7) {
-                for (int i = 0; i < aisles7.size(); i++) {
-                    Patch randomPatch = aisles7.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 8) {
-                for (int i = 0; i < aisles8.size(); i++) {
-                    Patch randomPatch = aisles8.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 9) {
-                for (int i = 0; i < aisles9.size(); i++) {
-                    Patch randomPatch = aisles9.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 10) {
-                for (int i = 0; i < aisles10.size(); i++) {
-                    Patch randomPatch = aisles10.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 11) {
-                for (int i = 0; i < aisles11.size(); i++) {
-                    Patch randomPatch = aisles11.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 12) {
-                for (int i = 0; i < aisles12.size(); i++) {
-                    Patch randomPatch = aisles12.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
-            else if (team == 13) {
-                for (int i = 0; i < aisles13.size(); i++) {
-                    Patch randomPatch = aisles13.get(0).getAttractors().get(0).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, randomPatch, 120, 180));
-                    routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
-                }
-            }
+            actions = new ArrayList<>();
+            actions.add(new MallAction(MallAction.Name.STAFF_STORE_STATION, 120, 180));
+            routePlan.add(new MallState(MallState.Name.STAFF_STORE_SALES, this, agent, actions));
         }
         else if (agent.getPersona() == MallAgent.Persona.STAFF_STORE_CASHIER) {
             actions = new ArrayList<>();
@@ -278,60 +147,110 @@ public class MallRoutePlan {
             routePlan.add(new MallState(MallState.Name.STAFF_STORE_CASHIER, this, agent, actions));
         }
         else {
-            if (agent.getPersona() == MallAgent.Persona.ERRAND_FAMILY) {
-                if (leaderAgent == null) {
-                    routePlan = createErrandRoute(agent, mall, EFAMILY_RESTO_CHANCE, EFAMILY_WANDERING_CHANCE);
-                }
-                else {
-                    routePlan = createFollowingRoute(agent, leaderAgent);
-                }
-            }
-            else if (agent.getPersona() == MallAgent.Persona.LOITER_FAMILY) {
-                if (leaderAgent == null) {
-                    routePlan = createLoiterRoute(agent, mall, LFAMILY_RESTO_CHANCE, LFAMILY_WANDERING_CHANCE);
-                }
-                else {
-                    routePlan = createFollowingRoute(agent, leaderAgent);
-                }
-            }
-            else if (agent.getPersona() == MallAgent.Persona.ERRAND_FRIENDS) {
-                if (leaderAgent == null) {
-                    routePlan = createErrandRoute(agent, mall, EFRIENDS_RESTO_CHANCE, EFRIENDS_WANDERING_CHANCE);
-                }
-                else {
-                    routePlan = createFollowingRoute(agent, leaderAgent);
-                }
-            }
-            else if (agent.getPersona() == MallAgent.Persona.LOITER_FRIENDS) {
-                if (leaderAgent == null) {
-                    routePlan = createLoiterRoute(agent, mall, LFRIENDS_RESTO_CHANCE, LFRIENDS_WANDERING_CHANCE);
-                }
-                else {
-                    routePlan = createFollowingRoute(agent, leaderAgent);
-                }
-            }
-            else if (agent.getPersona() == MallAgent.Persona.ERRAND_COUPLE) {
-                if (leaderAgent == null) {
-                    routePlan = createErrandRoute(agent, mall, ECOUPLE_RESTO_CHANCE, ECOUPLE_WANDERING_CHANCE);
-                }
-                else {
-                    routePlan = createFollowingRoute(agent, leaderAgent);
-                }
-            }
-            else if (agent.getPersona() == MallAgent.Persona.LOITER_COUPLE) {
-                if (leaderAgent == null) {
-                    routePlan = createLoiterRoute(agent, mall, LCOUPLE_RESTO_CHANCE, LCOUPLE_WANDERING_CHANCE);
-                }
-                else {
-                    routePlan = createFollowingRoute(agent, leaderAgent);
-                }
-            }
-            else if (agent.getPersona() == MallAgent.Persona.ERRAND_ALONE) {
-                routePlan = createErrandRoute(agent, mall, EALONE_RESTO_CHANCE, EALONE_WANDERING_CHANCE);
-            }
-            else if (agent.getPersona() == MallAgent.Persona.LOITER_ALONE) {
-                routePlan = createLoiterRoute(agent, mall, LALONE_RESTO_CHANCE, LALONE_WANDERING_CHANCE);
-            }
+            actions = new ArrayList<>();
+            actions.add(new MallAction(MallAction.Name.GOING_TO_SECURITY_QUEUE));
+            actions.add(new MallAction(MallAction.Name.GO_THROUGH_SCANNER, (MallAgent) null, 2));
+            routePlan.add(new MallState(MallState.Name.GOING_TO_SECURITY, this, agent, actions));
+
+//            actions = new ArrayList<>();
+//            actions.add(new MallAction(MallAction.Name.FIND_BENCH));
+//            actions.add(new MallAction(MallAction.Name.SIT_ON_BENCH, 120, 360));
+//            routePlan.add(new MallState(MallState.Name.WANDERING_AROUND, this, agent, actions));
+//
+//            actions = new ArrayList<>();
+//            actions.add(new MallAction(MallAction.Name.FIND_DIRECTORY));
+//            actions.add(new MallAction(MallAction.Name.VIEW_DIRECTORY, 24, 48));
+//            routePlan.add(new MallState(MallState.Name.WANDERING_AROUND, this, agent, actions));
+
+//            actions = new ArrayList<>();
+//            actions.add(new MallAction(MallAction.Name.GO_TO_BATHROOM));
+//            actions.add(new MallAction(MallAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
+//            actions.add(new MallAction(MallAction.Name.WASH_IN_SINK, (MallAgent) null, 12));
+//            routePlan.add(new MallState(MallState.Name.NEEDS_BATHROOM, this, agent, actions));
+
+//            actions = new ArrayList<>();
+//            actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
+//            routePlan.add(new MallState(MallState.Name.GOING_TO_SHOWCASE, this, agent, actions));
+//            actions = new ArrayList<>();
+//            actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
+//            actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
+//            routePlan.add(new MallState(MallState.Name.IN_SHOWCASE, this, agent, actions));
+
+//            actions = new ArrayList<>();
+//            actions.add(new MallAction(MallAction.Name.GO_TO_RESTAURANT));
+//            routePlan.add(new MallState(MallState.Name.GOING_TO_RESTO, this, agent, actions));
+//            actions = new ArrayList<>();
+//            actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 360, 1080));
+//            routePlan.add(new MallState(MallState.Name.IN_RESTO, this, agent, actions));
+
+//            actions = new ArrayList<>();
+//            actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
+//            actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
+//            actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
+//            routePlan.add(new MallState(MallState.Name.GOING_TO_DINING, this, agent, actions));
+//            actions = new ArrayList<>();
+//            actions.add(new MallAction(MallAction.Name.GO_TO_DINING_AREA));
+//            actions.add(new MallAction(MallAction.Name.DINING_AREA_STAY_PUT, 120, 360));
+//            routePlan.add(new MallState(MallState.Name.IN_DINING, this, agent, actions));
+
+            actions = new ArrayList<>();
+            actions.add(new MallAction(MallAction.Name.LEAVE_BUILDING));
+            routePlan.add(new MallState(MallState.Name.GOING_HOME, this, agent, actions));
+
+//            if (agent.getPersona() == MallAgent.Persona.ERRAND_FAMILY) {
+//                if (leaderAgent == null) {
+//                    routePlan = createErrandRoute(agent, mall, EFAMILY_RESTO_CHANCE, EFAMILY_WANDERING_CHANCE);
+//                }
+//                else {
+//                    routePlan = createFollowingRoute(agent, leaderAgent);
+//                }
+//            }
+//            else if (agent.getPersona() == MallAgent.Persona.LOITER_FAMILY) {
+//                if (leaderAgent == null) {
+//                    routePlan = createLoiterRoute(agent, mall, LFAMILY_RESTO_CHANCE, LFAMILY_WANDERING_CHANCE);
+//                }
+//                else {
+//                    routePlan = createFollowingRoute(agent, leaderAgent);
+//                }
+//            }
+//            else if (agent.getPersona() == MallAgent.Persona.ERRAND_FRIENDS) {
+//                if (leaderAgent == null) {
+//                    routePlan = createErrandRoute(agent, mall, EFRIENDS_RESTO_CHANCE, EFRIENDS_WANDERING_CHANCE);
+//                }
+//                else {
+//                    routePlan = createFollowingRoute(agent, leaderAgent);
+//                }
+//            }
+//            else if (agent.getPersona() == MallAgent.Persona.LOITER_FRIENDS) {
+//                if (leaderAgent == null) {
+//                    routePlan = createLoiterRoute(agent, mall, LFRIENDS_RESTO_CHANCE, LFRIENDS_WANDERING_CHANCE);
+//                }
+//                else {
+//                    routePlan = createFollowingRoute(agent, leaderAgent);
+//                }
+//            }
+//            else if (agent.getPersona() == MallAgent.Persona.ERRAND_COUPLE) {
+//                if (leaderAgent == null) {
+//                    routePlan = createErrandRoute(agent, mall, ECOUPLE_RESTO_CHANCE, ECOUPLE_WANDERING_CHANCE);
+//                }
+//                else {
+//                    routePlan = createFollowingRoute(agent, leaderAgent);
+//                }
+//            }
+//            else if (agent.getPersona() == MallAgent.Persona.LOITER_COUPLE) {
+//                if (leaderAgent == null) {
+//                    routePlan = createLoiterRoute(agent, mall, LCOUPLE_RESTO_CHANCE, LCOUPLE_WANDERING_CHANCE);
+//                }
+//                else {
+//                    routePlan = createFollowingRoute(agent, leaderAgent);
+//                }
+//            }
+//            else if (agent.getPersona() == MallAgent.Persona.ERRAND_ALONE) {
+//                routePlan = createErrandRoute(agent, mall, EALONE_RESTO_CHANCE, EALONE_WANDERING_CHANCE);
+//            }
+//            else if (agent.getPersona() == MallAgent.Persona.LOITER_ALONE) {
+//                routePlan = createLoiterRoute(agent, mall, LALONE_RESTO_CHANCE, LALONE_WANDERING_CHANCE);
+//            }
         }
 
         if (leaderAgent == null) {
@@ -343,7 +262,7 @@ public class MallRoutePlan {
         setNextState(-1);
     }
 
-    public void addUrgentRoute(MallState s){
+    public void addUrgentRoute(MallState s) {
         this.currentState = s;
     }
 
@@ -462,10 +381,12 @@ public class MallRoutePlan {
             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
             actions = new ArrayList<>();
             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
-            if (willCheckout) {
-                actions.add(new MallAction(MallAction.Name.CHECKOUT_STORE, 12, 18));
-            }
             routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
+            if (willCheckout) {
+                actions = new ArrayList<>();
+                actions.add(new MallAction(MallAction.Name.CHECKOUT_STORE, 12, 18));
+                routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
+            }
 
             numProducts--;
             routeIndex++;
@@ -495,11 +416,11 @@ public class MallRoutePlan {
                     if (isShowcase) {
                         actions = new ArrayList<>();
                         actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
-                        routePlan.add(new MallState(MallState.Name.IN_SHOWCASE, this, agent, actions));
+                        routePlan.add(new MallState(MallState.Name.GOING_TO_SHOWCASE, this, agent, actions));
                         actions = new ArrayList<>();
                         actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
                         actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
-                        routePlan.add(new MallState(MallState.Name.GOING_TO_SHOWCASE, this, agent, actions));
+                        routePlan.add(new MallState(MallState.Name.IN_SHOWCASE, this, agent, actions));
                     }
                     else {
                         actions = new ArrayList<>();
@@ -589,12 +510,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles1.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -608,12 +532,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles2.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -627,12 +554,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles3.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -646,12 +576,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles4.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -665,12 +598,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles5.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -684,12 +620,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles6.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -703,12 +642,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles7.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -722,12 +664,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles8.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -741,12 +686,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles9.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -760,12 +708,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles10.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -779,12 +730,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles11.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -798,12 +752,15 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles12.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
@@ -817,21 +774,25 @@ public class MallRoutePlan {
                             routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                         else {
                             randomAisle = aisles13.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
+                            actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
                             actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
+                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
                         }
                     }
                 }
             }
 
             if (willCheckout) {
+                actions = new ArrayList<>();
                 actions.add(new MallAction(MallAction.Name.CHECKOUT_STORE, 12, 18));
+                routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
             }
-            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
 
             numProducts--;
             routeIndex++;
@@ -861,11 +822,11 @@ public class MallRoutePlan {
                     if (isShowcase) {
                         actions = new ArrayList<>();
                         actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
-                        routePlan.add(new MallState(MallState.Name.IN_SHOWCASE, this, agent, actions));
+                        routePlan.add(new MallState(MallState.Name.GOING_TO_SHOWCASE, this, agent, actions));
                         actions = new ArrayList<>();
                         actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
                         actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
-                        routePlan.add(new MallState(MallState.Name.GOING_TO_SHOWCASE, this, agent, actions));
+                        routePlan.add(new MallState(MallState.Name.IN_SHOWCASE, this, agent, actions));
                     }
                     else {
                         actions = new ArrayList<>();

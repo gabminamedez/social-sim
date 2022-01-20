@@ -382,13 +382,13 @@ public class MallScreenController extends ScreenController {
         DigitalMapper.draw(digitalPatches);
 
         List<Patch> kioskPatches = new ArrayList<>();
-        kioskPatches.add(mall.getPatch(21,53));
-        kioskPatches.add(mall.getPatch(21,70));
-        kioskPatches.add(mall.getPatch(21,87));
-        kioskPatches.add(mall.getPatch(32,53));
-        kioskPatches.add(mall.getPatch(32,70));
-        kioskPatches.add(mall.getPatch(32,87));
-        kioskPatches.add(mall.getPatch(26,97));
+        kioskPatches.add(mall.getPatch(21,53)); // 0
+        kioskPatches.add(mall.getPatch(21,70)); // 1
+        kioskPatches.add(mall.getPatch(21,87)); // 2
+        kioskPatches.add(mall.getPatch(32,53)); // 3
+        kioskPatches.add(mall.getPatch(32,70)); // 4
+        kioskPatches.add(mall.getPatch(32,87)); // 5
+        kioskPatches.add(mall.getPatch(26,97)); // 6
         KioskMapper.draw(kioskPatches);
 
         List<Patch> tableUpPatches = new ArrayList<>();
