@@ -360,8 +360,8 @@ public class MallScreenController extends ScreenController {
         aisleRightPatches.add(mall.getPatch(47,105)); // Store 10; 67
         aisleRightPatches.add(mall.getPatch(47,108)); // Store 11; 68
         aisleRightPatches.add(mall.getPatch(47,117)); // Store 11; 69
-        aisleRightPatches.add(mall.getPatch(23,129)); // Store 12; 70
-        aisleRightPatches.add(mall.getPatch(37,129)); // Store 13; 71
+        aisleRightPatches.add(mall.getPatch(23,127)); // Store 12; 70
+        aisleRightPatches.add(mall.getPatch(37,127)); // Store 13; 71
         StoreAisleMapper.draw(aisleRightPatches, "RIGHT");
 
         List<Patch> mallGateExitPatches = new ArrayList<>();

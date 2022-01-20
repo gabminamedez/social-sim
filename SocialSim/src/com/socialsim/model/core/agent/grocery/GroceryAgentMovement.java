@@ -21,7 +21,6 @@ import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable;
 import com.socialsim.model.simulator.Simulator;
 import com.socialsim.model.simulator.grocery.GrocerySimulator;
-import com.socialsim.model.simulator.university.UniversitySimulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

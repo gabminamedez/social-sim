@@ -4,7 +4,6 @@ import com.socialsim.controller.Main;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.mall.Mall;
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.StoreAisle;
-import com.socialsim.model.core.environment.mall.patchobject.passable.goal.Table;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.ArrayList;
@@ -147,110 +146,60 @@ public class MallRoutePlan {
             routePlan.add(new MallState(MallState.Name.STAFF_STORE_CASHIER, this, agent, actions));
         }
         else {
-            actions = new ArrayList<>();
-            actions.add(new MallAction(MallAction.Name.GOING_TO_SECURITY_QUEUE));
-            actions.add(new MallAction(MallAction.Name.GO_THROUGH_SCANNER, (MallAgent) null, 2));
-            routePlan.add(new MallState(MallState.Name.GOING_TO_SECURITY, this, agent, actions));
-
-//            actions = new ArrayList<>();
-//            actions.add(new MallAction(MallAction.Name.FIND_BENCH));
-//            actions.add(new MallAction(MallAction.Name.SIT_ON_BENCH, 120, 360));
-//            routePlan.add(new MallState(MallState.Name.WANDERING_AROUND, this, agent, actions));
-//
-//            actions = new ArrayList<>();
-//            actions.add(new MallAction(MallAction.Name.FIND_DIRECTORY));
-//            actions.add(new MallAction(MallAction.Name.VIEW_DIRECTORY, 24, 48));
-//            routePlan.add(new MallState(MallState.Name.WANDERING_AROUND, this, agent, actions));
-
-//            actions = new ArrayList<>();
-//            actions.add(new MallAction(MallAction.Name.GO_TO_BATHROOM));
-//            actions.add(new MallAction(MallAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
-//            actions.add(new MallAction(MallAction.Name.WASH_IN_SINK, (MallAgent) null, 12));
-//            routePlan.add(new MallState(MallState.Name.NEEDS_BATHROOM, this, agent, actions));
-
-//            actions = new ArrayList<>();
-//            actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
-//            routePlan.add(new MallState(MallState.Name.GOING_TO_SHOWCASE, this, agent, actions));
-//            actions = new ArrayList<>();
-//            actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
-//            actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
-//            routePlan.add(new MallState(MallState.Name.IN_SHOWCASE, this, agent, actions));
-
-//            actions = new ArrayList<>();
-//            actions.add(new MallAction(MallAction.Name.GO_TO_RESTAURANT));
-//            routePlan.add(new MallState(MallState.Name.GOING_TO_RESTO, this, agent, actions));
-//            actions = new ArrayList<>();
-//            actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 360, 1080));
-//            routePlan.add(new MallState(MallState.Name.IN_RESTO, this, agent, actions));
-
-//            actions = new ArrayList<>();
-//            actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
-//            actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
-//            actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
-//            routePlan.add(new MallState(MallState.Name.GOING_TO_DINING, this, agent, actions));
-//            actions = new ArrayList<>();
-//            actions.add(new MallAction(MallAction.Name.GO_TO_DINING_AREA));
-//            actions.add(new MallAction(MallAction.Name.DINING_AREA_STAY_PUT, 120, 360));
-//            routePlan.add(new MallState(MallState.Name.IN_DINING, this, agent, actions));
-
-            actions = new ArrayList<>();
-            actions.add(new MallAction(MallAction.Name.LEAVE_BUILDING));
-            routePlan.add(new MallState(MallState.Name.GOING_HOME, this, agent, actions));
-
-//            if (agent.getPersona() == MallAgent.Persona.ERRAND_FAMILY) {
-//                if (leaderAgent == null) {
-//                    routePlan = createErrandRoute(agent, mall, EFAMILY_RESTO_CHANCE, EFAMILY_WANDERING_CHANCE);
-//                }
-//                else {
-//                    routePlan = createFollowingRoute(agent, leaderAgent);
-//                }
-//            }
-//            else if (agent.getPersona() == MallAgent.Persona.LOITER_FAMILY) {
-//                if (leaderAgent == null) {
-//                    routePlan = createLoiterRoute(agent, mall, LFAMILY_RESTO_CHANCE, LFAMILY_WANDERING_CHANCE);
-//                }
-//                else {
-//                    routePlan = createFollowingRoute(agent, leaderAgent);
-//                }
-//            }
-//            else if (agent.getPersona() == MallAgent.Persona.ERRAND_FRIENDS) {
-//                if (leaderAgent == null) {
-//                    routePlan = createErrandRoute(agent, mall, EFRIENDS_RESTO_CHANCE, EFRIENDS_WANDERING_CHANCE);
-//                }
-//                else {
-//                    routePlan = createFollowingRoute(agent, leaderAgent);
-//                }
-//            }
-//            else if (agent.getPersona() == MallAgent.Persona.LOITER_FRIENDS) {
-//                if (leaderAgent == null) {
-//                    routePlan = createLoiterRoute(agent, mall, LFRIENDS_RESTO_CHANCE, LFRIENDS_WANDERING_CHANCE);
-//                }
-//                else {
-//                    routePlan = createFollowingRoute(agent, leaderAgent);
-//                }
-//            }
-//            else if (agent.getPersona() == MallAgent.Persona.ERRAND_COUPLE) {
-//                if (leaderAgent == null) {
-//                    routePlan = createErrandRoute(agent, mall, ECOUPLE_RESTO_CHANCE, ECOUPLE_WANDERING_CHANCE);
-//                }
-//                else {
-//                    routePlan = createFollowingRoute(agent, leaderAgent);
-//                }
-//            }
-//            else if (agent.getPersona() == MallAgent.Persona.LOITER_COUPLE) {
-//                if (leaderAgent == null) {
-//                    routePlan = createLoiterRoute(agent, mall, LCOUPLE_RESTO_CHANCE, LCOUPLE_WANDERING_CHANCE);
-//                }
-//                else {
-//                    routePlan = createFollowingRoute(agent, leaderAgent);
-//                }
-//            }
-//            else if (agent.getPersona() == MallAgent.Persona.ERRAND_ALONE) {
-//                routePlan = createErrandRoute(agent, mall, EALONE_RESTO_CHANCE, EALONE_WANDERING_CHANCE);
-//            }
-//            else if (agent.getPersona() == MallAgent.Persona.LOITER_ALONE) {
-//                routePlan = createLoiterRoute(agent, mall, LALONE_RESTO_CHANCE, LALONE_WANDERING_CHANCE);
-//            }
+            if (agent.getPersona() == MallAgent.Persona.ERRAND_FAMILY) {
+                if (leaderAgent == null) {
+                    routePlan = createErrandRoute(agent, mall, EFAMILY_RESTO_CHANCE, EFAMILY_WANDERING_CHANCE);
+                }
+                else {
+                    routePlan = createFollowingRoute(agent, leaderAgent);
+                }
+            }
+            else if (agent.getPersona() == MallAgent.Persona.LOITER_FAMILY) {
+                if (leaderAgent == null) {
+                    routePlan = createLoiterRoute(agent, mall, LFAMILY_RESTO_CHANCE, LFAMILY_WANDERING_CHANCE);
+                }
+                else {
+                    routePlan = createFollowingRoute(agent, leaderAgent);
+                }
+            }
+            else if (agent.getPersona() == MallAgent.Persona.ERRAND_FRIENDS) {
+                if (leaderAgent == null) {
+                    routePlan = createErrandRoute(agent, mall, EFRIENDS_RESTO_CHANCE, EFRIENDS_WANDERING_CHANCE);
+                }
+                else {
+                    routePlan = createFollowingRoute(agent, leaderAgent);
+                }
+            }
+            else if (agent.getPersona() == MallAgent.Persona.LOITER_FRIENDS) {
+                if (leaderAgent == null) {
+                    routePlan = createLoiterRoute(agent, mall, LFRIENDS_RESTO_CHANCE, LFRIENDS_WANDERING_CHANCE);
+                }
+                else {
+                    routePlan = createFollowingRoute(agent, leaderAgent);
+                }
+            }
+            else if (agent.getPersona() == MallAgent.Persona.ERRAND_COUPLE) {
+                if (leaderAgent == null) {
+                    routePlan = createErrandRoute(agent, mall, ECOUPLE_RESTO_CHANCE, ECOUPLE_WANDERING_CHANCE);
+                }
+                else {
+                    routePlan = createFollowingRoute(agent, leaderAgent);
+                }
+            }
+            else if (agent.getPersona() == MallAgent.Persona.LOITER_COUPLE) {
+                if (leaderAgent == null) {
+                    routePlan = createLoiterRoute(agent, mall, LCOUPLE_RESTO_CHANCE, LCOUPLE_WANDERING_CHANCE);
+                }
+                else {
+                    routePlan = createFollowingRoute(agent, leaderAgent);
+                }
+            }
+            else if (agent.getPersona() == MallAgent.Persona.ERRAND_ALONE) {
+                routePlan = createErrandRoute(agent, mall, EALONE_RESTO_CHANCE, EALONE_WANDERING_CHANCE);
+            }
+            else if (agent.getPersona() == MallAgent.Persona.LOITER_ALONE) {
+                routePlan = createLoiterRoute(agent, mall, LALONE_RESTO_CHANCE, LALONE_WANDERING_CHANCE);
+            }
         }
 
         if (leaderAgent == null) {

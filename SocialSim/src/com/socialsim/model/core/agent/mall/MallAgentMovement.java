@@ -4,7 +4,6 @@ import com.socialsim.controller.Main;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentMovement;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
-import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
@@ -18,7 +17,6 @@ import com.socialsim.model.core.environment.mall.Mall;
 import com.socialsim.model.core.environment.mall.patchfield.*;
 import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.*;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable;
 import com.socialsim.model.simulator.Simulator;
 
 import java.util.*;
@@ -1239,12 +1237,20 @@ public class MallAgentMovement extends AgentMovement {
             }
 
             if(this.currentState.getName() != MallState.Name.GOING_TO_SECURITY && this.currentState.getName() != MallState.Name.GOING_HOME
+                    && this.currentState.getName() != MallState.Name.GOING_TO_STORE && this.currentState.getName() != MallState.Name.IN_STORE
                     && this.currentAction.getName() != MallAction.Name.QUEUE_KIOSK && this.currentAction.getName() != MallAction.Name.CHECKOUT_KIOSK
                     && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Bathroom.class)
                     && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Restaurant.class)
                     && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Store.class)
                     && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Dining.class)) {
                 for (Agent otherAgent : patch.getAgents()) { // Inspect each agent in each patch in the patches in the field of view
+                    if (this.getLeaderAgent() == null && this.followers.contains(otherAgent)) {
+                        continue;
+                    }
+                    else if (this.getLeaderAgent() != null && otherAgent == this.getLeaderAgent()) {
+                        continue;
+                    }
+
                     MallAgent mallAgent = (MallAgent) otherAgent;
                     if (agentsProcessed == agentsProcessedLimit) {
                         break;
@@ -1971,7 +1977,7 @@ public class MallAgentMovement extends AgentMovement {
             return true;
         }
         else if (patch.getAmenityBlock() != null && !patch.getAmenityBlock().getParent().equals(amenity)) {
-            if (patch.getAmenityBlock().getParent().getClass() == Security.class || patch.getAmenityBlock().getParent().getClass() == Table.class || patch.getAmenityBlock().getParent().getClass() == Toilet.class || patch.getAmenityBlock().getParent().getClass() == Bench.class) {
+            if (patch.getAmenityBlock().getParent().getClass() == Security.class || patch.getAmenityBlock().getParent().getClass() == Table.class || patch.getAmenityBlock().getParent().getClass() == Toilet.class || patch.getAmenityBlock().getParent().getClass() == Bench.class || patch.getAmenityBlock().getParent().getClass() == StoreAisle.class || patch.getAmenityBlock().getParent().getClass() == StoreCounter.class) {
                 return false;
             }
             else {

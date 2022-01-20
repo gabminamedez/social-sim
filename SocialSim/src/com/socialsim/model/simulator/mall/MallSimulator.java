@@ -2,25 +2,18 @@ package com.socialsim.model.simulator.mall;
 
 import com.socialsim.controller.Main;
 import com.socialsim.controller.mall.controls.MallScreenController;
-import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.mall.MallAction;
 import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.agent.mall.MallAgentMovement;
 import com.socialsim.model.core.agent.mall.MallState;
-import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
-import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.mall.Mall;
 import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
-import com.socialsim.model.core.environment.mall.patchobject.passable.goal.Bench;
-import com.socialsim.model.core.environment.mall.patchobject.passable.goal.Digital;
-import com.socialsim.model.core.environment.mall.patchobject.passable.goal.Sink;
-import com.socialsim.model.core.environment.mall.patchobject.passable.goal.Toilet;
+import com.socialsim.model.core.environment.mall.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -359,7 +352,6 @@ public class MallSimulator extends Simulator {
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
-                            agentMovement.checkIfStuck();
                             if (agentMovement.hasReachedNextPatchInPath()) {
                                 agentMovement.reachPatchInPath();
                             }
@@ -736,6 +728,110 @@ public class MallSimulator extends Simulator {
                             agentMovement.setActionIndex(0);
                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                             agentMovement.resetGoal();
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.GOING_TO_STORE) {
+                    if (action.getName() == MallAction.Name.GO_TO_STORE) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getCurrentAction().getDestination().getAmenityBlock());
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                            }
+                            else {
+                                if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                    while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                        agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                        agentMovement.reachPatchInPath();
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.IN_STORE) {
+                    if (action.getName() == MallAction.Name.CHECK_AISLE) {
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.GO_TO_AISLE) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getCurrentAction().getDestination().getAmenityBlock());
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                            }
+                            else {
+                                if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                    while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                        agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                        agentMovement.reachPatchInPath();
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.CHECKOUT_STORE) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseGoal(StoreCounter.class);
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                }
+                                else {
+                                    if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                        while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                            agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                            agentMovement.reachPatchInPath();
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                if (agentMovement.getDuration() <= 0) {
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
                         }
                     }
                 }
