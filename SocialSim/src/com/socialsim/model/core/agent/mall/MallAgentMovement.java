@@ -765,106 +765,97 @@ public class MallAgentMovement extends AgentMovement {
             ArrayList<StoreAisle> aisles9 = new ArrayList<>();
             ArrayList<StoreAisle> aisles10 = new ArrayList<>();
             ArrayList<StoreAisle> aisles11 = new ArrayList<>();
-            ArrayList<StoreAisle> aisles12 = new ArrayList<>();
-            ArrayList<StoreAisle> aisles13 = new ArrayList<>();
 
             if (this.team == 1) {
                 aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(0));
                 aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(1));
-                for (int i = 45; i < 50; i++) {
+                for (int i = 33; i < 38; i++) {
                     aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
-
                 this.goalAmenity = aisles1.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles1.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 2) {
-                aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(50));
-                aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(51));
-                for (int i = 2; i < 8; i++) {
+                aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(38));
+                aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(39));
+                for (int i = 2; i < 6; i++) {
                     aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
                 this.goalAmenity = aisles2.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles2.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 3) {
-                for (int i = 8; i < 14; i++) {
+                for (int i = 6; i < 12; i++) {
                     aisles3.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
                 this.goalAmenity = aisles3.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles3.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 4) {
-                aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(52));
-                aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(53));
-                for (int i = 14; i < 20; i++) {
+                aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(40));
+                aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(41));
+                for (int i = 12; i < 16; i++) {
                     aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
                 this.goalAmenity = aisles4.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles4.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 5) {
-                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(20));
-                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(21));
-                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(22));
-                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(54));
-                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(55));
+                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(16));
+                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(17));
+                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(42));
+                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(43));
                 this.goalAmenity = aisles5.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles5.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 6) {
-                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(23));
-                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(24));
-                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(25));
-                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(56));
-                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(57));
+                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(18));
+                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(19));
+                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(44));
+                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(45));
                 this.goalAmenity = aisles6.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles6.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 7) {
-                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(26));
-                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(27));
-                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(28));
-                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(58));
-                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(59));
-                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(60));
-                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(61));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(20));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(21));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(22));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(46));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(47));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(48));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(49));
                 this.goalAmenity = aisles7.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles7.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 8) {
-                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(29));
-                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(30));
-                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(31));
-                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(62));
-                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(63));
+                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(23));
+                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(24));
+                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(50));
+                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(51));
                 this.goalAmenity = aisles8.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles8.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 9) {
-                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(32));
-                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(33));
-                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(34));
-                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(64));
-                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(65));
+                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(25));
+                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(26));
+                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(52));
+                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(53));
                 this.goalAmenity = aisles9.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles9.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 10) {
-                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(35));
-                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(36));
-                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(37));
-                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(66));
-                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(67));
+                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(27));
+                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(28));
+                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(54));
+                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(55));
                 this.goalAmenity = aisles10.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles10.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 11) {
-                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(38));
-                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(39));
-                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(40));
-                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(68));
-                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(69));
+                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(29));
+                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(30));
+                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(56));
+                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(57));
                 this.goalAmenity = aisles11.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles11.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }

@@ -125,10 +125,10 @@ public class MallSimulator extends Simulator {
         mall.getAgents().add(resto8);
         mall.getAgentPatchSet().add(resto8.getAgentMovement().getCurrentPatch());
 
-        MallAgent cashier1 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(11, 19), true, null, -1, 1);
+        MallAgent cashier1 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(10, 19), true, null, -1, 1);
         mall.getAgents().add(cashier1);
         mall.getAgentPatchSet().add(cashier1.getAgentMovement().getCurrentPatch());
-        MallAgent cashier2 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(6, 41), true, null, -1, 2);
+        MallAgent cashier2 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(5, 41), true, null, -1, 2);
         mall.getAgents().add(cashier2);
         mall.getAgentPatchSet().add(cashier2.getAgentMovement().getCurrentPatch());
         MallAgent cashier3 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(49, 19), true, null, -1, 3);
@@ -137,19 +137,19 @@ public class MallSimulator extends Simulator {
         MallAgent cashier4 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(54, 41), true, null, -1, 4);
         mall.getAgents().add(cashier4);
         mall.getAgentPatchSet().add(cashier4.getAgentMovement().getCurrentPatch());
-        MallAgent cashier5 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(1, 55), true, null, -1, 5);
+        MallAgent cashier5 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(0, 55), true, null, -1, 5);
         mall.getAgents().add(cashier5);
         mall.getAgentPatchSet().add(cashier5.getAgentMovement().getCurrentPatch());
-        MallAgent cashier6 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(1, 66), true, null, -1, 6);
+        MallAgent cashier6 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(0, 66), true, null, -1, 6);
         mall.getAgents().add(cashier6);
         mall.getAgentPatchSet().add(cashier6.getAgentMovement().getCurrentPatch());
-        MallAgent cashier7 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(1, 84), true, null, -1, 7);
+        MallAgent cashier7 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(0, 84), true, null, -1, 7);
         mall.getAgents().add(cashier7);
         mall.getAgentPatchSet().add(cashier7.getAgentMovement().getCurrentPatch());
-        MallAgent cashier8 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(1, 102), true, null, -1, 8);
+        MallAgent cashier8 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(0, 102), true, null, -1, 8);
         mall.getAgents().add(cashier8);
         mall.getAgentPatchSet().add(cashier8.getAgentMovement().getCurrentPatch());
-        MallAgent cashier9 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(1, 113), true, null, -1, 9);
+        MallAgent cashier9 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(0, 113), true, null, -1, 9);
         mall.getAgents().add(cashier9);
         mall.getAgentPatchSet().add(cashier9.getAgentMovement().getCurrentPatch());
         MallAgent cashier10 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(59, 100), true, null, -1, 10);
@@ -158,89 +158,56 @@ public class MallSimulator extends Simulator {
         MallAgent cashier11 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(59, 112), true, null, -1, 11);
         mall.getAgents().add(cashier11);
         mall.getAgentPatchSet().add(cashier11.getAgentMovement().getCurrentPatch());
-        MallAgent cashier12 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(18, 124), true, null, -1, 12);
+        MallAgent cashier12 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(15, 124), true, null, -1, 12);
         mall.getAgents().add(cashier12);
         mall.getAgentPatchSet().add(cashier12.getAgentMovement().getCurrentPatch());
-        MallAgent cashier13 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(32, 124), true, null, -1, 13);
+        MallAgent cashier13 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(31, 124), true, null, -1, 13);
         mall.getAgents().add(cashier13);
         mall.getAgentPatchSet().add(cashier13.getAgentMovement().getCurrentPatch());
 
         MallAgent sales = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(14, 14), true, null, -1, 1);
         mall.getAgents().add(sales);
         mall.getAgentPatchSet().add(sales.getAgentMovement().getCurrentPatch());
-        MallAgent sales0 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(14, 15), true, null, -1, 1);
-        mall.getAgents().add(sales0);
-        mall.getAgentPatchSet().add(sales0.getAgentMovement().getCurrentPatch());
 
         MallAgent sales1 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(7, 36), true, null, -1, 2);
         mall.getAgents().add(sales1);
         mall.getAgentPatchSet().add(sales1.getAgentMovement().getCurrentPatch());
-        MallAgent sales2 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(7, 37), true, null, -1, 2);
-        mall.getAgents().add(sales2);
-        mall.getAgentPatchSet().add(sales2.getAgentMovement().getCurrentPatch());
 
         MallAgent sales3 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(46, 14), true, null, -1, 3);
         mall.getAgents().add(sales3);
         mall.getAgentPatchSet().add(sales3.getAgentMovement().getCurrentPatch());
-        MallAgent sales4 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(46, 15), true, null, -1, 3);
-        mall.getAgents().add(sales4);
-        mall.getAgentPatchSet().add(sales4.getAgentMovement().getCurrentPatch());
 
         MallAgent sales5 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(51, 36), true, null, -1, 4);
         mall.getAgents().add(sales5);
         mall.getAgentPatchSet().add(sales5.getAgentMovement().getCurrentPatch());
-        MallAgent sales6 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(51, 37), true, null, -1, 4);
-        mall.getAgents().add(sales6);
-        mall.getAgentPatchSet().add(sales6.getAgentMovement().getCurrentPatch());
 
         MallAgent sales7 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 52), true, null, -1, 5);
         mall.getAgents().add(sales7);
         mall.getAgentPatchSet().add(sales7.getAgentMovement().getCurrentPatch());
-        MallAgent sales8 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 53), true, null, -1, 5);
-        mall.getAgents().add(sales8);
-        mall.getAgentPatchSet().add(sales8.getAgentMovement().getCurrentPatch());
 
         MallAgent sales9 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 63), true, null, -1, 6);
         mall.getAgents().add(sales9);
         mall.getAgentPatchSet().add(sales9.getAgentMovement().getCurrentPatch());
-        MallAgent sales10 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 64), true, null, -1, 6);
-        mall.getAgents().add(sales10);
-        mall.getAgentPatchSet().add(sales10.getAgentMovement().getCurrentPatch());
 
         MallAgent sales11 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 81), true, null, -1, 7);
         mall.getAgents().add(sales11);
         mall.getAgentPatchSet().add(sales11.getAgentMovement().getCurrentPatch());
-        MallAgent sales12 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 82), true, null, -1, 7);
-        mall.getAgents().add(sales12);
-        mall.getAgentPatchSet().add(sales12.getAgentMovement().getCurrentPatch());
 
         MallAgent sales13 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 99), true, null, -1, 8);
         mall.getAgents().add(sales13);
         mall.getAgentPatchSet().add(sales13.getAgentMovement().getCurrentPatch());
-        MallAgent sales14 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 100), true, null, -1, 8);
-        mall.getAgents().add(sales14);
-        mall.getAgentPatchSet().add(sales14.getAgentMovement().getCurrentPatch());
 
         MallAgent sales15 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 110), true, null, -1, 9);
         mall.getAgents().add(sales15);
         mall.getAgentPatchSet().add(sales15.getAgentMovement().getCurrentPatch());
-        MallAgent sales16 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 111), true, null, -1, 9);
-        mall.getAgents().add(sales16);
-        mall.getAgentPatchSet().add(sales16.getAgentMovement().getCurrentPatch());
 
         MallAgent sales17 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(56, 97), true, null, -1, 10);
         mall.getAgents().add(sales17);
         mall.getAgentPatchSet().add(sales17.getAgentMovement().getCurrentPatch());
-        MallAgent sales18 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(56, 98), true, null, -1, 10);
-        mall.getAgents().add(sales18);
-        mall.getAgentPatchSet().add(sales18.getAgentMovement().getCurrentPatch());
 
         MallAgent sales19 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(56, 109), true, null, -1, 11);
         mall.getAgents().add(sales19);
         mall.getAgentPatchSet().add(sales19.getAgentMovement().getCurrentPatch());
-        MallAgent sales20 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(56, 110), true, null, -1, 11);
-        mall.getAgents().add(sales20);
-        mall.getAgentPatchSet().add(sales20.getAgentMovement().getCurrentPatch());
     }
 
     public void reset() {
