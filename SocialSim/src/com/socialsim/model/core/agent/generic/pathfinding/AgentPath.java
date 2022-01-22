@@ -2,6 +2,7 @@ package com.socialsim.model.core.agent.generic.pathfinding;
 
 import com.socialsim.model.core.environment.generic.Patch;
 
+import java.util.Arrays;
 import java.util.Stack;
 
 public class AgentPath extends PathfindingResult {
@@ -22,6 +23,11 @@ public class AgentPath extends PathfindingResult {
 
     public Stack<Patch> getPath() {
         return path;
+    }
+
+    @Override
+    public String toString(){
+        return Arrays.toString(path.toArray());
     }
 
 }

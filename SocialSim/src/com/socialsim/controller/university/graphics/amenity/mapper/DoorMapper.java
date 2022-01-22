@@ -21,18 +21,45 @@ public class DoorMapper extends AmenityMapper {
             Amenity.AmenityBlock amenityBlock = amenityBlockFactory.create(patch, true, true);
             amenityBlocks.add(amenityBlock);
             patch.setAmenityBlock(amenityBlock);
+            patch.setPatchField(null);
 
             if(facing.equals("UP") || facing.equals("DOWN")) {
                 Patch rightPatch = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 1);
                 Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(rightPatch, true, false);
                 amenityBlocks.add(amenityBlock2);
                 rightPatch.setAmenityBlock(amenityBlock2);
+                rightPatch.setPatchField(null);
+
+                Patch rightPatch3 = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 2);
+                Amenity.AmenityBlock amenityBlock3 = amenityBlockFactory.create(rightPatch3, true, true);
+                amenityBlocks.add(amenityBlock3);
+                rightPatch3.setAmenityBlock(amenityBlock3);
+                rightPatch3.setPatchField(null);
+
+                Patch rightPatch4 = Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol + 3);
+                Amenity.AmenityBlock amenityBlock4 = amenityBlockFactory.create(rightPatch4, true, false);
+                amenityBlocks.add(amenityBlock4);
+                rightPatch4.setAmenityBlock(amenityBlock4);
+                rightPatch4.setPatchField(null);
             }
             else {
                 Patch lowerPatch = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol);
                 Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(lowerPatch, true, false);
                 amenityBlocks.add(amenityBlock2);
                 lowerPatch.setAmenityBlock(amenityBlock2);
+                lowerPatch.setPatchField(null);
+
+                Patch lowerPatch3 = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 2, origPatchCol);
+                Amenity.AmenityBlock amenityBlock3 = amenityBlockFactory.create(lowerPatch3, true, true);
+                amenityBlocks.add(amenityBlock3);
+                lowerPatch3.setAmenityBlock(amenityBlock3);
+                lowerPatch3.setPatchField(null);
+
+                Patch lowerPatch4 = Main.universitySimulator.getUniversity().getPatch(origPatchRow + 3, origPatchCol);
+                Amenity.AmenityBlock amenityBlock4 = amenityBlockFactory.create(lowerPatch4, true, false);
+                amenityBlocks.add(amenityBlock4);
+                lowerPatch4.setAmenityBlock(amenityBlock4);
+                lowerPatch4.setPatchField(null);
             }
 
             Door doorToAdd = Door.DoorFactory.create(amenityBlocks, true, facing);
