@@ -212,38 +212,43 @@ public class OfficeScreenController extends ScreenController {
         chairPatches.add(office.getPatch(49,50)); // 3
         chairPatches.add(office.getPatch(55,60)); // 4
         chairPatches.add(office.getPatch(55,63)); // 5
-        for (int i = 87; i < 95; i++) {
-            chairPatches.add(office.getPatch(9, i));
-            chairPatches.add(office.getPatch(14, i));
-            chairPatches.add(office.getPatch(27, i));
-            chairPatches.add(office.getPatch(32, i));
-            chairPatches.add(office.getPatch(45, i));
-            chairPatches.add(office.getPatch(50, i));
-        }
+        // meeting room chairs
+        for (int i = 87; i < 95; i++) { //
+            chairPatches.add(office.getPatch(9, i));// 6, 12, 18, 24, 30, 36, 42, 48
+            chairPatches.add(office.getPatch(14, i));// 7, 13, 19, 25, 31, 37, 43, 49
+            chairPatches.add(office.getPatch(27, i));// 8, 14, 20, 26, 32, 38, 44, 50
+            chairPatches.add(office.getPatch(32, i));// 9, 15, 21, 27, 33, 39, 45, 51
+            chairPatches.add(office.getPatch(45, i));// 10, 16, 22, 28, 34, 40, 46, 52
+            chairPatches.add(office.getPatch(50, i));// 11, 17, 23, 29, 35, 41, 47, 53
+        }//54, 58, 62
         chairPatches.add(office.getPatch(11,85));
         chairPatches.add(office.getPatch(12,85));
         chairPatches.add(office.getPatch(11,96));
         chairPatches.add(office.getPatch(12,96));
+
         chairPatches.add(office.getPatch(29,85));
         chairPatches.add(office.getPatch(30,85));
         chairPatches.add(office.getPatch(29,96));
         chairPatches.add(office.getPatch(30,96));
+
         chairPatches.add(office.getPatch(47,85));
         chairPatches.add(office.getPatch(48,85));
         chairPatches.add(office.getPatch(47,96));
         chairPatches.add(office.getPatch(48,96));
+        // collaboration desk chairs
         for (int i = 64; i < 70; i++) {
-            chairPatches.add(office.getPatch(7, i));
-            chairPatches.add(office.getPatch(10, i));
-            chairPatches.add(office.getPatch(14, i));
-            chairPatches.add(office.getPatch(17, i));
-            chairPatches.add(office.getPatch(21, i));
-            chairPatches.add(office.getPatch(24, i));
-            chairPatches.add(office.getPatch(28, i));
-            chairPatches.add(office.getPatch(31, i));
-            chairPatches.add(office.getPatch(35, i));
-            chairPatches.add(office.getPatch(38, i));
+            chairPatches.add(office.getPatch(7, i)); // 66, 76, 86, 96, 106, 116
+            chairPatches.add(office.getPatch(10, i)); // 67, 77, 87, 97, 107, 117
+            chairPatches.add(office.getPatch(14, i)); // 68
+            chairPatches.add(office.getPatch(17, i)); // 69
+            chairPatches.add(office.getPatch(21, i)); // 70
+            chairPatches.add(office.getPatch(24, i)); // 71
+            chairPatches.add(office.getPatch(28, i)); // 72
+            chairPatches.add(office.getPatch(31, i)); // 73
+            chairPatches.add(office.getPatch(35, i)); // 74
+            chairPatches.add(office.getPatch(38, i)); // 75, 85, 95, 105, 115, 125
         }
+        // Break room chairs
         chairPatches.add(office.getPatch(32,1)); chairPatches.add(office.getPatch(32,3));
         chairPatches.add(office.getPatch(33,1)); chairPatches.add(office.getPatch(33,3));
         chairPatches.add(office.getPatch(32,5)); chairPatches.add(office.getPatch(32,7));
