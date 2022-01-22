@@ -13,7 +13,7 @@ import java.util.List;
 
 public class MallGate extends Gate {
 
-    private double chancePerSecond; // Denotes the chance of generating an agent per second
+    private double chancePerTick; // Denotes the chance of generating an agent per second
     private MallGate.MallGateMode mallGateMode; // Denotes the mode of this station gate (whether it's entry/exit only, or both)
     private int agentBacklogCount; // Denotes the number of agents who are supposed to enter the gate, but cannot
     public static final MallGate.MallGateFactory mallGateFactory;
@@ -23,21 +23,21 @@ public class MallGate extends Gate {
         mallGateFactory = new MallGate.MallGateFactory();
     }
 
-    protected MallGate(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerSecond, MallGate.MallGateMode mallGateMode) {
+    protected MallGate(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerTick, MallGate.MallGateMode mallGateMode) {
         super(amenityBlocks, enabled);
 
-        this.chancePerSecond = chancePerSecond;
+        this.chancePerTick = chancePerTick;
         this.mallGateMode = mallGateMode;
         this.agentBacklogCount = 0;
         this.mallGateGraphic = new MallGateGraphic(this);
     }
 
-    public double getChancePerSecond() {
-        return chancePerSecond;
+    public double getChancePerTick() {
+        return chancePerTick;
     }
 
-    public void setChancePerSecond(double chancePerSecond) {
-        this.chancePerSecond = chancePerSecond;
+    public void setChancePerTick(double chancePerTick) {
+        this.chancePerTick = chancePerTick;
     }
 
     public MallGate.MallGateMode getMallGateMode() {
@@ -114,32 +114,6 @@ public class MallGate extends Gate {
         return patchesFree;
     }
 
-    public MallAgent spawnAgentFromBacklogs(boolean forceEntry) { // Spawn an agent from the backlogs
-        Mall mall = (Mall) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
-
-        if (mall != null) {
-            List<MallAgent> mallGateQueue = mall.getAgentBacklogs();
-
-            if (!mallGateQueue.isEmpty()) { // If the backlog queue isn't empty, check if this gate is free from agents
-                if (forceEntry || this.isGateFree()) { // If this gate is free from other agents, get one from the backlog queue
-                    MallAgent agent = mallGateQueue.remove(0);
-                    Patch spawnPatch = this.getSpawners().get(0).getPatch();
-
-                    return agent;
-                }
-                else {
-                    return null;
-                }
-            }
-            else {
-                return null;
-            }
-        }
-        else {
-            return null;
-        }
-    }
-
     public enum MallGateMode {
         ENTRANCE("Entrance"), EXIT("Exit"), ENTRANCE_AND_EXIT("Entrance and Exit");
 
@@ -180,8 +154,8 @@ public class MallGate extends Gate {
     }
 
     public static class MallGateFactory extends GateFactory {
-        public static MallGate create(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerSecond, MallGate.MallGateMode stationGateMode) {
-            return new MallGate(amenityBlocks, enabled, chancePerSecond, stationGateMode);
+        public static MallGate create(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerTick, MallGate.MallGateMode stationGateMode) {
+            return new MallGate(amenityBlocks, enabled, chancePerTick, stationGateMode);
         }
     }
 

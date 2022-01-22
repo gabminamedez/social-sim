@@ -1,5 +1,6 @@
-package com.socialsim.model.core.agent.grocery;
+package com.socialsim.model.core.agent.mall;
 
+import com.socialsim.controller.Main;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentMovement;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
@@ -12,34 +13,31 @@ import com.socialsim.model.core.environment.generic.patchobject.passable.goal.Go
 import com.socialsim.model.core.environment.generic.patchobject.passable.goal.QueueableGoal;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.generic.position.Vector;
-import com.socialsim.model.core.environment.grocery.Grocery;
-import com.socialsim.model.core.environment.grocery.patchfield.CashierCounterField;
-import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterField;
-import com.socialsim.model.core.environment.grocery.patchfield.StallField;
-import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
-import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable;
+import com.socialsim.model.core.environment.mall.Mall;
+import com.socialsim.model.core.environment.mall.patchfield.*;
+import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
+import com.socialsim.model.core.environment.mall.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
-import com.socialsim.model.simulator.grocery.GrocerySimulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class GroceryAgentMovement extends AgentMovement {
+public class MallAgentMovement extends AgentMovement {
 
-    private final GroceryAgent parent;
+    private final MallAgent parent;
     private final Coordinates position; // Denotes the position of the agent
-    private GroceryAgent leaderAgent;
-    private List<GroceryAgent> followers;
-    private final Grocery grocery;
+    private MallAgent leaderAgent;
+    private List<MallAgent> followers;
+    private final Mall mall;
     private final double baseWalkingDistance; // Denotes the distance (m) the agent walks in one second
     private double preferredWalkingDistance;
     private double currentWalkingDistance;
     private double proposedHeading;// Denotes the proposed heading of the agent in degrees where E = 0 degrees, N = 90 degrees, W = 180 degrees, S = 270 degrees
     private double heading;
     private double previousHeading;
+    private int team;
+    private KioskField chosenKioskField = null;
+    private Table chosenTable = null;
 
     private Patch currentPatch;
     private Amenity currentAmenity;
@@ -50,21 +48,18 @@ public class GroceryAgentMovement extends AgentMovement {
     private PatchField goalPatchField;
     private QueueingPatchField goalQueueingPatchField; // Denotes the patch field of the agent goal
     private Patch goalNearestQueueingPatch; // Denotes the patch with the nearest queueing patch
-    private CashierCounterField chosenCashierField = null;
-    private ServiceCounterField chosenServiceField = null;
-    private StallField chosenStallField = null;
-    private EatTable chosenEatTable = null;
 
-    private GroceryRoutePlan routePlan;
+    private MallRoutePlan routePlan;
     private AgentPath currentPath; // Denotes the current path followed by this agent, if any
     private int stateIndex;
     private int actionIndex;
-    private GroceryState currentState;
-    private GroceryAction currentAction; // Low-level description of what the agent is doing
+    private int returnIndex;
+    private MallState currentState;
+    private MallAction currentAction; // Low-level description of what the agent is doing
 
     private boolean isWaitingOnAmenity; // Denotes whether the agent is temporarily waiting on an amenity to be vacant
     private boolean hasEncounteredAgentToFollow; // Denotes whether this agent has encountered the agent to be followed in the queue
-    private GroceryAgent agentFollowedWhenAssembling; // Denotes the agent this agent is currently following while assembling
+    private MallAgent agentFollowedWhenAssembling; // Denotes the agent this agent is currently following while assembling
     private double distanceMovedInTick; // Denotes the distance moved by this agent in the previous tick
     private int tickEntered;
     private int duration;
@@ -81,27 +76,16 @@ public class GroceryAgentMovement extends AgentMovement {
     private boolean isReadyToFree; // Denotes whether the agent is ready to be freed from being stuck
     private final ConcurrentHashMap<Patch, Integer> recentPatches; // Denotes the recent patches this agent has been in
 
-    // Interaction parameters
-    private boolean isInteracting; // Denotes whether the agent is currently interacting with another agent
-    private boolean isSimultaneousInteractionAllowed; // Denotes whether an interaction is allowed while an action is being done simultaneously
-    private int interactionDuration;
-    private GroceryAgentMovement.InteractionType interactionType;
-
-    public enum InteractionType {
-        NON_VERBAL,
-        COOPERATIVE,
-        EXCHANGE
-    }
-
     // The vectors of this agent
     private final List<Vector> repulsiveForceFromAgents;
     private final List<Vector> repulsiveForcesFromObstacles;
     private Vector attractiveForce;
     private Vector motivationForce;
 
-    public GroceryAgentMovement(Patch spawnPatch, GroceryAgent parent, GroceryAgent leaderAgent, double baseWalkingDistance, Coordinates coordinates, long tickEntered) { // For inOnStart agents
+    public MallAgentMovement(Patch spawnPatch, MallAgent parent, MallAgent leaderAgent, double baseWalkingDistance, Coordinates coordinates, long tickEntered, int team) { // For inOnStart agents
         this.parent = parent;
         this.position = new Coordinates(coordinates.getX(), coordinates.getY());
+        this.team = team;
         this.leaderAgent = leaderAgent;
         this.followers = new ArrayList<>();
 
@@ -110,22 +94,36 @@ public class GroceryAgentMovement extends AgentMovement {
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
-        if (parent.getInOnStart()) { // All inOnStart agents will face the south by default
+        if (parent.getInOnStart() && parent.getType() != MallAgent.Type.STAFF_STORE_CASHIER) { // All inOnStart agents will face the south by default
             this.proposedHeading = Math.toRadians(270.0);
             this.heading = Math.toRadians(270.0);
             this.previousHeading = Math.toRadians(270.0);
-            this.fieldOfViewAngle = Math.toRadians(270.0);
+            this.fieldOfViewAngle = Math.toRadians(30.0);
         }
-        else { // All newly generated agents will face the north by default
-            this.proposedHeading = Math.toRadians(90.0);
-            this.heading = Math.toRadians(90.0);
-            this.previousHeading = Math.toRadians(90.0);
-            this.fieldOfViewAngle = Math.toRadians(90.0);
+        else if (parent.getInOnStart() && parent.getType() == MallAgent.Type.STAFF_STORE_CASHIER) {
+            if (team == 3 || team == 4 || team == 10 || team == 11) {
+                this.proposedHeading = Math.toRadians(90.0);
+                this.heading = Math.toRadians(90.0);
+                this.previousHeading = Math.toRadians(90.0);
+                this.fieldOfViewAngle = Math.toRadians(30.0);
+            }
+            else {
+                this.proposedHeading = Math.toRadians(270.0);
+                this.heading = Math.toRadians(270.0);
+                this.previousHeading = Math.toRadians(270.0);
+                this.fieldOfViewAngle = Math.toRadians(30.0);
+            }
+        }
+        else { // All newly generated agents will face the east by default
+            this.proposedHeading = Math.toRadians(0);
+            this.heading = Math.toRadians(0);
+            this.previousHeading = Math.toRadians(0);
+            this.fieldOfViewAngle = Math.toRadians(30.0);
         }
 
         this.currentPatch = spawnPatch; // Add this agent to the spawn patch
         this.currentPatch.getAgents().add(parent);
-        this.grocery = (Grocery) currentPatch.getEnvironment();
+        this.mall = (Mall) currentPatch.getEnvironment();
         this.currentPatchField = null;
         this.tickEntered = (int) tickEntered;
         this.ticksUntilFullyAccelerated = 10; // Set the agent's time until it fully accelerates
@@ -136,13 +134,13 @@ public class GroceryAgentMovement extends AgentMovement {
         repulsiveForcesFromObstacles = new ArrayList<>();
         resetGoal(); // Set the agent goal
 
-        this.routePlan = new GroceryRoutePlan(parent, leaderAgent, grocery, currentPatch);
+        this.routePlan = new MallRoutePlan(parent, leaderAgent, mall, currentPatch, team);
         this.stateIndex = 0;
         this.actionIndex = 0;
         this.currentState = this.routePlan.getCurrentState();
         this.currentAction = this.routePlan.getCurrentState().getActions().get(actionIndex);
         if (!parent.getInOnStart()) {
-            this.currentAmenity = grocery.getGroceryGates().get(1); // Getting Entrance Gate
+            this.currentAmenity = mall.getMallGates().get(1); // Getting Entrance Gate
         }
         if (this.currentAction.getDestination() != null) {
             this.goalAttractor = this.currentAction.getDestination().getAmenityBlock();
@@ -150,11 +148,9 @@ public class GroceryAgentMovement extends AgentMovement {
         if (this.currentAction.getDuration() != 0) {
             this.duration = this.currentAction.getDuration();
         }
-
-        this.isInteracting = false;
     }
 
-    public GroceryAgent getParent() {
+    public MallAgent getParent() {
         return parent;
     }
 
@@ -168,7 +164,7 @@ public class GroceryAgentMovement extends AgentMovement {
         this.position.setX(coordinates.getX());
         this.position.setY(coordinates.getY());
 
-        Patch newPatch = this.grocery.getPatch(new Coordinates(coordinates.getX(), coordinates.getY())); // Get the patch of the new position
+        Patch newPatch = this.mall.getPatch(new Coordinates(coordinates.getX(), coordinates.getY())); // Get the patch of the new position
         if (!previousPatch.equals(newPatch)) { // If the new position is on a different patch, remove the agent from its old patch, then add it to the new patch
             previousPatch.removeAgent(this.parent);
             newPatch.addAgent(this.parent);
@@ -189,16 +185,8 @@ public class GroceryAgentMovement extends AgentMovement {
         }
     }
 
-    public GroceryAgent getLeaderAgent() {
-        return leaderAgent;
-    }
-
-    public List<GroceryAgent> getFollowers() {
-        return followers;
-    }
-
-    public Grocery getGrocery() {
-        return grocery;
+    public Mall getMall() {
+        return mall;
     }
 
     public double getCurrentWalkingDistance() {
@@ -211,6 +199,30 @@ public class GroceryAgentMovement extends AgentMovement {
 
     public double getHeading() {
         return heading;
+    }
+
+    public int getTeam() {
+        return team;
+    }
+
+    public KioskField getChosenKioskField() {
+        return chosenKioskField;
+    }
+
+    public Table getChosenTable() {
+        return chosenTable;
+    }
+
+    public List<MallAgent> getFollowers() {
+        return followers;
+    }
+
+    public MallAgent getLeaderAgent() {
+        return leaderAgent;
+    }
+
+    public double getFieldOfViewAngle() {
+        return fieldOfViewAngle;
     }
 
     public Patch getCurrentPatch() {
@@ -229,6 +241,14 @@ public class GroceryAgentMovement extends AgentMovement {
         this.currentPath = currentPath;
     }
 
+    public int getReturnIndex() {
+        return returnIndex;
+    }
+
+    public void setReturnIndex(int stateIndex) {
+        this.returnIndex = stateIndex;
+    }
+
     public int getStateIndex() {
         return stateIndex;
     }
@@ -245,23 +265,23 @@ public class GroceryAgentMovement extends AgentMovement {
         this.actionIndex = actionIndex;
     }
 
-    public GroceryState getCurrentState() {
+    public MallState getCurrentState() {
         return currentState;
     }
 
-    public void setNextState() {
-        this.currentState = this.currentState.getRoutePlan().setNextState();
+    public void setNextState(int i) {
+        this.currentState = this.currentState.getRoutePlan().setNextState(i);
     }
 
-    public void setPreviousState() {
-        this.currentState = this.currentState.getRoutePlan().setPreviousState();
+    public void setPreviousState(int i) {
+        this.currentState = this.currentState.getRoutePlan().setPreviousState(i);
     }
 
-    public GroceryAction getCurrentAction() {
+    public MallAction getCurrentAction() {
         return currentAction;
     }
 
-    public void setCurrentAction(GroceryAction currentAction) {
+    public void setCurrentAction(MallAction currentAction) {
         this.currentAction = currentAction;
     }
 
@@ -283,22 +303,6 @@ public class GroceryAgentMovement extends AgentMovement {
 
     public Patch getGoalPatch() {
         return goalPatch;
-    }
-
-    public CashierCounterField getChosenCashierField() {
-        return chosenCashierField;
-    }
-
-    public ServiceCounterField getChosenServiceField() {
-        return chosenServiceField;
-    }
-
-    public StallField getChosenStallField() {
-        return chosenStallField;
-    }
-
-    public EatTable getChosenEatTable() {
-        return chosenEatTable;
     }
 
     public Amenity.AmenityBlock getGoalAttractor() {
@@ -333,11 +337,11 @@ public class GroceryAgentMovement extends AgentMovement {
         return goalNearestQueueingPatch;
     }
 
-    public GroceryRoutePlan getRoutePlan() {
+    public MallRoutePlan getRoutePlan() {
         return routePlan;
     }
 
-    public void setRoutePlan(GroceryRoutePlan routePlan) {
+    public void setRoutePlan(MallRoutePlan routePlan) {
         this.routePlan = routePlan;
     }
 
@@ -345,7 +349,7 @@ public class GroceryAgentMovement extends AgentMovement {
         return isWaitingOnAmenity;
     }
 
-    public GroceryAgent getAgentFollowedWhenAssembling() {
+    public MallAgent getAgentFollowedWhenAssembling() {
         return agentFollowedWhenAssembling;
     }
 
@@ -375,10 +379,6 @@ public class GroceryAgentMovement extends AgentMovement {
 
     public void setTickEntered(int tickEntered) {
         this.tickEntered = tickEntered;
-    }
-
-    public double getFieldOfViewAngle() {
-        return fieldOfViewAngle;
     }
 
     public int getNoMovementCounter() {
@@ -492,7 +492,7 @@ public class GroceryAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                if (goalAmenity.getClass() == Table.class || goalAmenity.getClass() == GroceryGate.class) {
+                if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Table.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == MallGate.class) {
                     path.push(goalPatch);
                 }
                 double length = 0.0;
@@ -510,7 +510,9 @@ public class GroceryAgentMovement extends AgentMovement {
 
             List<Patch> patchToExploreNeighbors = patchToExplore.getNeighbors();
             for (Patch patchToExploreNeighbor : patchToExploreNeighbors) {
-                if (patchToExploreNeighbor.getAmenityBlock() == null || patchToExploreNeighbor.getPatchField() == null
+                if ((patchToExploreNeighbor.getAmenityBlock() == null && patchToExploreNeighbor.getPatchField() == null)
+                        || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getPatchField() == null && patchToExploreNeighbor.getAmenityBlock().getParent() == goalAmenity)
+                        || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getPatchField() != null && patchToExploreNeighbor.getAmenityBlock().getParent() == goalAmenity)
                         || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getAmenityBlock().getParent().getClass() == Security.class)
                         || (patchToExploreNeighbor.getPatchField() != null && patchToExploreNeighbor.getPatchField().getKey().getClass() != Wall.class)
                         || (!includeStartingPatch && patchToExplore.equals(startingPatch) || !includeGoalPatch && patchToExploreNeighbor.equals(goalPatch))) {
@@ -529,9 +531,9 @@ public class GroceryAgentMovement extends AgentMovement {
         return null;
     }
 
-    public void chooseGoal(Class<? extends Amenity> nextAmenityClass) { // Set the nearest goal to this agent
+    public boolean chooseGoal(Class<? extends Amenity> nextAmenityClass) { // Set the nearest goal to this agent
         if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
-            List<? extends Amenity> amenityListInFloor = this.grocery.getAmenityList(nextAmenityClass);
+            List<? extends Amenity> amenityListInFloor = this.mall.getAmenityList(nextAmenityClass);
             Amenity chosenAmenity = null;
             Amenity.AmenityBlock chosenAttractor = null;
             HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
@@ -562,239 +564,411 @@ public class GroceryAgentMovement extends AgentMovement {
 
             for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
                 Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                if (candidateAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
-                    chosenAmenity =  candidateAttractor.getParent();
+                if (!candidateAttractor.getPatch().getAmenityBlock().getIsReserved()) { // Break when first vacant amenity is found
+                    chosenAmenity = candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
-                    candidateAttractor.getPatch().getAgents().add(this.parent);
+                    candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
                     break;
                 }
             }
 
-            this.goalAmenity = chosenAmenity;
-            this.goalAttractor = chosenAttractor;
+            if (chosenAmenity != null) {
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void chooseRandomTable() { // Set the nearest goal to this agent
+        if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
+            ArrayList<Table> tables1 = new ArrayList<>();
+            ArrayList<Table> tables2 = new ArrayList<>();
+
+            if (this.team == 1) {
+                for (int i = 0; i < 16; i++) {
+                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
+                }
+                for (int i = 35; i < 40; i++) {
+                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
+                }
+                this.goalAmenity = tables1.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(tables1.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+            }
+            else {
+                for (int i = 16; i < 31; i++) {
+                    tables2.add(Main.mallSimulator.getMall().getTables().get(i));
+                }
+                for (int i = 40; i < 44; i++) {
+                    tables2.add(Main.mallSimulator.getMall().getTables().get(i));
+                }
+                this.goalAmenity = tables2.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(tables2.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+            }
+        }
+    }
+
+    public void chooseRandomTablePatron(String type) { // Set the nearest goal to this agent
+        if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
+            Amenity chosenAmenity = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+            ArrayList<Table> tables1 = new ArrayList<>();
+            ArrayList<Table> tables2 = new ArrayList<>();
+
+            if (type == "RESTO") {
+                for (int i = 0; i < 16; i++) {
+                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
+                }
+                for (int i = 35; i < 40; i++) {
+                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
+                }
+                for (int i = 16; i < 31; i++) {
+                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
+                }
+                for (int i = 40; i < 44; i++) {
+                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
+                }
+
+                if (this.leaderAgent == null) {
+                    for (Amenity amenity : tables1) {
+                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                            distancesToAttractors.put(attractor, distanceToAttractor);
+                        }
+                    }
+
+                    // Sort amenity by distance, from nearest to furthest
+                    List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+                    Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                        public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
+                            return (o1.getValue()).compareTo(o2.getValue());
+                        }
+                    });
+
+                    HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+                    for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                        sortedDistances.put(aa.getKey(), aa.getValue());
+                    }
+
+                    for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
+                        Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                        List<Amenity.AmenityBlock> candidateAmenity = candidateAttractor.getParent().getAttractors();
+                        boolean isEmpty = true;
+                        for (Amenity.AmenityBlock anAttractor : candidateAmenity) {
+                            if (!anAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
+                                isEmpty = false;
+                                break;
+                            }
+                        }
+
+                        if (isEmpty) {
+                            chosenAmenity = candidateAttractor.getParent();
+                            chosenAttractor = candidateAttractor;
+                            candidateAttractor.getPatch().getAgents().add(this.parent);
+                            break;
+                        }
+                    }
+
+                    this.goalAmenity = chosenAmenity;
+                    this.goalAttractor = chosenAttractor;
+                    this.chosenTable = (Table) chosenAmenity;
+                }
+                else {
+                    if (leaderAgent.getAgentMovement().getChosenTable() != null) {
+                        this.goalAmenity = leaderAgent.getAgentMovement().getChosenTable();
+                        this.goalAttractor = leaderAgent.getAgentMovement().getChosenTable().getAttractors().get(0);
+                    }
+                }
+            }
+            else {
+                tables2.add(Main.mallSimulator.getMall().getTables().get(32));
+                tables2.add(Main.mallSimulator.getMall().getTables().get(33));
+                tables2.add(Main.mallSimulator.getMall().getTables().get(34));
+                tables2.add(Main.mallSimulator.getMall().getTables().get(45));
+                tables2.add(Main.mallSimulator.getMall().getTables().get(46));
+                tables2.add(Main.mallSimulator.getMall().getTables().get(47));
+                tables2.add(Main.mallSimulator.getMall().getTables().get(48));
+
+                if (this.leaderAgent == null) {
+                    for (Amenity amenity : tables2) {
+                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                            distancesToAttractors.put(attractor, distanceToAttractor);
+                        }
+                    }
+
+                    // Sort amenity by distance, from nearest to furthest
+                    List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+                    Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                        public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
+                            return (o1.getValue()).compareTo(o2.getValue());
+                        }
+                    });
+
+                    HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+                    for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                        sortedDistances.put(aa.getKey(), aa.getValue());
+                    }
+
+                    for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
+                        Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                        List<Amenity.AmenityBlock> candidateAmenity = candidateAttractor.getParent().getAttractors();
+                        boolean isEmpty = true;
+                        for (Amenity.AmenityBlock anAttractor : candidateAmenity) {
+                            if (!anAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
+                                isEmpty = false;
+                                break;
+                            }
+                        }
+
+                        if (isEmpty) {
+                            chosenAmenity = candidateAttractor.getParent();
+                            chosenAttractor = candidateAttractor;
+                            candidateAttractor.getPatch().getAgents().add(this.parent);
+                            break;
+                        }
+                    }
+
+                    this.goalAmenity = chosenAmenity;
+                    this.goalAttractor = chosenAttractor;
+                    this.chosenTable = (Table) chosenAmenity;
+                }
+                else {
+                    if (leaderAgent.getAgentMovement().getChosenTable() != null) {
+                        this.goalAmenity = leaderAgent.getAgentMovement().getChosenTable();
+                        this.goalAttractor = leaderAgent.getAgentMovement().getChosenTable().getAttractors().get(0);
+                    }
+                }
+            }
         }
     }
 
     public void chooseRandomAisle() { // Set the nearest goal to this agent
         if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
-            List<? extends Amenity> freshProducts = this.grocery.getAmenityList(FreshProducts.class);
-            List<? extends Amenity> frozenProducts = this.grocery.getAmenityList(FrozenProducts.class);
-            List<? extends Amenity> frozenWall = this.grocery.getAmenityList(FrozenWall.class);
-            List<? extends Amenity> productAisle = this.grocery.getAmenityList(ProductAisle.class);
-            List<? extends Amenity> productShelf = this.grocery.getAmenityList(ProductShelf.class);
-            List<? extends Amenity> productWall = this.grocery.getAmenityList(ProductWall.class);
-            List<? extends Amenity> amenities1 = Stream.concat(freshProducts.stream(), frozenProducts.stream()).collect(Collectors.toList());
-            List<? extends Amenity> amenities2 = Stream.concat(amenities1.stream(), frozenWall.stream()).collect(Collectors.toList());
-            List<? extends Amenity> amenities3 = Stream.concat(amenities2.stream(), productAisle.stream()).collect(Collectors.toList());
-            List<? extends Amenity> amenities4 = Stream.concat(amenities3.stream(), productShelf.stream()).collect(Collectors.toList());
-            List<? extends Amenity> amenityListInFloor = Stream.concat(amenities4.stream(), productWall.stream()).collect(Collectors.toList());
+            ArrayList<StoreAisle> aisles1 = new ArrayList<>();
+            ArrayList<StoreAisle> aisles2 = new ArrayList<>();
+            ArrayList<StoreAisle> aisles3 = new ArrayList<>();
+            ArrayList<StoreAisle> aisles4 = new ArrayList<>();
+            ArrayList<StoreAisle> aisles5 = new ArrayList<>();
+            ArrayList<StoreAisle> aisles6 = new ArrayList<>();
+            ArrayList<StoreAisle> aisles7 = new ArrayList<>();
+            ArrayList<StoreAisle> aisles8 = new ArrayList<>();
+            ArrayList<StoreAisle> aisles9 = new ArrayList<>();
+            ArrayList<StoreAisle> aisles10 = new ArrayList<>();
+            ArrayList<StoreAisle> aisles11 = new ArrayList<>();
 
-            this.goalAmenity = amenityListInFloor.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(amenityListInFloor.size()));
-            this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
-        }
-    }
-
-    public void chooseCashierCounter() {
-        if (this.goalAmenity == null) { // Only set the goal if one hasn't been set yet
-            List<CashierCounterField> cashierCounterFields = this.grocery.getCashierCounterFields();
-            Amenity chosenAmenity = null;
-            Amenity.AmenityBlock chosenAttractor = null;
-
-            if (this.leaderAgent == null) {
-                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-                for (CashierCounterField cashierCounterField : cashierCounterFields) {
-                    Amenity.AmenityBlock attractor = cashierCounterField.getAssociatedPatches().get(0).getAmenityBlock();
-                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                    distancesToAttractors.put(attractor, distanceToAttractor);
+            if (this.team == 1) {
+                aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(0));
+                aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(1));
+                for (int i = 33; i < 38; i++) {
+                    aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
-
-                double minimumAttractorScore = Double.MAX_VALUE;
-
-                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
-                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                    Double candidateDistance = distancesToAttractorEntry.getValue();
-
-                    Amenity currentAmenity = candidateAttractor.getParent();
-                    QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
-
-                    double agentPenalty = 25.0;
-                    double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
-
-                    if (attractorScore < minimumAttractorScore) {
-                        minimumAttractorScore = attractorScore;
-                        chosenAmenity = currentAmenity;
-                        chosenAttractor = candidateAttractor;
-                    }
-                }
-
-                this.goalAmenity = chosenAmenity;
-                this.goalAttractor = chosenAttractor;
-                this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
-                this.chosenCashierField = (CashierCounterField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                this.goalAmenity = aisles1.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles1.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
-            else {
-                if (leaderAgent.getAgentMovement().getChosenCashierField() != null) {
-                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenCashierField().getTarget();
-                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenCashierField().getAssociatedPatches().get(0).getAmenityBlock();
-                    this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenCashierField();
+            else if (this.team == 2) {
+                aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(38));
+                aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(39));
+                for (int i = 2; i < 6; i++) {
+                    aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
+                this.goalAmenity = aisles2.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles2.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
-        }
-    }
-
-    public void chooseServiceCounter() {
-        if (this.goalAmenity == null) { // Only set the goal if one hasn't been set yet
-            List<ServiceCounterField> serviceCounterFields = this.grocery.getServiceCounterFields();
-            Amenity chosenAmenity = null;
-            Amenity.AmenityBlock chosenAttractor = null;
-
-            if (this.leaderAgent == null) {
-                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-                for (ServiceCounterField serviceCounterField : serviceCounterFields) {
-                    Amenity.AmenityBlock attractor = serviceCounterField.getAssociatedPatches().get(0).getAmenityBlock();
-                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                    distancesToAttractors.put(attractor, distanceToAttractor);
+            else if (this.team == 3) {
+                for (int i = 6; i < 12; i++) {
+                    aisles3.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
-
-                double minimumAttractorScore = Double.MAX_VALUE;
-
-                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
-                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                    Double candidateDistance = distancesToAttractorEntry.getValue();
-
-                    Amenity currentAmenity = candidateAttractor.getParent();
-                    QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
-
-                    double agentPenalty = 25.0;
-                    double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
-
-                    if (attractorScore < minimumAttractorScore) {
-                        minimumAttractorScore = attractorScore;
-                        chosenAmenity = currentAmenity;
-                        chosenAttractor = candidateAttractor;
-                    }
-                }
-
-                this.goalAmenity = chosenAmenity;
-                this.goalAttractor = chosenAttractor;
-                this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
-                this.chosenServiceField = (ServiceCounterField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                this.goalAmenity = aisles3.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles3.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
-            else {
-                if (leaderAgent.getAgentMovement().getChosenServiceField() != null) {
-                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenServiceField().getTarget();
-                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenServiceField().getAssociatedPatches().get(0).getAmenityBlock();
-                    this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenServiceField();
+            else if (this.team == 4) {
+                aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(40));
+                aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(41));
+                for (int i = 12; i < 16; i++) {
+                    aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
+                this.goalAmenity = aisles4.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles4.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+            }
+            else if (this.team == 5) {
+                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(16));
+                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(17));
+                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(42));
+                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(43));
+                this.goalAmenity = aisles5.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles5.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+            }
+            else if (this.team == 6) {
+                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(18));
+                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(19));
+                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(44));
+                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(45));
+                this.goalAmenity = aisles6.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles6.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+            }
+            else if (this.team == 7) {
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(20));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(21));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(22));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(46));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(47));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(48));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(49));
+                this.goalAmenity = aisles7.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles7.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+            }
+            else if (this.team == 8) {
+                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(23));
+                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(24));
+                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(50));
+                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(51));
+                this.goalAmenity = aisles8.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles8.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+            }
+            else if (this.team == 9) {
+                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(25));
+                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(26));
+                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(52));
+                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(53));
+                this.goalAmenity = aisles9.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles9.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+            }
+            else if (this.team == 10) {
+                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(27));
+                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(28));
+                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(54));
+                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(55));
+                this.goalAmenity = aisles10.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles10.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+            }
+            else if (this.team == 11) {
+                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(29));
+                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(30));
+                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(56));
+                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(57));
+                this.goalAmenity = aisles11.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles11.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
         }
     }
 
-    public void chooseStall() {
-        if (this.goalAmenity == null) { // Only set the goal if one hasn't been set yet
-            List<StallField> stallFields = this.grocery.getStallFields();
-            Amenity chosenAmenity = null;
-            Amenity.AmenityBlock chosenAttractor = null;
-
-            if (this.leaderAgent == null) {
-                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-                for (StallField stallField : stallFields) {
-                    Amenity.AmenityBlock attractor = stallField.getAssociatedPatches().get(0).getAmenityBlock();
-                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                    distancesToAttractors.put(attractor, distanceToAttractor);
-                }
-
-                double minimumAttractorScore = Double.MAX_VALUE;
-
-                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
-                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                    Double candidateDistance = distancesToAttractorEntry.getValue();
-
-                    Amenity currentAmenity = candidateAttractor.getParent();
-                    QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
-
-                    double agentPenalty = 25.0;
-                    double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
-
-                    if (attractorScore < minimumAttractorScore) {
-                        minimumAttractorScore = attractorScore;
-                        chosenAmenity = currentAmenity;
-                        chosenAttractor = candidateAttractor;
-                    }
-                }
-
-                this.goalAmenity = chosenAmenity;
-                this.goalAttractor = chosenAttractor;
-                this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
-                this.chosenStallField = (StallField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
-            }
-            else {
-                if (leaderAgent.getAgentMovement().getChosenStallField() != null) {
-                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenStallField().getTarget();
-                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenStallField().getAssociatedPatches().get(0).getAmenityBlock();
-                    this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenStallField();
-                }
-            }
-        }
-    }
-
-    public void chooseEatTable() { // Set the nearest goal to this agent
+    public boolean chooseBathroomGoal(Class<? extends Amenity> nextAmenityClass) { // Set the nearest goal to this agent
         if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
-            List<? extends Amenity> amenityListInFloor = this.grocery.getTables();
+            List<? extends Amenity> amenityListInFloor = this.mall.getAmenityList(nextAmenityClass);
             Amenity chosenAmenity = null;
             Amenity.AmenityBlock chosenAttractor = null;
             HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
 
-            if (this.leaderAgent == null) {
-                for (Amenity amenity : amenityListInFloor) {
-                    for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
-                        double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                        distancesToAttractors.put(attractor, distanceToAttractor);
-                    }
-                }
-
-                // Sort amenity by distance, from nearest to furthest
-                List<Map.Entry<Amenity.AmenityBlock, Double> > list =
-                        new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
-
-                Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
-                    public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
-                        return (o1.getValue()).compareTo(o2.getValue());
-                    }
-                });
-
-                HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
-                for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
-                    sortedDistances.put(aa.getKey(), aa.getValue());
-                }
-
-                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
-                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                    List<Amenity.AmenityBlock> candidateAmenity = candidateAttractor.getParent().getAttractors();
-                    boolean isEmpty = true;
-                    for (Amenity.AmenityBlock anAttractor : candidateAmenity) {
-                        if (!anAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
-                            isEmpty = false;
-                            break;
+            for (Amenity amenity : amenityListInFloor) {
+                if (parent.getGender() == MallAgent.Gender.MALE) {
+                    if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == 2) {
+                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                            distancesToAttractors.put(attractor, distanceToAttractor);
                         }
                     }
+                }
+                else {
+                    if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == 1) {
+                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                            distancesToAttractors.put(attractor, distanceToAttractor);
+                        }
+                    }
+                }
+            }
 
-                    if (isEmpty) {
-                        chosenAmenity =  candidateAttractor.getParent();
+            // Sort amenity by distance, from nearest to furthest
+            List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                sortedDistances.put(aa.getKey(), aa.getValue());
+            }
+
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
+                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                if (!candidateAttractor.getPatch().getAmenityBlock().getIsReserved()) { // Break when first vacant amenity is found
+                    chosenAmenity = candidateAttractor.getParent();
+                    chosenAttractor = candidateAttractor;
+                    candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
+                    break;
+                }
+            }
+
+            if (chosenAmenity != null) {
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void chooseKiosk() {
+        if (this.goalAmenity == null) { // Only set the goal if one hasn't been set yet
+            List<KioskField> kioskFields = this.mall.getKioskFields();
+            Amenity chosenAmenity = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+
+            if (this.leaderAgent == null) {
+                HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+                for (KioskField kioskField : kioskFields) {
+                    Amenity.AmenityBlock attractor = kioskField.getAssociatedPatches().get(0).getAmenityBlock();
+                    double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                    distancesToAttractors.put(attractor, distanceToAttractor);
+                }
+
+                double minimumAttractorScore = Double.MAX_VALUE;
+
+                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : distancesToAttractors.entrySet()) {
+                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                    Double candidateDistance = distancesToAttractorEntry.getValue();
+
+                    Amenity currentAmenity = candidateAttractor.getParent();
+                    QueueingPatchField currentStallKey = candidateAttractor.getPatch().getQueueingPatchField().getKey();
+
+                    double agentPenalty = 25.0;
+                    double attractorScore = candidateDistance + currentStallKey.getQueueingAgents().size() * agentPenalty;
+
+                    if (attractorScore < minimumAttractorScore) {
+                        minimumAttractorScore = attractorScore;
+                        chosenAmenity = currentAmenity;
                         chosenAttractor = candidateAttractor;
-                        candidateAttractor.getPatch().getAgents().add(this.parent);
-                        break;
                     }
                 }
 
                 this.goalAmenity = chosenAmenity;
                 this.goalAttractor = chosenAttractor;
-                this.chosenEatTable = (EatTable) chosenAmenity;
+                this.goalQueueingPatchField = chosenAttractor.getPatch().getQueueingPatchField().getKey();
+                this.chosenKioskField = (KioskField) chosenAttractor.getPatch().getQueueingPatchField().getKey();
             }
             else {
-                if (leaderAgent.getAgentMovement().getChosenEatTable() != null) {
-                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenEatTable();
-                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenEatTable().getAttractors().get(0);
+                if (leaderAgent.getAgentMovement().getChosenKioskField() != null) {
+                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenKioskField().getTarget();
+                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenKioskField().getAssociatedPatches().get(0).getAmenityBlock();
+                    this.goalQueueingPatchField = leaderAgent.getAgentMovement().getChosenKioskField();
                 }
             }
         }
@@ -857,7 +1031,7 @@ public class GroceryAgentMovement extends AgentMovement {
         final int noNewPatchesSeenTicksThreshold = 5; // If the agent has not seen new patches for more than this number of ticks, the agent will be considered stuck
         final int unstuckTicksThreshold = 60; // Stuck agent must move this no. of ticks
         final double noMovementThreshold = 0.01 * this.preferredWalkingDistance; // If distance the agent moves per tick is less than this distance, this agent is considered to not have moved
-        final double noNewPatchesSeenThreshold = 5; // GroceryAgent hasn't moved if new patches seen are less than this
+        final double noNewPatchesSeenThreshold = 5; // MallAgent hasn't moved if new patches seen are less than this
         final double slowdownStartDistance = 2.0; // The distance to another agent before this agent slows down
         final double minimumStopDistance = 0.6; // The minimum allowable distance from another agent at its front before this agent stops
         double maximumStopDistance = 1.0; // The maximum allowable distance from another agent at its front before this agent stops
@@ -895,64 +1069,61 @@ public class GroceryAgentMovement extends AgentMovement {
             this.preferredWalkingDistance *= speedDecreaseFactor;
         }
 
-        // If this agent is queueing, the only social forces that apply are attractive forces to agents and obstacles (if not in queueing action)
+        // If this agent is queueing, the only social forces that apply are attractive forces to agents and obstacles
+        // (if not in queueing action)
         // TODO: add code to check if agent is already in queue / queueing logic
-//        if (this.currentState.getName() == GroceryState.Name.GOING_TO_SECURITY || this.currentState.getName() == GroceryState.Name.GOING_TO_LUNCH || this.currentState.getName() == GroceryState.Name.NEEDS_DRINK) {
-//            // Heading towards the queue, but not inside the queue yet
-//            if (this.currentAction.getName() == GroceryAction.Name.GO_THROUGH_SCANNER || this.currentAction.getName() == GroceryAction.Name.QUEUE_VENDOR || this.currentAction.getName() == GroceryAction.Name.QUEUE_FOUNTAIN) {
+//        if (this.currentState.getName() == MallState.Name.GOING_TO_SECURITY ||
+//                this.currentState.getName() == MallState.Name.GOING_TO_LUNCH ||
+//                this.currentState.getName() == MallState.Name.NEEDS_DRINK) {
+//            // looking for queue
+//            /*if (this.currentAction.getName() == MallAction.Name.GO_THROUGH_SCANNER ||
+//                    this.currentAction.getName() == MallAction.Name.QUEUE_VENDOR ||
+//                    this.currentAction.getName() == MallAction.Name.QUEUE_FOUNTAIN) {
 //                Patch nextQueuePatch = this.currentPatch.getQueueingPatchField().getKey().getNextQueuePatch(currentPatch);
-//                if (nextQueuePatch.getAgents().isEmpty()) {
-//                    move(Coordinates.getPatchCenterCoordinates(nextQueuePatch));
+//                System.out.println("queueingPatchField: " + this.currentPatch.getQueueingPatchField()
+//                + " key: " + this.currentPatch.getQueueingPatchField().getKey());
+//                if (!nextQueuePatch.getAgents().isEmpty()) {
+//                    this.stop();
 //                }
-//                else if (this.currentPatch.getQueueingPatchField().getKey().inLastQueuePatch(currentPatch)) {
-//                    // wala
-//                }
-//            }
-//            else if (this.currentAction.getName() == GroceryAction.Name.CHECKOUT || this.currentAction.getName() == GroceryAction.Name.DRINK_FOUNTAIN ||
-//                    this.currentAction.getName() == GroceryAction.Name.CLASSROOM_STAY_PUT || this.currentAction.getName() == GroceryAction.Name.STUDY_AREA_STAY_PUT ||
-//                    this.currentAction.getName() == GroceryAction.Name.LUNCH_STAY_PUT || this.currentAction.getName() == GroceryAction.Name.RELIEVE_IN_CUBICLE ||
-//                    this.currentAction.getName() == GroceryAction.Name.VIEW_BULLETIN || this.currentAction.getName() == GroceryAction.Name.SIT_ON_BENCH ||
-//                    this.currentAction.getName() == GroceryAction.Name.GUARD_STAY_PUT || this.currentAction.getName() == GroceryAction.Name.JANITOR_CLEAN_TOILET || this.currentAction.getName() == GroceryAction.Name.JANITOR_CHECK_FOUNTAIN) {
+//            }else*/ if (this.currentAction.getName() == MallAction.Name.CHECKOUT || this.currentAction.getName() == MallAction.Name.DRINK_FOUNTAIN ||
+//                    this.currentAction.getName() == MallAction.Name.CLASSROOM_STAY_PUT || this.currentAction.getName() == MallAction.Name.STUDY_AREA_STAY_PUT ||
+//                    this.currentAction.getName() == MallAction.Name.LUNCH_STAY_PUT || this.currentAction.getName() == MallAction.Name.RELIEVE_IN_CUBICLE ||
+//                    this.currentAction.getName() == MallAction.Name.VIEW_BULLETIN || this.currentAction.getName() == MallAction.Name.SIT_ON_BENCH ||
+//                    this.currentAction.getName() == MallAction.Name.GUARD_STAY_PUT || this.currentAction.getName() == MallAction.Name.JANITOR_CLEAN_TOILET || this.currentAction.getName() == MallAction.Name.JANITOR_CHECK_FOUNTAIN) {
 //                this.stop();
-//                decrementDuration(); // TODO: check if this should be done on Simulator or Movement
-//            }
-//            else { // Not in queue and not staying put
+//            }else { // Not in queue and not staying put
 //                // TODO: Calculate which queue to go to for cafeteria gogo julian
 //                if (this.isStuck || this.isServicedByQueueableGoal() && this.noMovementCounter > noMovementTicksThreshold) {
 //                    this.isStuck = true;
 //                    this.stuckCounter++;
 //                }
 //
-//                TreeMap<Double, GroceryAgent> agentsWithinFieldOfView = new TreeMap<>(); // Count agents within FOV
+//                TreeMap<Double, MallAgent> agentsWithinFieldOfView = new TreeMap<>(); // Count agents within FOV
 //
 //                for (Patch patch : patchesToExplore) { // Look around the patches that fall on the agent's field of view
-//                    if (this.currentAction.getName() != GroceryAction.Name.GO_THROUGH_SCANNER && this.currentAction.getName() != GroceryAction.Name.QUEUE_VENDOR && this.currentAction.getName() != GroceryAction.Name.QUEUE_FOUNTAIN) { // If not in queue, count obstacles
+//                    if (this.currentAction.getName() != MallAction.Name.GO_THROUGH_SCANNER && this.currentAction.getName() != MallAction.Name.QUEUE_VENDOR && this.currentAction.getName() != MallAction.Name.QUEUE_FOUNTAIN) { // If not in queue, count obstacles
 //                        Amenity.AmenityBlock patchAmenityBlock = patch.getAmenityBlock();
-//
 //                        // Get the distance between this agent and the obstacle on this patch
-//
 //                        if (hasObstacle(patch, goalAmenity)) {
 //                            numberOfObstacles++;
-//
 //                            double distanceToObstacle = Coordinates.distance(this.position, patch.getPatchCenterCoordinates());
 //                            if (distanceToObstacle <= slowdownStartDistance) {
 //                                obstaclesEncountered.put(distanceToObstacle, patch);
 //                            }
-//
 //                        }
 //                    }
 //
 //                    // confirm other agents within FOV
 //                    if (!this.isStuck) { // make sure agent is not stuck
 //                        for (Agent otherAgent : patch.getAgents()) {
-//                            GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
+//                            MallAgent mallAgent = (MallAgent) otherAgent;
 //                            if (!otherAgent.equals(this.getParent())) { // Make sure that the agent discovered isn't itself
 //                                numberOfAgents++; // Take note of the agent density in this area
 //
 //                                // Check if this agent is within the field of view and within the slowdown distance
-//                                double distanceToAgent = Coordinates.distance(this.position, groceryAgent.getAgentMovement().getPosition());
-//                                if (Coordinates.isWithinFieldOfView(this.position, groceryAgent.getAgentMovement().getPosition(), this.proposedHeading, this.fieldOfViewAngle) && distanceToAgent <= slowdownStartDistance) {
-//                                    agentsWithinFieldOfView.put(distanceToAgent, groceryAgent);
+//                                double distanceToAgent = Coordinates.distance(this.position, mallAgent.getAgentMovement().getPosition());
+//                                if (Coordinates.isWithinFieldOfView(this.position, mallAgent.getAgentMovement().getPosition(), this.proposedHeading, this.fieldOfViewAngle) && distanceToAgent <= slowdownStartDistance) {
+//                                    agentsWithinFieldOfView.put(distanceToAgent, mallAgent);
 //                                }
 //                            }
 //                        }
@@ -963,7 +1134,7 @@ public class GroceryAgentMovement extends AgentMovement {
 //                final double maximumDensityTolerated = 3.0;
 //                final double agentDensity = (numberOfAgents > maximumDensityTolerated ? maximumDensityTolerated : numberOfAgents) / maximumDensityTolerated;
 //
-//                Map.Entry<Double, GroceryAgent> nearestAgentEntry = agentsWithinFieldOfView.firstEntry(); // For each agent found within the slowdown distance, get the nearest one, if there is any
+//                Map.Entry<Double, MallAgent> nearestAgentEntry = agentsWithinFieldOfView.firstEntry(); // For each agent found within the slowdown distance, get the nearest one, if there is any
 //
 //                // If there are no agents within the field of view, good - move normally
 //                if (nearestAgentEntry == null|| nearestAgentEntry.getValue().getAgentMovement().getGoalAmenity() != null && !nearestAgentEntry.getValue().getAgentMovement().getGoalAmenity().equals(this.goalAmenity)) {
@@ -972,24 +1143,23 @@ public class GroceryAgentMovement extends AgentMovement {
 //                    // Get the attractive force of this agent to the new position
 //                    this.attractiveForce = this.computeAttractiveForce(new Coordinates(this.position), this.proposedHeading, proposedNewPosition, this.preferredWalkingDistance);
 //                    vectorsToAdd.add(attractiveForce);
-//                }
-//                else { // If there are agents in the way
+//                }else { // If there are agents in the way
 //                    // Get a random (but weighted) floor field value around the other agent
 //                    Patch PatchFieldPatch = this.getBestQueueingPatchAroundAgent(nearestAgentEntry.getValue());
 //
 //                    // Check the distance of that nearest agent to this agent
-//                    double distanceToNearestAgent = nearestAgentEntry.getKey();
+//                    //double distanceToNearestAgent = nearestAgentEntry.getKey();
 //
 //                    // Modify the maximum stopping distance depending on the density of the environment
 //                    // That is, the denser the surroundings, the less space this agent will allow between other
 //                    // agents
-//                    maximumStopDistance -= (maximumStopDistance - minimumStopDistance) * agentDensity;
+//                    /*maximumStopDistance -= (maximumStopDistance - minimumStopDistance) * agentDensity;
 //
-//                    this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null;
+//                    this.hasEncounteredAgentToFollow = this.agentFollowedWhenAssembling != null;*/
 //
 //                    // Else, just slow down and move towards the direction of that agent in front
-//                    final double slowdownFactor = (distanceToNearestAgent - maximumStopDistance) / (slowdownStartDistance - maximumStopDistance);
-//                    double computedWalkingDistance = slowdownFactor * this.preferredWalkingDistance;
+//                    //final double slowdownFactor = (distanceToNearestAgent - maximumStopDistance) / (slowdownStartDistance - maximumStopDistance);
+//                    double computedWalkingDistance = /*slowdownFactor **/ this.preferredWalkingDistance;
 //
 //                    // TODO Used to calculate when queueing for train; can be used for cafeteria
 //
@@ -998,43 +1168,44 @@ public class GroceryAgentMovement extends AgentMovement {
 //                    double distanceFromThisAgentToGoal = Coordinates.distance(this.currentPatch, this.goalPatch);
 //                    double revisedHeading;
 //                    Coordinates revisedPosition;
+//
 //                    if (distanceFromChosenPatchToGoal < distanceFromThisAgentToGoal) {
 //                        revisedHeading = Coordinates.headingTowards(this.position, PatchFieldPatch.getPatchCenterCoordinates());
 //                        revisedPosition = this.getFuturePosition(this.position, revisedHeading, computedWalkingDistance);
 //                        this.attractiveForce = this.computeAttractiveForce(new Coordinates(this.position), revisedHeading, revisedPosition, computedWalkingDistance);
 //                        vectorsToAdd.add(attractiveForce);
 //
-//                        // TODO fix if null pointer exception; no agents within FOV
-//                        for (Map.Entry<Double, GroceryAgent> otherAgentEntry : agentsWithinFieldOfView.entrySet()) {
-//                            final int maximumAgentCountTolerated = 5; // Then compute the repulsive force from this agent; Compute the perceived density of the agents assuming the maximum density an agent sees within its environment is 5 before it thinks the crowd is very dense
+//                        if(!agentsWithinFieldOfView.entrySet().isEmpty()){
+//                            for (Map.Entry<Double, MallAgent> otherAgentEntry : agentsWithinFieldOfView.entrySet()) {
+//                                final int maximumAgentCountTolerated = 5; // Then compute the repulsive force from this agent; Compute the perceived density of the agents assuming the maximum density an agent sees within its environment is 5 before it thinks the crowd is very dense
 //
-//                            // The distance by which the repulsion starts to kick in will depend on the density of the agent's surroundings
-//                            final int minimumAgentCount = 1;
-//                            final double maximumDistance = 2.0;
-//                            final int maximumAgentCount = 5;
-//                            final double minimumDistance = 0.7;
-//                            double computedMaximumDistance = computeMaximumRepulsionDistance(numberOfObstacles, maximumAgentCountTolerated, minimumAgentCount, maximumDistance, maximumAgentCount, minimumDistance);
-//                            Vector agentRepulsiveForce = computeSocialForceFromAgent(otherAgentEntry.getValue(), otherAgentEntry.getKey(), computedMaximumDistance, minimumAgentStopDistance, this.preferredWalkingDistance);
-//                            this.repulsiveForceFromAgents.add(agentRepulsiveForce);
+//                                // The distance by which the repulsion starts to kick in will depend on the density of the agent's surroundings
+//                                final int minimumAgentCount = 1;
+//                                final double maximumDistance = 2.0;
+//                                final int maximumAgentCount = 5;
+//                                final double minimumDistance = 0.7;
+//                                double computedMaximumDistance = computeMaximumRepulsionDistance(numberOfObstacles, maximumAgentCountTolerated, minimumAgentCount, maximumDistance, maximumAgentCount, minimumDistance);
+//                                Vector agentRepulsiveForce = computeSocialForceFromAgent(otherAgentEntry.getValue(), otherAgentEntry.getKey(), computedMaximumDistance, minimumAgentStopDistance, this.preferredWalkingDistance);
+//                                this.repulsiveForceFromAgents.add(agentRepulsiveForce);
+//                            }
 //                        }
-//                    } // end of finding a new patch closer to the goal
-//                 /*else {
-//                    Coordinates revisedPosition = this.getFuturePosition(computedWalkingDistance);
+//                    }else {
+//                        revisedPosition = this.getFuturePosition(computedWalkingDistance);
 //
-//                    // Get the attractive force of this agent to the new position
-//                    this.attractiveForce = this.computeAttractiveForce(
-//                            new Coordinates(this.position),
-//                            this.proposedHeading,
-//                            revisedPosition,
-//                            computedWalkingDistance
-//                    );
+//                        // Get the attractive force of this agent to the new position
+//                        this.attractiveForce = this.computeAttractiveForce(
+//                                new Coordinates(this.position),
+//                                this.proposedHeading,
+//                                revisedPosition,
+//                                computedWalkingDistance
+//                        );
 //
-//                    vectorsToAdd.add(attractiveForce);
-//                }*/
+//                        vectorsToAdd.add(attractiveForce);
+//                    }
 //                }
 //            }
 //        }
-        //else {
+//        else {
         if (this.isStuck || this.noNewPatchesSeenCounter > noNewPatchesSeenTicksThreshold) { // Check if agent is stuck
             this.isStuck = true;
             this.stuckCounter++;
@@ -1056,10 +1227,13 @@ public class GroceryAgentMovement extends AgentMovement {
                 }
             }
 
-            if (this.currentState.getName() != GroceryState.Name.GOING_TO_SECURITY && this.currentState.getName() != GroceryState.Name.GOING_HOME
-                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_SERVICE && this.currentAction.getName() != GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE
-                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_FOOD && this.currentAction.getName() != GroceryAction.Name.BUY_FOOD
-                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_CHECKOUT && this.currentAction.getName() != GroceryAction.Name.CHECKOUT) {
+            if(this.currentState.getName() != MallState.Name.GOING_TO_SECURITY && this.currentState.getName() != MallState.Name.GOING_HOME
+                    && this.currentState.getName() != MallState.Name.GOING_TO_STORE && this.currentState.getName() != MallState.Name.IN_STORE
+                    && this.currentAction.getName() != MallAction.Name.QUEUE_KIOSK && this.currentAction.getName() != MallAction.Name.CHECKOUT_KIOSK
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Bathroom.class)
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Restaurant.class)
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Store.class)
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Dining.class)) {
                 for (Agent otherAgent : patch.getAgents()) { // Inspect each agent in each patch in the patches in the field of view
                     if (this.getLeaderAgent() == null && this.followers.contains(otherAgent)) {
                         continue;
@@ -1068,7 +1242,7 @@ public class GroceryAgentMovement extends AgentMovement {
                         continue;
                     }
 
-                    GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
+                    MallAgent mallAgent = (MallAgent) otherAgent;
                     if (agentsProcessed == agentsProcessedLimit) {
                         break;
                     }
@@ -1077,7 +1251,7 @@ public class GroceryAgentMovement extends AgentMovement {
                         numberOfAgents++; // Take note of the agent density in this area
 
                         // Get the distance between this agent and the other agent
-                        double distanceToOtherAgent = Coordinates.distance(this.position, groceryAgent.getAgentMovement().getPosition());
+                        double distanceToOtherAgent = Coordinates.distance(this.position, mallAgent.getAgentMovement().getPosition());
 
                         if (distanceToOtherAgent <= slowdownStartDistance) { // If the distance is less than or equal to the distance when repulsion is supposed to kick in, compute for the magnitude of that repulsion force
                             final int maximumAgentCountTolerated = 5;
@@ -1089,7 +1263,7 @@ public class GroceryAgentMovement extends AgentMovement {
                             final double minimumDistance = 0.7;
 
                             double computedMaximumDistance = computeMaximumRepulsionDistance(numberOfObstacles, maximumAgentCountTolerated, minimumAgentCount, maximumDistance, maximumAgentCount, minimumDistance);
-                            Vector agentRepulsiveForce = computeSocialForceFromAgent(groceryAgent, distanceToOtherAgent, computedMaximumDistance, minimumAgentStopDistance, this.preferredWalkingDistance);
+                            Vector agentRepulsiveForce = computeSocialForceFromAgent(mallAgent, distanceToOtherAgent, computedMaximumDistance, minimumAgentStopDistance, this.preferredWalkingDistance);
                             this.repulsiveForceFromAgents.add(agentRepulsiveForce); // Add the computed vector to the list of vectors
 
                             agentsProcessed++;
@@ -1185,7 +1359,7 @@ public class GroceryAgentMovement extends AgentMovement {
 
                     // If this agent's distance covered falls under the threshold, increment the counter denoting the ticks spent not moving; Otherwise, reset the counter
                     // Do not count for movements/non-movements when the agent is in the "in queue" state
-                    if (this.currentAction.getName() != GroceryAction.Name.GO_THROUGH_SCANNER && this.currentAction.getName() != GroceryAction.Name.GO_TO_CUSTOMER_SERVICE && this.currentAction.getName() != GroceryAction.Name.GO_TO_FOOD_STALL && this.currentAction.getName() != GroceryAction.Name.GO_TO_CHECKOUT) {
+                    if (this.currentAction.getName() != MallAction.Name.GO_THROUGH_SCANNER && this.currentAction.getName() != MallAction.Name.QUEUE_KIOSK) {
                         if (this.recentPatches.size() <= noNewPatchesSeenThreshold) {
                             this.noNewPatchesSeenCounter++;
                             this.newPatchesSeenCounter = 0;
@@ -1208,8 +1382,8 @@ public class GroceryAgentMovement extends AgentMovement {
 
                     // If the agent has moved above the no-movement threshold for at least this number of ticks, remove the agent from its stuck state
                     if (this.isStuck &&
-                            (((this.currentAction.getName() != GroceryAction.Name.GO_THROUGH_SCANNER && this.currentAction.getName() != GroceryAction.Name.GO_TO_CUSTOMER_SERVICE && this.currentAction.getName() != GroceryAction.Name.GO_TO_FOOD_STALL && this.currentAction.getName() != GroceryAction.Name.GO_TO_CHECKOUT && this.movementCounter >= unstuckTicksThreshold)
-                                    || this.currentAction.getName() != GroceryAction.Name.GO_THROUGH_SCANNER && this.currentAction.getName() != GroceryAction.Name.GO_TO_CUSTOMER_SERVICE && this.currentAction.getName() != GroceryAction.Name.GO_TO_FOOD_STALL && this.currentAction.getName() != GroceryAction.Name.GO_TO_CHECKOUT && this.newPatchesSeenCounter >= unstuckTicksThreshold                                    ))) {
+                            (((this.currentAction.getName() == MallAction.Name.GO_THROUGH_SCANNER || this.currentAction.getName() == MallAction.Name.QUEUE_KIOSK && this.movementCounter >= unstuckTicksThreshold)
+                                    || this.currentAction.getName() != MallAction.Name.GO_THROUGH_SCANNER && this.currentAction.getName() != MallAction.Name.QUEUE_KIOSK && this.newPatchesSeenCounter >= unstuckTicksThreshold                                    ))) {
                         this.isReadyToFree = true;
                     }
                     this.timeSinceLeftPreviousGoal++;
@@ -1240,7 +1414,7 @@ public class GroceryAgentMovement extends AgentMovement {
 
     public void checkIfStuck() {
         if (this.currentAmenity == null) {
-            if (this.currentPatch.getAmenityBlock() != null) {
+            if (this.currentPatch.getAmenityBlock() != null && this.currentPatch.getAmenityBlock().getParent() != this.goalAmenity) {
                 List<Patch> candidatePatches = this.currentPatch.getNeighbors();
                 for (Patch candidate: candidatePatches) {
                     if (candidate.getAmenityBlock() == null && (candidate.getPatchField() == null || (candidate.getPatchField() != null && candidate.getPatchField().getKey().getClass() != Wall.class))) {
@@ -1304,6 +1478,11 @@ public class GroceryAgentMovement extends AgentMovement {
     }
 
     private double computeRepulsionMagnitudeFactor(final double distance, final double maximumDistance, final double minimumRepulsionFactor, final double minimumDistance, final double maximumRepulsionFactor) {
+        /*if(currentPatch.getPatchField() != null && currentPatch.getPatchField().getKey().getClass() == Classroom.class
+                || this.currentPatch.getAmenityBlock() != null && !this.currentPatch.getAmenityBlock().getParent()
+                .equals(Door.class)){
+            return 2;
+        }else{*/
         // Formula: for the inverse square law equation y = a / x ^ 2 + b,
         // a = (d_max ^ 2 * (r_min * d_max ^ 2 - r_min * d_min ^ 2 + r_max ^ 2 * d_min ^ 2)) / (d_max ^ 2 - d_min ^ 2)
         // b = -((r_max ^ 2 * d_min ^ 2) / (d_max ^ 2 - d_min ^ 2))
@@ -1319,9 +1498,10 @@ public class GroceryAgentMovement extends AgentMovement {
         }
 
         return repulsion;
+        //}
     }
 
-    private Vector computeSocialForceFromAgent(GroceryAgent agent, final double distanceToOtherAgent, final double maximumDistance, final double minimumDistance, final double maximumMagnitude) {
+    private Vector computeSocialForceFromAgent(MallAgent agent, final double distanceToOtherAgent, final double maximumDistance, final double minimumDistance, final double maximumMagnitude) {
         final double maximumRepulsionFactor = 1.0;
         final double minimumRepulsionFactor = 0.0;
 
@@ -1383,7 +1563,16 @@ public class GroceryAgentMovement extends AgentMovement {
 
         Coordinates repulsionVectorStartingPosition = wallPatch.getPatchCenterCoordinates();
 
-        double modifiedDistanceToObstacle = Math.max(distanceToObstacle, minimumDistance); // If this agent is closer than the minimum distance specified, apply a force as if the distance is just at that minimum
+        double modifiedDistanceToObstacle;
+        /*if(currentPatch.getPatchField() != null && currentPatch.getPatchField().getKey().getClass() == Classroom.class
+        || this.currentPatch.getAmenityBlock() != null && !this.currentPatch.getAmenityBlock().getParent()
+                .equals(Door.class)){*/
+        modifiedDistanceToObstacle = Math.max(distanceToObstacle, minimumDistance);
+        /*}else{
+            modifiedDistanceToObstacle = Math.max(distanceToObstacle, minimumDistance);
+        }*/
+        // If this agent is closer than the minimum distance specified, apply a force as if the distance is just at
+        // that minimum
         double repulsionMagnitudeCoefficient;
         double repulsionMagnitude;
 
@@ -1436,20 +1625,10 @@ public class GroceryAgentMovement extends AgentMovement {
 
     public void joinQueue() { // Register this agent to its queueable goal patch field's queue
         this.goalQueueingPatchField.getQueueingAgents().add(this.parent);
-//        if (this.goalQueueingPatchField.getQueueingAgents().get(0) == this.parent) {
-//            this.goalQueueingPatchField.setCurrentAgent(this.parent);
-//        }
 
         Stack<Patch> path = new Stack<>(); // Manually set the patch to
-        if (this.goalQueueingPatchField.getClass() == CashierCounterField.class) {
-            for (int i = 1; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
-                path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
-            }
-        }
-        else {
-            for (int i = 1; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
-                path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
-            }
+        for (int i = 0; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
+            path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
         }
         this.currentPath = new AgentPath(0, path);
         this.duration = currentAction.getDuration();
@@ -1469,7 +1648,7 @@ public class GroceryAgentMovement extends AgentMovement {
     }
 
     public boolean isServicedByQueueableGoal() { // Check if this agent the one currently served by its goal
-        GroceryAgent agentServiced = (GroceryAgent) this.goalQueueingPatchField.getCurrentAgent();
+        MallAgent agentServiced = (MallAgent) this.goalQueueingPatchField.getCurrentAgent();
 
         return agentServiced != null && agentServiced.equals(this.parent);
     }
@@ -1509,7 +1688,7 @@ public class GroceryAgentMovement extends AgentMovement {
             else {
                 break;
             }
-        } while (!this.currentPath.getPath().isEmpty() && nextPatch.getAmenityBlocksAround() == 0 && nextPatch.getWallsAround() == 0
+        } while (!this.currentPath.getPath().isEmpty() && nextPatch.getAmenityBlocksAround() == 0/* && nextPatch.getWallsAround() == 0*/
                 && this.isOnOrCloseToPatch(nextPatch) && this.hasClearLineOfSight(this.position, nextPatch.getPatchCenterCoordinates(), true));
     }
 
@@ -1524,9 +1703,9 @@ public class GroceryAgentMovement extends AgentMovement {
         }
     }
 
-    public boolean hasReachedFinalGoal() { // Check if this agent has reached its final goal
-        return !this.routePlan.getCurrentRoutePlan().hasNext();
-    }
+//    public boolean hasReachedFinalGoal() { // Check if this agent has reached its final goal
+//        return !this.routePlan.getCurrentRoutePlan().hasNext();
+//    }
 
     public boolean hasAgentReachedFinalPatchInPath() { // Check if this agent has reached the final patch in its current path
         return this.currentPath.getPath().isEmpty();
@@ -1543,18 +1722,11 @@ public class GroceryAgentMovement extends AgentMovement {
     public void despawn() {
         if (this.currentPatch != null) {
             this.currentPatch.getAgents().remove(this.parent);
-            this.getGrocery().getAgents().remove(this.parent);
+            this.getMall().getAgents().remove(this.parent);
 
-            SortedSet<Patch> currentPatchSet = this.getGrocery().getAgentPatchSet();
+            SortedSet<Patch> currentPatchSet = this.getMall().getAgentPatchSet();
             if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
                 currentPatchSet.remove(this.currentPatch);
-            }
-            switch (this.getParent().getPersona()){
-                case COMPLETE_FAMILY_CUSTOMER, HELP_FAMILY_CUSTOMER, DUO_FAMILY_CUSTOMER -> {
-                    if (this.getParent().isLeader())
-                        GrocerySimulator.currentFamilyCount--;
-                }
-                case STTP_ALONE_CUSTOMER, MODERATE_ALONE_CUSTOMER -> GrocerySimulator.currentAloneCustomerCount--;
             }
         }
     }
@@ -1582,7 +1754,7 @@ public class GroceryAgentMovement extends AgentMovement {
             // TODO: for queues
 //            if (this.getGoalAmenityAsQueueable() != null) {
 //                // Head towards the queue of the goal
-//                LinkedList<GroceryAgent> agentsQueueing
+//                LinkedList<MallAgent> agentsQueueing
 //                        = this.goalQueueObject.getAgentsQueueing();
 //
 //                // If there are no agents in that queue at all, simply head for the goal patch
@@ -1598,12 +1770,12 @@ public class GroceryAgentMovement extends AgentMovement {
 //                    // If there are agents in the queue, this agent should only follow the last agent in
 //                    // that queue if that agent is assembling
 //                    // If the last agent is not assembling, simply head for the goal patch instead
-//                    GroceryAgent lastAgent = agentsQueueing.getLast();
+//                    MallAgent lastAgent = agentsQueueing.getLast();
 //
 //                    if (
 //                            !(this.getGoalAmenityAsQueueable() instanceof TrainDoor)
 //                                    && !(this.getGoalAmenityAsQueueable() instanceof Turnstile)
-//                                    && lastAgent.getAgentMovement().getGroceryAction() == GroceryAction.ASSEMBLING
+//                                    && lastAgent.getAgentMovement().getMallAction() == MallAction.ASSEMBLING
 //                    ) {
 //                        double distanceToGoalPatch = Coordinates.distance(
 //                                this.currentFloor.getStation(),
@@ -1678,7 +1850,7 @@ public class GroceryAgentMovement extends AgentMovement {
 
             while (true) {
                 nextPatchInPath = this.currentPath.getPath().peek();
-                if (!(this.currentPath.getPath().size() > 1 && nextPatchInPath.getAmenityBlocksAround() == 0
+                if (!(this.currentPath.getPath().size() > 1/* && nextPatchInPath.getAmenityBlocksAround() == 0*/
                         && this.isOnOrCloseToPatch(nextPatchInPath)
                         && this.hasClearLineOfSight(this.position, nextPatchInPath.getPatchCenterCoordinates(), true))) {
                     break;
@@ -1703,20 +1875,20 @@ public class GroceryAgentMovement extends AgentMovement {
 //        double valueSum = 0.0;
 //
 //        for (Patch patch : PatchFieldList) {
-//            Map<QueueingPatchField.PatchFieldGroceryState, Double> PatchFieldGroceryStateDoubleMap
+//            Map<QueueingPatchField.PatchFieldMallState, Double> PatchFieldMallStateDoubleMap
 //                    = patch.getPatchFieldValues().get(this.getGoalAmenityAsQueueable());
 //
 //            if (
 //                    !patch.getPatchFieldValues().isEmpty()
-//                            && PatchFieldGroceryStateDoubleMap != null
-//                            && !PatchFieldGroceryStateDoubleMap.isEmpty()
-//                            && PatchFieldGroceryStateDoubleMap.get(
-//                            this.goalQueueingPatchFieldGroceryState
+//                            && PatchFieldMallStateDoubleMap != null
+//                            && !PatchFieldMallStateDoubleMap.isEmpty()
+//                            && PatchFieldMallStateDoubleMap.get(
+//                            this.goalQueueingPatchFieldMallState
 //                    ) != null
 //            ) {
 //                double futurePatchFieldValue = patch.getPatchFieldValues()
 //                        .get(this.getGoalAmenityAsQueueable())
-//                        .get(this.goalQueueingPatchFieldGroceryState);
+//                        .get(this.goalQueueingPatchFieldMallState);
 //
 ////                if (currentPatchFieldValue == null) {
 //                valueSum += futurePatchFieldValue;
@@ -1753,7 +1925,7 @@ public class GroceryAgentMovement extends AgentMovement {
 
     // Get the best queueing patch around the current patch of another agent given the current floor field state
     // TODO Change implementation based on the queues for cafeteria etc
-//    private Patch getBestQueueingPatchAroundAgent(GroceryAgent otherAgent) {
+//    private Patch getBestQueueingPatchAroundAgent(MallAgent otherAgent) {
 //        // Get the other agent's patch
 //        Patch otherAgentPatch = otherAgent.getAgentMovement().getCurrentPatch();
 //
@@ -1787,7 +1959,7 @@ public class GroceryAgentMovement extends AgentMovement {
 //        return chosenPatch;
 //    }
 
-    private Patch getBestQueueingPatchAroundAgent(GroceryAgent agent) {
+    private Patch getBestQueueingPatchAroundAgent(MallAgent agent) {
         return this.currentPatch;
     }
 
@@ -1796,7 +1968,7 @@ public class GroceryAgentMovement extends AgentMovement {
             return true;
         }
         else if (patch.getAmenityBlock() != null && !patch.getAmenityBlock().getParent().equals(amenity)) {
-            if (patch.getAmenityBlock().getParent().getClass() == Security.class) {
+            if (patch.getAmenityBlock().getParent().getClass() == Security.class || patch.getAmenityBlock().getParent().getClass() == Table.class || patch.getAmenityBlock().getParent().getClass() == Toilet.class || patch.getAmenityBlock().getParent().getClass() == Bench.class || patch.getAmenityBlock().getParent().getClass() == StoreAisle.class || patch.getAmenityBlock().getParent().getClass() == StoreCounter.class) {
                 return false;
             }
             else {
@@ -1809,7 +1981,7 @@ public class GroceryAgentMovement extends AgentMovement {
 
     // Check if there is a clear line of sight from one point to another
     private boolean hasClearLineOfSight(Coordinates sourceCoordinates, Coordinates targetCoordinates, boolean includeStartingPatch) {
-        if (hasObstacle(this.grocery.getPatch(targetCoordinates), goalAmenity)) {
+        if (hasObstacle(this.mall.getPatch(targetCoordinates), goalAmenity)) {
             return false;
         }
 
@@ -1817,13 +1989,13 @@ public class GroceryAgentMovement extends AgentMovement {
         final double distanceToTargetCoordinates = Coordinates.distance(sourceCoordinates, targetCoordinates);
         final double headingToTargetCoordinates = Coordinates.headingTowards(sourceCoordinates, targetCoordinates);
 
-        Patch startingPatch = this.grocery.getPatch(sourceCoordinates);
+        Patch startingPatch = this.mall.getPatch(sourceCoordinates);
         Coordinates currentPosition = new Coordinates(sourceCoordinates);
         double distanceCovered = 0.0;
 
         while (distanceCovered <= distanceToTargetCoordinates) { // Keep looking for blocks while there is still distance to cover
-            if (includeStartingPatch || !this.grocery.getPatch(currentPosition).equals(startingPatch)) {
-                if (hasObstacle(this.grocery.getPatch(currentPosition), goalAmenity)) {
+            if (includeStartingPatch || !this.mall.getPatch(currentPosition).equals(startingPatch)) {
+                if (hasObstacle(this.mall.getPatch(currentPosition), goalAmenity)) {
                     return false;
                 }
             }
@@ -1855,182 +2027,4 @@ public class GroceryAgentMovement extends AgentMovement {
         }
     }
 
-    public void decrementDuration(){
-        this.duration = getDuration() - 1;
-    }
-
-    public void forceActionInteraction(GroceryAgent agent, GroceryAgentMovement.InteractionType interactionType, int duration, GrocerySimulator GrocerySimulator){
-        //TODO: Statistics in interaction
-
-        // set own agent interaction parameters
-        this.isInteracting = true;
-        this.interactionType = interactionType;
-        // set other agent interaction parameters
-        agent.getAgentMovement().setInteracting(true);
-        agent.getAgentMovement().setInteractionType(interactionType);
-        double interactionStdDeviation, interactionMean;
-
-        if (interactionType == GroceryAgentMovement.InteractionType.NON_VERBAL){
-            interactionStdDeviation = 1;
-            interactionMean = 2;
-        }
-        else if (interactionType == GroceryAgentMovement.InteractionType.COOPERATIVE){
-
-            interactionStdDeviation = 5;
-            interactionMean = 19;
-        }
-        else if (interactionType == GroceryAgentMovement.InteractionType.EXCHANGE){
-
-            interactionStdDeviation = 5;
-            interactionMean = 19;
-        }
-        else{
-            interactionStdDeviation = 0;
-            interactionMean = 0;
-        }
-        if (duration == -1)
-            this.interactionDuration = (int) Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean);
-        else
-            this.interactionDuration = duration;
-
-    }
-    public void rollAgentInteraction(GroceryAgent agent){
-        //TODO: Statistics in interaction
-
-        double IOS1 = grocery.getIOS().get(this.getParent().getId()).get(agent.getId());
-        double IOS2 = grocery.getIOS().get(agent.getId()).get(this.getParent().getId());
-        // roll if possible interaction
-        double CHANCE1 = Simulator.roll();
-        double CHANCE2 = Simulator.roll();
-        double interactionStdDeviation, interactionMean;
-        if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
-            // roll if what kind of interaction
-            CHANCE1 = Simulator.roll() * IOS1;
-            CHANCE2 = Simulator.roll() * IOS2;
-            double CHANCE = (CHANCE1 + CHANCE2) / 2;
-            double CHANCE_NONVERBAL1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
-                    CHANCE_COOPERATIVE1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
-                    CHANCE_EXCHANGE1 = GroceryAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
-                    CHANCE_NONVERBAL2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
-                    CHANCE_COOPERATIVE2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
-                    CHANCE_EXCHANGE2 = GroceryAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
-            if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
-                GrocerySimulator.currentNonverbalCount++;
-                this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.NON_VERBAL);
-                agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.NON_VERBAL);
-                interactionStdDeviation = 1;
-                interactionMean = 2;
-            }
-            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
-                GrocerySimulator.currentCooperativeCount++;
-                this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.COOPERATIVE);
-                agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.COOPERATIVE);
-                CHANCE1 = Simulator.roll() * IOS1;
-                CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
-            }
-            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
-                GrocerySimulator.currentExchangeCount++;
-                this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.EXCHANGE);
-                agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.EXCHANGE);
-                CHANCE1 = Simulator.roll() * IOS1;
-                CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
-            }
-            else{
-                return;
-            }
-            // set own agent interaction parameters
-            this.isInteracting = true;
-            // set other agent interaction parameters
-            agent.getAgentMovement().setInteracting(true);
-
-//            if (this.parent.getType() == GroceryAgent.Type.STUDENT){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentStudentCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentStudentProfCount++;
-//                    case GUARD -> GrocerySimulator.currentStudentGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentStudentJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.PROFESSOR){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentProfCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfProfCount++;
-//                    case GUARD -> GrocerySimulator.currentProfGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentProfJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.GUARD){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentGuardCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentGuardJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.JANITOR){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentJanitorCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfJanitorCount++;
-//                    case GUARD -> GrocerySimulator.currentGuardJanitorCount++;
-//                    case JANITOR -> GrocerySimulator.currentJanitorJanitorCount++;
-//                }
-//            }
-            // roll duration (NOTE GAUSSIAN)
-            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
-            if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.NON_VERBAL)
-                GrocerySimulator.averageNonverbalDuration = (GrocerySimulator.averageNonverbalDuration * (GrocerySimulator.currentNonverbalCount - 1) + this.interactionDuration) / GrocerySimulator.currentNonverbalCount;
-            else if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.COOPERATIVE)
-                GrocerySimulator.averageCooperativeDuration = (GrocerySimulator.averageCooperativeDuration * (GrocerySimulator.currentCooperativeCount - 1) + this.interactionDuration) / GrocerySimulator.currentCooperativeCount;
-            else if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.EXCHANGE)
-                GrocerySimulator.averageExchangeDuration = (GrocerySimulator.averageExchangeDuration * (GrocerySimulator.currentExchangeCount - 1) + this.interactionDuration) / GrocerySimulator.currentExchangeCount;
-        }
-    }
-    public void interact(){
-        //TODO: Statistics in interaction
-
-        // if 0 na, remove interacting phase for agent
-        if (this.interactionDuration == 0){
-            this.isInteracting = false;
-            this.interactionType = null;
-        }
-        // -- interaction
-        else{
-            this.interactionDuration--;
-        }
-    }
-
-    public boolean isInteracting() {
-        return isInteracting;
-    }
-
-    public void setInteracting(boolean interacting) {
-        isInteracting = interacting;
-    }
-
-    public boolean isSimultaneousInteractionAllowed() {
-        return isSimultaneousInteractionAllowed;
-    }
-
-    public void setSimultaneousInteractionAllowed(boolean simultaneousInteractionAllowed) {
-        isSimultaneousInteractionAllowed = simultaneousInteractionAllowed;
-    }
-
-    public int getInteractionDuration() {
-        return interactionDuration;
-    }
-
-    public void setInteractionDuration(int interactionDuration) {
-        this.interactionDuration = interactionDuration;
-    }
-
-    public InteractionType getInteractionType() {
-        return interactionType;
-    }
-
-    public void setInteractionType(InteractionType interactionType) {
-        this.interactionType = interactionType;
-    }
 }

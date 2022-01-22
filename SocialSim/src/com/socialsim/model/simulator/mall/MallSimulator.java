@@ -2,10 +2,18 @@ package com.socialsim.model.simulator.mall;
 
 import com.socialsim.controller.Main;
 import com.socialsim.controller.mall.controls.MallScreenController;
+import com.socialsim.model.core.agent.mall.MallAction;
+import com.socialsim.model.core.agent.mall.MallAgent;
+import com.socialsim.model.core.agent.mall.MallAgentMovement;
+import com.socialsim.model.core.agent.mall.MallState;
+import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.mall.Mall;
+import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
+import com.socialsim.model.core.environment.mall.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,10 +26,15 @@ public class MallSimulator extends Simulator {
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
 
+    public static int MAX_FAMILY = 1;
+    public static int MAX_FRIENDS = 1;
+    public static int MAX_COUPLE = 1;
+    public static int MAX_ALONE = 1;
+
     public MallSimulator() {
         this.mall = null;
         this.running = new AtomicBoolean(false);
-        this.time = new SimulationTime(0, 0, 0);
+        this.time = new SimulationTime(10, 0, 0);
         this.playSemaphore = new Semaphore(0);
         this.start(); // Start the simulation thread, but in reality it would be activated much later
     }
@@ -60,6 +73,147 @@ public class MallSimulator extends Simulator {
         this.running.set(false);
     }
 
+    public void spawnInitialAgents(Mall mall) {
+        MallAgent guard = MallAgent.MallAgentFactory.create(MallAgent.Type.GUARD, MallAgent.Persona.GUARD, null, null, mall.getPatch(33, 2), true, null, -1, 0);
+        mall.getAgents().add(guard);
+        mall.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
+
+        MallAgent kiosk1 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_KIOSK, MallAgent.Persona.STAFF_KIOSK, null, null, mall.getPatch(22, 53), true, null, -1, 0);
+        mall.getAgents().add(kiosk1);
+        mall.getAgentPatchSet().add(kiosk1.getAgentMovement().getCurrentPatch());
+        MallAgent kiosk2 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_KIOSK, MallAgent.Persona.STAFF_KIOSK, null, null, mall.getPatch(22, 70), true, null, -1, 0);
+        mall.getAgents().add(kiosk2);
+        mall.getAgentPatchSet().add(kiosk2.getAgentMovement().getCurrentPatch());
+        MallAgent kiosk3 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_KIOSK, MallAgent.Persona.STAFF_KIOSK, null, null, mall.getPatch(22, 87), true, null, -1, 0);
+        mall.getAgents().add(kiosk3);
+        mall.getAgentPatchSet().add(kiosk3.getAgentMovement().getCurrentPatch());
+        MallAgent kiosk4 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_KIOSK, MallAgent.Persona.STAFF_KIOSK, null, null, mall.getPatch(33, 53), true, null, -1, 0);
+        mall.getAgents().add(kiosk4);
+        mall.getAgentPatchSet().add(kiosk4.getAgentMovement().getCurrentPatch());
+        MallAgent kiosk5 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_KIOSK, MallAgent.Persona.STAFF_KIOSK, null, null, mall.getPatch(33, 70), true, null, -1, 0);
+        mall.getAgents().add(kiosk5);
+        mall.getAgentPatchSet().add(kiosk5.getAgentMovement().getCurrentPatch());
+        MallAgent kiosk6 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_KIOSK, MallAgent.Persona.STAFF_KIOSK, null, null, mall.getPatch(33, 87), true, null, -1, 0);
+        mall.getAgents().add(kiosk6);
+        mall.getAgentPatchSet().add(kiosk6.getAgentMovement().getCurrentPatch());
+        MallAgent kiosk7 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_KIOSK, MallAgent.Persona.STAFF_KIOSK, null, null, mall.getPatch(27, 97), true, null, -1, 0);
+        mall.getAgents().add(kiosk7);
+        mall.getAgentPatchSet().add(kiosk7.getAgentMovement().getCurrentPatch());
+
+        MallAgent resto1 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_RESTO, MallAgent.Persona.STAFF_RESTO, null, null, mall.getPatch(59, 52), true, null, -1, 1);
+        mall.getAgents().add(resto1);
+        mall.getAgentPatchSet().add(resto1.getAgentMovement().getCurrentPatch());
+        MallAgent resto2 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_RESTO, MallAgent.Persona.STAFF_RESTO, null, null, mall.getPatch(59, 58), true, null, -1, 1);
+        mall.getAgents().add(resto2);
+        mall.getAgentPatchSet().add(resto2.getAgentMovement().getCurrentPatch());
+        MallAgent resto3 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_RESTO, MallAgent.Persona.STAFF_RESTO, null, null, mall.getPatch(59, 64), true, null, -1, 1);
+        mall.getAgents().add(resto3);
+        mall.getAgentPatchSet().add(resto3.getAgentMovement().getCurrentPatch());
+        MallAgent resto4 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_RESTO, MallAgent.Persona.STAFF_RESTO, null, null, mall.getPatch(59, 70), true, null, -1, 1);
+        mall.getAgents().add(resto4);
+        mall.getAgentPatchSet().add(resto4.getAgentMovement().getCurrentPatch());
+        MallAgent resto5 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_RESTO, MallAgent.Persona.STAFF_RESTO, null, null, mall.getPatch(59, 74), true, null, -1, 2);
+        mall.getAgents().add(resto5);
+        mall.getAgentPatchSet().add(resto5.getAgentMovement().getCurrentPatch());
+        MallAgent resto6 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_RESTO, MallAgent.Persona.STAFF_RESTO, null, null, mall.getPatch(59, 80), true, null, -1, 2);
+        mall.getAgents().add(resto6);
+        mall.getAgentPatchSet().add(resto6.getAgentMovement().getCurrentPatch());
+        MallAgent resto7 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_RESTO, MallAgent.Persona.STAFF_RESTO, null, null, mall.getPatch(59, 86), true, null, -1, 2);
+        mall.getAgents().add(resto7);
+        mall.getAgentPatchSet().add(resto7.getAgentMovement().getCurrentPatch());
+        MallAgent resto8 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_RESTO, MallAgent.Persona.STAFF_RESTO, null, null, mall.getPatch(59, 92), true, null, -1, 2);
+        mall.getAgents().add(resto8);
+        mall.getAgentPatchSet().add(resto8.getAgentMovement().getCurrentPatch());
+
+        MallAgent cashier1 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(10, 19), true, null, -1, 1);
+        mall.getAgents().add(cashier1);
+        mall.getAgentPatchSet().add(cashier1.getAgentMovement().getCurrentPatch());
+        MallAgent cashier2 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(5, 41), true, null, -1, 2);
+        mall.getAgents().add(cashier2);
+        mall.getAgentPatchSet().add(cashier2.getAgentMovement().getCurrentPatch());
+        MallAgent cashier3 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(49, 19), true, null, -1, 3);
+        mall.getAgents().add(cashier3);
+        mall.getAgentPatchSet().add(cashier3.getAgentMovement().getCurrentPatch());
+        MallAgent cashier4 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(54, 41), true, null, -1, 4);
+        mall.getAgents().add(cashier4);
+        mall.getAgentPatchSet().add(cashier4.getAgentMovement().getCurrentPatch());
+        MallAgent cashier5 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(0, 55), true, null, -1, 5);
+        mall.getAgents().add(cashier5);
+        mall.getAgentPatchSet().add(cashier5.getAgentMovement().getCurrentPatch());
+        MallAgent cashier6 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(0, 66), true, null, -1, 6);
+        mall.getAgents().add(cashier6);
+        mall.getAgentPatchSet().add(cashier6.getAgentMovement().getCurrentPatch());
+        MallAgent cashier7 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(0, 84), true, null, -1, 7);
+        mall.getAgents().add(cashier7);
+        mall.getAgentPatchSet().add(cashier7.getAgentMovement().getCurrentPatch());
+        MallAgent cashier8 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(0, 102), true, null, -1, 8);
+        mall.getAgents().add(cashier8);
+        mall.getAgentPatchSet().add(cashier8.getAgentMovement().getCurrentPatch());
+        MallAgent cashier9 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(0, 113), true, null, -1, 9);
+        mall.getAgents().add(cashier9);
+        mall.getAgentPatchSet().add(cashier9.getAgentMovement().getCurrentPatch());
+        MallAgent cashier10 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(59, 100), true, null, -1, 10);
+        mall.getAgents().add(cashier10);
+        mall.getAgentPatchSet().add(cashier10.getAgentMovement().getCurrentPatch());
+        MallAgent cashier11 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(59, 112), true, null, -1, 11);
+        mall.getAgents().add(cashier11);
+        mall.getAgentPatchSet().add(cashier11.getAgentMovement().getCurrentPatch());
+        MallAgent cashier12 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(15, 124), true, null, -1, 12);
+        mall.getAgents().add(cashier12);
+        mall.getAgentPatchSet().add(cashier12.getAgentMovement().getCurrentPatch());
+        MallAgent cashier13 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, mall.getPatch(31, 124), true, null, -1, 13);
+        mall.getAgents().add(cashier13);
+        mall.getAgentPatchSet().add(cashier13.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(14, 14), true, null, -1, 1);
+        mall.getAgents().add(sales);
+        mall.getAgentPatchSet().add(sales.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales1 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(7, 36), true, null, -1, 2);
+        mall.getAgents().add(sales1);
+        mall.getAgentPatchSet().add(sales1.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales3 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(46, 14), true, null, -1, 3);
+        mall.getAgents().add(sales3);
+        mall.getAgentPatchSet().add(sales3.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales5 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(51, 36), true, null, -1, 4);
+        mall.getAgents().add(sales5);
+        mall.getAgentPatchSet().add(sales5.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales7 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 52), true, null, -1, 5);
+        mall.getAgents().add(sales7);
+        mall.getAgentPatchSet().add(sales7.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales9 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 63), true, null, -1, 6);
+        mall.getAgents().add(sales9);
+        mall.getAgentPatchSet().add(sales9.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales11 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 81), true, null, -1, 7);
+        mall.getAgents().add(sales11);
+        mall.getAgentPatchSet().add(sales11.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales13 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 99), true, null, -1, 8);
+        mall.getAgents().add(sales13);
+        mall.getAgentPatchSet().add(sales13.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales15 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(4, 110), true, null, -1, 9);
+        mall.getAgents().add(sales15);
+        mall.getAgentPatchSet().add(sales15.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales17 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(56, 97), true, null, -1, 10);
+        mall.getAgents().add(sales17);
+        mall.getAgentPatchSet().add(sales17.getAgentMovement().getCurrentPatch());
+
+        MallAgent sales19 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, mall.getPatch(56, 109), true, null, -1, 11);
+        mall.getAgents().add(sales19);
+        mall.getAgentPatchSet().add(sales19.getAgentMovement().getCurrentPatch());
+    }
+
+    public void reset() {
+        this.time.reset();
+    }
+
     private void start() {
         new Thread(() -> {
             final int speedAwarenessLimitMilliseconds = 10; // For times shorter than this, speed awareness will be implemented
@@ -69,14 +223,10 @@ public class MallSimulator extends Simulator {
                     playSemaphore.acquire(); // Wait until the play button has been pressed
 
                     while (this.isRunning()) { // Keep looping until paused
+                        long currentTick = this.time.getStartTime().until(this.time.getTime(), ChronoUnit.SECONDS) / 5;
                         try {
-                            // Update the pertinent variables when ticking
-//                            Simulator.updateAgentsInStation(
-//                                    floorExecutorService,
-//                                    Main.simulator.getStation(),
-//                                    null,
-//                                    false
-//                            );
+                            updateAgentsInMall(mall);
+                            spawnAgent(mall, currentTick);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -87,6 +237,11 @@ public class MallSimulator extends Simulator {
 
                         this.time.tick();
                         Thread.sleep(SimulationTime.SLEEP_TIME_MILLISECONDS.get());
+
+                        if ((this.time.getStartTime().until(this.time.getTime(), ChronoUnit.SECONDS) / 5) == 8640) {
+                            ((MallScreenController) Main.mainScreenController).playAction();
+                            break;
+                        }
                     }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
@@ -95,1232 +250,712 @@ public class MallSimulator extends Simulator {
         }).start();
     }
 
-    // Manage all agent-related updates
-//    public static void updateAgentsInStation(
-//            ExecutorService floorExecutorService,
-//            Station station,
-//            List<AgentTripInformation> agentsToSpawn,
-//            boolean willDrawFromAgentList
-//    ) throws InterruptedException {
-//        List<Agent> agentsToSwitchFloors = Collections.synchronizedList(new ArrayList<>());
-//        List<Agent> agentsToDespawn = Collections.synchronizedList(new ArrayList<>());
-//        List<Agent> agentsToBoard = Collections.synchronizedList(new ArrayList<>());
-//        List<Agent> agentsToDispose = Collections.synchronizedList(new ArrayList<>());
-//
-//        // For each portal, update its agents' time spent values
-//        Simulator.updateAgentsInPortals(station);
-//
-//        // Update all agents on the floors
-//        Simulator.updateAgentsOnFloors(
-//                floorExecutorService,
-//                station,
-//                agentsToSpawn,
-//                agentsToSwitchFloors,
-//                agentsToDespawn,
-//                agentsToBoard,
-//                agentsToDispose,
-//                willDrawFromAgentList
-//        );
-//
-//        // Manage all agent despawns
-//        Simulator.manageDespawning(
-//                agentsToSwitchFloors,
-//                agentsToDespawn,
-//                agentsToBoard,
-//                agentsToDispose,
-//                willDrawFromAgentList
-//        );
-//    }
-
-    // Update all agents on the floors
-//    private static void updateAgentsOnFloors(
-//            ExecutorService executorService,
-//            Station station,
-//            List<AgentTripInformation> agentsToSpawn,
-//            List<Agent> agentsToSwitchFloors,
-//            List<Agent> agentsToDespawn,
-//            List<Agent> agentsToBoard,
-//            List<Agent> agentsToDispose,
-//            boolean willDrawFromAgentList
-//    ) throws InterruptedException {
-//        List<FloorUpdateTask> floorsToUpdate = new ArrayList<>();
-//        HashMap<AgentTripInformation, StationGate> spawnMap = null;
-//
-//        if (agentsToSpawn != null) {
-//            spawnMap = collectAgentsToSpawn(station.getFloors(), agentsToSpawn);
-//        }
-//
-//        for (Floor floor : station.getFloors()) {
-//            spawnAgentsOnFloor(floor, spawnMap, willDrawFromAgentList);
-////            spawnAgentsOnFloor(floor);
-//
-//            floorsToUpdate.add(
-//                    new FloorUpdateTask(
-//                            floor,
-//                            willDrawFromAgentList,
-//                            agentsToSwitchFloors,
-//                            agentsToDespawn,
-//                            agentsToBoard,
-//                            agentsToDispose
-//                    )
-//            );
-//        }
-//
-//        executorService.invokeAll(floorsToUpdate);
-//    }
-
-//    private static HashMap<AgentTripInformation, StationGate> collectAgentsToSpawn(
-//            List<Floor> floors,
-//            List<AgentTripInformation> agentsToSpawn
-//    ) {
-//        HashMap<AgentTripInformation, StationGate> spawnMap = new HashMap<>();
-//
-//        // For each agent to spawn, get the station gates it is eligible to spawn from
-//        // Pick the one with the shortest backlog
-//        for (AgentTripInformation agentTripInformation : agentsToSpawn) {
-//            List<StationGate> eligibleStationGates = new ArrayList<>();
-//
-//            int leastBacklogs = Integer.MAX_VALUE;
-//
-//            // Compile all station gates which are eligible to spawn this agent
-//            for (Floor floor : floors) {
-//                for (StationGate stationGate : floor.getStationGates()) {
-//                    if (
-//                            stationGate.isEnabled()
-//                                    && stationGate.getStationGateMode() != StationGate.StationGateMode.EXIT
-//                    ) {
-//                        if (
-//                                stationGate.getStationGateAgentTravelDirections().contains(
-//                                        agentTripInformation.getTravelDirection()
-//                                )
-//                        ) {
-//                            com.trainsimulation.model.core.environment.trainservice.agentservice.stationset.Station
-//                                    station = stationGate.getAmenityBlocks().get(0).getPatch().getFloor().getStation()
-//                                    .getStation();
-//
-//                            final int currentBacklogs = station.getAgentBacklogs().get(stationGate).size();
-//
-//                            if (currentBacklogs < leastBacklogs) {
-//                                eligibleStationGates.clear();
-//                                eligibleStationGates.add(stationGate);
-//
-//                                leastBacklogs = currentBacklogs;
-//                            } else if (currentBacklogs == leastBacklogs) {
-//                                eligibleStationGates.add(stationGate);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            // From the station gates compiled, choose one which will actually spawn this agent
-//            int eligibleStationGatesSize = eligibleStationGates.size();
-//            int randomIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(eligibleStationGatesSize);
-//
-//            StationGate chosenStationGate = eligibleStationGates.get(randomIndex);
-//
-//            spawnMap.put(agentTripInformation, chosenStationGate);
-//        }
-//
-//        return spawnMap;
-//    }
-
-    // Manage the agents which spawn on the floor
-//    private static void spawnAgentsOnFloor(
-//            Floor floor,
-//            HashMap<AgentTripInformation, StationGate> spawnMap,
-//            boolean willDrawFromAgentList
-//    ) {
-//        // Take note of all station gates which did not spawn agents this tick
-//        List<StationGate> stationGatesWithoutSpawn = new ArrayList<>(floor.getStationGates());
-//
-//        if (willDrawFromAgentList) {
-//            if (spawnMap != null) {
-//                // Spawn all agents from their chosen station gates
-//                for (Map.Entry<AgentTripInformation, StationGate> entry : spawnMap.entrySet()) {
-//                    AgentTripInformation agentTripInformation = entry.getKey();
-//                    StationGate stationGate = entry.getValue();
-//
-//                    if (stationGate.getAmenityBlocks().get(0).getPatch().getFloor().equals(floor)) {
-//                        spawnAgent(floor, stationGate, agentTripInformation);
-//
-//                        stationGatesWithoutSpawn.remove(stationGate);
-//                    }
-//                }
-//            }
-//
-//            // In all station gates which did not spawn a agent, use the free time to spawn one agent from its
-//            // backlog, if any
-//            for (StationGate stationGate : stationGatesWithoutSpawn) {
-//                // If no agent happens to spawn this tick, use this free time to spawn a agent from the
-//                // backlog, if there are any
-//                // TODO: Offload to station gate itself
-//                spawnAgentFromStationGateBacklog(
-//                        floor,
-//                        stationGate,
-//                        willDrawFromAgentList
-//                );
-//            }
-//
-//            // Spawn from all open train doors
-//            synchronized (floor.getTrainDoors()) {
-//                for (TrainDoor trainDoor : floor.getTrainDoors()) {
-//                    if (trainDoor.isOpen()) {
-//                        trainDoor.releaseAgent(false);
-//                    }
-//                }
-//            }
-//        } else {
-//            // Make all station gates in this floor spawn agents depending on their spawn frequency
-//            // Generate a number from 0.0 to 1.0
-//            double boardingRandomNumber;
-//            double alightingRandomNumber;
-//
-//            final double alightingChancePerSecond = 0.1;
-//
-//            // Spawn boarding agents from the station gate
-//            for (StationGate stationGate : floor.getStationGates()) {
-//                boardingRandomNumber = RANDOM_NUMBER_GENERATOR.nextDouble();
-//
-//                // Only deal with station gates which have entrances
-//                if (
-//                        stationGate.isEnabled()
-//                                && stationGate.getStationGateMode() != StationGate.StationGateMode.EXIT
-//                ) {
-//                    // Spawn agents depending on the spawn frequency of the station gate
-//                    if (stationGate.getChancePerSecond() > boardingRandomNumber) {
-//                        spawnAgent(floor, stationGate);
-//                    } else {
-//                        // If no agent happens to spawn this tick, use this free time to spawn a agent from the
-//                        // backlog, if there are any
-//                        spawnAgentFromStationGateBacklog(floor, stationGate, false);
-//                    }
-//                }
-//            }
-//
-//            // Spawn alighting agents from the train doors
-//            for (TrainDoor trainDoor : floor.getTrainDoors()) {
-//                alightingRandomNumber = RANDOM_NUMBER_GENERATOR.nextDouble();
-//
-//                if (trainDoor.isOpen()) {
-//                    if (alightingChancePerSecond > alightingRandomNumber) {
-//                        spawnAgent(floor, trainDoor);
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-    // Entertain each agent marked for switching floors
-//    private static void manageDespawning(
-//            List<Agent> agentsToSwitchFloors,
-//            List<Agent> agentsToDespawn,
-//            List<Agent> agentsToBoard,
-//            List<Agent> agentsToDispose,
-//            boolean willDrawFromAgentList
-//    ) {
-//        try {
-//            // Manage agents to switch floors
-//            for (Agent agentToSwitchFloors : agentsToSwitchFloors) {
-//                // Get the agent's portal
-//                Portal portal = (Portal) agentToSwitchFloors.getAgentMovement().getCurrentAmenity();
-//
-//                // Have the gate absorb that agent
-//                portal.absorb(agentToSwitchFloors);
-//            }
-//
-//            // Remove all agents that are marked for removal
-//            for (Agent agentToDespawn : agentsToDespawn) {
-//                // Record the time it took
-//                agentToDespawn.getAgentTime().exitStation();
-//
-//                // Get the agent's gate
-//                Gate gate = (Gate) agentToDespawn.getAgentMovement().getCurrentAmenity();
-//
-//                // Have the gate despawn that agent
-//                gate.despawnAgent(agentToDespawn);
-//
-//                // Remove the agent from the train system
-//                // TODO: Have a better way of checking whether this agent has necessary information, or not
-//                //  perhaps insert a different agent information object to a agent when at train simulation and
-//                //  at station editing?
-//                if (willDrawFromAgentList) {
-//                    agentToDespawn.getAgentMovement().getRoutePlan().getOriginStation().getTrainSystem()
-//                            .getAgents().remove(agentToDespawn);
-//
-//                    // Log the agent who completed the journey
-//                    com.trainsimulation.model.simulator.Simulator.logAgent(agentToDespawn);
-//                }
-//            }
-//
-//            // Have agents board the carriage connected to its train door
-//            for (Agent agentToBoard : agentsToBoard) {
-//                // Get the agent's train door
-//                TrainDoor trainDoor = (TrainDoor) agentToBoard.getAgentMovement().getCurrentAmenity();
-//
-//                // Have the train door transfer that agent to the carriage
-//                trainDoor.boardAgent(agentToBoard);
-//            }
-//
-//            // Simply discard agents with errors
-//            if (willDrawFromAgentList) {
-//                for (Agent agentToDispose : agentsToDispose) {
-//                    // Get the agent's gate
-//                    Gate gate = (Gate) agentToDispose.getAgentMovement().getCurrentAmenity();
-//
-//                    // Have the gate despawn that agent
-//                    gate.despawnAgent(agentToDispose);
-//
-//                    // Remove the agent from the train system
-//                    agentToDispose.getAgentMovement().getRoutePlan().getOriginStation().getTrainSystem()
-//                            .getAgents().remove(agentToDispose);
-//                }
-//            }
-//
-//            agentsToDespawn.clear();
-//            agentsToSwitchFloors.clear();
-//            agentsToBoard.clear();
-//            agentsToDispose.clear();
-//        } catch (NullPointerException ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-
-    public void reset() {
-        this.time.reset();
+    public static void updateAgentsInMall(Mall mall) throws InterruptedException { // Manage all agent-related updates
+        moveAll(mall);
     }
 
-    // Make all agents tick (move once in a one-second time frame) in the given floor
-//    private static void updateFloor(
-//            Floor floor,
-//            boolean willDrawFromAgentList,
-//            List<Agent> agentsToSwitchFloors,
-//            List<Agent> agentsToDespawn,
-//            List<Agent> agentsToBoard,
-//            List<Agent> agentsToDispose
-//    ) {
-//
-//        // Make each agent move
-//        synchronized (floor.getAgentsInFloor()) {
-//            for (Agent agent : floor.getAgentsInFloor()) {
-//                try {
-//                    moveAgent(
-//                            agent,
-//                            willDrawFromAgentList,
-//                            agentsToSwitchFloors,
-//                            agentsToDespawn,
-//                            agentsToBoard
-//                    );
-//
-//                    // Also update the graphic of the agent
-//                    agent.getAgentGraphic().change();
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        }
-//    }
+    private static void moveAll(Mall mall) { // Make all agents move for one tick
+        for (MallAgent agent : mall.getAgents()) {
+            try {
+                moveOne(agent);
+                agent.getAgentGraphic().change();
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
-//    private static void moveAgent(
-//            Agent agent,
-//            boolean willDrawFromAgentList,
-//            List<Agent> agentsToSwitchFloors,
-//            List<Agent> agentsToDespawn,
-//            List<Agent> agentsToBoard
-//    ) throws Exception {
-//        AgentMovement agentMovement = agent.getAgentMovement();
-//
-//        // Get the three agent movement states
-//        AgentMovement.Disposition disposition = agentMovement.getDisposition();
-//        AgentMovement.State state = agentMovement.getState();
-//        AgentMovement.Action action = agentMovement.getAction();
-//
-//        switch (disposition) {
-//            case BOARDING:
-//            case ALIGHTING:
-//                // The agent has entered the station and is heading towards the platform to board the train
-//                switch (state) {
-//                    case WALKING:
-//                        if (action == AgentMovement.Action.WILL_QUEUE) {
-//                            // Look for the goal nearest to this agent
-//                            agentMovement.chooseGoal();
-//
-//                            // Check if this agent is set to use a portal to go to another floor
-//                            if (agentMovement.willHeadToPortal()) {
-//                                // Make this agent face the goal portal
-//                                agentMovement.faceNextPosition();
-//
-//                                // Move towards that direction
-//                                agentMovement.moveSocialForce();
-//
-//                                // Set the appropriate action
-//                                if (agentMovement.isGoalFloorLower()) {
-//                                    agentMovement.setAction(AgentMovement.Action.WILL_DESCEND);
-//                                    action = AgentMovement.Action.WILL_DESCEND;
-//                                } else {
-//                                    agentMovement.setAction(AgentMovement.Action.WILL_ASCEND);
-//                                    action = AgentMovement.Action.WILL_ASCEND;
-//                                }
-//
-//                                break;
-//                            } else {
-//                                // This agent is set to stay on this floor, so simply move towards its goal
-//                                if (
-//                                        agentMovement.getParent().getTicketType()
-//                                                == TicketBooth.TicketType.SINGLE_JOURNEY
-//                                                || agentMovement.getParent().getTicketType()
-//                                                == TicketBooth.TicketType.STORED_VALUE
-//                                                && !agentMovement.willPathFind()
-//                                ) {
-//                                    // Make this agent face the set goal, its queueing area, or the agent at the
-//                                    // tail of the queue
-//                                    agentMovement.faceNextPosition();
-//
-//                                    // Move towards that direction
-//                                    agentMovement.moveSocialForce();
-//
-//                                    if (agentMovement.hasEncounteredAgentToFollow()) {
-//                                        // If the agent did not move, and there is someone blocking it while queueing,
-//                                        // transition into the "in queue" state and the "assembling" action
-//                                        agentMovement.joinQueue();
-//
-//                                        agentMovement.setState(AgentMovement.State.IN_QUEUE);
-//                                        state = AgentMovement.State.IN_QUEUE;
-//
-//                                        agentMovement.setAction(AgentMovement.Action.ASSEMBLING);
-//                                        action = AgentMovement.Action.ASSEMBLING;
-//
-//                                        // If this agent is a stored value card holder, signal that there will
-//                                        // be no more need to pathfind
-//                                        if (
-//                                                agentMovement.getParent().getTicketType()
-//                                                        == TicketBooth.TicketType.STORED_VALUE
-//                                        ) {
-//                                            agentMovement.endStoredValuePathfinding();
-//                                        }
-//
-//                                        break;
-//                                    }
-//
-//                                    // Check whether the agent's next amenity is a queueable
-//                                    // If it is, check whether the agent has reached its floor field
-//                                    if (agentMovement.isNextAmenityQueueable()) {
-//                                        // If the agent has reached the patch with the nearest floor field value,
-//                                        // transition
-//                                        // into the "in queue" state and the "queueing" action
-//                                        if (agentMovement.hasReachedQueueingFloorField()) {
-//                                            // Mark this agent as the latest one to join its queue
-//                                            agentMovement.joinQueue();
-//
-//                                            agentMovement.setState(AgentMovement.State.IN_QUEUE);
-//                                            state = AgentMovement.State.IN_QUEUE;
-//
-//                                            if (agentMovement.isNextAmenityTrainDoor()) {
-//                                                agentMovement.setAction(AgentMovement.Action.WAITING_FOR_TRAIN);
-//                                                action = AgentMovement.Action.WAITING_FOR_TRAIN;
-//                                            } else {
-//                                                agentMovement.setAction(AgentMovement.Action.QUEUEING);
-//                                                action = AgentMovement.Action.QUEUEING;
-//                                            }
-//
-//                                            // If this agent is a stored value card holder, signal that there will
-//                                            // be no more need to pathfind
-//                                            if (
-//                                                    agentMovement.getParent().getTicketType()
-//                                                            == TicketBooth.TicketType.STORED_VALUE
-//                                            ) {
-//                                                agentMovement.endStoredValuePathfinding();
-//                                            }
-//
-//                                            break;
-//                                        }
-//                                    } else {
-//                                        // If the agent has reached its non-queueable goal, transition into the
-//                                        // appropriate state and action
-//                                        // This non-queueable goal could only be a station gate, so exit the station
-//                                        if (agentMovement.hasReachedGoal()) {
-//                                            // Have the agent set its current goal
-//                                            agentMovement.reachGoal();
-//
-//                                            // Then have this agent marked for despawning
-//                                            agentsToDespawn.add(agent);
-//
-//                                            break;
-//                                        }
-//                                    }
-//
-//                                    // If the agent is stuck, switch to the "rerouting" action except if the
-//                                    // agent is a stored value ticket holder
-//                                    if (
-//                                            agentMovement.isStuck()
-//                                                    && agentMovement.getState() != AgentMovement.State.IN_QUEUE
-///*                                                    && agentMovement.getParent().getTicketType()
-//                                                    != TicketBooth.TicketType.STORED_VALUE*/
-//                                    ) {
-//                                        agentMovement.setAction(AgentMovement.Action.REROUTING);
-//                                        action = AgentMovement.Action.REROUTING;
-//                                    }
-//
-//                                    break;
-//                                } else {
-//                                    // This agent is a stored value ticket holder so generate a path, if one hasn't
-//                                    // been generated yet, then follow it until the agent reaches its goal
-//                                    // Get the next path
-//                                    if (agentMovement.chooseNextPatchInPath()) {
-//                                        // Make this agent face that patch
-//                                        agentMovement.faceNextPosition();
-//
-//                                        // Move towards that patch
-//                                        agentMovement.moveSocialForce();
-//
-//                                        if (agentMovement.hasEncounteredAgentToFollow()) {
-//                                            // If the agent did not move, and there is someone blocking it while
-//                                            // queueing, transition into the "in queue" state and the "assembling"
-//                                            // action
-//                                            agentMovement.joinQueue();
-//
-//                                            agentMovement.setState(AgentMovement.State.IN_QUEUE);
-//                                            state = AgentMovement.State.IN_QUEUE;
-//
-//                                            agentMovement.setAction(AgentMovement.Action.ASSEMBLING);
-//                                            action = AgentMovement.Action.ASSEMBLING;
-//
-//                                            agentMovement.endStoredValuePathfinding();
-//
-//                                            break;
-//                                        }
-//
-//                                        if (agentMovement.hasReachedNextPatchInPath()) {
-//                                            // The agent has reached the next patch in the path, so remove this from
-//                                            // this agent's current path
-//                                            agentMovement.reachPatchInPath();
-//
-//                                            // Check if there are still patches left in the path
-//                                            // If there are no more patches left, revert back to the "will queue" action
-//                                            if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-//                                                agentMovement.setState(AgentMovement.State.WALKING);
-//                                                state = AgentMovement.State.WALKING;
-//
-//                                                agentMovement.setAction(AgentMovement.Action.WILL_QUEUE);
-//                                                action = AgentMovement.Action.WILL_QUEUE;
-//
-//                                                agentMovement.endStoredValuePathfinding();
-//                                            }
-//
-//                                            break;
-//                                        }
-//                                    } else {
-//                                        // No more next patches, so transition back into the walking state
-//                                        agentMovement.setState(AgentMovement.State.WALKING);
-//                                        state = AgentMovement.State.WALKING;
-//
-//                                        agentMovement.setAction(AgentMovement.Action.WILL_QUEUE);
-//                                        action = AgentMovement.Action.WILL_QUEUE;
-//
-//                                        agentMovement.endStoredValuePathfinding();
-//
-//                                        break;
-//                                    }
-//                                }
-//                            }
-//                        } else if (
-//                                action == AgentMovement.Action.WILL_DESCEND
-//                                        || action == AgentMovement.Action.WILL_ASCEND
-//                        ) {
-//                            // Check if the agent is set to switch floors
-//                            // If it is, this agent will now head to its chosen portal
-//                            if (
-//                                    agentMovement.getParent().getTicketType()
-//                                            == TicketBooth.TicketType.SINGLE_JOURNEY
-//                                            || agentMovement.getParent().getTicketType()
-//                                            == TicketBooth.TicketType.STORED_VALUE
-//                                            && !agentMovement.willPathFind()
-//                            ) {
-//                                // Look for the goal nearest to this agent
-//                                agentMovement.chooseGoal();
-//
-//                                // Make this agent face its portal
-//                                agentMovement.faceNextPosition();
-//
-//                                // Then make the agent move towards that exit
-//                                agentMovement.moveSocialForce();
-//                            } else {
-//                                // This agent is a stored value ticket holder so generate a path, if one hasn't been
-//                                // generated yet, then follow it until the agent reaches its goal
-//                                // Get the next path
-//                                if (agentMovement.chooseNextPatchInPath()) {
-//                                    // Make this agent face that patch
-//                                    agentMovement.faceNextPosition();
-//
-//                                    // Move towards that patch
-//                                    agentMovement.moveSocialForce();
-//
-//                                    if (agentMovement.hasReachedNextPatchInPath()) {
-//                                        // The agent has reached the next patch in the path, so remove this from
-//                                        // this agent's current path
-//                                        agentMovement.reachPatchInPath();
-//
-//                                        // Check if there are still patches left in the path
-//                                        // If there are no more patches left, stop using any pathfinding algorithm
-//                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-//                                            agentMovement.endStoredValuePathfinding();
-//                                        }
-//                                    }
-//                                } else {
-//                                    agentMovement.endStoredValuePathfinding();
-//                                }
-//                            }
-//
-//                            if (agentMovement.hasEncounteredPortalWaitingAgent()) {
-//                                agentMovement.beginWaitingOnPortal();
-//                            } else {
-//                                agentMovement.endWaitingOnPortal();
-//                            }
-//
-//                            // Check if the agent is now at the portal
-//                            if (
-//                                    agentMovement.hasReachedGoal()
-//                            ) {
-//                                agentMovement.beginWaitingOnPortal();
-//
-//                                if (agentMovement.willEnterPortal()) {
-//                                    agentMovement.endWaitingOnPortal();
-//
-//                                    // Have the agent set its current goal
-//                                    agentMovement.reachGoal();
-//
-//                                    // Reset the current goal of the agent
-//                                    agentMovement.resetGoal(false);
-//
-//                                    // Then have this agent marked for floor switching
-//                                    agentsToSwitchFloors.add(agent);
-//                                } else {
-//                                    agentMovement.stop();
-//                                }
-//
-//                                break;
-//                            } else {
-//                                if (agentMovement.willEnterPortal()) {
-//                                    agentMovement.endWaitingOnPortal();
-//                                }
-//                            }
-//
-//                            // If the agent is stuck, switch to the "rerouting" action except if the agent
-//                            // is a stored value ticket holder
-//                            if (
-//                                    agentMovement.isStuck()/*
-//                                            && agentMovement.getParent().getTicketType()
-//                                            != TicketBooth.TicketType.STORED_VALUE*/
-//                            ) {
-//                                agentMovement.setAction(AgentMovement.Action.REROUTING);
-//                                action = AgentMovement.Action.REROUTING;
-//                            }
-//
-//                            break;
-//                        } else if (action == AgentMovement.Action.EXITING_STATION) {
-//                            // This agent is ready to exit
-//                            agentMovement.prepareForStationExit();
-//
-//                            // This agent is now heading to its chosen exit
-//                            agentMovement.chooseGoal();
-//
-//                            // Check if this agent is set to use a portal to go to another floor
-//                            if (agentMovement.willHeadToPortal()) {
-//                                // Make this agent face the goal portal
-//                                agentMovement.faceNextPosition();
-//
-//                                // Move towards that direction
-//                                agentMovement.moveSocialForce();
-//
-//                                // Set the appropriate action
-//                                if (agentMovement.isGoalFloorLower()) {
-//                                    agentMovement.setAction(AgentMovement.Action.WILL_DESCEND);
-//                                    action = AgentMovement.Action.WILL_DESCEND;
-//                                } else {
-//                                    agentMovement.setAction(AgentMovement.Action.WILL_ASCEND);
-//                                    action = AgentMovement.Action.WILL_ASCEND;
-//                                }
-//                            }
-//
-//                            if (
-//                                    agentMovement.getParent().getTicketType()
-//                                            == TicketBooth.TicketType.SINGLE_JOURNEY
-//                                            || agentMovement.getParent().getTicketType()
-//                                            == TicketBooth.TicketType.STORED_VALUE
-//                                            && !agentMovement.willPathFind()
-//                            ) {
-//                                // Make this agent face its exit
-//                                agentMovement.faceNextPosition();
-//
-//                                // Then make the agent move towards that exit
-//                                agentMovement.moveSocialForce();
-//                            } else {
-//                                // This agent is a stored value ticket holder so generate a path, if one hasn't been
-//                                // generated yet, then follow it until the agent reaches its goal
-//                                // Get the next path
-//                                if (agentMovement.chooseNextPatchInPath()) {
-//                                    // Make this agent face that patch
-//                                    agentMovement.faceNextPosition();
-//
-//                                    // Move towards that patch
-//                                    agentMovement.moveSocialForce();
-//
-//                                    if (agentMovement.hasReachedNextPatchInPath()) {
-//                                        // The agent has reached the next patch in the path, so remove this from
-//                                        // this agent's current path
-//                                        agentMovement.reachPatchInPath();
-//
-//                                        // Check if there are still patches left in the path
-//                                        // If there are no more patches left, stop using any pathfinding algorithm
-//                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-//                                            agentMovement.endStoredValuePathfinding();
-//                                        }
-//                                    }
-//                                } else {
-//                                    agentMovement.endStoredValuePathfinding();
-//                                }
-//                            }
-//
-//                            // Check if the agent is now at the exit
-//                            if (agentMovement.hasReachedGoal()) {
-//                                // Have the agent set its current goal
-//                                agentMovement.reachGoal();
-//
-//                                // Then have this agent marked for despawning
-//                                agentsToDespawn.add(agent);
-//
-//                                break;
-//                            }
-//
-//                            // If the agent is stuck, switch to the "rerouting" action except if the agent
-//                            // is a stored value ticket holder
-//                            if (
-//                                    agentMovement.isStuck()/*
-//                                            && agentMovement.getParent().getTicketType()
-//                                            != TicketBooth.TicketType.STORED_VALUE*/
-//                            ) {
-//                                agentMovement.setAction(AgentMovement.Action.REROUTING);
-//                                action = AgentMovement.Action.REROUTING;
-//
-//                                break;
-//                            }
-//
-//                            break;
-//                        } else if (action == AgentMovement.Action.REROUTING) {
-//                            // This agent is stuck, so generate a path, if one hasn't been generated yet, then
-//                            // follow it until the agent is not stuck anymore
-//                            // Get the next path
-//                            if (agentMovement.chooseNextPatchInPath()) {
-//                                // Make this agent face that patch
-//                                agentMovement.faceNextPosition();
-//
-//                                // Move towards that patch
-//                                agentMovement.moveSocialForce();
-//
-//                                // Check if the agent has reached its goal
-//                                if (agentMovement.hasReachedGoal()) {
-//                                    // Have the agent set its current goal
-//                                    agentMovement.reachGoal();
-//
-//                                    if (agentMovement.getGoalAmenity() instanceof StationGate) {
-//                                        agentMovement.setState(AgentMovement.State.WALKING);
-//                                        state = AgentMovement.State.WALKING;
-//
-//                                        agentMovement.setAction(AgentMovement.Action.EXITING_STATION);
-//                                        action = AgentMovement.Action.EXITING_STATION;
-//                                    } else {
-//                                        agentMovement.setState(AgentMovement.State.WALKING);
-//                                        state = AgentMovement.State.WALKING;
-//
-//                                        agentMovement.setAction(AgentMovement.Action.WILL_QUEUE);
-//                                        action = AgentMovement.Action.WILL_QUEUE;
-//                                    }
-//
-//                                    break;
-//                                }
-//
-//                                if (agentMovement.isReadyToFree()) {
-//                                    // If the agent has been moving again for a consistent period of time, free the
-//                                    // agent and don't follow the path anymore
-//                                    if (agentMovement.getGoalAmenity() instanceof StationGate) {
-//                                        agentMovement.setState(AgentMovement.State.WALKING);
-//                                        state = AgentMovement.State.WALKING;
-//
-//                                        agentMovement.setAction(AgentMovement.Action.EXITING_STATION);
-//                                        action = AgentMovement.Action.EXITING_STATION;
-//                                    } else {
-//                                        agentMovement.setState(AgentMovement.State.WALKING);
-//                                        state = AgentMovement.State.WALKING;
-//
-//                                        agentMovement.setAction(AgentMovement.Action.WILL_QUEUE);
-//                                        action = AgentMovement.Action.WILL_QUEUE;
-//                                    }
-//
-//                                    // Then this agent will not be stuck anymore
-//                                    agentMovement.free();
-//
-//                                    break;
-//                                }
-//
-//                                if (agentMovement.hasEncounteredAgentToFollow()) {
-//                                    // If the agent did not move, and there is someone blocking it while queueing,
-//                                    // transition into the "in queue" state and the "assembling" action
-//                                    agentMovement.joinQueue();
-//
-//                                    agentMovement.setState(AgentMovement.State.IN_QUEUE);
-//                                    state = AgentMovement.State.IN_QUEUE;
-//
-//                                    agentMovement.setAction(AgentMovement.Action.ASSEMBLING);
-//                                    action = AgentMovement.Action.ASSEMBLING;
-//
-//                                    // Then this agent will not be stuck anymore
-//                                    agentMovement.free();
-//
-//                                    break;
-//                                }
-//
-//                                if (agentMovement.getGoalAmenity() instanceof Portal) {
-//                                    // Check if the agent is now at the portal
-//                                    if (
-//                                            agentMovement.hasReachedGoal()
-//                                    ) {
-//                                        agentMovement.beginWaitingOnPortal();
-//
-//                                        if (agentMovement.willEnterPortal()) {
-//                                            agentMovement.endWaitingOnPortal();
-//
-//                                            // Have the agent set its current goal
-//                                            agentMovement.reachGoal();
-//
-//                                            // Reset the current goal of the agent
-//                                            agentMovement.resetGoal(false);
-//
-//                                            // Then have this agent marked for floor switching
-//                                            agentsToSwitchFloors.add(agent);
-//                                        } else {
-//                                            agentMovement.stop();
-//                                        }
-//
-//                                        break;
-//                                    } else {
-//                                        if (agentMovement.willEnterPortal()) {
-//                                            agentMovement.endWaitingOnPortal();
-//                                        }
-//                                    }
-//                                }
-//
-//                                if (agentMovement.hasReachedNextPatchInPath()) {
-//                                    // The agent has reached the next patch in the path, so remove this from this
-//                                    // agent's current path
-//                                    agentMovement.reachPatchInPath();
-//
-//                                    // Check if there are still patches left in the path
-//                                    // If there are no more patches left, revert back to the "will queue" action
-//                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-//                                        if (agentMovement.getGoalAmenity() instanceof StationGate) {
-//                                            agentMovement.setState(AgentMovement.State.WALKING);
-//                                            state = AgentMovement.State.WALKING;
-//
-//                                            agentMovement.setAction(AgentMovement.Action.EXITING_STATION);
-//                                            action = AgentMovement.Action.EXITING_STATION;
-//                                        } else {
-//                                            agentMovement.setState(AgentMovement.State.WALKING);
-//                                            state = AgentMovement.State.WALKING;
-//
-//                                            agentMovement.setAction(AgentMovement.Action.WILL_QUEUE);
-//                                            action = AgentMovement.Action.WILL_QUEUE;
-//                                        }
-//
-//                                        // Then this agent will not be stuck anymore
-//                                        agentMovement.free();
-//                                    }
-//
-//                                    break;
-//                                }
-//                            } else {
-//                                if (agentMovement.getGoalAmenity() instanceof StationGate) {
-//                                    agentMovement.setState(AgentMovement.State.WALKING);
-//                                    state = AgentMovement.State.WALKING;
-//
-//                                    agentMovement.setAction(AgentMovement.Action.EXITING_STATION);
-//                                    action = AgentMovement.Action.EXITING_STATION;
-//                                } else {
-//                                    agentMovement.setState(AgentMovement.State.WALKING);
-//                                    state = AgentMovement.State.WALKING;
-//
-//                                    agentMovement.setAction(AgentMovement.Action.WILL_QUEUE);
-//                                    action = AgentMovement.Action.WILL_QUEUE;
-//                                }
-//
-//                                // Then this agent will not be stuck anymore
-//                                agentMovement.free();
-//
-//                                break;
-//                            }
-//                        }
-//                    case IN_NONQUEUEABLE:
-//                        // TODO: Like in IN_QUEUEABLE
-//                        break;
-//                    case IN_QUEUE:
-//                        if (action == AgentMovement.Action.ASSEMBLING) {
-//                            // The agent is not yet in the queueing area, but is already queueing
-//                            // So keep following the end of the queue until the queueing area is reached
-//                            // Make this agent face the set goal, its queueing area, or the agent at the tail of
-//                            // the queue
-//                            agentMovement.faceNextPosition();
-//
-//                            // Move towards that direction
-//                            agentMovement.moveSocialForce();
-//
-//                            if (agentMovement.isReadyToFree()) {
-//                                // Then this agent will not be stuck anymore
-//                                agentMovement.free();
-//                            }
-//
-//                            // Check whether the agent has reached its floor field
-//                            // If the agent has reached the patch with the nearest floor field value, transition
-//                            // into the "queueing" action
-//                            if (agentMovement.hasReachedQueueingFloorField()) {
-//                                if (agentMovement.isNextAmenityTrainDoor()) {
-//                                    agentMovement.setAction(AgentMovement.Action.WAITING_FOR_TRAIN);
-//                                    action = AgentMovement.Action.WAITING_FOR_TRAIN;
-//                                } else {
-//                                    agentMovement.setAction(AgentMovement.Action.QUEUEING);
-//                                    action = AgentMovement.Action.QUEUEING;
-//                                }
-//                            }
-//
-//                            // Check if this agent has not encountered a queueing agent anymore
-//                            if (!agentMovement.hasEncounteredAgentToFollow()) {
-//                                // If the agent did not move, and there is someone blocking it while queueing,
-//                                // transition into the "in queue" state and the "assembling" action
-//                                agentMovement.leaveQueue();
-//
-//                                agentMovement.setState(AgentMovement.State.WALKING);
-//                                state = AgentMovement.State.WALKING;
-//
-//                                agentMovement.setAction(AgentMovement.Action.WILL_QUEUE);
-//                                action = AgentMovement.Action.WILL_QUEUE;
-//
-//                                break;
-//                            }
-//                        } else if (action == AgentMovement.Action.QUEUEING) {
-//                            // The agent is still queueing, so follow the path set by the floor field and its values
-//                            // Only move if the agent is not waiting for the amenity to be vacant
-//                            if (!agentMovement.isWaitingOnAmenity()) {
-//                                // In its neighboring patches, look for the patch with the highest floor field
-//                                agentMovement.chooseBestQueueingPatch();
-//
-//                                // Make this agent face that patch
-//                                agentMovement.faceNextPosition();
-//
-//                                // Move towards that patch
-//                                agentMovement.moveSocialForce();
-//                            }
-//
-//                            if (agentMovement.isReadyToFree()) {
-//                                // Then this agent will not be stuck anymore
-//                                agentMovement.free();
-//                            }
-//
-//                            // Check if the agent is on one of the current floor field's apices
-//                            // If not, keep following the floor field until it is reached
-//                            if (agentMovement.hasReachedQueueingFloorFieldApex()) {
-//                                // Have the agent waiting for the amenity to be vacant
-//                                // TODO: Add waiting for turn state
-//                                agentMovement.beginWaitingOnAmenity();
-//
-//                                // Check first if the goal of this agent is not currently serving other agents
-//                                // If it is, the agent will now transition into the "heading to queueable" action
-//                                // Do nothing if there is another agent still being serviced
-//                                if (agentMovement.isGoalFree()) {
-//                                    // The amenity is vacant, so no need to wait anymore
-//                                    agentMovement.endWaitingOnAmenity();
-//
-//                                    // Have the amenity mark this agent as the one to be served next
-//                                    agentMovement.beginServicingThisAgent();
-//
-//                                    agentMovement.setAction(AgentMovement.Action.HEADING_TO_QUEUEABLE);
-//                                    action = AgentMovement.Action.HEADING_TO_QUEUEABLE;
-//
-//                                    // Then this agent will not be stuck anymore
-//                                    agentMovement.free();
-//                                } else {
-//                                    // Just stop and wait
-//                                    agentMovement.stop();
-//                                }
-//                            }
-//                        } else if (action == AgentMovement.Action.WAITING_FOR_TRAIN) {
-//                            if (agentMovement.isReadyToFree()) {
-//                                // Then this agent will not be stuck anymore
-//                                agentMovement.free();
-//                            }
-//
-//                            if (agentMovement.willEnterTrain()) {
-//                                // Have the amenity mark this agent as the one to be served next
-//                                agentMovement.beginServicingThisAgent();
-//
-//                                agentMovement.setAction(AgentMovement.Action.HEADING_TO_TRAIN_DOOR);
-//                                action = AgentMovement.Action.HEADING_TO_TRAIN_DOOR;
-//
-//                                // Then this agent will not be stuck anymore
-//                                agentMovement.free();
-//                            } else {
-//                                // In its neighboring patches, look for the patch with the highest floor field
-//                                agentMovement.chooseBestQueueingPatch();
-//
-//                                // Make this agent face that patch
-//                                agentMovement.faceNextPosition();
-//
-//                                // Move towards that patch
-//                                agentMovement.moveSocialForce();
-//                            }
-//                        } else if (action == AgentMovement.Action.HEADING_TO_QUEUEABLE) {
-//                            // Check if the agent is now in the goal
-//                            if (agentMovement.hasReachedGoal()) {
-//                                // Check if the agent is in a pure goal (an amenity with waiting time variables)
-//                                if (agentMovement.isNextAmenityGoal()) {
-//                                    // Transition into the "in queueable" state and the appropriate action
-//                                    agentMovement.setState(AgentMovement.State.IN_QUEUEABLE);
-//                                    state = AgentMovement.State.IN_QUEUEABLE;
-//
-//                                    if (agentMovement.getGoalAmenity() instanceof Security) {
-//                                        agentMovement.setAction(AgentMovement.Action.SECURITY_CHECKING);
-//                                        action = AgentMovement.Action.SECURITY_CHECKING;
-//                                    } else if (agentMovement.getGoalAmenity() instanceof TicketBooth) {
-//                                        agentMovement.setAction(AgentMovement.Action.TRANSACTING_TICKET);
-//                                        action = AgentMovement.Action.TRANSACTING_TICKET;
-//                                    } else if (agentMovement.getGoalAmenity() instanceof Turnstile) {
-//                                        agentMovement.setAction(AgentMovement.Action.USING_TICKET);
-//                                        action = AgentMovement.Action.USING_TICKET;
-//                                    }
-//                                } else {
-//                                    // Either the next goal is an elevator
-//                                    if (agentMovement.getGoalAmenity() instanceof ElevatorPortal) {
-//                                        // TODO: The next goal is an elevator, so change to the appropriate actions and
-//                                        // states
-//                                    }
-//                                }
-//                            } else {
-//                                // The agent has exited its goal's floor field and is now headed to the goal itself
-//                                agentMovement.chooseGoal();
-//
-//                                // Make this agent face the set goal, or its queueing area
-//                                agentMovement.faceNextPosition();
-//
-//                                // Then make the agent move towards that goal
-//                                agentMovement.moveSocialForce();
-//                            }
-//                        } else if (action == AgentMovement.Action.HEADING_TO_TRAIN_DOOR) {
-//                            // Check if the agent is now in the goal
-//                            if (agentMovement.hasReachedGoal()) {
-//                                if (agentMovement.willEnterTrain()) {
-//                                    // Transition into the "in queueable" state and the appropriate action
-//                                    agentMovement.setState(AgentMovement.State.IN_QUEUEABLE);
-//                                    state = AgentMovement.State.IN_QUEUEABLE;
-//
-//                                    agentMovement.setAction(AgentMovement.Action.BOARDING_TRAIN);
-//                                    action = AgentMovement.Action.BOARDING_TRAIN;
-//                                } else {
-//                                    agentMovement.endServicingThisAgent();
-//
-//                                    // The train door has closed, so revert to waiting for a train
-//                                    agentMovement.setState(AgentMovement.State.IN_QUEUE);
-//                                    state = AgentMovement.State.IN_QUEUE;
-//
-//                                    agentMovement.setAction(AgentMovement.Action.WAITING_FOR_TRAIN);
-//                                    action = AgentMovement.Action.WAITING_FOR_TRAIN;
-//                                }
-//                            } else {
-//                                if (agentMovement.willEnterTrain()) {
-//                                    // The agent has exited its goal's floor field and is now headed to the goal itself
-//                                    agentMovement.chooseGoal();
-//
-//                                    // Make this agent face the set goal, or its queueing area
-//                                    agentMovement.faceNextPosition();
-//
-//                                    // Then make the agent move towards that goal
-//                                    agentMovement.moveSocialForce();
-//                                } else {
-//                                    agentMovement.endServicingThisAgent();
-//
-//                                    // The train door has closed, so revert to waiting for a train
-//                                    agentMovement.setState(AgentMovement.State.IN_QUEUE);
-//                                    state = AgentMovement.State.IN_QUEUE;
-//
-//                                    agentMovement.setAction(AgentMovement.Action.WAITING_FOR_TRAIN);
-//                                    action = AgentMovement.Action.WAITING_FOR_TRAIN;
-//                                }
-//                            }
-//                        }
-//                    case IN_QUEUEABLE:
-//                        if (action == AgentMovement.Action.BOARDING_TRAIN) {
-//                            // Have this agent's goal wrap up serving this agent
-//                            agentMovement.endServicingThisAgent();
-//
-//                            // Leave the queue
-//                            agentMovement.leaveQueue();
-//
-//                            // Have the agent set its current goal
-//                            agentMovement.reachGoal();
-//
-//                            // Then have this agent marked for boarding
-//                            if (willDrawFromAgentList) {
-//                                agentsToBoard.add(agent);
-//                            } else {
-//                                agentsToDespawn.add(agent);
-//                            }
-//                        } else if (
-//                                action == AgentMovement.Action.ASCENDING
-//                                        || action == AgentMovement.Action.DESCENDING
-//                        ) {
-//                            // Have the agent set its current goal
-//                            agentMovement.reachGoal();
-//
-//                            // Leave the queue
-//                            agentMovement.leaveQueue();
-//                        } else if (
-//                                action == AgentMovement.Action.SECURITY_CHECKING
-//                                        || action == AgentMovement.Action.TRANSACTING_TICKET
-//                                        || action == AgentMovement.Action.USING_TICKET
-//                        ) {
-//                            // Record the time it took
-//                            switch (action) {
-//                                case SECURITY_CHECKING:
-//                                    agent.getAgentTime().passSecurity();
-//
-//                                    break;
-//                                case USING_TICKET:
-//                                    if (agentMovement.getDisposition() == AgentMovement.Disposition.BOARDING) {
-//                                        agent.getAgentTime().tapInTurnstile();
-//                                    } else {
-//                                        agent.getAgentTime().tapOutTurnstile();
-//                                    }
-//
-//                                    break;
-//                            }
-//
-//                            // Have the agent set its current goal
-//                            agentMovement.reachGoal();
-//
-//                            // Check if the agent is allowed passage by the goal
-//                            // If it is, proceed to the next state
-//                            // If not, wait for an additional second
-//                            if (
-//                                    agentMovement.isAllowedPass()
-//                                            && (
-//                                            action == AgentMovement.Action.TRANSACTING_TICKET
-//                                                    || agentMovement.isFirstStepPositionFree()
-//                                                    || (
-//                                                    agentMovement.getCurrentTurnstileGate() != null
-//                                                            && agentMovement.getCurrentTurnstileGate()
-//                                                            .getTurnstileMode()
-//                                                            == Turnstile.TurnstileMode.BIDIRECTIONAL
-//                                            )
-//                                    )
-//                            ) {
-//                                // Have this agent's goal wrap up serving this agent
-//                                agentMovement.endServicingThisAgent();
-//
-//                                // Leave the queue
-//                                agentMovement.leaveQueue();
-//
-//                                // Move forward and go looking for the
-//                                // next one
-//                                agentMovement.getRoutePlan().setNextAmenityClass();
-//
-//                                // Reset the current goal of the agent
-//                                // The agent is set to step forward initially if the agent is coming from a
-//                                // security entrance or a turnstile
-//                                agentMovement.resetGoal(
-//                                        action == AgentMovement.Action.SECURITY_CHECKING
-//                                                || action == AgentMovement.Action.USING_TICKET
-//                                );
-//
-//                                // Transition back into the "walking" state, and the "will queue" action
-//                                // Or the "exiting station" action, if this agent is alighting and has left a
-//                                // turnstile
-//                                agentMovement.setState(AgentMovement.State.WALKING);
-//                                state = AgentMovement.State.WALKING;
-//
-//                                if (
-//                                        agentMovement.getDisposition() == AgentMovement.Disposition.ALIGHTING
-//                                                && action == AgentMovement.Action.USING_TICKET
-//                                ) {
-//                                    agentMovement.setAction(AgentMovement.Action.EXITING_STATION);
-//                                    action = AgentMovement.Action.EXITING_STATION;
-//                                } else {
-//                                    agentMovement.setAction(AgentMovement.Action.WILL_QUEUE);
-//                                    action = AgentMovement.Action.WILL_QUEUE;
-//                                }
-//                            } else {
-//                                // Just stop and wait
-//                                agentMovement.stop();
-//                            }
-//                        }
-//
-//                        break;
-//                }
-//
-//                break;
-//            case RIDING_TRAIN:
-//                // The agent is riding the train
-//                switch (state) {
-//                    case IN_TRAIN:
-//                        break;
-//                }
-//
-//                break;
-//        }
-//    }
+    private static void moveOne(MallAgent agent) throws Throwable {
+        MallAgentMovement agentMovement = agent.getAgentMovement();
 
-//    private static void spawnAgent(Gate gate, Mall mall) {
-//        Agent agent = gate.spawnAgent();
-//
-//        if (gate instanceof MallGate) {
-//            if (agent != null) {
-//                if (agent.getAgentMovement() != null) {
-//                    mall.getAgents().add(agent);
-//                    mall.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch()); // Add the agent's patch position to its current floor's patch set as well
-//                }
-//                else { // The agent was spawned, but outside, so insert agent into the queue
-//                    mall.getAgentBacklogs().add(agent);
-//                }
-//            }
-//        }
-//        else {
-//            if (agent != null) {
-//                mall.getAgents().add(agent);
-//                mall.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-//            }
-//        }
-//    }
+        MallAgent.Type type = agent.getType();
+        MallAgent.Persona persona = agent.getPersona();
+        MallState state = agentMovement.getCurrentState();
+        MallAction action = agentMovement.getCurrentAction();
 
-    // Spawn agents from the backlogs of the mall gate
-//    public static void spawnAgentFromMallGateBacklog(MallGate stationGate, Mall mall) {
-//        List<Agent> agentsToSpawn = new ArrayList<>();
-//        final int additionalAgentsToSpawnPerTick = 2;
-//        Agent agent = stationGate.spawnAgentFromBacklogs(false); // Spawn two more after the first one has already been spawned
-//
-//        if (agent != null) {
-//            agentsToSpawn.add(agent);
-//
-//            for (int spawnTimes = 0; spawnTimes < additionalAgentsToSpawnPerTick; spawnTimes++) {
-//                agent = stationGate.spawnAgentFromBacklogs(true); // Force the spawning of more agents, to avoid long backlogs
-//
-//                if (agent == null) { // No more to spawn, stop iterating
-//                    break;
-//                }
-//                else {
-//                    agentsToSpawn.add(agent);
-//                }
-//            }
-//        }
-//
-//        for (Agent agentToSpawn : agentsToSpawn) {
-//            mall.getAgents().add(agentToSpawn);
-//            mall.getAgentPatchSet().add(agentToSpawn.getAgentMovement().getCurrentPatch());
-//        }
-//    }
+        switch (type) {
+            case STAFF_RESTO:
+                if (state.getName() == MallState.Name.STAFF_RESTO) {
+                    if (action.getName() == MallAction.Name.STAFF_RESTO_SERVE) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseRandomTable();
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                            }
+                            else {
+                                if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                    while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                        agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                        agentMovement.reachPatchInPath();
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
+                            if (agentMovement.getDuration() <= 0) {
+                                agentMovement.resetGoal();
+                            }
+                        }
+                    }
+                }
+
+                break;
+
+            case STAFF_STORE_SALES:
+                if (state.getName() == MallState.Name.STAFF_STORE_SALES) {
+                    if (action.getName() == MallAction.Name.STAFF_STORE_STATION) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseRandomAisle();
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                            }
+                            else {
+                                if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                    while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                        agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                        agentMovement.reachPatchInPath();
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
+                            if (agentMovement.getDuration() <= 0) {
+                                agentMovement.resetGoal();
+                            }
+                        }
+                    }
+                }
+
+                break;
+
+            case PATRON:
+                if (state.getName() == MallState.Name.GOING_TO_SECURITY) {
+                    if (action.getName() == MallAction.Name.GOING_TO_SECURITY_QUEUE) {
+                        if (agentMovement.getGoalQueueingPatchField() == null) {
+                            agentMovement.setGoalQueueingPatchField(Main.mallSimulator.getMall().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
+                            agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getSecurities().get(0));
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.joinQueue();
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.GO_THROUGH_SCANNER) {
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                            }
+                        }
+                        else {
+                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
+                            if (agentMovement.getDuration() <= 0) {
+                                agentMovement.leaveQueue();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.WANDERING_AROUND) {
+                    if (action.getName() == MallAction.Name.FIND_BENCH || action.getName() == MallAction.Name.FIND_DIRECTORY) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if (action.getName() == MallAction.Name.FIND_BENCH) {
+                                if (!agentMovement.chooseGoal(Bench.class)) {
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                            else {
+                                if (!agentMovement.chooseGoal(Digital.class)) {
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                        }
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }
+                                }
+                                else {
+                                    if (agentMovement.getCurrentPath().getPath().size() <= 3) {
+                                        while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                            agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                            agentMovement.reachPatchInPath();
+                                            if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                                agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                                agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.SIT_ON_BENCH || action.getName() == MallAction.Name.VIEW_DIRECTORY) {
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.NEEDS_BATHROOM) {
+                    if (action.getName() == MallAction.Name.GO_TO_BATHROOM) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if (!agentMovement.chooseBathroomGoal(Toilet.class)) {
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }
+                        }
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                        System.out.println("reached toilet");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.RELIEVE_IN_CUBICLE) {
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                            agentMovement.resetGoal();
+                            System.out.println("done shitting");
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.WASH_IN_SINK) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if (!agentMovement.chooseBathroomGoal(Sink.class)) {
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }
+                            else {
+                                agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                            }
+                        }
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                }
+                            }
+                            else {
+                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                if (agentMovement.getDuration() <= 0) {
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.GOING_TO_SHOWCASE) {
+                    if (action.getName() == MallAction.Name.GO_TO_KIOSK) {
+                        if (agentMovement.getGoalQueueingPatchField() == null) {
+                            agentMovement.chooseKiosk();
+                        }
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                        agentMovement.setActionIndex(0);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.joinQueue();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.IN_SHOWCASE) {
+                    if (action.getName() == MallAction.Name.QUEUE_KIOSK) {
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                            }
+                        }
+                        else {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.CHECKOUT_KIOSK) {
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.leaveQueue();
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.GOING_TO_RESTO) {
+                    if (action.getName() == MallAction.Name.GO_TO_RESTAURANT) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseRandomTablePatron("RESTO");
+                        }
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                }
+                                else {
+                                    if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                        while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                            agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                            agentMovement.reachPatchInPath();
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                            }
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.IN_RESTO) {
+                    if (action.getName() == MallAction.Name.RESTAURANT_STAY_PUT) {
+                        if (agentMovement.getGoalAmenity() != null) {
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
+                            if (agentMovement.getDuration() <= 0) {
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.GOING_TO_DINING) {
+                    if (action.getName() == MallAction.Name.GO_TO_KIOSK) {
+                        if (agentMovement.getGoalQueueingPatchField() == null) {
+                            agentMovement.setGoalQueueingPatchField(Main.mallSimulator.getMall().getKioskFields().get(6));
+                            agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getKiosks().get(6));
+                            agentMovement.setGoalAttractor(agentMovement.getGoalQueueingPatchField().getAssociatedPatches().get(0).getAmenityBlock());
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.joinQueue();
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.QUEUE_KIOSK) {
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                            }
+                        }
+                        else {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.CHECKOUT_KIOSK) {
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.leaveQueue();
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.IN_DINING) {
+                    if (action.getName() == MallAction.Name.GO_TO_DINING_AREA) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseRandomTablePatron("DINING");
+                        }
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.DINING_AREA_STAY_PUT) {
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.GOING_TO_STORE) {
+                    if (action.getName() == MallAction.Name.GO_TO_STORE) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getCurrentAction().getDestination().getAmenityBlock());
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                            }
+                            else {
+                                if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                    while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                        agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                        agentMovement.reachPatchInPath();
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.IN_STORE) {
+                    if (action.getName() == MallAction.Name.CHECK_AISLE) {
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.GO_TO_AISLE) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAttractor(agentMovement.getCurrentAction().getDestination().getAmenityBlock());
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                            }
+                            else {
+                                if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                    while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                        agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                        agentMovement.reachPatchInPath();
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+                    }
+                    else if (action.getName() == MallAction.Name.CHECKOUT_STORE) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseGoal(StoreCounter.class);
+                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        }
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                }
+                                else {
+                                    if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                        while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                            agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                            agentMovement.reachPatchInPath();
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                if (agentMovement.getDuration() <= 0) {
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (state.getName() == MallState.Name.GOING_HOME) {
+                    if (action.getName() == MallAction.Name.LEAVE_BUILDING) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getMallGates().get(0));
+                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                        }
+
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                    agentMovement.despawn();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                break;
+        }
+    }
+
+    private void spawnAgent(Mall mall, long currentTick) {
+        MallGate gate = mall.getMallGates().get(1);
+
+        Gate.GateBlock spawner1 = gate.getSpawners().get(0);
+        Gate.GateBlock spawner2 = gate.getSpawners().get(1);
+        Gate.GateBlock spawner3 = gate.getSpawners().get(2);
+        Gate.GateBlock spawner4 = gate.getSpawners().get(3);
+
+        int spawnChance = (int) gate.getChancePerTick();
+        int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+        int type = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5);
+        boolean isErrand = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+
+        if (CHANCE > spawnChance) {
+            if (type == 0 && MAX_FAMILY > 0) {
+                MallAgent.Persona thisType = null;
+                if (isErrand) {
+                    thisType = MallAgent.Persona.ERRAND_FAMILY;
+                }
+                else {
+                    thisType = MallAgent.Persona.LOITER_FAMILY;
+                }
+
+                MallAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.Gender.MALE : MallAgent.Gender.FEMALE;
+                MallAgent.Gender gender2 = null;
+                if (gender1 == MallAgent.Gender.MALE) {
+                    gender2 = MallAgent.Gender.FEMALE;
+                }
+                else {
+                    gender2 = MallAgent.Gender.MALE;
+                }
+                MallAgent.Gender gender3 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.Gender.MALE : MallAgent.Gender.FEMALE;
+                MallAgent.Gender gender4 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.Gender.MALE : MallAgent.Gender.FEMALE;
+
+                MallAgent leaderAgent = MallAgent.MallAgentFactory.create(MallAgent.Type.PATRON, thisType, gender1, MallAgent.AgeGroup.FROM_25_TO_54, spawner1.getPatch(), true, null, (int) currentTick, 0);
+                mall.getAgents().add(leaderAgent);
+                mall.getAgentPatchSet().add(leaderAgent.getAgentMovement().getCurrentPatch());
+
+                MallAgent agent2 = MallAgent.MallAgentFactory.create(MallAgent.Type.PATRON, thisType, gender2, MallAgent.AgeGroup.FROM_25_TO_54, spawner2.getPatch(), true, leaderAgent, (int) currentTick, 0);
+                mall.getAgents().add(agent2);
+                mall.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+
+                MallAgent agent3 = MallAgent.MallAgentFactory.create(MallAgent.Type.PATRON, thisType, gender3, MallAgent.AgeGroup.FROM_15_TO_24, spawner3.getPatch(), true, leaderAgent, (int) currentTick, 0);
+                mall.getAgents().add(agent3);
+                mall.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
+
+                MallAgent agent4 = MallAgent.MallAgentFactory.create(MallAgent.Type.PATRON, thisType, gender4, MallAgent.AgeGroup.FROM_15_TO_24, spawner3.getPatch(), true, leaderAgent, (int) currentTick, 0);
+                mall.getAgents().add(agent4);
+                mall.getAgentPatchSet().add(agent4.getAgentMovement().getCurrentPatch());
+
+                leaderAgent.getAgentMovement().getFollowers().add(agent2);
+                leaderAgent.getAgentMovement().getFollowers().add(agent3);
+                leaderAgent.getAgentMovement().getFollowers().add(agent4);
+
+                MAX_FAMILY -= 1;
+            }
+            else if (type == 1 && MAX_FRIENDS > 0) {
+                MallAgent.Persona thisType = null;
+                if (isErrand) {
+                    thisType = MallAgent.Persona.ERRAND_FRIENDS;
+                }
+                else {
+                    thisType = MallAgent.Persona.LOITER_FRIENDS;
+                }
+
+                MallAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.Gender.MALE : MallAgent.Gender.FEMALE;
+                MallAgent.Gender gender2 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.Gender.MALE : MallAgent.Gender.FEMALE;
+                MallAgent.Gender gender3 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.Gender.MALE : MallAgent.Gender.FEMALE;
+
+                MallAgent leaderAgent = MallAgent.MallAgentFactory.create(MallAgent.Type.PATRON, thisType, gender1, MallAgent.AgeGroup.FROM_15_TO_24, spawner1.getPatch(), true, null, (int) currentTick, 0);
+                mall.getAgents().add(leaderAgent);
+                mall.getAgentPatchSet().add(leaderAgent.getAgentMovement().getCurrentPatch());
+
+                MallAgent agent2 = MallAgent.MallAgentFactory.create(MallAgent.Type.PATRON, thisType, gender2, MallAgent.AgeGroup.FROM_15_TO_24, spawner2.getPatch(), true, leaderAgent, (int) currentTick, 0);
+                mall.getAgents().add(agent2);
+                mall.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+
+                MallAgent agent3 = MallAgent.MallAgentFactory.create(MallAgent.Type.PATRON, thisType, gender3, MallAgent.AgeGroup.FROM_15_TO_24, spawner3.getPatch(), true, leaderAgent, (int) currentTick, 0);
+                mall.getAgents().add(agent3);
+                mall.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
+
+                leaderAgent.getAgentMovement().getFollowers().add(agent2);
+                leaderAgent.getAgentMovement().getFollowers().add(agent3);
+
+                MAX_FRIENDS -= 1;
+            }
+            else if (type == 2 && MAX_COUPLE > 0) {
+                MallAgent.Persona thisType = null;
+                if (isErrand) {
+                    thisType = MallAgent.Persona.ERRAND_COUPLE;
+                }
+                else {
+                    thisType = MallAgent.Persona.LOITER_COUPLE;
+                }
+
+                MallAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.Gender.MALE : MallAgent.Gender.FEMALE;
+                MallAgent.Gender gender2 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.Gender.MALE : MallAgent.Gender.FEMALE;
+                MallAgent.AgeGroup age1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.AgeGroup.FROM_15_TO_24 : MallAgent.AgeGroup.FROM_25_TO_54;
+
+                MallAgent leaderAgent = MallAgent.MallAgentFactory.create(MallAgent.Type.PATRON, thisType, gender1, age1, spawner1.getPatch(), true, null, (int) currentTick, 0);
+                mall.getAgents().add(leaderAgent);
+                mall.getAgentPatchSet().add(leaderAgent.getAgentMovement().getCurrentPatch());
+
+                MallAgent agent2 = MallAgent.MallAgentFactory.create(MallAgent.Type.PATRON, thisType, gender2, age1, spawner2.getPatch(), true, leaderAgent, (int) currentTick, 0);
+                mall.getAgents().add(agent2);
+                mall.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+
+                leaderAgent.getAgentMovement().getFollowers().add(agent2);
+
+                MAX_COUPLE -= 1;
+            }
+            else if (type == 3 && MAX_ALONE > 0) {
+                MallAgent.Persona thisType = null;
+                if (isErrand) {
+                    thisType = MallAgent.Persona.ERRAND_ALONE;
+                }
+                else {
+                    thisType = MallAgent.Persona.LOITER_ALONE;
+                }
+
+                MallAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.Gender.MALE : MallAgent.Gender.FEMALE;
+                MallAgent.AgeGroup age1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.AgeGroup.FROM_15_TO_24 : MallAgent.AgeGroup.FROM_25_TO_54;
+
+                MallAgent leaderAgent = MallAgent.MallAgentFactory.create(MallAgent.Type.PATRON, thisType, gender1, age1, spawner1.getPatch(), true, null, (int) currentTick, 0);
+                mall.getAgents().add(leaderAgent);
+                mall.getAgentPatchSet().add(leaderAgent.getAgentMovement().getCurrentPatch());
+
+                MAX_ALONE -= 1;
+            }
+        }
+    }
 
 }

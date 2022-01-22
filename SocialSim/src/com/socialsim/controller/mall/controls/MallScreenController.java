@@ -4,6 +4,7 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.mall.graphics.MallGraphicsController;
 import com.socialsim.controller.mall.graphics.amenity.mapper.*;
+import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.mall.Mall;
@@ -44,7 +45,7 @@ public class MallScreenController extends ScreenController {
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
 
-    private final double CANVAS_SCALE = 0.3;
+    private final double CANVAS_SCALE = 0.7;
 
     public MallScreenController() {
     }
@@ -62,6 +63,11 @@ public class MallScreenController extends ScreenController {
 
     @FXML
     public void initializeAction() {
+        if (Main.mallSimulator.isRunning()) {
+            playAction();
+            playButton.setSelected(false);
+        }
+
         int width = 60; // Value may be from 25-100
         int length = 130; // Value may be from 106-220
         int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
@@ -75,6 +81,7 @@ public class MallScreenController extends ScreenController {
         Main.mallSimulator.resetToDefaultConfiguration(mall);
         MallGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.mallSimulator.getMall().getRows();
         mapMall();
+        Main.mallSimulator.spawnInitialAgents(mall);
         drawInterface();
     }
 
@@ -128,44 +135,28 @@ public class MallScreenController extends ScreenController {
         Main.mallSimulator.getMall().getBathrooms().add(Bathroom.bathroomFactory.create(mBathroomPatches, 2));
 
         List<Patch> resto1Patches = new ArrayList<>();
-        for (int i = 45; i < 60; i++) {
+        for (int i = 40; i < 60; i++) {
             for (int j = 52; j < 72; j++) {
                 resto1Patches.add(mall.getPatch(i, j));
             }
         }
         Main.mallSimulator.getMall().getRestaurants().add(Restaurant.restaurantFactory.create(resto1Patches, 1));
 
-        List<Patch> dining1Patches = new ArrayList<>();
-        for (int i = 40; i < 45; i++) {
-            for (int j = 52; j < 72; j++) {
-                dining1Patches.add(mall.getPatch(i, j));
-            }
-        }
-        Main.mallSimulator.getMall().getDinings().add(Dining.diningFactory.create(dining1Patches, 1));
-
         List<Patch> resto2Patches = new ArrayList<>();
-        for (int i = 45; i < 60; i++) {
+        for (int i = 40; i < 60; i++) {
             for (int j = 74; j < 94; j++) {
                 resto2Patches.add(mall.getPatch(i, j));
             }
         }
         Main.mallSimulator.getMall().getRestaurants().add(Restaurant.restaurantFactory.create(resto2Patches, 2));
 
-        List<Patch> dining2Patches = new ArrayList<>();
-        for (int i = 40; i < 45; i++) {
-            for (int j = 74; j < 94; j++) {
-                dining2Patches.add(mall.getPatch(i, j));
-            }
-        }
-        Main.mallSimulator.getMall().getDinings().add(Dining.diningFactory.create(dining2Patches, 2));
-
-        List<Patch> dining3Patches = new ArrayList<>();
+        List<Patch> dining1Patches = new ArrayList<>();
         for (int i = 25; i < 35; i++) {
             for (int j = 96; j < 116; j++) {
-                dining3Patches.add(mall.getPatch(i, j));
+                dining1Patches.add(mall.getPatch(i, j));
             }
         }
-        Main.mallSimulator.getMall().getDinings().add(Dining.diningFactory.create(dining3Patches, 3));
+        Main.mallSimulator.getMall().getDinings().add(Dining.diningFactory.create(dining1Patches, 1));
 
         List<Patch> store1Patches = new ArrayList<>();
         for (int i = 10; i < 20; i++) {
@@ -256,7 +247,7 @@ public class MallScreenController extends ScreenController {
         Main.mallSimulator.getMall().getStores().add(Store.storeFactory.create(store11Patches, 11));
 
         List<Patch> store12Patches = new ArrayList<>();
-        for (int i = 17; i < 29; i++) {
+        for (int i = 15; i < 29; i++) {
             for (int j = 120; j < 130; j++) {
                 store12Patches.add(mall.getPatch(i, j));
             }
@@ -264,7 +255,7 @@ public class MallScreenController extends ScreenController {
         Main.mallSimulator.getMall().getStores().add(Store.storeFactory.create(store12Patches, 12));
 
         List<Patch> store13Patches = new ArrayList<>();
-        for (int i = 31; i < 43; i++) {
+        for (int i = 31; i < 45; i++) {
             for (int j = 120; j < 130; j++) {
                 store13Patches.add(mall.getPatch(i, j));
             }
@@ -278,6 +269,88 @@ public class MallScreenController extends ScreenController {
             }
         }
         Main.mallSimulator.getMall().getShowcases().add(Showcase.showcaseFactory.create(showcasePatches, 1));
+
+        List<Patch> storeCounterPatches = new ArrayList<>();
+        storeCounterPatches.add(mall.getPatch(16,121)); // Store 12; 0
+        storeCounterPatches.add(mall.getPatch(32,121)); // Store 13; 1
+        storeCounterPatches.add(mall.getPatch(1,52)); // Store 5; 2
+        storeCounterPatches.add(mall.getPatch(1,63)); // Store 6; 3
+        storeCounterPatches.add(mall.getPatch(1,81)); // Store 7; 4
+        storeCounterPatches.add(mall.getPatch(1,99)); // Store 8; 5
+        storeCounterPatches.add(mall.getPatch(1,110)); // Store 9; 6
+        storeCounterPatches.add(mall.getPatch(57,97)); // Store 10; 7
+        storeCounterPatches.add(mall.getPatch(57,109)); // Store 11; 8
+        storeCounterPatches.add(mall.getPatch(11,16)); // Store 1; 9
+        storeCounterPatches.add(mall.getPatch(6,38)); // Store 2; 10
+        storeCounterPatches.add(mall.getPatch(47,16)); // Store 3; 11
+        storeCounterPatches.add(mall.getPatch(52,38)); // Store 4; 12
+        StoreCounterMapper.draw(storeCounterPatches);
+
+        List<Patch> aisleDownPatches = new ArrayList<>();
+        aisleDownPatches.add(mall.getPatch(16,19)); // Store 1; 0
+        aisleDownPatches.add(mall.getPatch(19,19)); // Store 1; 1
+        aisleDownPatches.add(mall.getPatch(11,38)); // Store 2; 2
+        aisleDownPatches.add(mall.getPatch(11,43)); // Store 2; 3
+        aisleDownPatches.add(mall.getPatch(17,38)); // Store 2; 4
+        aisleDownPatches.add(mall.getPatch(17,43)); // Store 2; 5
+        aisleDownPatches.add(mall.getPatch(40,12)); // Store 3; 6
+        aisleDownPatches.add(mall.getPatch(40,18)); // Store 3; 7
+        aisleDownPatches.add(mall.getPatch(40,24)); // Store 3; 8
+        aisleDownPatches.add(mall.getPatch(43,12)); // Store 3; 9
+        aisleDownPatches.add(mall.getPatch(43,18)); // Store 3; 10
+        aisleDownPatches.add(mall.getPatch(43,24)); // Store 3; 11
+        aisleDownPatches.add(mall.getPatch(43,38)); // Store 4; 12
+        aisleDownPatches.add(mall.getPatch(46,38)); // Store 4; 13
+        aisleDownPatches.add(mall.getPatch(43,43)); // Store 4; 14
+        aisleDownPatches.add(mall.getPatch(46,43)); // Store 4; 15
+        aisleDownPatches.add(mall.getPatch(6,54)); // Store 5; 16
+        aisleDownPatches.add(mall.getPatch(12,54)); // Store 5; 17
+        aisleDownPatches.add(mall.getPatch(6,65)); // Store 6; 18
+        aisleDownPatches.add(mall.getPatch(12,65)); // Store 6; 19
+        aisleDownPatches.add(mall.getPatch(6,83)); // Store 7; 20
+        aisleDownPatches.add(mall.getPatch(9,83)); // Store 7; 21
+        aisleDownPatches.add(mall.getPatch(12,83)); // Store 7; 22
+        aisleDownPatches.add(mall.getPatch(6,101)); // Store 8; 23
+        aisleDownPatches.add(mall.getPatch(12,101)); // Store 8; 24
+        aisleDownPatches.add(mall.getPatch(6,112)); // Store 9; 25
+        aisleDownPatches.add(mall.getPatch(12,112)); // Store 9; 26
+        aisleDownPatches.add(mall.getPatch(47,99)); // Store 10; 27
+        aisleDownPatches.add(mall.getPatch(53,99)); // Store 10; 28
+        aisleDownPatches.add(mall.getPatch(47,111)); // Store 11; 29
+        aisleDownPatches.add(mall.getPatch(53,111)); // Store 11; 30
+        aisleDownPatches.add(mall.getPatch(28,123)); // Store 12; 31
+        aisleDownPatches.add(mall.getPatch(44,123)); // Store 13; 32
+        StoreAisleMapper.draw(aisleDownPatches, "DOWN");
+
+        List<Patch> aisleRightPatches = new ArrayList<>();
+        aisleRightPatches.add(mall.getPatch(16,10)); // Store 1; 33
+        aisleRightPatches.add(mall.getPatch(16,13)); // Store 1; 34
+        aisleRightPatches.add(mall.getPatch(16,16)); // Store 1; 35
+        aisleRightPatches.add(mall.getPatch(16,26)); // Store 1; 36
+        aisleRightPatches.add(mall.getPatch(16,29)); // Store 1; 37
+        aisleRightPatches.add(mall.getPatch(12,35)); // Store 2; 38
+        aisleRightPatches.add(mall.getPatch(12,49)); // Store 2; 39
+        aisleRightPatches.add(mall.getPatch(43,35)); // Store 4; 40
+        aisleRightPatches.add(mall.getPatch(45,49)); // Store 4; 41
+        aisleRightPatches.add(mall.getPatch(8,51)); // Store 5; 42
+        aisleRightPatches.add(mall.getPatch(8,60)); // Store 5; 43
+        aisleRightPatches.add(mall.getPatch(8,62)); // Store 6; 44
+        aisleRightPatches.add(mall.getPatch(8,71)); // Store 6; 45
+        aisleRightPatches.add(mall.getPatch(8,75)); // Store 7; 46
+        aisleRightPatches.add(mall.getPatch(8,94)); // Store 7; 47
+        aisleRightPatches.add(mall.getPatch(8,79)); // Store 7; 48
+        aisleRightPatches.add(mall.getPatch(8,90)); // Store 7; 49
+        aisleRightPatches.add(mall.getPatch(8,98)); // Store 8; 50
+        aisleRightPatches.add(mall.getPatch(8,107)); // Store 8; 51
+        aisleRightPatches.add(mall.getPatch(8,109)); // Store 9; 52
+        aisleRightPatches.add(mall.getPatch(8,118)); // Store 9; 53
+        aisleRightPatches.add(mall.getPatch(47,96)); // Store 10; 54
+        aisleRightPatches.add(mall.getPatch(47,105)); // Store 10; 55
+        aisleRightPatches.add(mall.getPatch(47,108)); // Store 11; 56
+        aisleRightPatches.add(mall.getPatch(47,117)); // Store 11; 57
+        aisleRightPatches.add(mall.getPatch(21,129)); // Store 12; 58
+        aisleRightPatches.add(mall.getPatch(37,129)); // Store 13; 59
+        StoreAisleMapper.draw(aisleRightPatches, "RIGHT");
 
         List<Patch> mallGateExitPatches = new ArrayList<>();
         mallGateExitPatches.add(mall.getPatch(24,0));
@@ -297,86 +370,68 @@ public class MallScreenController extends ScreenController {
         DigitalMapper.draw(digitalPatches);
 
         List<Patch> kioskPatches = new ArrayList<>();
-        kioskPatches.add(mall.getPatch(21,53));
-        kioskPatches.add(mall.getPatch(21,70));
-        kioskPatches.add(mall.getPatch(21,87));
-        kioskPatches.add(mall.getPatch(32,53));
-        kioskPatches.add(mall.getPatch(32,70));
-        kioskPatches.add(mall.getPatch(32,87));
-        kioskPatches.add(mall.getPatch(26,97));
+        kioskPatches.add(mall.getPatch(21,53)); // 0
+        kioskPatches.add(mall.getPatch(21,70)); // 1
+        kioskPatches.add(mall.getPatch(21,87)); // 2
+        kioskPatches.add(mall.getPatch(32,53)); // 3
+        kioskPatches.add(mall.getPatch(32,70)); // 4
+        kioskPatches.add(mall.getPatch(32,87)); // 5
+        kioskPatches.add(mall.getPatch(26,97)); // 6
         KioskMapper.draw(kioskPatches);
 
-        List<Patch> storeCounterPatches = new ArrayList<>();
-        storeCounterPatches.add(mall.getPatch(19,121));
-        storeCounterPatches.add(mall.getPatch(33,121));
-        storeCounterPatches.add(mall.getPatch(2,52));
-        storeCounterPatches.add(mall.getPatch(2,63));
-        storeCounterPatches.add(mall.getPatch(2,81));
-        storeCounterPatches.add(mall.getPatch(2,99));
-        storeCounterPatches.add(mall.getPatch(2,110));
-        storeCounterPatches.add(mall.getPatch(57,97));
-        storeCounterPatches.add(mall.getPatch(57,109));
-        storeCounterPatches.add(mall.getPatch(12,16));
-        storeCounterPatches.add(mall.getPatch(7,38));
-        storeCounterPatches.add(mall.getPatch(47,16));
-        storeCounterPatches.add(mall.getPatch(52,38));
-        StoreCounterMapper.draw(storeCounterPatches);
-
         List<Patch> tableUpPatches = new ArrayList<>();
-        tableUpPatches.add(mall.getPatch(47,52));
-        tableUpPatches.add(mall.getPatch(47,58));
-        tableUpPatches.add(mall.getPatch(47,64));
-        tableUpPatches.add(mall.getPatch(47,70));
-        tableUpPatches.add(mall.getPatch(50,52));
-        tableUpPatches.add(mall.getPatch(50,58));
-        tableUpPatches.add(mall.getPatch(50,64));
-        tableUpPatches.add(mall.getPatch(50,70));
-        tableUpPatches.add(mall.getPatch(53,52));
-        tableUpPatches.add(mall.getPatch(53,58));
-        tableUpPatches.add(mall.getPatch(53,64));
-        tableUpPatches.add(mall.getPatch(53,70));
-        tableUpPatches.add(mall.getPatch(56,52));
-        tableUpPatches.add(mall.getPatch(56,58));
-        tableUpPatches.add(mall.getPatch(56,64));
-        tableUpPatches.add(mall.getPatch(56,70));
-        tableUpPatches.add(mall.getPatch(47,74));
-        tableUpPatches.add(mall.getPatch(47,80));
-        tableUpPatches.add(mall.getPatch(47,86));
-        tableUpPatches.add(mall.getPatch(47,92));
-        tableUpPatches.add(mall.getPatch(50,74));
-        tableUpPatches.add(mall.getPatch(50,80));
-        tableUpPatches.add(mall.getPatch(50,86));
-        tableUpPatches.add(mall.getPatch(50,92));
-        tableUpPatches.add(mall.getPatch(53,74));
-        tableUpPatches.add(mall.getPatch(53,80));
-        tableUpPatches.add(mall.getPatch(53,86));
-        tableUpPatches.add(mall.getPatch(53,92));
-        tableUpPatches.add(mall.getPatch(56,74));
-        tableUpPatches.add(mall.getPatch(56,80));
-        tableUpPatches.add(mall.getPatch(56,86));
-        tableUpPatches.add(mall.getPatch(56,92));
-        tableUpPatches.add(mall.getPatch(27,103));
-        tableUpPatches.add(mall.getPatch(27,107));
-        tableUpPatches.add(mall.getPatch(27,111));
+        tableUpPatches.add(mall.getPatch(47,52)); // 0
+        tableUpPatches.add(mall.getPatch(47,58)); // 1
+        tableUpPatches.add(mall.getPatch(47,64)); // 2
+        tableUpPatches.add(mall.getPatch(47,70)); // 3
+        tableUpPatches.add(mall.getPatch(50,52)); // 4
+        tableUpPatches.add(mall.getPatch(50,58)); // 5
+        tableUpPatches.add(mall.getPatch(50,64)); // 6
+        tableUpPatches.add(mall.getPatch(50,70)); // 7
+        tableUpPatches.add(mall.getPatch(53,52)); // 8
+        tableUpPatches.add(mall.getPatch(53,58)); // 9
+        tableUpPatches.add(mall.getPatch(53,64)); // 10
+        tableUpPatches.add(mall.getPatch(53,70)); // 11
+        tableUpPatches.add(mall.getPatch(56,52)); // 12
+        tableUpPatches.add(mall.getPatch(56,58)); // 13
+        tableUpPatches.add(mall.getPatch(56,64)); // 14
+        tableUpPatches.add(mall.getPatch(56,70)); // 15
+        tableUpPatches.add(mall.getPatch(47,74)); // 16
+        tableUpPatches.add(mall.getPatch(47,80)); // 17
+        tableUpPatches.add(mall.getPatch(47,86)); // 18
+        tableUpPatches.add(mall.getPatch(47,92)); // 19
+        tableUpPatches.add(mall.getPatch(50,74)); // 20
+        tableUpPatches.add(mall.getPatch(50,80)); // 21
+        tableUpPatches.add(mall.getPatch(50,86)); // 22
+        tableUpPatches.add(mall.getPatch(50,92)); // 23
+        tableUpPatches.add(mall.getPatch(53,74)); // 24
+        tableUpPatches.add(mall.getPatch(53,80)); // 25
+        tableUpPatches.add(mall.getPatch(53,86)); // 26
+        tableUpPatches.add(mall.getPatch(53,92)); // 27
+        tableUpPatches.add(mall.getPatch(56,74)); // 28
+        tableUpPatches.add(mall.getPatch(56,80)); // 29
+        tableUpPatches.add(mall.getPatch(56,86)); // 30
+        tableUpPatches.add(mall.getPatch(56,92)); // 31
+        tableUpPatches.add(mall.getPatch(27,103)); // 32
+        tableUpPatches.add(mall.getPatch(27,107)); // 33
+        tableUpPatches.add(mall.getPatch(27,111)); // 34
         TableMapper.draw(tableUpPatches, "UP");
 
         List<Patch> tableRightPatches = new ArrayList<>();
-        tableRightPatches.add(mall.getPatch(42,56));
-        tableRightPatches.add(mall.getPatch(42,59));
-        tableRightPatches.add(mall.getPatch(42,62));
-        tableRightPatches.add(mall.getPatch(42,65));
-        tableRightPatches.add(mall.getPatch(42,68));
-        tableRightPatches.add(mall.getPatch(42,78));
-        tableRightPatches.add(mall.getPatch(42,81));
-        tableRightPatches.add(mall.getPatch(42,84));
-        tableRightPatches.add(mall.getPatch(42,87));
-        tableRightPatches.add(mall.getPatch(42,90));
-        tableRightPatches.add(mall.getPatch(31,97));
-        tableRightPatches.add(mall.getPatch(31,100));
-        tableRightPatches.add(mall.getPatch(31,103));
-        tableRightPatches.add(mall.getPatch(31,106));
-        tableRightPatches.add(mall.getPatch(31,109));
-        tableRightPatches.add(mall.getPatch(31,112));
+        tableRightPatches.add(mall.getPatch(42,56)); // 35
+        tableRightPatches.add(mall.getPatch(42,59)); // 36
+        tableRightPatches.add(mall.getPatch(42,62)); // 37
+        tableRightPatches.add(mall.getPatch(42,65)); // 38
+        tableRightPatches.add(mall.getPatch(42,68)); // 39
+        tableRightPatches.add(mall.getPatch(42,78)); // 40
+        tableRightPatches.add(mall.getPatch(42,81)); // 41
+        tableRightPatches.add(mall.getPatch(42,84)); // 42
+        tableRightPatches.add(mall.getPatch(42,87)); // 43
+        tableRightPatches.add(mall.getPatch(42,90)); // 44
+        tableRightPatches.add(mall.getPatch(31,103)); // 45
+        tableRightPatches.add(mall.getPatch(31,106)); // 46
+        tableRightPatches.add(mall.getPatch(31,109)); // 47
+        tableRightPatches.add(mall.getPatch(31,112)); // 58
         TableMapper.draw(tableRightPatches, "RIGHT");
 
         List<Patch> trashPatches = new ArrayList<>();
@@ -431,6 +486,44 @@ public class MallScreenController extends ScreenController {
         benchRightPatches.add(mall.getPatch(28,37));
         benchRightPatches.add(mall.getPatch(28,41));
         BenchMapper.draw(benchRightPatches, "RIGHT");
+
+        List<Patch> toiletPatches = new ArrayList<>();
+        toiletPatches.add(mall.getPatch(0, 12));
+        toiletPatches.add(mall.getPatch(0, 14));
+        toiletPatches.add(mall.getPatch(0, 16));
+        toiletPatches.add(mall.getPatch(0, 18));
+        toiletPatches.add(mall.getPatch(0, 21));
+        toiletPatches.add(mall.getPatch(0, 23));
+        toiletPatches.add(mall.getPatch(0, 25));
+        toiletPatches.add(mall.getPatch(0, 27));
+        toiletPatches.add(mall.getPatch(53, 12));
+        toiletPatches.add(mall.getPatch(53, 14));
+        toiletPatches.add(mall.getPatch(53, 16));
+        toiletPatches.add(mall.getPatch(53, 18));
+        toiletPatches.add(mall.getPatch(53, 21));
+        toiletPatches.add(mall.getPatch(53, 23));
+        toiletPatches.add(mall.getPatch(53, 25));
+        toiletPatches.add(mall.getPatch(53, 27));
+        ToiletMapper.draw(toiletPatches);
+
+        List<Patch> sinkPatches = new ArrayList<>();
+        sinkPatches.add(mall.getPatch(6, 12));
+        sinkPatches.add(mall.getPatch(6, 14));
+        sinkPatches.add(mall.getPatch(6, 16));
+        sinkPatches.add(mall.getPatch(6, 18));
+        sinkPatches.add(mall.getPatch(6, 21));
+        sinkPatches.add(mall.getPatch(6, 23));
+        sinkPatches.add(mall.getPatch(6, 25));
+        sinkPatches.add(mall.getPatch(6, 27));
+        sinkPatches.add(mall.getPatch(59, 12));
+        sinkPatches.add(mall.getPatch(59, 14));
+        sinkPatches.add(mall.getPatch(59, 16));
+        sinkPatches.add(mall.getPatch(59, 18));
+        sinkPatches.add(mall.getPatch(59, 21));
+        sinkPatches.add(mall.getPatch(59, 23));
+        sinkPatches.add(mall.getPatch(59, 25));
+        sinkPatches.add(mall.getPatch(59, 27));
+        SinkMapper.draw(sinkPatches);
     }
 
     private void drawInterface() {
@@ -456,7 +549,7 @@ public class MallScreenController extends ScreenController {
         long elapsedTime = Main.mallSimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS);
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
-        elapsedTimeText.setText("Elapsed time: " + timeString + " (" + elapsedTime + " s)");
+        elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
     }
 
     public void setElements() {
@@ -495,16 +588,26 @@ public class MallScreenController extends ScreenController {
     @FXML
     public void resetAction() {
         Main.mallSimulator.reset();
-
-        // Clear all agents
-//        clearMall(Main.simulator.getMall());
-
+        MallAgent.clearMallAgentCounts();
+        clearMall(Main.mallSimulator.getMall());
+        Main.mallSimulator.spawnInitialAgents(Main.mallSimulator.getMall());
         drawMallViewForeground(Main.mallSimulator.getMall(), false); // Redraw the canvas
-
         if (Main.mallSimulator.isRunning()) { // If the simulator is running, stop it
             playAction();
             playButton.setSelected(false);
         }
+    }
+
+    public static void clearMall(Mall mall) {
+        for (MallAgent agent : mall.getAgents()) { // Remove the relationship between the patch and the agents
+            agent.getAgentMovement().getCurrentPatch().getAgents().clear();
+            agent.getAgentMovement().setCurrentPatch(null);
+        }
+
+        // Remove all the agents
+        mall.getAgents().removeAll(mall.getAgents());
+        mall.getAgents().clear();
+        mall.getAgentPatchSet().clear();
     }
 
     @Override
