@@ -16,9 +16,7 @@ public class OfficeAction {
         GUARD_STAY_PUT(),
         GREET_PERSON(),
 
-        JANITOR_GO_TOILET(),
         JANITOR_CLEAN_TOILET(),
-        JANITOR_GO_PLANT(),
         JANITOR_WATER_PLANT(),
 
         CLIENT_GO_RECEPTIONIST(),
@@ -30,21 +28,30 @@ public class OfficeAction {
 
         VISITOR_GO_RECEPTIONIST(),
         VISITOR_GO_OFFICE(),
-
         RECEPTIONIST_STAY_PUT(),
 
         SECRETARY_STAY_PUT(),
         SECRETARY_CHECK_CABINET(),
-        SECRETARY_GO_BOSS(),
 
         GO_TO_STATION(),
         GO_TO_OFFICE_ROOM(),
+        GO_BOSS(),
+        ASK_BOSS(),
+        SECRETARY_GO_BOSS(),
+
+        GO_WORKER(),
+        GO_MANAGER(),
+        ASK_WORKER(),
+        ASK_MANAGER(),
+        ANSWER_BOSS(),
+
+        ANSWER_MANAGER(),
+        ANSWER_WORKER(),
 
         GO_TO_BATHROOM(),
-        FIND_CUBICLE(),
         RELIEVE_IN_CUBICLE(),
+        FIND_SINK(),
         WASH_IN_SINK(),
-        LEAVE_BATHROOM(),
 
         GO_TO_PRINTER(),
         QUEUE_PRINTER(),
@@ -56,14 +63,11 @@ public class OfficeAction {
 
         TECHNICAL_GO_PRINTER(),
         FIX_PRINTER(),
-
-        TECHNICAL_GO_CUBICLE(),
         FIX_CUBICLE(),
 
         GO_MEETING(),
         WAIT_MEETING(),
-        MEETING(),
-        LEAVE_MEETING();
+        MEETING();
 
         final int ID;
         Name(int ID){
@@ -76,23 +80,6 @@ public class OfficeAction {
             return ID;
         }
 
-        LEAVE_OFFICE, GO_TO_LUNCH, EAT_LUNCH, EXIT_LUNCH, GOING_TO_SECURITY_QUEUE, GO_THROUGH_SCANNER,
-        GUARD_STAY_PUT,
-        JANITOR_CLEAN_TOILET,
-        JANITOR_WATER_PLANT,
-        CLIENT_GO_RECEPTIONIST, CLIENT_GO_COUCH, CLIENT_GO_OFFICE,
-        DRIVER_GO_RECEPTIONIST, DRIVER_GO_COUCH,
-        VISITOR_GO_RECEPTIONIST, VISITOR_GO_OFFICE,
-        RECEPTIONIST_STAY_PUT,
-        SECRETARY_STAY_PUT, SECRETARY_CHECK_CABINET,
-        GO_TO_STATION, GO_TO_OFFICE_ROOM, GO_BOSS, ASK_BOSS, SECRETARY_GO_BOSS,
-        GO_WORKER, GO_MANAGER, ASK_WORKER, ASK_MANAGER, ANSWER_BOSS,
-        ANSWER_MANAGER, ANSWER_WORKER,
-        GO_TO_BATHROOM, RELIEVE_IN_CUBICLE, WASH_IN_SINK, FIND_SINK,
-        GO_TO_PRINTER, QUEUE_PRINTER, PRINTING,
-        GO_TO_COLLAB, WAIT_FOR_COLLAB, COLLABORATE,
-        TECHNICAL_GO_PRINTER, FIX_PRINTER, FIX_CUBICLE,
-        GO_MEETING, WAIT_MEETING, MEETING
     }
 
     private Name name;
