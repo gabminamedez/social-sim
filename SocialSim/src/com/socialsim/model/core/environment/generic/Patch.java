@@ -27,6 +27,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     private final List<MatrixPosition> neighbor3x3Indices; // Denotes the positions of the neighbors of this patch within a 7x7 range
     private int amenityBlocksAround; // Denotes the number of amenity blocks around this patch
     private int wallsAround; // Denotes the number of amenity blocks around this patch
+    private int team;
 
     public Patch(Environment environment, MatrixPosition matrixPosition) {
         super();
@@ -43,6 +44,7 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         this.neighbor3x3Indices = this.compute7x7Neighbors();
         this.amenityBlocksAround = 0;
         this.wallsAround = 0;
+        this.team = -1;
     }
 
     public MatrixPosition getMatrixPosition() {
@@ -426,4 +428,11 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         }
     }
 
+    public int getTeam() {
+        return team;
+    }
+
+    public void setTeam(int team) {
+        this.team = team;
+    }
 }

@@ -24,6 +24,11 @@ public abstract class Amenity extends PatchObject {
                 amenityBlock.getPatch().setAmenityBlock(amenityBlock);
                 if (amenityBlock.getParent().getClass() != Door.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Door.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Chair.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Table.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.MeetingDesk.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Toilet.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Sink.class
                         && amenityBlock.getParent().getClass() != Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Security.class
@@ -96,48 +101,7 @@ public abstract class Amenity extends PatchObject {
         public void setIsReserved(boolean isReserved) {
             this.isReserved = isReserved;
         }
-
-        public boolean isPassable(Class<? extends Amenity> amenityClass){
-            if (amenityClass == UniversityGate.class) {
-                return false;
-            }
-            if (amenityClass == Bench.class) {
-                return false;
-            }
-            else if (amenityClass == Board.class) {
-                return false;
-            }
-            else if (amenityClass == Bulletin.class) {
-                return false;
-            }
-            else if (amenityClass == Chair.class) {
-                return true;
-            }
-            else if (amenityClass == Door.class) {
-                return true;
-            }
-            else if (amenityClass == Fountain.class) {
-                return false;
-            }
-            else if (amenityClass == LabTable.class) {
-                return false;
-            }
-            else if (amenityClass == ProfTable.class) {
-                return false;
-            }
-            else if (amenityClass == Security.class) {
-                return false;
-            }
-            else if (amenityClass == Staircase.class) {
-                return true;
-            }
-            else if (amenityClass == Trash.class) {
-                return false;
-            }else{
-                return false;
-            }
-        }
-
+      
         private static AmenityBlockFactory getAmenityBlockFactory(Class<? extends Amenity> amenityClass) {
             if (amenityClass == UniversityGate.class) {
                 return UniversityGate.UniversityGateBlock.universityGateBlockFactory;
