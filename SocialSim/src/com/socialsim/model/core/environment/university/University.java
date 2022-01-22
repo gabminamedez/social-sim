@@ -293,7 +293,7 @@ public class University extends Environment {
         }
     }
 
-    public void createInitialAgentDemographics(int numAgents){
+    public void createInitialAgentDemographics(int MAX_STUDENTS, int MAX_PROFESSORS){
         //Guard
         UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, true);
         this.getAgents().add(guard);
@@ -305,21 +305,18 @@ public class University extends Environment {
         UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, true);
         this.getAgents().add(janitor2);
 
-        numAgents = numAgents - 3;
+        int ctr = 0;
         //Students and Professors
-        while (numAgents > 0){
-            double CHANCE = Simulator.roll();
-            if (CHANCE < INT_CHANCE_SPAWN + INT_ORG_CHANCE_SPAWN + EXT_CHANCE_SPAWN + EXT_ORG_CHANCE_SPAWN){
-                UniversityAgent newAgent = UniversityAgent.UniversityAgentFactory.create(Type.STUDENT, true);
-                //TODO: Check if need .clone() same with UniversityRoutePlan
-                this.getAgents().add(newAgent);
-            }
-            else{
-                UniversityAgent newAgent = UniversityAgent.UniversityAgentFactory.create(Type.PROFESSOR, true);
-                //TODO: Check if need .clone() same with UniversityRoutePlan
-                this.getAgents().add(newAgent);
-            }
-            numAgents--;
+        while (ctr < MAX_STUDENTS){
+            UniversityAgent newAgent = UniversityAgent.UniversityAgentFactory.create(Type.STUDENT, true);
+            ctr++;
+            this.getAgents().add(newAgent);
+        }
+        ctr = 0;
+        while (ctr < MAX_PROFESSORS){
+            UniversityAgent newAgent = UniversityAgent.UniversityAgentFactory.create(Type.PROFESSOR, true);
+            ctr++;
+            this.getAgents().add(newAgent);
         }
 
         for (int i = 0; i < this.getAgents().size(); i++){
