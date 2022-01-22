@@ -99,6 +99,10 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         return wallsAround;
     }
 
+    public void setWallsAround(int wallsAround) {
+        this.wallsAround = wallsAround;
+    }
+
     public Environment getEnvironment() {
         return environment;
     }

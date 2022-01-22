@@ -32,7 +32,13 @@ public abstract class Amenity extends PatchObject {
                         && amenityBlock.getParent().getClass() != Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Security.class
-                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.Security.class) {
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.Security.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.StudyTable.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.LabTable.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Chair.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Sink.class) {
                     amenityBlock.getPatch().signalAddAmenityBlock();
                 }
 
@@ -65,6 +71,7 @@ public abstract class Amenity extends PatchObject {
             this.patch = patch;
             this.attractor = attractor;
             this.hasGraphic = hasGraphic;
+            this.isReserved = false;
         }
 
         public Amenity getParent() {
@@ -94,7 +101,7 @@ public abstract class Amenity extends PatchObject {
         public void setIsReserved(boolean isReserved) {
             this.isReserved = isReserved;
         }
-
+      
         private static AmenityBlockFactory getAmenityBlockFactory(Class<? extends Amenity> amenityClass) {
             if (amenityClass == UniversityGate.class) {
                 return UniversityGate.UniversityGateBlock.universityGateBlockFactory;
