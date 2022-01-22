@@ -51,7 +51,7 @@ public class UniversitySimulator extends Simulator {
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
     private final int MAX_STUDENTS = 50; // 250
-    private final int MAX_PROFESSORS = 0;
+    private final int MAX_PROFESSORS = 20;
     private final int NUM_AGENTS = 500;
 
     public UniversitySimulator() {
@@ -164,11 +164,11 @@ public class UniversitySimulator extends Simulator {
             try {
                 if (currentTick == 540 && (agent.getType() == UniversityAgent.Type.PROFESSOR || agent.getType() == UniversityAgent.Type.STUDENT)) {
                     while(i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && hasClass==false){
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 720){
                             hasClass = true;
                             classIndex = i;
                         }
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 720){
                             hasClass = true;
                             classIndex = i;
                         }
@@ -186,11 +186,11 @@ public class UniversitySimulator extends Simulator {
 
                 else if (currentTick == 1800 && (agent.getType() == UniversityAgent.Type.PROFESSOR || agent.getType() == UniversityAgent.Type.STUDENT)) {
                     while(i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && hasClass==false){
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT&& agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 1980){
                             hasClass = true;
                             classIndex = i;
                         }
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR&& agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 1980){
                             hasClass = true;
                             classIndex = i;
                         }
@@ -208,11 +208,11 @@ public class UniversitySimulator extends Simulator {
 
                 else if (currentTick == 3060 && (agent.getType() == UniversityAgent.Type.PROFESSOR || agent.getType() == UniversityAgent.Type.STUDENT)) {
                     while(i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && hasClass==false){
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 3240){
                             hasClass = true;
                             classIndex = i;
                         }
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 3240){
                             hasClass = true;
                             classIndex = i;
                         }
@@ -230,11 +230,11 @@ public class UniversitySimulator extends Simulator {
 
                 else if (currentTick == 4320 && (agent.getType() == UniversityAgent.Type.PROFESSOR || agent.getType() == UniversityAgent.Type.STUDENT)) {
                     while(i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && hasClass==false){
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 4500){
                             hasClass = true;
                             classIndex = i;
                         }
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 4500){
                             hasClass = true;
                             classIndex = i;
                         }
@@ -252,11 +252,11 @@ public class UniversitySimulator extends Simulator {
 
                 else if (currentTick == 5580 && (agent.getType() == UniversityAgent.Type.PROFESSOR || agent.getType() == UniversityAgent.Type.STUDENT)) {
                     while(i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && hasClass==false){
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 5760){
                             hasClass = true;
                             classIndex = i;
                         }
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 5760){
                             hasClass = true;
                             classIndex = i;
                         }
@@ -274,11 +274,11 @@ public class UniversitySimulator extends Simulator {
 
                 else if (currentTick == 6840 && (agent.getType() == UniversityAgent.Type.PROFESSOR || agent.getType() == UniversityAgent.Type.STUDENT)) {
                     while(i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && hasClass==false){
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT&& agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 7020){
                             hasClass = true;
                             classIndex = i;
                         }
-                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR){
+                        if(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 7020){
                             hasClass = true;
                             classIndex = i;
                         }
