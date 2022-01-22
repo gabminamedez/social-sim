@@ -24,6 +24,11 @@ public abstract class Amenity extends PatchObject {
                 amenityBlock.getPatch().setAmenityBlock(amenityBlock);
                 if (amenityBlock.getParent().getClass() != Door.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Door.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Chair.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Table.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.MeetingDesk.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Toilet.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Sink.class
                         && amenityBlock.getParent().getClass() != Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Security.class
@@ -54,6 +59,7 @@ public abstract class Amenity extends PatchObject {
         private final Patch patch;
         private final boolean attractor;
         private final boolean hasGraphic;
+        private boolean isReserved;
 
         protected AmenityBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             this.patch = patch;
@@ -79,6 +85,14 @@ public abstract class Amenity extends PatchObject {
 
         public boolean hasGraphic() {
             return hasGraphic;
+        }
+
+        public boolean getIsReserved() {
+            return isReserved;
+        }
+
+        public void setIsReserved(boolean isReserved) {
+            this.isReserved = isReserved;
         }
 
         private static AmenityBlockFactory getAmenityBlockFactory(Class<? extends Amenity> amenityClass) {
