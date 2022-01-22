@@ -27,7 +27,13 @@ public abstract class Amenity extends PatchObject {
                         && amenityBlock.getParent().getClass() != Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Security.class
-                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.Security.class) {
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.Security.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.StudyTable.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.LabTable.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Chair.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Sink.class) {
                     amenityBlock.getPatch().signalAddAmenityBlock();
                 }
 
@@ -54,11 +60,13 @@ public abstract class Amenity extends PatchObject {
         private final Patch patch;
         private final boolean attractor;
         private final boolean hasGraphic;
+        private boolean isReserved;
 
         protected AmenityBlock(Patch patch, boolean attractor, boolean hasGraphic) {
             this.patch = patch;
             this.attractor = attractor;
             this.hasGraphic = hasGraphic;
+            this.isReserved = false;
         }
 
         public Amenity getParent() {
@@ -79,6 +87,55 @@ public abstract class Amenity extends PatchObject {
 
         public boolean hasGraphic() {
             return hasGraphic;
+        }
+
+        public boolean getIsReserved() {
+            return isReserved;
+        }
+
+        public void setIsReserved(boolean isReserved) {
+            this.isReserved = isReserved;
+        }
+
+        public boolean isPassable(Class<? extends Amenity> amenityClass){
+            if (amenityClass == UniversityGate.class) {
+                return false;
+            }
+            if (amenityClass == Bench.class) {
+                return false;
+            }
+            else if (amenityClass == Board.class) {
+                return false;
+            }
+            else if (amenityClass == Bulletin.class) {
+                return false;
+            }
+            else if (amenityClass == Chair.class) {
+                return true;
+            }
+            else if (amenityClass == Door.class) {
+                return true;
+            }
+            else if (amenityClass == Fountain.class) {
+                return false;
+            }
+            else if (amenityClass == LabTable.class) {
+                return false;
+            }
+            else if (amenityClass == ProfTable.class) {
+                return false;
+            }
+            else if (amenityClass == Security.class) {
+                return false;
+            }
+            else if (amenityClass == Staircase.class) {
+                return true;
+            }
+            else if (amenityClass == Trash.class) {
+                return false;
+            }else{
+                return false;
+            }
         }
 
         private static AmenityBlockFactory getAmenityBlockFactory(Class<? extends Amenity> amenityClass) {

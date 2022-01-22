@@ -9,7 +9,7 @@ public class UniversityState {
         GOING_TO_STUDY, STUDYING, GOING_TO_CLASS_STUDENT, GOING_TO_CLASS_PROFESSOR,
         WAIT_FOR_CLASS_STUDENT, WAIT_FOR_CLASS_PROFESSOR,
         IN_CLASS_STUDENT, IN_CLASS_PROFESSOR, GOING_TO_LUNCH, EATING_LUNCH,
-        GOING_HOME, GUARD, MAINTENANCE_BATHROOM, MAINTENANCE_FOUNTAIN;
+        GOING_HOME, GUARD, MAINTENANCE_BATHROOM, MAINTENANCE_FOUNTAIN
     }
 
     private Name name;
@@ -42,6 +42,21 @@ public class UniversityState {
         this.tickClassStart = tickClassStart;
         this.classroomID = classroomID;
         this.actions = new ArrayList<>();
+    }
+    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, int tickClassStart, int classroomID, ArrayList<UniversityAction> actions) { // Class state
+        this.name = a;
+        this.routePlan = routePlan;
+        this.agent = agent;
+        this.tickClassStart = tickClassStart;
+        this.classroomID = classroomID;
+        this.actions = actions;
+    }
+    public UniversityState(Name a, UniversityRoutePlan routePlan, int classroomID,UniversityAgent agent, ArrayList<UniversityAction> actions) { // Class state
+        this.name = a;
+        this.routePlan = routePlan;
+        this.agent = agent;
+        this.classroomID = classroomID;
+        this.actions = actions;
     }
 
     public Name getName() {
@@ -102,5 +117,14 @@ public class UniversityState {
 
     public int getTickClassStart() {
         return tickClassStart;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder s = new StringBuilder();
+        s.append("State " + name.name() + "\n");
+        for (UniversityAction action: actions)
+            s.append(action.getName().name() + "\n");
+        return s.toString();
     }
 }
