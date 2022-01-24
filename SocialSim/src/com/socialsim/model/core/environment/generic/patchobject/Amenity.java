@@ -24,13 +24,24 @@ public abstract class Amenity extends PatchObject {
                 amenityBlock.getPatch().setAmenityBlock(amenityBlock);
                 if (amenityBlock.getParent().getClass() != Door.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Door.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Chair.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Table.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.MeetingDesk.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Toilet.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Sink.class
                         && amenityBlock.getParent().getClass() != Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.office.patchobject.passable.goal.Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.Security.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.StoreAisle.class
                         && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.StoreCounter.class
-                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.Table.class) {
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.mall.patchobject.passable.goal.Table.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.StudyTable.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.LabTable.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Chair.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet.class
+                        && amenityBlock.getParent().getClass() != com.socialsim.model.core.environment.university.patchobject.passable.goal.Sink.class) {
                     amenityBlock.getPatch().signalAddAmenityBlock();
                 }
 

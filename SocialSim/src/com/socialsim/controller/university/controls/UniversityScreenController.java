@@ -10,20 +10,20 @@ import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet;
 import com.socialsim.model.simulator.SimulationTime;
+import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class UniversityScreenController extends ScreenController {
 
@@ -110,7 +110,7 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> fBathroomPatches = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 50; j < 60; j++) {
-                if (j != 59 || i >= 3  && i <= 4)
+                if (j != 59 || i >= 2 && i <= 5)
                     fBathroomPatches.add(university.getPatch(i, j));
             }
         }
@@ -119,7 +119,7 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> mBathroomPatches = new ArrayList<>();
         for (int i = 9; i < 17; i++) {
             for (int j = 50; j < 60; j++) {
-                if (j != 59 || i >= 12  && i <= 13)
+                if (j != 59 || i >= 11  && i <= 14)
                     mBathroomPatches.add(university.getPatch(i, j));
             }
         }
@@ -135,8 +135,8 @@ public class UniversityScreenController extends ScreenController {
 
         List<Patch> classroom1Patches = new ArrayList<>();
         for (int i = 3; i < 24; i++) {
-            for (int j = 5; j < 20; j++) {
-                if (i != 23 || j <= 6 || j >= 18) {
+            for (int j = 5; j < 21; j++) {
+                if (i != 23 || j <= 8 || j >= 17) {
                     classroom1Patches.add(university.getPatch(i, j));
                 }
             }
@@ -146,7 +146,7 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> classroom2Patches = new ArrayList<>();
         for (int i = 3; i < 24; i++) {
             for (int j = 25; j < 45; j++) {
-                if (i != 23 || j <= 26 || j >= 43) {
+                if (i != 23 || j <= 28 || j >= 41) {
                     classroom2Patches.add(university.getPatch(i, j));
                 }
             }
@@ -155,8 +155,8 @@ public class UniversityScreenController extends ScreenController {
 
         List<Patch> classroom3Patches = new ArrayList<>();
         for (int i = 36; i < 57; i++) {
-            for (int j = 24; j < 39; j++) {
-                if (i != 36 || j <= 25 || j >= 37)
+            for (int j = 23; j < 39; j++) {
+                if (i != 36 || j <= 26 || j >= 35)
                     classroom3Patches.add(university.getPatch(i, j));
             }
         }
@@ -164,8 +164,8 @@ public class UniversityScreenController extends ScreenController {
 
         List<Patch> classroom4Patches = new ArrayList<>();
         for (int i = 36; i < 57; i++) {
-            for (int j = 43; j < 58; j++) {
-                if (i != 36 || j <= 44 || j >= 56)
+            for (int j = 42; j < 58; j++) {
+                if (i != 36 || j <= 45 || j >= 54)
                     classroom4Patches.add(university.getPatch(i, j));
             }
         }
@@ -173,8 +173,8 @@ public class UniversityScreenController extends ScreenController {
 
         List<Patch> classroom5Patches = new ArrayList<>();
         for (int i = 36; i < 57; i++) {
-            for (int j = 62; j < 77; j++) {
-                if (i != 36 || j <= 63 || j >= 75)
+            for (int j = 61; j < 77; j++) {
+                if (i != 36 || j <= 64 || j >= 73)
                     classroom5Patches.add(university.getPatch(i, j));
             }
         }
@@ -182,8 +182,8 @@ public class UniversityScreenController extends ScreenController {
 
         List<Patch> classroom6Patches = new ArrayList<>();
         for (int i = 36; i < 57; i++) {
-            for (int j = 81; j < 96; j++) {
-                if (i != 36 || j <= 82 || j >= 94)
+            for (int j = 80; j < 96; j++) {
+                if (i != 36 || j <= 83 || j >= 92)
                     classroom6Patches.add(university.getPatch(i, j));
             }
         }
@@ -192,7 +192,7 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> laboratoryPatches = new ArrayList<>();
         for (int i = 36; i < 56; i++) {
             for (int j = 99; j < 119; j++) {
-                if (i != 36 || (j >= 108 && j <= 109))
+                if (i != 36 || (j >= 107 && j <= 110))
                     laboratoryPatches.add(university.getPatch(i, j));
             }
         }
@@ -201,7 +201,7 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> studyAreaPatches = new ArrayList<>();
         for (int i = 3; i < 24; i++) {
             for (int j = 75; j < 95; j++) {
-                if (i != 23 || (j >= 84 && j <= 85)) {
+                if (i != 23 || (j >= 83 && j <= 86)) {
                     studyAreaPatches.add(university.getPatch(i, j));
                 }
             }
@@ -266,7 +266,7 @@ public class UniversityScreenController extends ScreenController {
         BulletinMapper.draw(bulletinRightPatches, "RIGHT");
 
         List<Patch> bulletinDownPatches = new ArrayList<>();
-        bulletinDownPatches.add(university.getPatch(23,9));
+        bulletinDownPatches.add(university.getPatch(23,10));
         bulletinDownPatches.add(university.getPatch(23,32));
         BulletinMapper.draw(bulletinDownPatches, "DOWN");
 
@@ -333,127 +333,127 @@ public class UniversityScreenController extends ScreenController {
             }
         }
         //Study Room Chairs
-        for (int i = 5; i < 18; i++) {
-            if (i == 5 || i == 6 || i == 8 || i == 9 || i == 13 || i == 14 || i == 16 || i == 17) {
-                for (int j = 77; j < 84; j++) {
-                    if (j == 77 || j == 79 || j == 81 || j == 83) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
-                }
-            }
-        }
-        chairPatches.add(university.getPatch(5, 85));
-        chairPatches.add(university.getPatch(5, 86));
-        chairPatches.add(university.getPatch(8, 85));
-        chairPatches.add(university.getPatch(8, 86));
-        chairPatches.add(university.getPatch(12, 87));
-        chairPatches.add(university.getPatch(15, 87));
-        chairPatches.add(university.getPatch(12, 88));
-        chairPatches.add(university.getPatch(15, 88));
-        chairPatches.add(university.getPatch(17, 87));
-        chairPatches.add(university.getPatch(20, 87));
-        chairPatches.add(university.getPatch(17, 88));
-        chairPatches.add(university.getPatch(20, 88));
-        chairPatches.add(university.getPatch(12, 91));
-        chairPatches.add(university.getPatch(15, 91));
-        chairPatches.add(university.getPatch(12, 92));
-        chairPatches.add(university.getPatch(15, 92));
-        chairPatches.add(university.getPatch(17, 91));
-        chairPatches.add(university.getPatch(20, 91));
-        chairPatches.add(university.getPatch(17, 92));
-        chairPatches.add(university.getPatch(20, 92));
-        for (int i = 4; i < 11; i++) {
-            if (i == 4 || i == 6 || i == 8 || i == 10) {
-                for (int j = 88; j < 93; j++) {
-                    if (j == 88 || j == 89 || j == 91 || j == 92) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
-                }
-            }
-        }
-
-        for (int j = 77; j < 83; j++) {
-            if (j == 77 || j == 78 || j == 81 || j == 82) {
-                chairPatches.add(university.getPatch(19, j));
-                chairPatches.add(university.getPatch(21, j));
-            }
-        }
+//        for (int i = 5; i < 18; i++) {
+//            if (i == 5 || i == 6 || i == 8 || i == 9 || i == 13 || i == 14 || i == 16 || i == 17) {
+//                for (int j = 77; j < 84; j++) {
+//                    if (j == 77 || j == 79 || j == 81 || j == 83) {
+//                        chairPatches.add(university.getPatch(i, j));
+//                    }
+//                }
+//            }
+//        }
+//        chairPatches.add(university.getPatch(5, 85));
+//        chairPatches.add(university.getPatch(5, 86));
+//        chairPatches.add(university.getPatch(8, 85));
+//        chairPatches.add(university.getPatch(8, 86));
+//        chairPatches.add(university.getPatch(12, 87));
+//        chairPatches.add(university.getPatch(15, 87));
+//        chairPatches.add(university.getPatch(12, 88));
+//        chairPatches.add(university.getPatch(15, 88));
+//        chairPatches.add(university.getPatch(17, 87));
+//        chairPatches.add(university.getPatch(20, 87));
+//        chairPatches.add(university.getPatch(17, 88));
+//        chairPatches.add(university.getPatch(20, 88));
+//        chairPatches.add(university.getPatch(12, 91));
+//        chairPatches.add(university.getPatch(15, 91));
+//        chairPatches.add(university.getPatch(12, 92));
+//        chairPatches.add(university.getPatch(15, 92));
+//        chairPatches.add(university.getPatch(17, 91));
+//        chairPatches.add(university.getPatch(20, 91));
+//        chairPatches.add(university.getPatch(17, 92));
+//        chairPatches.add(university.getPatch(20, 92));
+//        for (int i = 4; i < 11; i++) {
+//            if (i == 4 || i == 6 || i == 8 || i == 10) {
+//                for (int j = 88; j < 93; j++) {
+//                    if (j == 88 || j == 89 || j == 91 || j == 92) {
+//                        chairPatches.add(university.getPatch(i, j));
+//                    }
+//                }
+//            }
+//        }
+//
+//        for (int j = 77; j < 83; j++) {
+//            if (j == 77 || j == 78 || j == 81 || j == 82) {
+//                chairPatches.add(university.getPatch(19, j));
+//                chairPatches.add(university.getPatch(21, j));
+//            }
+//        }
         //Cafeteria Chairs
-        for (int i = 5; i < 24; i++) {
-            if (i == 5 || i == 7 || i == 9 || i == 11 || i == 13 || i == 15 || i == 17 || i == 19|| i == 21 || i == 23) {
-                for (int j = 102; j < 128; j++) {
-                    if (j == 102 || j == 103 || j == 108 || j == 109 ||j == 114 || j == 115 ||j == 120 || j == 121 ||j == 126 || j == 127) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
-                }
-            }
-        }
+//        for (int i = 5; i < 24; i++) {
+//            if (i == 5 || i == 7 || i == 9 || i == 11 || i == 13 || i == 15 || i == 17 || i == 19|| i == 21 || i == 23) {
+//                for (int j = 102; j < 128; j++) {
+//                    if (j == 102 || j == 103 || j == 108 || j == 109 ||j == 114 || j == 115 ||j == 120 || j == 121 ||j == 126 || j == 127) {
+//                        chairPatches.add(university.getPatch(i, j));
+//                    }
+//                }
+//            }
+//        }
         //Laboratory Chairs
-        chairPatches.add(university.getPatch(38,102));
-        chairPatches.add(university.getPatch(38,103));
-        chairPatches.add(university.getPatch(38,104));
-        chairPatches.add(university.getPatch(38,105));
-        chairPatches.add(university.getPatch(38,112));
-        chairPatches.add(university.getPatch(38,113));
-        chairPatches.add(university.getPatch(38,114));
-        chairPatches.add(university.getPatch(38,115));
-        chairPatches.add(university.getPatch(41,102));
-        chairPatches.add(university.getPatch(41,103));
-        chairPatches.add(university.getPatch(41,104));
-        chairPatches.add(university.getPatch(41,105));
-        chairPatches.add(university.getPatch(41,112));
-        chairPatches.add(university.getPatch(41,113));
-        chairPatches.add(university.getPatch(41,114));
-        chairPatches.add(university.getPatch(41,115));
-        chairPatches.add(university.getPatch(44,102));
-        chairPatches.add(university.getPatch(44,103));
-        chairPatches.add(university.getPatch(44,104));
-        chairPatches.add(university.getPatch(44,105));
-        chairPatches.add(university.getPatch(44,112));
-        chairPatches.add(university.getPatch(44,113));
-        chairPatches.add(university.getPatch(44,114));
-        chairPatches.add(university.getPatch(44,115));
-        chairPatches.add(university.getPatch(47,102));
-        chairPatches.add(university.getPatch(47,103));
-        chairPatches.add(university.getPatch(47,104));
-        chairPatches.add(university.getPatch(47,105));
-        chairPatches.add(university.getPatch(47,112));
-        chairPatches.add(university.getPatch(47,113));
-        chairPatches.add(university.getPatch(47,114));
-        chairPatches.add(university.getPatch(47,115));
-        chairPatches.add(university.getPatch(50,102));
-        chairPatches.add(university.getPatch(50,103));
-        chairPatches.add(university.getPatch(50,104));
-        chairPatches.add(university.getPatch(50,105));
-        chairPatches.add(university.getPatch(50,112));
-        chairPatches.add(university.getPatch(50,113));
-        chairPatches.add(university.getPatch(50,114));
-        chairPatches.add(university.getPatch(50,115));
+//        chairPatches.add(university.getPatch(38,102));
+//        chairPatches.add(university.getPatch(38,103));
+//        chairPatches.add(university.getPatch(38,104));
+//        chairPatches.add(university.getPatch(38,105));
+//        chairPatches.add(university.getPatch(38,112));
+//        chairPatches.add(university.getPatch(38,113));
+//        chairPatches.add(university.getPatch(38,114));
+//        chairPatches.add(university.getPatch(38,115));
+//        chairPatches.add(university.getPatch(41,102));
+//        chairPatches.add(university.getPatch(41,103));
+//        chairPatches.add(university.getPatch(41,104));
+//        chairPatches.add(university.getPatch(41,105));
+//        chairPatches.add(university.getPatch(41,112));
+//        chairPatches.add(university.getPatch(41,113));
+//        chairPatches.add(university.getPatch(41,114));
+//        chairPatches.add(university.getPatch(41,115));
+//        chairPatches.add(university.getPatch(44,102));
+//        chairPatches.add(university.getPatch(44,103));
+//        chairPatches.add(university.getPatch(44,104));
+//        chairPatches.add(university.getPatch(44,105));
+//        chairPatches.add(university.getPatch(44,112));
+//        chairPatches.add(university.getPatch(44,113));
+//        chairPatches.add(university.getPatch(44,114));
+//        chairPatches.add(university.getPatch(44,115));
+//        chairPatches.add(university.getPatch(47,102));
+//        chairPatches.add(university.getPatch(47,103));
+//        chairPatches.add(university.getPatch(47,104));
+//        chairPatches.add(university.getPatch(47,105));
+//        chairPatches.add(university.getPatch(47,112));
+//        chairPatches.add(university.getPatch(47,113));
+//        chairPatches.add(university.getPatch(47,114));
+//        chairPatches.add(university.getPatch(47,115));
+//        chairPatches.add(university.getPatch(50,102));
+//        chairPatches.add(university.getPatch(50,103));
+//        chairPatches.add(university.getPatch(50,104));
+//        chairPatches.add(university.getPatch(50,105));
+//        chairPatches.add(university.getPatch(50,112));
+//        chairPatches.add(university.getPatch(50,113));
+//        chairPatches.add(university.getPatch(50,114));
+//        chairPatches.add(university.getPatch(50,115));
         ChairMapper.draw(chairPatches);
 
         List<Patch> doorDownPatches = new ArrayList<>();
         doorDownPatches.add(university.getPatch(23,5)); // Classroom 1
-        doorDownPatches.add(university.getPatch(23,18)); // Classroom 1
+        doorDownPatches.add(university.getPatch(23,17)); // Classroom 1
         doorDownPatches.add(university.getPatch(23,25)); // Classroom 2
-        doorDownPatches.add(university.getPatch(23,43)); // Classroom 2
-        doorDownPatches.add(university.getPatch(23,84)); // Study Room
+        doorDownPatches.add(university.getPatch(23,41)); // Classroom 2
+        doorDownPatches.add(university.getPatch(23,83)); // Study Room
         DoorMapper.draw(doorDownPatches, "DOWN");
 
         List<Patch> doorUpPatches = new ArrayList<>();
-        doorUpPatches.add(university.getPatch(36,24)); // Classroom 3
-        doorUpPatches.add(university.getPatch(36,37)); // Classroom 3
-        doorUpPatches.add(university.getPatch(36,43)); // Classroom 4
-        doorUpPatches.add(university.getPatch(36,56)); // Classroom 4
-        doorUpPatches.add(university.getPatch(36,62)); // Classroom 5
-        doorUpPatches.add(university.getPatch(36,75)); // Classroom 5
-        doorUpPatches.add(university.getPatch(36,81)); // Classroom 6
-        doorUpPatches.add(university.getPatch(36,94)); // Classroom 6
-        doorUpPatches.add(university.getPatch(36,108)); // Laboratory
+        doorUpPatches.add(university.getPatch(36,23)); // Classroom 3
+        doorUpPatches.add(university.getPatch(36,35)); // Classroom 3
+        doorUpPatches.add(university.getPatch(36,42)); // Classroom 4
+        doorUpPatches.add(university.getPatch(36,54)); // Classroom 4
+        doorUpPatches.add(university.getPatch(36,61)); // Classroom 5
+        doorUpPatches.add(university.getPatch(36,73)); // Classroom 5
+        doorUpPatches.add(university.getPatch(36,80)); // Classroom 6
+        doorUpPatches.add(university.getPatch(36,92)); // Classroom 6
+        doorUpPatches.add(university.getPatch(36,107)); // Laboratory
         DoorMapper.draw(doorUpPatches, "UP");
 
         List<Patch> doorRightPatches = new ArrayList<>();
-        doorRightPatches.add(university.getPatch(12, 59)); // mBathroom
-        doorRightPatches.add(university.getPatch(3, 59)); // fBathroom
+        doorRightPatches.add(university.getPatch(11, 59)); // mBathroom
+        doorRightPatches.add(university.getPatch(2, 59)); // fBathroom
         DoorMapper.draw(doorRightPatches, "RIGHT");
 
         List<Patch> eatTablePatches = new ArrayList<>();
@@ -533,31 +533,18 @@ public class UniversityScreenController extends ScreenController {
         }
         StudyTableMapper.draw(studyTablePatches, "LEFT");
         studyTablePatches = new ArrayList<>();
-        studyTablePatches.add(university.getPatch(6, 85));
-        studyTablePatches.add(university.getPatch(7, 85));
-        studyTablePatches.add(university.getPatch(13, 87));
-        studyTablePatches.add(university.getPatch(14, 87));
-        studyTablePatches.add(university.getPatch(18, 87));
-        studyTablePatches.add(university.getPatch(19, 87));
-        studyTablePatches.add(university.getPatch(13, 91));
-        studyTablePatches.add(university.getPatch(14, 91));
-        studyTablePatches.add(university.getPatch(18, 91));
-        studyTablePatches.add(university.getPatch(19, 91));
-        for (int i = 5; i < 10; i++) {
-            if (i == 5 || i == 9) {
-                for (int j = 87; j < 92; j++) {
-                    if (j == 88 || j == 91) {
-                        studyTablePatches.add(university.getPatch(i, j));
-                    }
-                }
-            }
-        }
-
-        for (int j = 77; j < 82; j++) {
-            if (j == 77 || j == 81) {
-                studyTablePatches.add(university.getPatch(20, j));
-            }
-        }
+        studyTablePatches.add(university.getPatch(12, 87));
+        studyTablePatches.add(university.getPatch(20, 87));
+        studyTablePatches.add(university.getPatch(12, 91));
+        studyTablePatches.add(university.getPatch(20, 91));
+        studyTablePatches.add(university.getPatch(4, 87));
+        studyTablePatches.add(university.getPatch(8, 87));
+        studyTablePatches.add(university.getPatch(4, 91));
+        studyTablePatches.add(university.getPatch(8, 91));
+        studyTablePatches.add(university.getPatch(16, 87));
+        studyTablePatches.add(university.getPatch(16, 91));
+        studyTablePatches.add(university.getPatch(20, 77));
+        studyTablePatches.add(university.getPatch(20, 81));
         StudyTableMapper.draw(studyTablePatches, "UP");
 
         List<Patch> trashPatches = new ArrayList<>();
@@ -608,6 +595,20 @@ public class UniversityScreenController extends ScreenController {
     public void drawUniversityViewForeground(University university, boolean speedAware) { // Draw the university view foreground
         UniversityGraphicsController.requestDrawUniversityView(stackPane, university, UniversityGraphicsController.tileSize, false, speedAware);
         requestUpdateInterfaceSimulationElements();
+    }
+
+    public void generateHeatMap() {
+        int[][] currentPatchCount = UniversitySimulator.currentPatchCount;
+        int maxPatchCount = Arrays.stream(currentPatchCount).flatMapToInt(Arrays::stream).max().getAsInt();
+        for(int i = 0; i < currentPatchCount.length; i++){
+            for (int j = 0; j < currentPatchCount[0].length; j++){
+                System.out.println(currentPatchCount.length);
+                System.out.println(currentPatchCount[0].length);
+                int patchRGBCount = 255 - currentPatchCount[i][j] * 255 / maxPatchCount;
+                foregroundCanvas.getGraphicsContext2D().setFill(Color.rgb(255, patchRGBCount, patchRGBCount));
+                foregroundCanvas.getGraphicsContext2D().fillRect(j * UniversityGraphicsController.tileSize, i * UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize);
+            }
+        }
     }
 
     private void requestUpdateInterfaceSimulationElements() { // Update the interface elements pertinent to the simulation

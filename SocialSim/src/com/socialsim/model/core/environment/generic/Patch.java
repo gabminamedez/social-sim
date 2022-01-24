@@ -24,8 +24,10 @@ public class Patch extends BaseObject implements Comparable<Patch> {
     private final Environment environment;
     private final List<MatrixPosition> neighborIndices;
     private final List<MatrixPosition> neighbor7x7Indices; // Denotes the positions of the neighbors of this patch within a 7x7 range
+    private final List<MatrixPosition> neighbor3x3Indices; // Denotes the positions of the neighbors of this patch within a 7x7 range
     private int amenityBlocksAround; // Denotes the number of amenity blocks around this patch
     private int wallsAround; // Denotes the number of amenity blocks around this patch
+    private int team;
 
     public Patch(Environment environment, MatrixPosition matrixPosition) {
         super();
@@ -39,8 +41,10 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         this.environment = environment;
         this.neighborIndices = this.computeNeighboringPatches();
         this.neighbor7x7Indices = this.compute7x7Neighbors();
+        this.neighbor3x3Indices = this.compute7x7Neighbors();
         this.amenityBlocksAround = 0;
         this.wallsAround = 0;
+        this.team = -1;
     }
 
     public MatrixPosition getMatrixPosition() {
@@ -93,6 +97,10 @@ public class Patch extends BaseObject implements Comparable<Patch> {
 
     public int getWallsAround() {
         return wallsAround;
+    }
+
+    public void setWallsAround(int wallsAround) {
+        this.wallsAround = wallsAround;
     }
 
     public Environment getEnvironment() {
@@ -183,6 +191,49 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         return patchIndicesToExplore;
     }
 
+    private List<MatrixPosition> compute3x3Neighbors() { // Field of vision
+        int patchRow = this.matrixPosition.getRow();
+        int patchColumn = this.matrixPosition.getColumn();
+
+        int truncatedX = (int) (this.getPatchCenterCoordinates().getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
+        int truncatedY = (int) (this.getPatchCenterCoordinates().getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
+
+        List<MatrixPosition> patchIndicesToExplore = new ArrayList<>();
+
+        for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+            for (int columnOffset = -1; columnOffset <= 1; columnOffset++) {
+                boolean xCondition;
+                boolean yCondition;
+
+                if (rowOffset < 0) { // Separate upper and lower rows
+                    yCondition = truncatedY + rowOffset > 0;
+                }
+                else if (rowOffset > 0) {
+                    yCondition = truncatedY + rowOffset < environment.getRows();
+                }
+                else {
+                    yCondition = true;
+                }
+
+                if (columnOffset < 0) { // Separate left and right columns
+                    xCondition = truncatedX + columnOffset > 0;
+                }
+                else if (columnOffset > 0) {
+                    xCondition = truncatedX + columnOffset < environment.getColumns();
+                }
+                else {
+                    xCondition = true;
+                }
+
+                if (xCondition && yCondition) { // Insert the patch to the list of patches to be explored if the patches are within the bounds of the floor
+                    patchIndicesToExplore.add(new MatrixPosition(patchRow + rowOffset, patchColumn + columnOffset));
+                }
+            }
+        }
+
+        return patchIndicesToExplore;
+    }
+
     public List<Patch> getNeighbors() {
         List<Patch> neighboringPatches = new ArrayList<>();
 
@@ -201,6 +252,22 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         List<Patch> neighboringPatches = new ArrayList<>();
 
         for (MatrixPosition neighboringPatchIndex : this.neighbor7x7Indices) {
+            Patch patch = this.getEnvironment().getPatch(neighboringPatchIndex.getRow(), neighboringPatchIndex.getColumn());
+
+            if (patch != null) {
+                if (!includeCenterPatch || !patch.equals(this)) {
+                    neighboringPatches.add(patch);
+                }
+            }
+        }
+
+        return neighboringPatches;
+    }
+
+    public List<Patch> get3x3Neighbors(boolean includeCenterPatch) {
+        List<Patch> neighboringPatches = new ArrayList<>();
+
+        for (MatrixPosition neighboringPatchIndex : this.neighbor3x3Indices) {
             Patch patch = this.getEnvironment().getPatch(neighboringPatchIndex.getRow(), neighboringPatchIndex.getColumn());
 
             if (patch != null) {
@@ -361,4 +428,11 @@ public class Patch extends BaseObject implements Comparable<Patch> {
         }
     }
 
+    public int getTeam() {
+        return team;
+    }
+
+    public void setTeam(int team) {
+        this.team = team;
+    }
 }
