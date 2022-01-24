@@ -658,16 +658,10 @@ public class MallAgentMovement extends AgentMovement {
 
             if (this.leaderAgent == null) {
                 if (type == "RESTO") {
-                    for (int i = 0; i < 16; i++) {
+                    for (int i = 0; i < 32; i++) {
                         tables.add(Main.mallSimulator.getMall().getTables().get(i));
                     }
-                    for (int i = 35; i < 40; i++) {
-                        tables.add(Main.mallSimulator.getMall().getTables().get(i));
-                    }
-                    for (int i = 16; i < 31; i++) {
-                        tables.add(Main.mallSimulator.getMall().getTables().get(i));
-                    }
-                    for (int i = 40; i < 44; i++) {
+                    for (int i = 35; i < 45; i++) {
                         tables.add(Main.mallSimulator.getMall().getTables().get(i));
                     }
                 }
@@ -704,19 +698,11 @@ public class MallAgentMovement extends AgentMovement {
 
                 for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
                     Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                    List<Amenity.AmenityBlock> candidateAmenity = candidateAttractor.getParent().getAttractors();
-                    boolean isEmpty = true;
-                    for (Amenity.AmenityBlock anAttractor : candidateAmenity) {
-                        if (!anAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
-                            isEmpty = false;
-                            break;
-                        }
-                    }
 
-                    if (isEmpty) {
+                    if (!candidateAttractor.getParent().getAttractors().get(0).getIsReserved()) {
                         chosenAmenity = candidateAttractor.getParent();
                         chosenAttractor = candidateAttractor;
-                        candidateAttractor.getPatch().getAgents().add(this.parent);
+                        chosenAmenity.getAttractors().get(0).setIsReserved(true);
                         break;
                     }
                 }
@@ -1609,7 +1595,7 @@ public class MallAgentMovement extends AgentMovement {
         this.goalQueueingPatchField.getQueueingAgents().add(this.parent);
 
         Stack<Patch> path = new Stack<>(); // Manually set the patch to
-        for (int i = 0; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
+        for (int i = 1; i < this.goalQueueingPatchField.getAssociatedPatches().size(); i++) {
             path.push(this.goalQueueingPatchField.getAssociatedPatches().get(i));
         }
         this.currentPath = new AgentPath(0, path);

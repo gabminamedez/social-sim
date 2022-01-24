@@ -599,6 +599,7 @@ public class MallSimulator extends Simulator {
                                 agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.getGoalAmenity().getAttractors().get(0).setIsReserved(false);
                                 agentMovement.resetGoal();
                             }
                         }

@@ -406,7 +406,7 @@ public class MallScreenController extends ScreenController {
         tableRightPatches.add(mall.getPatch(31,103)); // 45
         tableRightPatches.add(mall.getPatch(31,106)); // 46
         tableRightPatches.add(mall.getPatch(31,109)); // 47
-        tableRightPatches.add(mall.getPatch(31,112)); // 58
+        tableRightPatches.add(mall.getPatch(31,112)); // 48
         TableMapper.draw(tableRightPatches, "RIGHT");
 
         List<Patch> trashPatches = new ArrayList<>();
@@ -471,17 +471,25 @@ public class MallScreenController extends ScreenController {
         toiletPatches.add(mall.getPatch(0, 23));
         toiletPatches.add(mall.getPatch(0, 25));
         toiletPatches.add(mall.getPatch(0, 27));
-        toiletPatches.add(mall.getPatch(53, 12));
-        toiletPatches.add(mall.getPatch(53, 14));
-        toiletPatches.add(mall.getPatch(53, 16));
-        toiletPatches.add(mall.getPatch(53, 18));
-        toiletPatches.add(mall.getPatch(53, 21));
-        toiletPatches.add(mall.getPatch(53, 23));
-        toiletPatches.add(mall.getPatch(53, 25));
-        toiletPatches.add(mall.getPatch(53, 27));
+        toiletPatches.add(mall.getPatch(59, 12));
+        toiletPatches.add(mall.getPatch(59, 14));
+        toiletPatches.add(mall.getPatch(59, 16));
+        toiletPatches.add(mall.getPatch(59, 18));
+        toiletPatches.add(mall.getPatch(59, 21));
+        toiletPatches.add(mall.getPatch(59, 23));
+        toiletPatches.add(mall.getPatch(59, 25));
+        toiletPatches.add(mall.getPatch(59, 27));
         ToiletMapper.draw(toiletPatches);
 
         List<Patch> sinkPatches = new ArrayList<>();
+        sinkPatches.add(mall.getPatch(53, 12));
+        sinkPatches.add(mall.getPatch(53, 14));
+        sinkPatches.add(mall.getPatch(53, 16));
+        sinkPatches.add(mall.getPatch(53, 18));
+        sinkPatches.add(mall.getPatch(53, 21));
+        sinkPatches.add(mall.getPatch(53, 23));
+        sinkPatches.add(mall.getPatch(53, 25));
+        sinkPatches.add(mall.getPatch(53, 27));
         sinkPatches.add(mall.getPatch(6, 12));
         sinkPatches.add(mall.getPatch(6, 14));
         sinkPatches.add(mall.getPatch(6, 16));
@@ -490,14 +498,6 @@ public class MallScreenController extends ScreenController {
         sinkPatches.add(mall.getPatch(6, 23));
         sinkPatches.add(mall.getPatch(6, 25));
         sinkPatches.add(mall.getPatch(6, 27));
-        sinkPatches.add(mall.getPatch(59, 12));
-        sinkPatches.add(mall.getPatch(59, 14));
-        sinkPatches.add(mall.getPatch(59, 16));
-        sinkPatches.add(mall.getPatch(59, 18));
-        sinkPatches.add(mall.getPatch(59, 21));
-        sinkPatches.add(mall.getPatch(59, 23));
-        sinkPatches.add(mall.getPatch(59, 25));
-        sinkPatches.add(mall.getPatch(59, 27));
         SinkMapper.draw(sinkPatches);
     }
 

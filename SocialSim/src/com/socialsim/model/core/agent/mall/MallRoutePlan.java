@@ -12,6 +12,7 @@ public class MallRoutePlan {
 
     private MallState currentState; // Denotes the current class of the amenity/patchfield in the route plan
     private ArrayList<MallState> routePlan;
+    private int MAX_BATHROOM = 2;
 
     private static final int MIN_ERRAND_PRODUCTS = 2;
     private static final int MIN_LOITER_PRODUCTS = 9;
@@ -25,6 +26,7 @@ public class MallRoutePlan {
     public static final int LCOUPLE_RESTO_CHANCE = 100, LCOUPLE_WANDERING_CHANCE = 100;
     public static final int EALONE_RESTO_CHANCE = 30, EALONE_WANDERING_CHANCE = 15;
     public static final int LALONE_RESTO_CHANCE = 80, LALONE_WANDERING_CHANCE = 100;
+    public static final int BATHROOM_CHANCE = 10;
 
     private static ArrayList<StoreAisle> aisles1 = new ArrayList<>();
     private static ArrayList<StoreAisle> aisles2 = new ArrayList<>();
@@ -240,6 +242,16 @@ public class MallRoutePlan {
                 actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 360, 1080));
                 routePlan.add(new MallState(MallState.Name.IN_RESTO, this, agent, actions));
             }
+
+            x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            if (x < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                actions = new ArrayList<>();
+                actions.add(new MallAction(MallAction.Name.GO_TO_BATHROOM));
+                actions.add(new MallAction(MallAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                actions.add(new MallAction(MallAction.Name.WASH_IN_SINK, (MallAgent) null, 12));
+                routePlan.add(new MallState(MallState.Name.NEEDS_BATHROOM,this, agent, actions));
+                MAX_BATHROOM -= 1;
+            }
         }
 
         MallState.Shop[] route = null;
@@ -315,6 +327,16 @@ public class MallRoutePlan {
                 routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions, route[routeIndex].getID()));
             }
 
+            int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            if (x < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                actions = new ArrayList<>();
+                actions.add(new MallAction(MallAction.Name.GO_TO_BATHROOM));
+                actions.add(new MallAction(MallAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                actions.add(new MallAction(MallAction.Name.WASH_IN_SINK, (MallAgent) null, 12));
+                routePlan.add(new MallState(MallState.Name.NEEDS_BATHROOM,this, agent, actions));
+                MAX_BATHROOM -= 1;
+            }
+
             numProducts--;
             routeIndex++;
         }
@@ -361,6 +383,16 @@ public class MallRoutePlan {
                         routePlan.add(new MallState(MallState.Name.IN_DINING, this, agent, actions));
                     }
                 }
+
+                x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                if (x < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.GO_TO_BATHROOM));
+                    actions.add(new MallAction(MallAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                    actions.add(new MallAction(MallAction.Name.WASH_IN_SINK, (MallAgent) null, 12));
+                    routePlan.add(new MallState(MallState.Name.NEEDS_BATHROOM,this, agent, actions));
+                    MAX_BATHROOM -= 1;
+                }
             }
         }
 
@@ -399,6 +431,16 @@ public class MallRoutePlan {
                 actions = new ArrayList<>();
                 actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 360, 1080));
                 routePlan.add(new MallState(MallState.Name.IN_RESTO, this, agent, actions));
+            }
+
+            x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            if (x < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                actions = new ArrayList<>();
+                actions.add(new MallAction(MallAction.Name.GO_TO_BATHROOM));
+                actions.add(new MallAction(MallAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                actions.add(new MallAction(MallAction.Name.WASH_IN_SINK, (MallAgent) null, 12));
+                routePlan.add(new MallState(MallState.Name.NEEDS_BATHROOM,this, agent, actions));
+                MAX_BATHROOM -= 1;
             }
         }
 
@@ -677,6 +719,16 @@ public class MallRoutePlan {
                 routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions, route[routeIndex].getID()));
             }
 
+            int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            if (x < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                actions = new ArrayList<>();
+                actions.add(new MallAction(MallAction.Name.GO_TO_BATHROOM));
+                actions.add(new MallAction(MallAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                actions.add(new MallAction(MallAction.Name.WASH_IN_SINK, (MallAgent) null, 12));
+                routePlan.add(new MallState(MallState.Name.NEEDS_BATHROOM,this, agent, actions));
+                MAX_BATHROOM -= 1;
+            }
+
             numProducts--;
             routeIndex++;
         }
@@ -722,6 +774,16 @@ public class MallRoutePlan {
                         actions.add(new MallAction(MallAction.Name.DINING_AREA_STAY_PUT, 120, 360));
                         routePlan.add(new MallState(MallState.Name.IN_DINING, this, agent, actions));
                     }
+                }
+
+                x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                if (x < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.GO_TO_BATHROOM));
+                    actions.add(new MallAction(MallAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                    actions.add(new MallAction(MallAction.Name.WASH_IN_SINK, (MallAgent) null, 12));
+                    routePlan.add(new MallState(MallState.Name.NEEDS_BATHROOM,this, agent, actions));
+                    MAX_BATHROOM -= 1;
                 }
             }
         }
