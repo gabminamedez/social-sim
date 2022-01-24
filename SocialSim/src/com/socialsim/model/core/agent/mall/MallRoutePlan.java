@@ -14,8 +14,8 @@ public class MallRoutePlan {
     private ArrayList<MallState> routePlan;
 
     private static final int MIN_ERRAND_PRODUCTS = 2;
-    private static final int MIN_LOITER_PRODUCTS = 10;
-    private static final int MAX_PRODUCTS = 13;
+    private static final int MIN_LOITER_PRODUCTS = 9;
+    private static final int MAX_PRODUCTS = 11;
 
     public static final int EFAMILY_RESTO_CHANCE = 100, EFAMILY_WANDERING_CHANCE = 30;
     public static final int LFAMILY_RESTO_CHANCE = 100, LFAMILY_WANDERING_CHANCE = 100;
@@ -37,8 +37,6 @@ public class MallRoutePlan {
     private static ArrayList<StoreAisle> aisles9 = new ArrayList<>();
     private static ArrayList<StoreAisle> aisles10 = new ArrayList<>();
     private static ArrayList<StoreAisle> aisles11 = new ArrayList<>();
-    private static ArrayList<StoreAisle> aisles12 = new ArrayList<>();
-    private static ArrayList<StoreAisle> aisles13 = new ArrayList<>();
 
     static {
         aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(0));
@@ -301,12 +299,6 @@ public class MallRoutePlan {
                 }
                 case 10 -> {
                     randomAisle = aisles11.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles11.size()));
-                }
-                case 11 -> {
-                    randomAisle = aisles12.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles12.size()));
-                }
-                default -> {
-                    randomAisle = aisles13.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles13.size()));
                 }
             }
 
@@ -669,50 +661,6 @@ public class MallRoutePlan {
                         }
                         else {
                             randomAisle = aisles11.get(i);
-                            Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
-                            actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
-                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
-                        }
-                    }
-                }
-                case 11 -> {
-                    for (int i = 0; i < aisles12.size(); i++) {
-                        if (i == 0) {
-                            randomAisle = aisles12.get(i);
-                            Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.GO_TO_STORE, randomPatch));
-                            routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
-                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
-                        }
-                        else {
-                            randomAisle = aisles12.get(i);
-                            Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
-                            actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
-                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
-                        }
-                    }
-                }
-                default -> {
-                    for (int i = 0; i < aisles13.size(); i++) {
-                        if (i == 0) {
-                            randomAisle = aisles13.get(i);
-                            Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.GO_TO_STORE, randomPatch));
-                            routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
-                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
-                        }
-                        else {
-                            randomAisle = aisles13.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));

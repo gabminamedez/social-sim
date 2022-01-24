@@ -21,9 +21,7 @@ public class MallState {
         Store8(7),
         Store9(8),
         Store10(9),
-        Store11(10),
-        Store12(11),
-        Store13(12);
+        Store11(10);
 
         public final int ID;
         Shop(int ID) {
@@ -121,8 +119,6 @@ public class MallState {
                 Shop.Store7,
                 Shop.Store8,
                 Shop.Store9,
-                Shop.Store12,
-                Shop.Store13,
                 Shop.Store11,
                 Shop.Store10
         };
@@ -132,8 +128,6 @@ public class MallState {
         return new Shop[] {
                 Shop.Store10,
                 Shop.Store11,
-                Shop.Store13,
-                Shop.Store12,
                 Shop.Store9,
                 Shop.Store8,
                 Shop.Store7,
@@ -155,8 +149,6 @@ public class MallState {
                 Shop.Store7,
                 Shop.Store8,
                 Shop.Store9,
-                Shop.Store12,
-                Shop.Store13,
                 Shop.Store11,
                 Shop.Store10,
                 Shop.Store4,
@@ -170,8 +162,6 @@ public class MallState {
                 Shop.Store4,
                 Shop.Store10,
                 Shop.Store11,
-                Shop.Store13,
-                Shop.Store12,
                 Shop.Store9,
                 Shop.Store8,
                 Shop.Store7,

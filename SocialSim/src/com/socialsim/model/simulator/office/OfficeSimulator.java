@@ -969,7 +969,8 @@ public class OfficeSimulator extends Simulator {
                                 if (agentMovement.hasReachedNextPatchInPath()) {
                                     agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                                     if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                        agentMovement.setNextState();
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
@@ -1207,7 +1208,8 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.leaveQueue();
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1325,7 +1327,8 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.leaveQueue();
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1358,7 +1361,8 @@ public class OfficeSimulator extends Simulator {
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 if (agentMovement.getActionIndex() >= agentMovement.getCurrentState().getActions().size()) {
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                 }
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -1396,7 +1400,8 @@ public class OfficeSimulator extends Simulator {
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 if (agentMovement.getActionIndex() >= agentMovement.getCurrentState().getActions().size()) {
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                 }
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -1484,7 +1489,8 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.leaveQueue();
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1512,7 +1518,8 @@ public class OfficeSimulator extends Simulator {
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 if (agentMovement.getActionIndex() >= agentMovement.getCurrentState().getActions().size()) {
-                                    agentMovement.setNextState();
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                 }
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -1681,7 +1688,7 @@ public class OfficeSimulator extends Simulator {
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             int spawnChance = (int) gate.getChancePerTick();
             int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-            int team = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
+            // int team = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
             if (CHANCE > spawnChance) {
                 agent = office.getUnspawnedWorkingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedWorkingAgents().size()));
                 int team = agent.getTeam();
