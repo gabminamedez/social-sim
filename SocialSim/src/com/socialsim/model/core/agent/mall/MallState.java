@@ -1,7 +1,5 @@
 package com.socialsim.model.core.agent.mall;
 
-import com.socialsim.model.core.agent.grocery.GroceryState;
-
 import java.util.ArrayList;
 
 public class MallState {
@@ -41,6 +39,7 @@ public class MallState {
     private MallRoutePlan routePlan;
     private MallAgent agent;
     private ArrayList<MallAction> actions;
+    private int storeNum;
 
     public MallState(MallState mallState, MallRoutePlan routePlan, MallAgent agent) {
         this.name = mallState.getName();
@@ -61,6 +60,14 @@ public class MallState {
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = actions;
+    }
+
+    public MallState(Name a, MallRoutePlan routePlan, MallAgent agent, ArrayList<MallAction> actions, int storeNum) {
+        this.name = a;
+        this.routePlan = routePlan;
+        this.agent = agent;
+        this.actions = actions;
+        this.storeNum = storeNum;
     }
 
     public Name getName() {
@@ -93,6 +100,14 @@ public class MallState {
 
     public void addAction(MallAction a){
         actions.add(a);
+    }
+
+    public int getStoreNum() {
+        return storeNum;
+    }
+
+    public void setStoreNum(int storeNum) {
+        this.storeNum = storeNum;
     }
 
     public static Shop[] eatShopLeft() {

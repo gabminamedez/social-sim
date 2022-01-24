@@ -43,12 +43,12 @@ public class MallRoutePlan {
     static {
         aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(0));
         aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(1));
-        for (int i = 33; i < 38; i++) {
+        for (int i = 31; i < 36; i++) {
             aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
         }
 
-        aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(38));
-        aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(39));
+        aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(36));
+        aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(37));
         for (int i = 2; i < 6; i++) {
             aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
         }
@@ -57,55 +57,49 @@ public class MallRoutePlan {
             aisles3.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
         }
 
-        aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(40));
-        aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(41));
+        aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(38));
+        aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(39));
         for (int i = 12; i < 16; i++) {
             aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
         }
 
         aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(16));
         aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(17));
-        aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(42));
-        aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(43));
+        aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(40));
+        aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(41));
 
         aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(18));
         aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(19));
-        aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(44));
-        aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(45));
+        aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(42));
+        aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(43));
 
         aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(20));
         aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(21));
         aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(22));
+        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(44));
+        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(45));
         aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(46));
         aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(47));
-        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(48));
-        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(49));
 
         aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(23));
         aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(24));
-        aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(50));
-        aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(51));
+        aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(48));
+        aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(49));
 
         aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(25));
         aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(26));
-        aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(52));
-        aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(53));
+        aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(50));
+        aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(51));
 
         aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(27));
         aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(28));
-        aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(54));
-        aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(55));
+        aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(52));
+        aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(53));
 
         aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(29));
         aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(30));
-        aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(56));
-        aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(57));
-
-        aisles12.add(Main.mallSimulator.getMall().getStoreAisles().get(31));
-        aisles12.add(Main.mallSimulator.getMall().getStoreAisles().get(58));
-
-        aisles13.add(Main.mallSimulator.getMall().getStoreAisles().get(32));
-        aisles13.add(Main.mallSimulator.getMall().getStoreAisles().get(59));
+        aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(54));
+        aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(55));
     }
 
     public MallRoutePlan(MallAgent agent, MallAgent leaderAgent, Mall mall, Patch spawnPatch, int team) { // leaderAgent is only for agents that follow and deviate
@@ -326,7 +320,7 @@ public class MallRoutePlan {
             if (willCheckout) {
                 actions = new ArrayList<>();
                 actions.add(new MallAction(MallAction.Name.CHECKOUT_STORE, 12, 18));
-                routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
+                routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions, route[routeIndex].getID()));
             }
 
             numProducts--;
@@ -732,7 +726,7 @@ public class MallRoutePlan {
             if (willCheckout) {
                 actions = new ArrayList<>();
                 actions.add(new MallAction(MallAction.Name.CHECKOUT_STORE, 12, 18));
-                routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
+                routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions, route[routeIndex].getID()));
             }
 
             numProducts--;

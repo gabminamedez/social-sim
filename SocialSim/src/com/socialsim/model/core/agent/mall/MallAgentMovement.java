@@ -37,6 +37,7 @@ public class MallAgentMovement extends AgentMovement {
     private double previousHeading;
     private int team;
     private KioskField chosenKioskField = null;
+    private Digital chosenDigital = null;
     private Table chosenTable = null;
 
     private Patch currentPatch;
@@ -209,8 +210,24 @@ public class MallAgentMovement extends AgentMovement {
         return chosenKioskField;
     }
 
+    public void setChosenKioskField(KioskField chosenKioskField) {
+        this.chosenKioskField = chosenKioskField;
+    }
+
+    public Digital getChosenDigital() {
+        return chosenDigital;
+    }
+
+    public void setChosenDigital(Digital chosenDigital) {
+        this.chosenDigital = chosenDigital;
+    }
+
     public Table getChosenTable() {
         return chosenTable;
+    }
+
+    public void setChosenTable(Table chosenTable) {
+        this.chosenTable = chosenTable;
     }
 
     public List<MallAgent> getFollowers() {
@@ -492,7 +509,7 @@ public class MallAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Table.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == MallGate.class) {
+                if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == MallGate.class) {
                     path.push(goalPatch);
                 }
                 double length = 0.0;
@@ -586,6 +603,24 @@ public class MallAgentMovement extends AgentMovement {
         return true;
     }
 
+    public void chooseRandomDigital() { // Set the nearest goal to this agent
+        if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
+            List<? extends Amenity> amenityListInFloor = this.mall.getDigitals();
+
+            if (this.leaderAgent == null) {
+                this.goalAmenity = amenityListInFloor.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(amenityListInFloor.size()));
+                this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+                this.chosenDigital = (Digital) goalAmenity;
+            }
+            else {
+                if (this.leaderAgent.getAgentMovement().getChosenDigital() != null) {
+                    this.goalAmenity = this.leaderAgent.getAgentMovement().getChosenDigital();
+                    this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
+                }
+            }
+        }
+    }
+
     public void chooseRandomTable() { // Set the nearest goal to this agent
         if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
             ArrayList<Table> tables1 = new ArrayList<>();
@@ -619,134 +654,81 @@ public class MallAgentMovement extends AgentMovement {
             Amenity chosenAmenity = null;
             Amenity.AmenityBlock chosenAttractor = null;
             HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
-            ArrayList<Table> tables1 = new ArrayList<>();
-            ArrayList<Table> tables2 = new ArrayList<>();
+            ArrayList<Table> tables = new ArrayList<>();
 
-            if (type == "RESTO") {
-                for (int i = 0; i < 16; i++) {
-                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
-                }
-                for (int i = 35; i < 40; i++) {
-                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
-                }
-                for (int i = 16; i < 31; i++) {
-                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
-                }
-                for (int i = 40; i < 44; i++) {
-                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
-                }
-
-                if (this.leaderAgent == null) {
-                    for (Amenity amenity : tables1) {
-                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
-                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                            distancesToAttractors.put(attractor, distanceToAttractor);
-                        }
+            if (this.leaderAgent == null) {
+                if (type == "RESTO") {
+                    for (int i = 0; i < 16; i++) {
+                        tables.add(Main.mallSimulator.getMall().getTables().get(i));
                     }
-
-                    // Sort amenity by distance, from nearest to furthest
-                    List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
-
-                    Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
-                        public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
-                            return (o1.getValue()).compareTo(o2.getValue());
-                        }
-                    });
-
-                    HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
-                    for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
-                        sortedDistances.put(aa.getKey(), aa.getValue());
+                    for (int i = 35; i < 40; i++) {
+                        tables.add(Main.mallSimulator.getMall().getTables().get(i));
                     }
+                    for (int i = 16; i < 31; i++) {
+                        tables.add(Main.mallSimulator.getMall().getTables().get(i));
+                    }
+                    for (int i = 40; i < 44; i++) {
+                        tables.add(Main.mallSimulator.getMall().getTables().get(i));
+                    }
+                }
+                else {
+                    tables.add(Main.mallSimulator.getMall().getTables().get(32));
+                    tables.add(Main.mallSimulator.getMall().getTables().get(33));
+                    tables.add(Main.mallSimulator.getMall().getTables().get(34));
+                    tables.add(Main.mallSimulator.getMall().getTables().get(45));
+                    tables.add(Main.mallSimulator.getMall().getTables().get(46));
+                    tables.add(Main.mallSimulator.getMall().getTables().get(47));
+                    tables.add(Main.mallSimulator.getMall().getTables().get(48));
+                }
 
-                    for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
-                        Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                        List<Amenity.AmenityBlock> candidateAmenity = candidateAttractor.getParent().getAttractors();
-                        boolean isEmpty = true;
-                        for (Amenity.AmenityBlock anAttractor : candidateAmenity) {
-                            if (!anAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
-                                isEmpty = false;
-                                break;
-                            }
-                        }
+                for (Amenity amenity : tables) {
+                    for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
+                        double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                        distancesToAttractors.put(attractor, distanceToAttractor);
+                    }
+                }
 
-                        if (isEmpty) {
-                            chosenAmenity = candidateAttractor.getParent();
-                            chosenAttractor = candidateAttractor;
-                            candidateAttractor.getPatch().getAgents().add(this.parent);
+                // Sort amenity by distance, from nearest to furthest
+                List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+                Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                    public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
+                        return (o1.getValue()).compareTo(o2.getValue());
+                    }
+                });
+
+                HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+                for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                    sortedDistances.put(aa.getKey(), aa.getValue());
+                }
+
+                for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
+                    Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                    List<Amenity.AmenityBlock> candidateAmenity = candidateAttractor.getParent().getAttractors();
+                    boolean isEmpty = true;
+                    for (Amenity.AmenityBlock anAttractor : candidateAmenity) {
+                        if (!anAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
+                            isEmpty = false;
                             break;
                         }
                     }
 
-                    this.goalAmenity = chosenAmenity;
-                    this.goalAttractor = chosenAttractor;
-                    this.chosenTable = (Table) chosenAmenity;
-                }
-                else {
-                    if (leaderAgent.getAgentMovement().getChosenTable() != null) {
-                        this.goalAmenity = leaderAgent.getAgentMovement().getChosenTable();
-                        this.goalAttractor = leaderAgent.getAgentMovement().getChosenTable().getAttractors().get(0);
+                    if (isEmpty) {
+                        chosenAmenity = candidateAttractor.getParent();
+                        chosenAttractor = candidateAttractor;
+                        candidateAttractor.getPatch().getAgents().add(this.parent);
+                        break;
                     }
                 }
+
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+                this.chosenTable = (Table) chosenAmenity;
             }
             else {
-                tables2.add(Main.mallSimulator.getMall().getTables().get(32));
-                tables2.add(Main.mallSimulator.getMall().getTables().get(33));
-                tables2.add(Main.mallSimulator.getMall().getTables().get(34));
-                tables2.add(Main.mallSimulator.getMall().getTables().get(45));
-                tables2.add(Main.mallSimulator.getMall().getTables().get(46));
-                tables2.add(Main.mallSimulator.getMall().getTables().get(47));
-                tables2.add(Main.mallSimulator.getMall().getTables().get(48));
-
-                if (this.leaderAgent == null) {
-                    for (Amenity amenity : tables2) {
-                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) { // Compute the distance to each attractor
-                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
-                            distancesToAttractors.put(attractor, distanceToAttractor);
-                        }
-                    }
-
-                    // Sort amenity by distance, from nearest to furthest
-                    List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
-
-                    Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
-                        public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
-                            return (o1.getValue()).compareTo(o2.getValue());
-                        }
-                    });
-
-                    HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
-                    for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
-                        sortedDistances.put(aa.getKey(), aa.getValue());
-                    }
-
-                    for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) { // Look for a vacant amenity
-                        Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
-                        List<Amenity.AmenityBlock> candidateAmenity = candidateAttractor.getParent().getAttractors();
-                        boolean isEmpty = true;
-                        for (Amenity.AmenityBlock anAttractor : candidateAmenity) {
-                            if (!anAttractor.getPatch().getAgents().isEmpty()) { //Break when first vacant amenity is found
-                                isEmpty = false;
-                                break;
-                            }
-                        }
-
-                        if (isEmpty) {
-                            chosenAmenity = candidateAttractor.getParent();
-                            chosenAttractor = candidateAttractor;
-                            candidateAttractor.getPatch().getAgents().add(this.parent);
-                            break;
-                        }
-                    }
-
-                    this.goalAmenity = chosenAmenity;
-                    this.goalAttractor = chosenAttractor;
-                    this.chosenTable = (Table) chosenAmenity;
-                }
-                else {
-                    if (leaderAgent.getAgentMovement().getChosenTable() != null) {
-                        this.goalAmenity = leaderAgent.getAgentMovement().getChosenTable();
-                        this.goalAttractor = leaderAgent.getAgentMovement().getChosenTable().getAttractors().get(0);
-                    }
+                if (leaderAgent.getAgentMovement().getChosenTable() != null) {
+                    this.goalAmenity = leaderAgent.getAgentMovement().getChosenTable();
+                    this.goalAttractor = leaderAgent.getAgentMovement().getChosenTable().getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(leaderAgent.getAgentMovement().getChosenTable().getAttractors().size()));
                 }
             }
         }
@@ -769,15 +751,15 @@ public class MallAgentMovement extends AgentMovement {
             if (this.team == 1) {
                 aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(0));
                 aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(1));
-                for (int i = 33; i < 38; i++) {
+                for (int i = 31; i < 36; i++) {
                     aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
                 this.goalAmenity = aisles1.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles1.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 2) {
-                aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(38));
-                aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(39));
+                aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(36));
+                aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(37));
                 for (int i = 2; i < 6; i++) {
                     aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
@@ -792,8 +774,8 @@ public class MallAgentMovement extends AgentMovement {
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 4) {
-                aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(40));
-                aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(41));
+                aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(38));
+                aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(39));
                 for (int i = 12; i < 16; i++) {
                     aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
                 }
@@ -803,16 +785,16 @@ public class MallAgentMovement extends AgentMovement {
             else if (this.team == 5) {
                 aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(16));
                 aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(17));
-                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(42));
-                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(43));
+                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(40));
+                aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(41));
                 this.goalAmenity = aisles5.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles5.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 6) {
                 aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(18));
                 aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(19));
-                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(44));
-                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(45));
+                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(42));
+                aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(43));
                 this.goalAmenity = aisles6.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles6.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
@@ -820,42 +802,42 @@ public class MallAgentMovement extends AgentMovement {
                 aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(20));
                 aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(21));
                 aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(22));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(44));
+                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(45));
                 aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(46));
                 aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(47));
-                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(48));
-                aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(49));
                 this.goalAmenity = aisles7.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles7.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 8) {
                 aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(23));
                 aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(24));
-                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(50));
-                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(51));
+                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(48));
+                aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(49));
                 this.goalAmenity = aisles8.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles8.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 9) {
                 aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(25));
                 aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(26));
-                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(52));
-                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(53));
+                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(50));
+                aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(51));
                 this.goalAmenity = aisles9.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles9.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 10) {
                 aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(27));
                 aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(28));
-                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(54));
-                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(55));
+                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(52));
+                aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(53));
                 this.goalAmenity = aisles10.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles10.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else if (this.team == 11) {
                 aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(29));
                 aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(30));
-                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(56));
-                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(57));
+                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(54));
+                aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(55));
                 this.goalAmenity = aisles11.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles11.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
@@ -1968,7 +1950,7 @@ public class MallAgentMovement extends AgentMovement {
             return true;
         }
         else if (patch.getAmenityBlock() != null && !patch.getAmenityBlock().getParent().equals(amenity)) {
-            if (patch.getAmenityBlock().getParent().getClass() == Security.class || patch.getAmenityBlock().getParent().getClass() == Table.class || patch.getAmenityBlock().getParent().getClass() == Toilet.class || patch.getAmenityBlock().getParent().getClass() == Bench.class || patch.getAmenityBlock().getParent().getClass() == StoreAisle.class || patch.getAmenityBlock().getParent().getClass() == StoreCounter.class) {
+            if (patch.getAmenityBlock().getParent().getClass() == Security.class || patch.getAmenityBlock().getParent().getClass() == Table.class || patch.getAmenityBlock().getParent().getClass() == Toilet.class || patch.getAmenityBlock().getParent().getClass() == Bench.class || patch.getAmenityBlock().getParent().getClass() == StoreAisle.class /*|| patch.getAmenityBlock().getParent().getClass() == StoreCounter.class*/) {
                 return false;
             }
             else {
