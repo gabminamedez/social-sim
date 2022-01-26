@@ -52,9 +52,9 @@ public class UniversitySimulator extends Simulator {
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
     public static int[][] currentPatchCount;
-    public static final int MAX_STUDENTS = 80; //250
+    public static final int MAX_STUDENTS = 250; //250
     public static final int MAX_PROFESSORS = 6;
-    public static final int MAX_CURRENT_STUDENTS = 80; //250
+    public static final int MAX_CURRENT_STUDENTS = 250; //250
     public static final int MAX_CURRENT_PROFESSORS = 6;
 
     public UniversitySimulator() {
@@ -612,7 +612,6 @@ public class UniversitySimulator extends Simulator {
                                             agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
                                             agentMovement.setNextState(agentMovement.getReturnIndex());
                                             agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
-                                            System.out.println(agentMovement.getCurrentState().getName());
                                             agentMovement.setActionIndex(0);
                                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                             agentMovement.getGoalAttractor().setIsReserved(false);
@@ -813,7 +812,9 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    if (agentMovement.getGoalAttractor() != null) {
+                                        agentMovement.getGoalAttractor().setIsReserved(false);
+                                    }
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromStudying(true);
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
@@ -825,7 +826,9 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    if (agentMovement.getGoalAttractor() != null) {
+                                        agentMovement.getGoalAttractor().setIsReserved(false);
+                                    }
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromStudying(true);
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
@@ -1814,12 +1817,12 @@ public class UniversitySimulator extends Simulator {
             if (CHANCE < spawnChance && university.getUnspawnedAgents().size() > 0){
                 agent = university.getUnspawnedAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(university.getUnspawnedAgents().size()));
                 if (agent.getType() == UniversityAgent.Type.STUDENT && UniversityAgent.studentCount < MAX_STUDENTS && currentStudentCount < MAX_CURRENT_STUDENTS){
-//                    agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
-////                    university.getAgents().add(agent);
-//                    university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-//                    currentStudentCount++;
-//                    UniversityAgent.studentCount++;
-//                    UniversityAgent.agentCount++;
+                    agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
+//                    university.getAgents().add(agent);
+                    university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    currentStudentCount++;
+                    UniversityAgent.studentCount++;
+                    UniversityAgent.agentCount++;
                 }
                 else if (agent.getType() == UniversityAgent.Type.PROFESSOR && UniversityAgent.professorCount < MAX_PROFESSORS && currentProfessorCount < MAX_CURRENT_PROFESSORS){
                     agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
