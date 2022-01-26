@@ -99,7 +99,7 @@ public class UniversityScreenController extends ScreenController {
                     if (i < 24 && (j < 60 || j > 71)) {
                         wallPatches.add(university.getPatch(i, j));
                     }
-                    else if (i > 35 && (j >= 20 && j <= 119 )) {
+                    else if (i > 35 && (j >= 20/* && j <= 119 */)) {
                         wallPatches.add(university.getPatch(i, j));
                     }
                 }
@@ -212,10 +212,6 @@ public class UniversityScreenController extends ScreenController {
         benchRightPatches.add(university.getPatch(43,0));
         benchRightPatches.add(university.getPatch(48,0));
         benchRightPatches.add(university.getPatch(53,0));
-        benchRightPatches.add(university.getPatch(38,120));
-        benchRightPatches.add(university.getPatch(43,120));
-        benchRightPatches.add(university.getPatch(48,120));
-        benchRightPatches.add(university.getPatch(53,120));
         BenchMapper.draw(benchRightPatches, "RIGHT");
 
         List<Patch> benchLeftPatches = new ArrayList<>();
@@ -223,10 +219,8 @@ public class UniversityScreenController extends ScreenController {
         benchLeftPatches.add(university.getPatch(43,19));
         benchLeftPatches.add(university.getPatch(48,19));
         benchLeftPatches.add(university.getPatch(53,19));
-        benchLeftPatches.add(university.getPatch(38,129));
-        benchLeftPatches.add(university.getPatch(43,129));
-        benchLeftPatches.add(university.getPatch(48,129));
-        benchLeftPatches.add(university.getPatch(53,129));
+        benchLeftPatches.add(university.getPatch(26,129));
+        benchLeftPatches.add(university.getPatch(31,129));
         BenchMapper.draw(benchLeftPatches, "LEFT");
 
         List<Patch> benchDownPatches = new ArrayList<>();
