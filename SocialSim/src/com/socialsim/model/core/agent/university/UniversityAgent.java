@@ -280,6 +280,15 @@ public class UniversityAgent extends Agent {
         }
     }
 
+    public static void clearUniversityAgentCounts() {
+        agentCount = 0;
+        guardCount = 0;
+        janitorCount = 0;
+        professorCount = 0;
+        studentCount = 0;
+        UniversityRoutePlan.resetClassroomSizes();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
