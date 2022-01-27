@@ -467,194 +467,264 @@ public class Mall extends Environment {
                         //1. Get IOS Scale of each agent then put in an array
                         //2. Place in convert function and replace IOS
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case STAFF_STORE_CASHIER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.STAFF_STORE_CASHIER){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
+                            case STAFF_STORE_CASHIER -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.STAFF_RESTO){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_RESTO -> {
+                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
+                                if (agent == otherAgent)
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.STAFF_KIOSK){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                             case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.GUARD){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.ERRAND_FAMILY){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_FAMILY -> {
+                                MallAgent agent = agents.get(i), otherAgent = agents.get(j);
+                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 3 >= otherAgent.getId()) // leader of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 3 >= agent.getId()) // follower of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
                             case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.LOITER_FAMILY){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_FAMILY -> {
+                                MallAgent agent = agents.get(i), otherAgent = agents.get(j);
+                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 3 >= otherAgent.getId()) // leader of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 3 >= agent.getId()) // follower of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.ERRAND_FRIENDS){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_FRIENDS -> {
+                                MallAgent agent = agents.get(i), otherAgent = agents.get(j);
+                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 3 >= otherAgent.getId()) // leader of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 3 >= agent.getId()) // follower of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
                             case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.LOITER_FRIENDS){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_FRIENDS -> {
+                                MallAgent agent = agents.get(i), otherAgent = agents.get(j);
+                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 3 >= otherAgent.getId()) // leader of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 3 >= agent.getId()) // follower of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            }
+                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.ERRAND_ALONE){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
                             case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.LOITER_ALONE){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
                             case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                         }
                     }
                     else if (agent1 == MallAgent.Persona.LOITER_COUPLE){
                         switch (agent2){
-                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
+                            case STAFF_STORE_SALES -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case STAFF_STORE_CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_RESTO -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case STAFF_KIOSK -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_FAMILY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case ERRAND_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            case LOITER_FRIENDS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
                             case ERRAND_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case LOITER_COUPLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                            case LOITER_ALONE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case LOITER_COUPLE -> {
+                                MallAgent agent = agents.get(i), otherAgent = agents.get(j);
+                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 3 >= otherAgent.getId()) // leader of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 4);
+                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 3 >= agent.getId()) // follower of family
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 4);
+                                else
+                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                            }
                         }
                     }
                 }

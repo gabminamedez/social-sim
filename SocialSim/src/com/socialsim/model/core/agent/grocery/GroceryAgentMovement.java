@@ -1961,38 +1961,102 @@ public class GroceryAgentMovement extends AgentMovement {
             this.isInteracting = true;
             // set other agent interaction parameters
             agent.getAgentMovement().setInteracting(true);
-
-//            if (this.parent.getType() == GroceryAgent.Type.STUDENT){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentStudentCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentStudentProfCount++;
-//                    case GUARD -> GrocerySimulator.currentStudentGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentStudentJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.PROFESSOR){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentProfCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfProfCount++;
-//                    case GUARD -> GrocerySimulator.currentProfGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentProfJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.GUARD){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentGuardCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentGuardJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.JANITOR){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentJanitorCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfJanitorCount++;
-//                    case GUARD -> GrocerySimulator.currentGuardJanitorCount++;
-//                    case JANITOR -> GrocerySimulator.currentJanitorJanitorCount++;
-//                }
-//            }
+            if (this.parent.getType() == GroceryAgent.Type.CUSTOMER){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerCustomerCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentCustomerAisleCount++;
+                    case CASHIER -> GrocerySimulator.currentCustomerCashierCount++;
+                    case BAGGER -> GrocerySimulator.currentCustomerBaggerCount++;
+                    case GUARD -> GrocerySimulator.currentCustomerGuardCount++;
+                    case BUTCHER -> GrocerySimulator.currentCustomerButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentCustomerServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentCustomerFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.STAFF_AISLE){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerAisleCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleAisleCount++;
+                    case CASHIER -> GrocerySimulator.currentAisleCashierCount++;
+                    case BAGGER -> GrocerySimulator.currentAisleBaggerCount++;
+                    case GUARD -> GrocerySimulator.currentAisleGuardCount++;
+                    case BUTCHER -> GrocerySimulator.currentAisleButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentAisleServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentAisleFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.CASHIER){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerCashierCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleCashierCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierCashierCount++;
+                    case BAGGER -> GrocerySimulator.currentCashierBaggerCount++;
+                    case GUARD -> GrocerySimulator.currentCashierGuardCount++;
+                    case BUTCHER -> GrocerySimulator.currentCashierButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentCashierServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentCashierFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.BAGGER){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerBaggerCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleBaggerCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierBaggerCount++;
+                    case BAGGER -> GrocerySimulator.currentBaggerBaggerCount++;
+                    case GUARD -> GrocerySimulator.currentBaggerGuardCount++;
+                    case BUTCHER -> GrocerySimulator.currentBaggerButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentBaggerServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentBaggerFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.GUARD){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerGuardCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleGuardCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierGuardCount++;
+                    case BAGGER -> GrocerySimulator.currentBaggerGuardCount++;
+                    case GUARD -> GrocerySimulator.currentGuardGuardCount++;
+                    case BUTCHER -> GrocerySimulator.currentGuardButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentGuardServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentGuardFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.BUTCHER){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerButcherCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleButcherCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierButcherCount++;
+                    case BAGGER -> GrocerySimulator.currentBaggerButcherCount++;
+                    case GUARD -> GrocerySimulator.currentGuardButcherCount++;
+                    case BUTCHER -> GrocerySimulator.currentButcherButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentButcherServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentButcherFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.CUSTOMER_SERVICE){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerServiceCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleServiceCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierServiceCount++;
+                    case BAGGER -> GrocerySimulator.currentBaggerServiceCount++;
+                    case GUARD -> GrocerySimulator.currentGuardServiceCount++;
+                    case BUTCHER -> GrocerySimulator.currentButcherServiceCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentServiceServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentServiceFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.STAFF_FOOD){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerFoodCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleFoodCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierFoodCount++;
+                    case BAGGER -> GrocerySimulator.currentBaggerFoodCount++;
+                    case GUARD -> GrocerySimulator.currentGuardFoodCount++;
+                    case BUTCHER -> GrocerySimulator.currentButcherFoodCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentServiceFoodCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentFoodFoodCount++;
+                }
+            }
             // roll duration (NOTE GAUSSIAN)
             this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
             if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.NON_VERBAL)
