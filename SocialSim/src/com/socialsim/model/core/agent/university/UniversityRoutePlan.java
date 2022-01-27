@@ -71,6 +71,10 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2));
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
 
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_TRASH,5));
+            routePlan.add(new UniversityState(UniversityState.Name.THROW_TRASH, this, agent, actions));
+
 //            actions = new ArrayList<>();
 //            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM));
 //            actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, 12, 60));

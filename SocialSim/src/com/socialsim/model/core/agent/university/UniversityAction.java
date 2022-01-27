@@ -57,7 +57,8 @@ public class UniversityAction {
         JANITOR_GO_TOILET(38),
         JANITOR_CLEAN_TOILET(39),
         JANITOR_GO_FOUNTAIN(40),
-        JANITOR_CHECK_FOUNTAIN(41);
+        JANITOR_CHECK_FOUNTAIN(41),
+        GO_TO_TRASH(42);
 
         final int ID;
         Name(int ID){
