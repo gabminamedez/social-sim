@@ -1328,6 +1328,21 @@ public class OfficeAgentMovement extends AgentMovement {
         return patchesToExplore;
     }
 
+    public List<Patch> get3x3Field(double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
+        Patch centerPatch = this.currentPatch;
+        List<Patch> patchesToExplore = new ArrayList<>();
+        boolean isCenterPatch;
+
+        for (Patch patch : centerPatch.get3x3Neighbors(includeCenterPatch)) {
+            // Make sure that the patch to be added is within the field of view of the agent which invoked this method
+            isCenterPatch = patch.equals(centerPatch);
+            if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(centerPatch.getPatchCenterCoordinates(), patch.getPatchCenterCoordinates(), heading, fieldOfViewAngle)) {
+                patchesToExplore.add(patch);
+            }
+        }
+        return patchesToExplore;
+    }
+
     private Vector computeAttractiveForce(final Coordinates startingPosition, final double proposedHeading, final Coordinates proposedNewPosition, final double preferredWalkingDistance) {
         return new Vector(startingPosition, proposedHeading, proposedNewPosition, preferredWalkingDistance);
     }

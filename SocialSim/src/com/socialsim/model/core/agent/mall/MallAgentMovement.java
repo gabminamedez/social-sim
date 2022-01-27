@@ -18,6 +18,7 @@ import com.socialsim.model.core.environment.mall.patchfield.*;
 import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
+import com.socialsim.model.simulator.mall.MallSimulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -76,6 +77,18 @@ public class MallAgentMovement extends AgentMovement {
     private final double fieldOfViewAngle; // Denotes the field of view angle of the agent
     private boolean isReadyToFree; // Denotes whether the agent is ready to be freed from being stuck
     private final ConcurrentHashMap<Patch, Integer> recentPatches; // Denotes the recent patches this agent has been in
+
+    // Interaction parameters
+    private boolean isInteracting; // Denotes whether the agent is currently interacting with another agent
+    private boolean isSimultaneousInteractionAllowed; // Denotes whether an interaction is allowed while an action is being done simultaneously
+    private int interactionDuration;
+    private MallAgentMovement.InteractionType interactionType;
+
+    public enum InteractionType {
+        NON_VERBAL,
+        COOPERATIVE,
+        EXCHANGE
+    }
 
     // The vectors of this agent
     private final List<Vector> repulsiveForceFromAgents;
@@ -1430,6 +1443,21 @@ public class MallAgentMovement extends AgentMovement {
         return patchesToExplore;
     }
 
+    public List<Patch> get3x3Field(double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
+        Patch centerPatch = this.currentPatch;
+        List<Patch> patchesToExplore = new ArrayList<>();
+        boolean isCenterPatch;
+
+        for (Patch patch : centerPatch.get3x3Neighbors(includeCenterPatch)) {
+            // Make sure that the patch to be added is within the field of view of the agent which invoked this method
+            isCenterPatch = patch.equals(centerPatch);
+            if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(centerPatch.getPatchCenterCoordinates(), patch.getPatchCenterCoordinates(), heading, fieldOfViewAngle)) {
+                patchesToExplore.add(patch);
+            }
+        }
+        return patchesToExplore;
+    }
+
     private Vector computeAttractiveForce(final Coordinates startingPosition, final double proposedHeading, final Coordinates proposedNewPosition, final double preferredWalkingDistance) {
         return new Vector(startingPosition, proposedHeading, proposedNewPosition, preferredWalkingDistance);
     }
@@ -1993,6 +2021,215 @@ public class MallAgentMovement extends AgentMovement {
         for (Patch patchToForget : patchesToForget) { // Remove all patches set to be forgotten
             this.recentPatches.remove(patchToForget);
         }
+    }
+
+    public void forceActionInteraction(MallAgent agent, MallAgentMovement.InteractionType interactionType, int duration, MallSimulator MallSimulator){
+        //TODO: Statistics in interaction
+
+        // set own agent interaction parameters
+        this.isInteracting = true;
+        this.interactionType = interactionType;
+        // set other agent interaction parameters
+        agent.getAgentMovement().setInteracting(true);
+        agent.getAgentMovement().setInteractionType(interactionType);
+        double interactionStdDeviation, interactionMean;
+
+        if (interactionType == MallAgentMovement.InteractionType.NON_VERBAL){
+            interactionStdDeviation = 1;
+            interactionMean = 2;
+        }
+        else if (interactionType == MallAgentMovement.InteractionType.COOPERATIVE){
+
+            interactionStdDeviation = 5;
+            interactionMean = 19;
+        }
+        else if (interactionType == MallAgentMovement.InteractionType.EXCHANGE){
+
+            interactionStdDeviation = 5;
+            interactionMean = 19;
+        }
+        else{
+            interactionStdDeviation = 0;
+            interactionMean = 0;
+        }
+        if (duration == -1)
+            this.interactionDuration = (int) Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean);
+        else
+            this.interactionDuration = duration;
+
+    }
+    public void rollAgentInteraction(MallAgent agent){
+        //TODO: Statistics in interaction
+
+        double IOS1 = mall.getIOS().get(this.getParent().getId()).get(agent.getId());
+        double IOS2 = mall.getIOS().get(agent.getId()).get(this.getParent().getId());
+        // roll if possible interaction
+        double CHANCE1 = Simulator.roll();
+        double CHANCE2 = Simulator.roll();
+        double interactionStdDeviation, interactionMean;
+        if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
+            // roll if what kind of interaction
+            CHANCE1 = Simulator.roll() * IOS1;
+            CHANCE2 = Simulator.roll() * IOS2;
+            double CHANCE = (CHANCE1 + CHANCE2) / 2;
+            double CHANCE_NONVERBAL1 = MallAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
+                    CHANCE_COOPERATIVE1 = MallAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
+                    CHANCE_EXCHANGE1 = MallAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
+                    CHANCE_NONVERBAL2 = MallAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
+                    CHANCE_COOPERATIVE2 = MallAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
+                    CHANCE_EXCHANGE2 = MallAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
+            if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
+                MallSimulator.currentNonverbalCount++;
+                this.getParent().getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.NON_VERBAL);
+                agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.NON_VERBAL);
+                interactionStdDeviation = 1;
+                interactionMean = 2;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
+                MallSimulator.currentCooperativeCount++;
+                this.getParent().getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.COOPERATIVE);
+                agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.COOPERATIVE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
+                MallSimulator.currentExchangeCount++;
+                this.getParent().getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.EXCHANGE);
+                agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.EXCHANGE);
+                CHANCE1 = Simulator.roll() * IOS1;
+                CHANCE2 = Simulator.roll() * IOS2;
+                interactionStdDeviation = 5;
+                interactionMean = 19;
+            }
+            else{
+                return;
+            }
+            // set own agent interaction parameters
+            this.isInteracting = true;
+            // set other agent interaction parameters
+            agent.getAgentMovement().setInteracting(true);
+
+            if (this.parent.getType() == MallAgent.Type.STAFF_STORE_SALES){
+                switch (agent.getType()){
+                    case STAFF_STORE_SALES -> MallSimulator.currentStaffStoreStaffStoreCount++;
+                    case STAFF_STORE_CASHIER -> MallSimulator.currentStaffStoreStaffStoreCount++;
+                    case STAFF_RESTO -> MallSimulator.currentStaffStoreStaffRestoCount++;
+                    case STAFF_KIOSK -> MallSimulator.currentStaffStoreStaffKioskCount++;
+                    case GUARD -> MallSimulator.currentStaffStoreGuardCount++;
+                    case PATRON -> MallSimulator.currentPatronStaffStoreCount++;
+                }
+            }
+            else if (this.parent.getType() == MallAgent.Type.STAFF_STORE_CASHIER){
+                switch (agent.getType()){
+                    case STAFF_STORE_SALES -> MallSimulator.currentStaffStoreStaffStoreCount++;
+                    case STAFF_STORE_CASHIER -> MallSimulator.currentStaffStoreStaffStoreCount++;
+                    case STAFF_RESTO -> MallSimulator.currentStaffStoreStaffRestoCount++;
+                    case STAFF_KIOSK -> MallSimulator.currentStaffStoreStaffKioskCount++;
+                    case GUARD -> MallSimulator.currentStaffStoreGuardCount++;
+                    case PATRON -> MallSimulator.currentPatronStaffStoreCount++;
+                }
+            }
+            else if (this.parent.getType() == MallAgent.Type.STAFF_RESTO){
+                switch (agent.getType()){
+                    case STAFF_STORE_SALES -> MallSimulator.currentStaffStoreStaffRestoCount++;
+                    case STAFF_STORE_CASHIER -> MallSimulator.currentStaffStoreStaffRestoCount++;
+                    case STAFF_RESTO -> MallSimulator.currentStaffRestoStaffRestoCount++;
+                    case STAFF_KIOSK -> MallSimulator.currentStaffRestoStaffKioskCount++;
+                    case GUARD -> MallSimulator.currentStaffRestoGuardCount++;
+                    case PATRON -> MallSimulator.currentPatronStaffRestoCount++;
+                }
+            }
+            else if (this.parent.getType() == MallAgent.Type.STAFF_KIOSK){
+                switch (agent.getType()){
+                    case STAFF_STORE_SALES -> MallSimulator.currentStaffStoreStaffKioskCount++;
+                    case STAFF_STORE_CASHIER -> MallSimulator.currentStaffStoreStaffKioskCount++;
+                    case STAFF_RESTO -> MallSimulator.currentStaffStoreStaffKioskCount++;
+                    case STAFF_KIOSK -> MallSimulator.currentStaffKioskStaffKioskCount++;
+                    case GUARD -> MallSimulator.currentStaffKioskGuardCount++;
+                    case PATRON -> MallSimulator.currentPatronStaffKioskCount++;
+                }
+            }
+            else if (this.parent.getType() == MallAgent.Type.GUARD){
+                switch (agent.getType()){
+                    case STAFF_STORE_SALES -> MallSimulator.currentStaffStoreGuardCount++;
+                    case STAFF_STORE_CASHIER -> MallSimulator.currentStaffStoreGuardCount++;
+                    case STAFF_RESTO -> MallSimulator.currentStaffRestoGuardCount++;
+                    case STAFF_KIOSK -> MallSimulator.currentStaffKioskGuardCount++;
+                    case PATRON -> MallSimulator.currentPatronGuardCount++;
+                }
+            }
+            else if (this.parent.getType() == MallAgent.Type.PATRON){
+                switch (agent.getType()){
+                    case STAFF_STORE_SALES -> MallSimulator.currentPatronStaffStoreCount++;
+                    case STAFF_STORE_CASHIER -> MallSimulator.currentPatronStaffStoreCount++;
+                    case STAFF_RESTO -> MallSimulator.currentPatronStaffRestoCount++;
+                    case STAFF_KIOSK -> MallSimulator.currentPatronStaffKioskCount++;
+                    case GUARD -> MallSimulator.currentPatronGuardCount++;
+                    case PATRON -> MallSimulator.currentPatronPatronCount++;
+                }
+            }
+            // roll duration (NOTE GAUSSIAN)
+            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+            agent.getAgentMovement().setInteractionDuration(this.interactionDuration);
+            if (agent.getAgentMovement().getInteractionType() == MallAgentMovement.InteractionType.NON_VERBAL)
+                MallSimulator.averageNonverbalDuration = (MallSimulator.averageNonverbalDuration * (MallSimulator.currentNonverbalCount - 1) + this.interactionDuration) / MallSimulator.currentNonverbalCount;
+            else if (agent.getAgentMovement().getInteractionType() == MallAgentMovement.InteractionType.COOPERATIVE)
+                MallSimulator.averageCooperativeDuration = (MallSimulator.averageCooperativeDuration * (MallSimulator.currentCooperativeCount - 1) + this.interactionDuration) / MallSimulator.currentCooperativeCount;
+            else if (agent.getAgentMovement().getInteractionType() == MallAgentMovement.InteractionType.EXCHANGE)
+                MallSimulator.averageExchangeDuration = (MallSimulator.averageExchangeDuration * (MallSimulator.currentExchangeCount - 1) + this.interactionDuration) / MallSimulator.currentExchangeCount;
+        }
+    }
+    public void interact(){
+        //TODO: Statistics in interaction
+
+        // if 0 na, remove interacting phase for agent
+        if (this.interactionDuration == 0){
+            this.isInteracting = false;
+            this.interactionType = null;
+        }
+        // -- interaction
+        else{
+            this.interactionDuration--;
+        }
+    }
+
+
+    public void decrementDuration(){
+        this.duration = getDuration() - 1;
+    }
+
+    public boolean isInteracting() {
+        return isInteracting;
+    }
+
+    public void setInteracting(boolean interacting) {
+        isInteracting = interacting;
+    }
+
+    public boolean isSimultaneousInteractionAllowed() {
+        return isSimultaneousInteractionAllowed;
+    }
+
+    public void setSimultaneousInteractionAllowed(boolean simultaneousInteractionAllowed) {
+        isSimultaneousInteractionAllowed = simultaneousInteractionAllowed;
+    }
+
+    public int getInteractionDuration() {
+        return interactionDuration;
+    }
+
+    public void setInteractionDuration(int interactionDuration) {
+        this.interactionDuration = interactionDuration;
+    }
+
+    public MallAgentMovement.InteractionType getInteractionType() {
+        return interactionType;
+    }
+
+    public void setInteractionType(MallAgentMovement.InteractionType interactionType) {
+        this.interactionType = interactionType;
     }
 
 }

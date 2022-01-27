@@ -92,6 +92,7 @@ public class GrocerySimulator extends Simulator {
     public static int currentServiceFoodCount = 0;
 
     public static int currentFoodFoodCount = 0;
+    public static int[][] currentPatchCount;
 
     public GrocerySimulator() {
         this.grocery = null;
@@ -133,6 +134,7 @@ public class GrocerySimulator extends Simulator {
         this.grocery = grocery;
         this.time.reset();
         this.running.set(false);
+        currentPatchCount = new int[grocery.getRows()][grocery.getColumns()];
     }
 
     public void spawnInitialAgents(Grocery grocery) {
@@ -406,7 +408,7 @@ public class GrocerySimulator extends Simulator {
     }
 
     private static void moveAll(Grocery grocery) { // Make all agents move for one tick
-        for (GroceryAgent agent : grocery.getAgents()) {
+        for (GroceryAgent agent : grocery.getMovableAgents()) {
             try {
                 moveOne(agent);
                 agent.getAgentGraphic().change();
@@ -731,11 +733,36 @@ public class GrocerySimulator extends Simulator {
                     GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
                     if (!groceryAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
                         if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), groceryAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
-                            if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), groceryAgent.getAgentMovement().getFieldOfViewAngle()))
+                            if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), groceryAgent.getAgentMovement().getFieldOfViewAngle())){
                                 agentMovement.rollAgentInteraction(groceryAgent);
+                                if (agentMovement.isInteracting()){ // interaction was successful
+                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                    currentPatchCount[groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                }
+                            }
                     if (agentMovement.isInteracting())
                         break;
                 }
+                if (agentMovement.isInteracting())
+                    break;
+            }
+            patches = agentMovement.get3x3Field(agentMovement.getHeading(), true, Math.toRadians(270));
+            for (Patch patch: patches){
+                for (Agent otherAgent: patch.getAgents()){
+                    GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
+                    if (!groceryAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
+                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), groceryAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
+                            if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
+                                agentMovement.rollAgentInteraction(groceryAgent);
+                                if (agentMovement.isInteracting()){ // interaction was successful
+                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                    currentPatchCount[groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                }
+                            }
+                    if (agentMovement.isInteracting())
+                        break;
+                }
+
                 if (agentMovement.isInteracting())
                     break;
             }
@@ -760,88 +787,92 @@ public class GrocerySimulator extends Simulator {
 
         if (CHANCE > spawnChance) {
             if (isFamily && totalAloneCustomerCount < MAX_FAMILY && currentFamilyCount < MAX_CURRENT_FAMILY) {
-                GroceryAgent leaderAgent = grocery.getUnspawnedFamilyAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedFamilyAgents().size()));
+                if (grocery.getUnspawnedFamilyAgents().size() > 0){
+                    GroceryAgent leaderAgent = grocery.getUnspawnedFamilyAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedFamilyAgents().size()));
 
-                if (leaderAgent.getPersona() == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER) { // Complete Family
-                    agent1 = leaderAgent;
-                    agent1.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), agent1, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
-                    grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
-                    GroceryAgent.customerCount++;
-                    GroceryAgent.agentCount++;
+                    if (leaderAgent.getPersona() == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER) { // Complete Family
+                        agent1 = leaderAgent;
+                        agent1.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), agent1, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
+                        grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
+                        GroceryAgent.customerCount++;
+                        GroceryAgent.agentCount++;
 
-                    agent2 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 1);
-                    agent2.setAgentMovement(new GroceryAgentMovement(spawner1.getPatch(), agent2, agent1, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick));
-                    grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
-                    GroceryAgent.customerCount++;
-                    GroceryAgent.agentCount++;
+                        agent2 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 1);
+                        agent2.setAgentMovement(new GroceryAgentMovement(spawner1.getPatch(), agent2, agent1, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick));
+                        grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+                        GroceryAgent.customerCount++;
+                        GroceryAgent.agentCount++;
 
-                    agent3 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 2);
-                    agent3.setAgentMovement(new GroceryAgentMovement(spawner3.getPatch(), agent3, agent1, 1.27, spawner3.getPatch().getPatchCenterCoordinates(), currentTick));
-                    grocery.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
-                    GroceryAgent.customerCount++;
-                    GroceryAgent.agentCount++;
+                        agent3 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 2);
+                        agent3.setAgentMovement(new GroceryAgentMovement(spawner3.getPatch(), agent3, agent1, 1.27, spawner3.getPatch().getPatchCenterCoordinates(), currentTick));
+                        grocery.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
+                        GroceryAgent.customerCount++;
+                        GroceryAgent.agentCount++;
 
-                    agent4 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 3);
-                    agent4.setAgentMovement(new GroceryAgentMovement(spawner4.getPatch(), agent4, agent1, 1.27, spawner4.getPatch().getPatchCenterCoordinates(), currentTick));
-                    grocery.getAgentPatchSet().add(agent4.getAgentMovement().getCurrentPatch());
-                    GroceryAgent.customerCount++;
-                    GroceryAgent.agentCount++;
+                        agent4 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 3);
+                        agent4.setAgentMovement(new GroceryAgentMovement(spawner4.getPatch(), agent4, agent1, 1.27, spawner4.getPatch().getPatchCenterCoordinates(), currentTick));
+                        grocery.getAgentPatchSet().add(agent4.getAgentMovement().getCurrentPatch());
+                        GroceryAgent.customerCount++;
+                        GroceryAgent.agentCount++;
 
-                    agent1.getAgentMovement().getFollowers().add(agent2);
-                    agent1.getAgentMovement().getFollowers().add(agent3);
-                    agent1.getAgentMovement().getFollowers().add(agent4);
-                    agent1.getAgentMovement().setNextState();
+                        agent1.getAgentMovement().getFollowers().add(agent2);
+                        agent1.getAgentMovement().getFollowers().add(agent3);
+                        agent1.getAgentMovement().getFollowers().add(agent4);
+                        agent1.getAgentMovement().setNextState();
+                    }
+                    else if (leaderAgent.getPersona() == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER) { // Help Family
+                        agent1 = leaderAgent;
+                        agent1.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), agent1, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
+                        grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
+                        GroceryAgent.customerCount++;
+                        GroceryAgent.agentCount++;
+
+                        agent2 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 1);
+                        agent2.setAgentMovement(new GroceryAgentMovement(spawner1.getPatch(), agent2, agent1, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick));
+                        grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+                        GroceryAgent.customerCount++;
+                        GroceryAgent.agentCount++;
+
+                        agent3 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 2);
+                        agent3.setAgentMovement(new GroceryAgentMovement(spawner3.getPatch(), agent3, agent1, 1.27, spawner3.getPatch().getPatchCenterCoordinates(), currentTick));
+                        grocery.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
+                        GroceryAgent.customerCount++;
+                        GroceryAgent.agentCount++;
+
+                        agent1.getAgentMovement().getFollowers().add(agent2);
+                        agent1.getAgentMovement().getFollowers().add(agent3);
+                        agent1.getAgentMovement().setNextState();
+                    }
+                    else { // Duo Family
+                        agent1 = leaderAgent;
+                        agent1.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), agent1, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
+                        grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
+                        GroceryAgent.customerCount++;
+                        GroceryAgent.agentCount++;
+
+                        agent2 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 1);
+                        agent2.setAgentMovement(new GroceryAgentMovement(spawner1.getPatch(), agent2, agent1, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick));
+                        grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+                        GroceryAgent.customerCount++;
+                        GroceryAgent.agentCount++;
+
+                        agent1.getAgentMovement().getFollowers().add(agent2);
+                        agent1.getAgentMovement().setNextState();
+                    }
+                    currentFamilyCount++;
+                    totalFamilyCount++;
                 }
-                else if (leaderAgent.getPersona() == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER) { // Help Family
-                    agent1 = leaderAgent;
-                    agent1.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), agent1, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
-                    grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
-                    GroceryAgent.customerCount++;
-                    GroceryAgent.agentCount++;
-
-                    agent2 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 1);
-                    agent2.setAgentMovement(new GroceryAgentMovement(spawner1.getPatch(), agent2, agent1, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick));
-                    grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
-                    GroceryAgent.customerCount++;
-                    GroceryAgent.agentCount++;
-
-                    agent3 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 2);
-                    agent3.setAgentMovement(new GroceryAgentMovement(spawner3.getPatch(), agent3, agent1, 1.27, spawner3.getPatch().getPatchCenterCoordinates(), currentTick));
-                    grocery.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
-                    GroceryAgent.customerCount++;
-                    GroceryAgent.agentCount++;
-
-                    agent1.getAgentMovement().getFollowers().add(agent2);
-                    agent1.getAgentMovement().getFollowers().add(agent3);
-                    agent1.getAgentMovement().setNextState();
-                }
-                else { // Duo Family
-                    agent1 = leaderAgent;
-                    agent1.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), agent1, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
-                    grocery.getAgentPatchSet().add(agent1.getAgentMovement().getCurrentPatch());
-                    GroceryAgent.customerCount++;
-                    GroceryAgent.agentCount++;
-
-                    agent2 = grocery.getAgents().get(grocery.getAgents().indexOf(leaderAgent) + 1);
-                    agent2.setAgentMovement(new GroceryAgentMovement(spawner1.getPatch(), agent2, agent1, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick));
-                    grocery.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
-                    GroceryAgent.customerCount++;
-                    GroceryAgent.agentCount++;
-
-                    agent1.getAgentMovement().getFollowers().add(agent2);
-                    agent1.getAgentMovement().setNextState();
-                }
-                currentFamilyCount++;
-                totalFamilyCount++;
             }
             else if (!isFamily && totalAloneCustomerCount < MAX_ALONE && currentAloneCustomerCount < MAX_CURRENT_ALONE) {
-                GroceryAgent aloneAgent = grocery.getUnspawnedAloneAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedAloneAgents().size()));
-                aloneAgent.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), aloneAgent, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
-                grocery.getAgentPatchSet().add(aloneAgent.getAgentMovement().getCurrentPatch());
-                currentAloneCustomerCount++;
-                totalAloneCustomerCount++;
-                GroceryAgent.customerCount++;
-                GroceryAgent.agentCount++;
+                if (grocery.getUnspawnedAloneAgents().size() > 0){
+                    GroceryAgent aloneAgent = grocery.getUnspawnedAloneAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedAloneAgents().size()));
+                    aloneAgent.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), aloneAgent, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));
+                    grocery.getAgentPatchSet().add(aloneAgent.getAgentMovement().getCurrentPatch());
+                    currentAloneCustomerCount++;
+                    totalAloneCustomerCount++;
+                    GroceryAgent.customerCount++;
+                    GroceryAgent.agentCount++;
+                }
             }
         }
     }

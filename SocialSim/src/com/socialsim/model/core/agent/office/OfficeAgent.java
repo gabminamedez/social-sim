@@ -10,6 +10,7 @@ import java.util.Objects;
 
 public class OfficeAgent extends Agent {
 
+    private int idCtr = 0;
     public static int agentCount = 0;
     public static int bossCount = 0;
     public static int managerCount = 0;
@@ -192,8 +193,9 @@ public class OfficeAgent extends Agent {
     }
 
     private OfficeAgent(OfficeAgent.Type type, boolean inOnStart, int team) {
-        this.id = agentCount;
+        this.id = idCtr++;
         this.type = type;
+        this.team = team;
         this.inOnStart = inOnStart;
 //
 //        if (type == Type.BOSS) {
