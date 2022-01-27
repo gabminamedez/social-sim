@@ -3,7 +3,7 @@ package com.socialsim.model.core.environment.generic.patchfield;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
-import com.socialsim.model.core.environment.generic.patchobject.passable.goal.QueueableGoal;
+import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +11,11 @@ import java.util.List;
 public class QueueingPatchField extends BaseObject {
 
     private final List<Patch> associatedPatches;
-    private final QueueableGoal target;
+    private final Amenity target;
     private List<Agent> queueingAgents;
     private Agent currentAgent;
 
-    protected QueueingPatchField(List<Patch> patches, QueueableGoal target) {
+    protected QueueingPatchField(List<Patch> patches, Amenity target) {
         super();
 
         this.associatedPatches = new ArrayList<>();
@@ -29,7 +29,7 @@ public class QueueingPatchField extends BaseObject {
         return associatedPatches;
     }
 
-    public QueueableGoal getQueueableGoal() {
+    public Amenity getTarget() {
         return target;
     }
 

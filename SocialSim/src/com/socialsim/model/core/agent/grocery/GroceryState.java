@@ -45,6 +45,17 @@ public class GroceryState {
 
     private AisleCluster aisleCluster;
 
+    public GroceryState(GroceryState groceryState, GroceryRoutePlan routePlan, GroceryAgent agent){
+        this.name = groceryState.getName();
+        this.routePlan = routePlan;
+        this.agent = agent;
+        this.actions = groceryState.getActions();
+
+        if (groceryState.getAisleCluster() != null) {
+            this.aisleCluster = groceryState.getAisleCluster();
+        }
+    }
+
     public GroceryState(Name a, GroceryRoutePlan routePlan, GroceryAgent agent){
         this.name = a;
         this.routePlan = routePlan;

@@ -28,6 +28,10 @@ public class Mall extends Environment {
     private final List<StoreCounter> storeCounters;
     private final List<Table> tables;
     private final List<Trash> trashes;
+    private final List<Toilet> toilets;
+    private final List<Sink> sinks;
+    private final List<StoreAisle> storeAisles;
+
 
     private final List<Bathroom> bathrooms;
     private final List<Dining> dinings;
@@ -35,8 +39,8 @@ public class Mall extends Environment {
     private final List<Showcase> showcases;
     private final List<Store> stores;
     private final List<Wall> walls;
-
-    List<MallAgent> agentBacklogs;
+    private final List<SecurityField> securityFields;
+    private final List<KioskField> kioskFields;
 
     private static final Mall.MallFactory mallFactory;
 
@@ -61,6 +65,9 @@ public class Mall extends Environment {
         this.storeCounters = Collections.synchronizedList(new ArrayList<>());
         this.tables = Collections.synchronizedList(new ArrayList<>());
         this.trashes = Collections.synchronizedList(new ArrayList<>());
+        this.toilets = Collections.synchronizedList(new ArrayList<>());
+        this.sinks = Collections.synchronizedList(new ArrayList<>());
+        this.storeAisles = Collections.synchronizedList(new ArrayList<>());
 
         this.bathrooms = Collections.synchronizedList(new ArrayList<>());
         this.dinings = Collections.synchronizedList(new ArrayList<>());
@@ -68,8 +75,8 @@ public class Mall extends Environment {
         this.showcases = Collections.synchronizedList(new ArrayList<>());
         this.stores = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
-
-        this.agentBacklogs = Collections.synchronizedList(new ArrayList<>());
+        this.securityFields = Collections.synchronizedList(new ArrayList<>());
+        this.kioskFields = Collections.synchronizedList(new ArrayList<>());
     }
 
     public CopyOnWriteArrayList<MallAgent> getAgents() {
@@ -122,6 +129,18 @@ public class Mall extends Environment {
         return trashes;
     }
 
+    public List<Toilet> getToilets() {
+        return toilets;
+    }
+
+    public List<Sink> getSinks() {
+        return sinks;
+    }
+
+    public List<StoreAisle> getStoreAisles() {
+        return storeAisles;
+    }
+
     public List<Bathroom> getBathrooms() {
         return bathrooms;
     }
@@ -146,8 +165,12 @@ public class Mall extends Environment {
         return walls;
     }
 
-    public List<MallAgent> getAgentBacklogs() {
-        return agentBacklogs;
+    public List<SecurityField> getSecurityFields() {
+        return securityFields;
+    }
+
+    public List<KioskField> getKioskFields() {
+        return kioskFields;
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {
@@ -177,6 +200,12 @@ public class Mall extends Environment {
         }
         else if (amenityClass == Trash.class) {
             return this.getTrashes();
+        }
+        else if (amenityClass == Toilet.class) {
+            return this.getToilets();
+        }
+        else if (amenityClass == Sink.class) {
+            return this.getSinks();
         }
         else {
             return null;

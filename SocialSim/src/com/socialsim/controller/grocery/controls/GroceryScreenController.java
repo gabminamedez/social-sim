@@ -123,15 +123,15 @@ public class GroceryScreenController extends ScreenController {
 
         List<Patch> freshProductsPatches = new ArrayList<>();
         freshProductsPatches.add(grocery.getPatch(22,9));
-        freshProductsPatches.add(grocery.getPatch(28,9));
         freshProductsPatches.add(grocery.getPatch(22,20));
+        freshProductsPatches.add(grocery.getPatch(28,9));
         freshProductsPatches.add(grocery.getPatch(28,20));
         FreshProductsMapper.draw(freshProductsPatches);
 
         List<Patch> frozenProductsPatches = new ArrayList<>();
         frozenProductsPatches.add(grocery.getPatch(10,9));
-        frozenProductsPatches.add(grocery.getPatch(16,9));
         frozenProductsPatches.add(grocery.getPatch(10,20));
+        frozenProductsPatches.add(grocery.getPatch(16,9));
         frozenProductsPatches.add(grocery.getPatch(16,20));
         FrozenProductsMapper.draw(frozenProductsPatches);
 
@@ -154,57 +154,57 @@ public class GroceryScreenController extends ScreenController {
         MeatSectionMapper.draw(meatSectionPatches);
 
         List<Patch> productAislePatches = new ArrayList<>();
-        productAislePatches.add(grocery.getPatch(10,31));
-        productAislePatches.add(grocery.getPatch(16,31));
-        productAislePatches.add(grocery.getPatch(22,31));
-        productAislePatches.add(grocery.getPatch(28,31));
-        productAislePatches.add(grocery.getPatch(10,58));
-        productAislePatches.add(grocery.getPatch(16,58));
-        productAislePatches.add(grocery.getPatch(22,58));
-        productAislePatches.add(grocery.getPatch(28,58));
-        productAislePatches.add(grocery.getPatch(10,83));
-        productAislePatches.add(grocery.getPatch(16,83));
-        productAislePatches.add(grocery.getPatch(22,83));
-        productAislePatches.add(grocery.getPatch(28,83));
+        productAislePatches.add(grocery.getPatch(10,31)); // 0
+        productAislePatches.add(grocery.getPatch(10,58)); // 1
+        productAislePatches.add(grocery.getPatch(10,83)); // 2
+        productAislePatches.add(grocery.getPatch(16,31)); // 3
+        productAislePatches.add(grocery.getPatch(16,58)); // 4
+        productAislePatches.add(grocery.getPatch(16,83)); // 5
+        productAislePatches.add(grocery.getPatch(22,31)); // 6
+        productAislePatches.add(grocery.getPatch(22,58)); // 7
+        productAislePatches.add(grocery.getPatch(22,83)); // 8
+        productAislePatches.add(grocery.getPatch(28,31)); // 9
+        productAislePatches.add(grocery.getPatch(28,58)); // 10
+        productAislePatches.add(grocery.getPatch(28,83)); // 11
         ProductAisleMapper.draw(productAislePatches);
 
         List<Patch> productShelfPatches = new ArrayList<>();
-        productShelfPatches.add(grocery.getPatch(10,47));
-        productShelfPatches.add(grocery.getPatch(16,47));
-        productShelfPatches.add(grocery.getPatch(22,47));
-        productShelfPatches.add(grocery.getPatch(28,47));
-        productShelfPatches.add(grocery.getPatch(10,73));
-        productShelfPatches.add(grocery.getPatch(16,73));
-        productShelfPatches.add(grocery.getPatch(22,73));
-        productShelfPatches.add(grocery.getPatch(28,73));
-        productShelfPatches.add(grocery.getPatch(34,9));
-        productShelfPatches.add(grocery.getPatch(34,20));
-        productShelfPatches.add(grocery.getPatch(34,31));
-        productShelfPatches.add(grocery.getPatch(34,42));
-        productShelfPatches.add(grocery.getPatch(34,53));
-        productShelfPatches.add(grocery.getPatch(34,64));
-        productShelfPatches.add(grocery.getPatch(34,75));
-        productShelfPatches.add(grocery.getPatch(34,86));
+        productShelfPatches.add(grocery.getPatch(10,47)); // 0
+        productShelfPatches.add(grocery.getPatch(10,73)); // 1
+        productShelfPatches.add(grocery.getPatch(16,47)); // 2
+        productShelfPatches.add(grocery.getPatch(16,73)); // 3
+        productShelfPatches.add(grocery.getPatch(22,47)); // 4
+        productShelfPatches.add(grocery.getPatch(22,73)); // 5
+        productShelfPatches.add(grocery.getPatch(28,47)); // 6
+        productShelfPatches.add(grocery.getPatch(28,73)); // 7
+        productShelfPatches.add(grocery.getPatch(34,9)); // 8
+        productShelfPatches.add(grocery.getPatch(34,20)); // 9
+        productShelfPatches.add(grocery.getPatch(34,31)); // 10
+        productShelfPatches.add(grocery.getPatch(34,42)); // 11
+        productShelfPatches.add(grocery.getPatch(34,53)); // 12
+        productShelfPatches.add(grocery.getPatch(34,64)); // 13
+        productShelfPatches.add(grocery.getPatch(34,75)); // 14
+        productShelfPatches.add(grocery.getPatch(34,86)); // 15
         ProductShelfMapper.draw(productShelfPatches);
 
         List<Patch> productWallDownPatches = new ArrayList<>();
-        productWallDownPatches.add(grocery.getPatch(0,5));
-        productWallDownPatches.add(grocery.getPatch(0,14));
-        productWallDownPatches.add(grocery.getPatch(0,23));
-        productWallDownPatches.add(grocery.getPatch(0,32));
-        productWallDownPatches.add(grocery.getPatch(0,41));
-        productWallDownPatches.add(grocery.getPatch(0,51));
-        productWallDownPatches.add(grocery.getPatch(0,60));
-        productWallDownPatches.add(grocery.getPatch(0,69));
-        productWallDownPatches.add(grocery.getPatch(0,78));
-        productWallDownPatches.add(grocery.getPatch(0,87));
+        productWallDownPatches.add(grocery.getPatch(0,5)); // 0
+        productWallDownPatches.add(grocery.getPatch(0,14)); // 1
+        productWallDownPatches.add(grocery.getPatch(0,23)); // 2
+        productWallDownPatches.add(grocery.getPatch(0,32)); // 3
+        productWallDownPatches.add(grocery.getPatch(0,41)); // 4
+        productWallDownPatches.add(grocery.getPatch(0,51)); // 5
+        productWallDownPatches.add(grocery.getPatch(0,60)); // 6
+        productWallDownPatches.add(grocery.getPatch(0,69)); // 7
+        productWallDownPatches.add(grocery.getPatch(0,78)); // 8
+        productWallDownPatches.add(grocery.getPatch(0,87)); // 9
         ProductWallMapper.draw(productWallDownPatches, "DOWN");
 
         List<Patch> productWallLeftPatches = new ArrayList<>();
-        productWallLeftPatches.add(grocery.getPatch(6,98));
-        productWallLeftPatches.add(grocery.getPatch(15,98));
-        productWallLeftPatches.add(grocery.getPatch(25,98));
-        productWallLeftPatches.add(grocery.getPatch(34,98));
+        productWallLeftPatches.add(grocery.getPatch(6,98)); // 10
+        productWallLeftPatches.add(grocery.getPatch(15,98)); // 11
+        productWallLeftPatches.add(grocery.getPatch(25,98)); // 12
+        productWallLeftPatches.add(grocery.getPatch(34,98)); // 13
         ProductWallMapper.draw(productWallLeftPatches, "LEFT");
 
         List<Patch> tablePatches = new ArrayList<>();
@@ -344,8 +344,8 @@ public class GroceryScreenController extends ScreenController {
 
     @FXML
     public void resetAction() {
-        initializeAction();
         Main.grocerySimulator.reset();
+        GroceryAgent.clearGroceryAgentCounts();
         clearGrocery(Main.grocerySimulator.getGrocery());
         Main.universitySimulator.spawnInitialAgents(Main.universitySimulator.getUniversity());
         drawGroceryViewForeground(Main.grocerySimulator.getGrocery(), false); // Redraw the canvas

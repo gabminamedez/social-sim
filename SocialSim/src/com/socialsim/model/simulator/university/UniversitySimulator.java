@@ -10,13 +10,14 @@ import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.university.University;
-import com.socialsim.model.core.environment.university.patchfield.StudyArea;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.List;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
@@ -50,9 +51,11 @@ public class UniversitySimulator extends Simulator {
     public static int currentProfJanitorCount = 0;
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
-    private final int MAX_STUDENTS = 100; // 250
-    private final int MAX_PROFESSORS = 20;
-    private final int NUM_AGENTS = 500;
+    public static int[][] currentPatchCount;
+    public static final int MAX_STUDENTS = 50; //250
+    public static final int MAX_PROFESSORS = 0;
+    public static final int MAX_CURRENT_STUDENTS = 3; //250
+    public static final int MAX_CURRENT_PROFESSORS = 0;
 
     public UniversitySimulator() {
         this.university = null;
@@ -94,24 +97,33 @@ public class UniversitySimulator extends Simulator {
         this.university = university;
         this.time.reset();
         this.running.set(false);
+        currentPatchCount = new int[university.getRows()][university.getColumns()];
+        for (int j = 0; j < university.getRows(); j++)
+            Arrays.setAll(currentPatchCount[j], i -> Simulator.RANDOM_NUMBER_GENERATOR.nextInt(255));
     }
 
     public void spawnInitialAgents(University university) {
-        university.createInitialAgentDemographics(NUM_AGENTS);
+        university.createInitialAgentDemographics(MAX_STUDENTS, MAX_PROFESSORS);
         UniversityAgent guard = university.getAgents().get(0); // 0
         guard.setAgentMovement(new UniversityAgentMovement(university.getPatch(57,12), guard, 1.27, university.getPatch(57,12).getPatchCenterCoordinates(), -1));
-        university.getAgents().add(guard);
+//        university.getAgents().add(guard);
         university.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
+        UniversityAgent.guardCount++;
+        UniversityAgent.agentCount++;
 
         UniversityAgent janitor1 = university.getAgents().get(1); // 1
         janitor1.setAgentMovement(new UniversityAgentMovement(university.getPatch(6,65), janitor1, 1.27, university.getPatch(6,65).getPatchCenterCoordinates(), -1));
-        university.getAgents().add(janitor1);
+//        university.getAgents().add(janitor1);
         university.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
+        UniversityAgent.janitorCount++;
+        UniversityAgent.agentCount++;
 
         UniversityAgent janitor2 = university.getAgents().get(2); // 2
         janitor2.setAgentMovement(new UniversityAgentMovement(university.getPatch(7,66), janitor2, 1.27, university.getPatch(7,66).getPatchCenterCoordinates(), -1));
-        university.getAgents().add(janitor2);
+//        university.getAgents().add(janitor2);
         university.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
+        UniversityAgent.janitorCount++;
+        UniversityAgent.agentCount++;
     }
 
     public void reset() {
@@ -1933,8 +1945,32 @@ public class UniversitySimulator extends Simulator {
                     UniversityAgent universityAgent = (UniversityAgent) otherAgent;
                     if (!universityAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
                         if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), universityAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
-                            if (Coordinates.isWithinFieldOfView(universityAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), universityAgent.getAgentMovement().getProposedHeading(), universityAgent.getAgentMovement().getFieldOfViewAngle()))
+                            if (Coordinates.isWithinFieldOfView(universityAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), universityAgent.getAgentMovement().getProposedHeading(), universityAgent.getAgentMovement().getFieldOfViewAngle())){
                                 agentMovement.rollAgentInteraction(universityAgent);
+                                if (agentMovement.isInteracting()){ // interaction was successful
+                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                    currentPatchCount[universityAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][universityAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                }
+                            }
+                    if (agentMovement.isInteracting())
+                        break;
+                }
+                if (agentMovement.isInteracting())
+                    break;
+            }
+            patches = agentMovement.get3x3Field(agentMovement.getHeading(), true, Math.toRadians(270));
+            for (Patch patch: patches){
+                for (Agent otherAgent: patch.getAgents()){
+                    UniversityAgent universityAgent = (UniversityAgent) otherAgent;
+                    if (!universityAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
+                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), universityAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
+                            if (Coordinates.isWithinFieldOfView(universityAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), universityAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
+                                agentMovement.rollAgentInteraction(universityAgent);
+                                if (agentMovement.isInteracting()){ // interaction was successful
+                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                    currentPatchCount[universityAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][universityAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                }
+                            }
                     if (agentMovement.isInteracting())
                         break;
                 }
@@ -1955,17 +1991,21 @@ public class UniversitySimulator extends Simulator {
             double CHANCE = Simulator.roll();
             if (CHANCE < spawnChance){
                 agent = university.getUnspawnedAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(university.getUnspawnedAgents().size()));
-                if (agent.getType() == UniversityAgent.Type.STUDENT && currentStudentCount < this.MAX_STUDENTS && currentStudentCount < UniversityAgent.studentCount){
+                if (agent.getType() == UniversityAgent.Type.STUDENT && UniversityAgent.studentCount < MAX_STUDENTS && currentStudentCount < MAX_CURRENT_STUDENTS){
                     agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
-                    university.getAgents().add(agent);
+//                    university.getAgents().add(agent);
                     university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     currentStudentCount++;
+                    UniversityAgent.studentCount++;
+                    UniversityAgent.agentCount++;
                 }
-                else if (agent.getType() == UniversityAgent.Type.PROFESSOR && currentProfessorCount < this.MAX_PROFESSORS && currentProfessorCount < UniversityAgent.professorCount){
+                else if (agent.getType() == UniversityAgent.Type.PROFESSOR && UniversityAgent.professorCount < MAX_PROFESSORS && currentProfessorCount < MAX_CURRENT_PROFESSORS){
                     agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
-                    university.getAgents().add(agent);
+//                    university.getAgents().add(agent);
                     university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     currentProfessorCount++;
+                    UniversityAgent.professorCount++;
+                    UniversityAgent.agentCount++;
                 }
             }
         }

@@ -4,11 +4,9 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TitledPane?>
@@ -76,19 +74,20 @@
                 <VBox prefHeight="794.0" prefWidth="286.0">
                     <TitledPane animated="false" collapsible="false" prefHeight="70.0" prefWidth="100.0" text="Simulation">
                         <VBox alignment="CENTER" prefHeight="70.0" prefWidth="100.0" spacing="10.0">
-                            <Button id="initializeButton" mnemonicParsing="false" text="Initialize" onAction="#initializeAction" />
+                            <Button id="initializeButton" mnemonicParsing="false" onAction="#initializeAction" text="Initialize" />
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                 <Text fx:id="elapsedTimeText" strokeType="OUTSIDE" strokeWidth="0.0" text="Current time: 00:00:00 (0 ticks)" textAlignment="CENTER" />
                             </HBox>
 
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="230.0" spacing="10.0">
-                                <ToggleButton fx:id="playButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="230.0" text="Play" onAction="#playAction" />
-                                <Button fx:id="resetButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Reset"  onAction="#resetAction" />
+                                <ToggleButton fx:id="playButton" mnemonicParsing="false" onAction="#playAction" prefHeight="25.0" prefWidth="230.0" text="Play" />
+                                <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetAction" prefHeight="25.0" prefWidth="117.0" text="Reset" />
                             </HBox>
 
                             <VBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                 <Label prefHeight="17.0" prefWidth="248.0" text="Simulation speed:" />
                                 <Slider fx:id="speedSlider" max="300.0" min="1.0" prefWidth="273.0" snapToTicks="true" value="1.0" />
+                        <Button mnemonicParsing="false" onAction="#generateHeatMap" text="Generate Heat Map" />
                             </VBox>
                         </VBox>
                     </TitledPane>

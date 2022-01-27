@@ -4,6 +4,7 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.graphics.amenity.AmenityMapper;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
+import com.socialsim.model.core.environment.grocery.patchfield.GroceryGateField;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 
 import java.util.ArrayList;
@@ -37,9 +38,16 @@ public class GroceryGateMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock4);
             patch4.setAmenityBlock(amenityBlock4);
 
-            GroceryGate groceryGateToAdd = GroceryGate.GroceryGateFactory.create(amenityBlocks, true, 20.0, ugMode);
+            GroceryGate groceryGateToAdd = GroceryGate.GroceryGateFactory.create(amenityBlocks, true, 95, ugMode);
             Main.grocerySimulator.getGrocery().getGroceryGates().add(groceryGateToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
+
+            if (ugMode == GroceryGate.GroceryGateMode.EXIT) {
+                List<Patch> groceryGateFieldPatches = new ArrayList<>();
+                groceryGateFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow - 1, origPatchCol + 2));
+                groceryGateFieldPatches.add(Main.grocerySimulator.getGrocery().getPatch(origPatchRow - 2, origPatchCol + 2));
+                Main.grocerySimulator.getGrocery().getGroceryGateFields().add(GroceryGateField.groceryGateFieldFactory.create(groceryGateFieldPatches, groceryGateToAdd, 1));
+            }
         }
     }
 

@@ -1188,6 +1188,21 @@ public class UniversityAgentMovement extends AgentMovement {
         return patchesToExplore;
     }
 
+    public List<Patch> get3x3Field(double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
+        Patch centerPatch = this.currentPatch;
+        List<Patch> patchesToExplore = new ArrayList<>();
+        boolean isCenterPatch;
+
+        for (Patch patch : centerPatch.get3x3Neighbors(includeCenterPatch)) {
+            // Make sure that the patch to be added is within the field of view of the agent which invoked this method
+            isCenterPatch = patch.equals(centerPatch);
+            if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(centerPatch.getPatchCenterCoordinates(), patch.getPatchCenterCoordinates(), heading, fieldOfViewAngle)) {
+                patchesToExplore.add(patch);
+            }
+        }
+        return patchesToExplore;
+    }
+
     private Vector computeAttractiveForce(final Coordinates startingPosition, final double proposedHeading, final Coordinates proposedNewPosition, final double preferredWalkingDistance) {
         return new Vector(startingPosition, proposedHeading, proposedNewPosition, preferredWalkingDistance);
     }
@@ -1453,6 +1468,10 @@ public class UniversityAgentMovement extends AgentMovement {
             SortedSet<Patch> currentPatchSet = this.getUniversity().getAgentPatchSet();
             if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
                 currentPatchSet.remove(this.currentPatch);
+            }
+            switch (this.getParent().getType()){
+                case STUDENT -> UniversitySimulator.currentStudentCount--;
+                case PROFESSOR -> UniversitySimulator.currentProfessorCount--;
             }
         }
     }
@@ -1753,7 +1772,7 @@ public class UniversityAgentMovement extends AgentMovement {
         }
     }
 
-    public void forceActionInteraction(UniversityAgent agent, InteractionType interactionType, int duration){
+    public void forceActionInteraction(UniversityAgent agent, InteractionType interactionType, int duration, UniversitySimulator UniversitySimulator){
         //TODO: Statistics in interaction
 
         // set own agent interaction parameters
@@ -1798,43 +1817,6 @@ public class UniversityAgentMovement extends AgentMovement {
         double CHANCE2 = Simulator.roll();
         double interactionStdDeviation, interactionMean;
         if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
-            // set own agent interaction parameters
-            this.isInteracting = true;
-            // set other agent interaction parameters
-            agent.getAgentMovement().setInteracting(true);
-
-            if (this.parent.getType() == UniversityAgent.Type.STUDENT){
-                switch (agent.getType()){
-                    case STUDENT -> UniversitySimulator.currentStudentStudentCount++;
-                    case PROFESSOR -> UniversitySimulator.currentStudentProfCount++;
-                    case GUARD -> UniversitySimulator.currentStudentGuardCount++;
-                    case JANITOR -> UniversitySimulator.currentStudentJanitorCount++;
-                }
-            }
-            else if (this.parent.getType() == UniversityAgent.Type.PROFESSOR){
-                switch (agent.getType()){
-                    case STUDENT -> UniversitySimulator.currentStudentProfCount++;
-                    case PROFESSOR -> UniversitySimulator.currentProfProfCount++;
-                    case GUARD -> UniversitySimulator.currentProfGuardCount++;
-                    case JANITOR -> UniversitySimulator.currentProfJanitorCount++;
-                }
-            }
-            else if (this.parent.getType() == UniversityAgent.Type.GUARD){
-                switch (agent.getType()){
-                    case STUDENT -> UniversitySimulator.currentStudentGuardCount++;
-                    case PROFESSOR -> UniversitySimulator.currentProfGuardCount++;
-                    case JANITOR -> UniversitySimulator.currentGuardJanitorCount++;
-                }
-            }
-            else if (this.parent.getType() == UniversityAgent.Type.JANITOR){
-                switch (agent.getType()){
-                    case STUDENT -> UniversitySimulator.currentStudentJanitorCount++;
-                    case PROFESSOR -> UniversitySimulator.currentProfJanitorCount++;
-                    case GUARD -> UniversitySimulator.currentGuardJanitorCount++;
-                    case JANITOR -> UniversitySimulator.currentJanitorJanitorCount++;
-                }
-            }
-
             // roll if what kind of interaction
             CHANCE1 = Simulator.roll() * IOS1;
             CHANCE2 = Simulator.roll() * IOS2;
@@ -1871,8 +1853,43 @@ public class UniversityAgentMovement extends AgentMovement {
                 interactionMean = 19;
             }
             else{
-                interactionStdDeviation = 0;
-                interactionMean = 0;
+                return;
+            }
+            // set own agent interaction parameters
+            this.isInteracting = true;
+            // set other agent interaction parameters
+            agent.getAgentMovement().setInteracting(true);
+
+            if (this.parent.getType() == UniversityAgent.Type.STUDENT){
+                switch (agent.getType()){
+                    case STUDENT -> UniversitySimulator.currentStudentStudentCount++;
+                    case PROFESSOR -> UniversitySimulator.currentStudentProfCount++;
+                    case GUARD -> UniversitySimulator.currentStudentGuardCount++;
+                    case JANITOR -> UniversitySimulator.currentStudentJanitorCount++;
+                }
+            }
+            else if (this.parent.getType() == UniversityAgent.Type.PROFESSOR){
+                switch (agent.getType()){
+                    case STUDENT -> UniversitySimulator.currentStudentProfCount++;
+                    case PROFESSOR -> UniversitySimulator.currentProfProfCount++;
+                    case GUARD -> UniversitySimulator.currentProfGuardCount++;
+                    case JANITOR -> UniversitySimulator.currentProfJanitorCount++;
+                }
+            }
+            else if (this.parent.getType() == UniversityAgent.Type.GUARD){
+                switch (agent.getType()){
+                    case STUDENT -> UniversitySimulator.currentStudentGuardCount++;
+                    case PROFESSOR -> UniversitySimulator.currentProfGuardCount++;
+                    case JANITOR -> UniversitySimulator.currentGuardJanitorCount++;
+                }
+            }
+            else if (this.parent.getType() == UniversityAgent.Type.JANITOR){
+                switch (agent.getType()){
+                    case STUDENT -> UniversitySimulator.currentStudentJanitorCount++;
+                    case PROFESSOR -> UniversitySimulator.currentProfJanitorCount++;
+                    case GUARD -> UniversitySimulator.currentGuardJanitorCount++;
+                    case JANITOR -> UniversitySimulator.currentJanitorJanitorCount++;
+                }
             }
             // roll duration (NOTE GAUSSIAN)
             this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));

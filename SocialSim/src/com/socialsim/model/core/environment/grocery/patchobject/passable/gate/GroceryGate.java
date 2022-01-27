@@ -13,7 +13,7 @@ import java.util.List;
 
 public class GroceryGate extends Gate {
 
-    private double chancePerSecond; // Denotes the chance of generating an agent per second
+    private double chancePerTick; // Denotes the chance of generating an agent per second
     private GroceryGateMode groceryGateMode;
     private int agentBacklogCount; // Denotes the number of agents who are supposed to enter the gate, but cannot
     public static final GroceryGateFactory groceryGateFactory;
@@ -23,21 +23,21 @@ public class GroceryGate extends Gate {
         groceryGateFactory = new GroceryGateFactory();
     }
 
-    protected GroceryGate(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerSecond, GroceryGateMode groceryGateMode) {
+    protected GroceryGate(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerTick, GroceryGateMode groceryGateMode) {
         super(amenityBlocks, enabled);
 
-        this.chancePerSecond = chancePerSecond;
+        this.chancePerTick = chancePerTick;
         this.groceryGateMode = groceryGateMode;
         this.agentBacklogCount = 0;
         this.groceryGateGraphic = new GroceryGateGraphic(this);
     }
 
-    public double getChancePerSecond() {
-        return chancePerSecond;
+    public double getChancePerTick() {
+        return chancePerTick;
     }
 
-    public void setChancePerSecond(double chancePerSecond) {
-        this.chancePerSecond = chancePerSecond;
+    public void setChancePerTick(double chancePerTick) {
+        this.chancePerTick = chancePerTick;
     }
 
     public GroceryGateMode getGroceryGateMode() {
@@ -154,8 +154,8 @@ public class GroceryGate extends Gate {
     }
 
     public static class GroceryGateFactory extends GateFactory {
-        public static GroceryGate create(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerSecond, GroceryGateMode groceryGateMode) {
-            return new GroceryGate(amenityBlocks, enabled, chancePerSecond, groceryGateMode);
+        public static GroceryGate create(List<AmenityBlock> amenityBlocks, boolean enabled, double chancePerTick, GroceryGateMode groceryGateMode) {
+            return new GroceryGate(amenityBlocks, enabled, chancePerTick, groceryGateMode);
         }
     }
 

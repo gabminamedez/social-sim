@@ -2,15 +2,22 @@ package com.socialsim.model.simulator.office;
 
 import com.socialsim.controller.Main;
 import com.socialsim.controller.office.controls.OfficeScreenController;
+import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.agent.office.OfficeAction;
 import com.socialsim.model.core.agent.office.OfficeAgentMovement;
 import com.socialsim.model.core.agent.office.OfficeState;
+import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
+import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Cabinet;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.CollabDesk;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Couch;
+import com.socialsim.model.core.environment.office.patchobject.passable.goal.Printer;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.Sink;
+import com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
@@ -46,10 +53,122 @@ public class OfficeSimulator extends Simulator {
     public static List<Integer> TECHNICAL_2 = new LinkedList<Integer>(List.of(43));
     public static List<Integer> TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
     public static List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
+
     private final int MAX_SECRETARIES = 1;
     private final int MAX_CLIENTS = 6;
     private final int MAX_DRIVERS = 3;
     private final int MAX_VISITORS = 1;
+
+    public static int currentManagerCount = 0;
+    public static int currentBusinessCount = 0;
+    public static int currentResearchCount = 0;
+    public static int currentTechnicalCount = 0;
+    public static int currentSecretaryCount = 0;
+    public static int currentClientCount = 0;
+    public static int currentDriverCount = 0;
+    public static int currentVisitorCount = 0;
+    public static int currentNonverbalCount = 0;
+    public static int currentCooperativeCount = 0;
+    public static int currentExchangeCount = 0;
+
+    public static int averageNonverbalDuration = 0;
+    public static int averageCooperativeDuration = 0;
+    public static int averageExchangeDuration = 0;
+
+    public static int currentTeam1Count = 0;
+    public static int currentTeam2Count = 0;
+    public static int currentTeam3Count = 0;
+    public static int currentTeam4Count = 0;
+
+    public static int currentBossManagerCount = 0;
+    public static int currentBossBusinessCount = 0;
+    public static int currentBossResearcherCount = 0;
+    public static int currentBossTechnicalCount = 0;
+    public static int currentBossJanitorCount = 0;
+    public static int currentBossClientCount = 0;
+    public static int currentBossDriverCount = 0;
+    public static int currentBossVisitorCount = 0;
+    public static int currentBossGuardCount = 0;
+    public static int currentBossReceptionistCount = 0;
+    public static int currentBossSecretaryCount = 0;
+
+    public static int currentManagerManagerCount = 0;
+    public static int currentManagerBusinessCount = 0;
+    public static int currentManagerResearcherCount = 0;
+    public static int currentManagerTechnicalCount = 0;
+    public static int currentManagerJanitorCount = 0;
+    public static int currentManagerClientCount = 0;
+    public static int currentManagerDriverCount = 0;
+    public static int currentManagerVisitorCount = 0;
+    public static int currentManagerGuardCount = 0;
+    public static int currentManagerReceptionistCount = 0;
+    public static int currentManagerSecretaryCount = 0;
+
+    public static int currentBusinessBusinessCount = 0;
+    public static int currentBusinessResearcherCount = 0;
+    public static int currentBusinessTechnicalCount = 0;
+    public static int currentBusinessJanitorCount = 0;
+    public static int currentBusinessClientCount = 0;
+    public static int currentBusinessDriverCount = 0;
+    public static int currentBusinessVisitorCount = 0;
+    public static int currentBusinessGuardCount = 0;
+    public static int currentBusinessReceptionistCount = 0;
+    public static int currentBusinessSecretaryCount = 0;
+
+    public static int currentResearcherResearcherCount = 0;
+    public static int currentResearcherTechnicalCount = 0;
+    public static int currentResearcherJanitorCount = 0;
+    public static int currentResearcherClientCount = 0;
+    public static int currentResearcherDriverCount = 0;
+    public static int currentResearcherVisitorCount = 0;
+    public static int currentResearcherGuardCount = 0;
+    public static int currentResearcherReceptionistCount = 0;
+    public static int currentResearcherSecretaryCount = 0;
+
+    public static int currentTechnicalTechnicalCount = 0;
+    public static int currentTechnicalJanitorCount = 0;
+    public static int currentTechnicalClientCount = 0;
+    public static int currentTechnicalDriverCount = 0;
+    public static int currentTechnicalVisitorCount = 0;
+    public static int currentTechnicalGuardCount = 0;
+    public static int currentTechnicalReceptionistCount = 0;
+    public static int currentTechnicalSecretaryCount = 0;
+
+    public static int currentJanitorJanitorCount = 0;
+    public static int currentJanitorClientCount = 0;
+    public static int currentJanitorDriverCount = 0;
+    public static int currentJanitorVisitorCount = 0;
+    public static int currentJanitorGuardCount = 0;
+    public static int currentJanitorReceptionistCount = 0;
+    public static int currentJanitorSecretaryCount = 0;
+
+    public static int currentClientClientCount = 0;
+    public static int currentClientDriverCount = 0;
+    public static int currentClientVisitorCount = 0;
+    public static int currentClientGuardCount = 0;
+    public static int currentClientReceptionistCount = 0;
+    public static int currentClientSecretaryCount = 0;
+
+    public static int currentDriverDriverCount = 0;
+    public static int currentDriverVisitorCount = 0;
+    public static int currentDriverGuardCount = 0;
+    public static int currentDriverReceptionistCount = 0;
+    public static int currentDriverSecretaryCount = 0;
+
+    public static int currentVisitorVisitorCount = 0;
+    public static int currentVisitorGuardCount = 0;
+    public static int currentVisitorReceptionistCount = 0;
+    public static int currentVisitorSecretaryCount = 0;
+
+    public static int currentGuardGuardCount = 0;
+    public static int currentGuardReceptionistCount = 0;
+    public static int currentGuardSecretaryCount = 0;
+
+    public static int currentReceptionistReceptionistCount = 0;
+    public static int currentReceptionistSecretaryCount = 0;
+
+    public static int currentSecretarySecretaryCount = 0;
+
 
     public OfficeSimulator() {
         this.office = null;
@@ -94,17 +213,24 @@ public class OfficeSimulator extends Simulator {
     }
 
     public void spawnInitialAgents(Office office) {
-        OfficeAgent guard = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.GUARD, office.getPatch(57,35), true, -1, 0, null);
-        office.getAgents().add(guard);
-        office.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
-
-        OfficeAgent janitor = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.JANITOR, office.getPatch(6,23), true, -1, 0, null);
-        office.getAgents().add(janitor);
+        office.createInitialAgentDemographics(MAX_CLIENTS, MAX_DRIVERS, MAX_VISITORS);
+        OfficeAgent janitor = office.getAgents().get(0); // 0
+        janitor.setAgentMovement(new OfficeAgentMovement(office.getPatch(6,23), janitor, 1.27, office.getPatch(6,23).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(janitor.getAgentMovement().getCurrentPatch());
+        OfficeAgent.janitorCount++;
+        OfficeAgent.agentCount++;
 
-        OfficeAgent receptionist = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RECEPTIONIST, office.getPatch(46,37), true, -1, 0, null);
-        office.getAgents().add(receptionist);
+        OfficeAgent guard = office.getAgents().get(1); // 1
+        guard.setAgentMovement(new OfficeAgentMovement(office.getPatch(57,35), guard, 1.27, office.getPatch(57,35).getPatchCenterCoordinates(), -1, 0, null));
+        office.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
+        OfficeAgent.guardCount++;
+        OfficeAgent.agentCount++;
+
+        OfficeAgent receptionist = office.getAgents().get(2); // 2
+        receptionist.setAgentMovement(new OfficeAgentMovement(office.getPatch(46,37), receptionist, 1.27, office.getPatch(46,37).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(receptionist.getAgentMovement().getCurrentPatch());
+        OfficeAgent.receptionistCount++;
+        OfficeAgent.agentCount++;
     }
 
     public void reset() {
@@ -154,14 +280,16 @@ public class OfficeSimulator extends Simulator {
         for (OfficeAgent agent : office.getAgents()) {
             try {
                 if (currentTick == 2160 && (agent.getType() == OfficeAgent.Type.BOSS || agent.getType() == OfficeAgent.Type.MANAGER || agent.getType() == OfficeAgent.Type.BUSINESS || agent.getType() == OfficeAgent.Type.RESEARCHER || agent.getType() == OfficeAgent.Type.TECHNICAL)) {
-                    agent.getAgentMovement().setNextState();
+                    agent.getAgentMovement().setNextState(agent.getAgentMovement().getStateIndex());
+                    agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
                     agent.getAgentMovement().setActionIndex(0);
                     agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(0));
                     agent.getAgentMovement().resetGoal();
                 }
 
                 if (currentTick == 5760) {
-                    agent.getAgentMovement().setNextState();
+                    agent.getAgentMovement().setNextState(agent.getAgentMovement().getStateIndex());
+                    agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
                     agent.getAgentMovement().setActionIndex(0);
                     agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(0));
                     agent.getAgentMovement().resetGoal();
@@ -182,30 +310,15 @@ public class OfficeSimulator extends Simulator {
         OfficeAgent.Persona persona = agent.getPersona();
         OfficeState state = agentMovement.getCurrentState();
         OfficeAction action = agentMovement.getCurrentAction();
+        Office officeInstance = agentMovement.getOffice();
 
-        switch (type) {
+        boolean isFull = false;
+
+        if (!agentMovement.isInteracting() || agentMovement.isSimultaneousInteractionAllowed()){
+            switch (type) {
             case JANITOR:
                 if (state.getName() == OfficeState.Name.MAINTENANCE_BATHROOM) {
-                    if (action.getName() == OfficeAction.Name.JANITOR_GO_TOILET) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                        }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // Check if there are still patches left in the path
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
-                                }
-                            }
-                        }
-                    }
-                    else if (action.getName() == OfficeAction.Name.JANITOR_CLEAN_TOILET) {
+                    if (action.getName() == OfficeAction.Name.JANITOR_CLEAN_TOILET) {
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -215,15 +328,19 @@ public class OfficeSimulator extends Simulator {
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
+                            agentMovement.checkIfStuck();
                             if (agentMovement.hasReachedNextPatchInPath()) {
                                 agentMovement.reachPatchInPath();
                             }
                         }
                         else {
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() == 0) {
-                                agentMovement.setNextState();
+                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            if (agentMovement.getDuration() <= 0) {
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
+                                agentMovement.getGoalAttractor().setIsReserved(false);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
                             }
@@ -231,26 +348,7 @@ public class OfficeSimulator extends Simulator {
                     }
                 }
                 else if (state.getName() == OfficeState.Name.MAINTENANCE_PLANT) {
-                    if (action.getName() == OfficeAction.Name.JANITOR_GO_PLANT) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                        }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) { // Check if there are still patches left in the path
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
-                                }
-                            }
-                        }
-                    }
-                    else if (action.getName() == OfficeAction.Name.JANITOR_WATER_PLANT) {
+                    if (action.getName() == OfficeAction.Name.JANITOR_WATER_PLANT) {
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -260,14 +358,16 @@ public class OfficeSimulator extends Simulator {
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
+                            agentMovement.checkIfStuck();
                             if (agentMovement.hasReachedNextPatchInPath()) {
                                 agentMovement.reachPatchInPath();
                             }
-                        }
-                        else {
+                        }else {
+                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() == 0) {
-                                agentMovement.setPreviousState();
+                            if (agentMovement.getDuration() <= 0) {
+                                agentMovement.setPreviousState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -312,7 +412,8 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.leaveQueue();
-                                agentMovement.setNextState();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -323,7 +424,8 @@ public class OfficeSimulator extends Simulator {
                 else if (state.getName() == OfficeState.Name.WORKING) {
                     if (action.getName() == OfficeAction.Name.GO_TO_OFFICE_ROOM) {
                         if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination()
+                                    .getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
                         }
 
@@ -331,122 +433,180 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
+                                agentMovement.reachPatchInPath();
+                                if(agentMovement.hasAgentReachedFinalPatchInPath()){
+                                    agentMovement.getRoutePlan().setFromWorking(true);
+                                    if(agentMovement.getRoutePlan().isFromUrgent()){
+                                        agentMovement.getRoutePlan().setFromUrgent(false);
+                                    }
                                 }
                             }
-                        }
-                    }
-                    else if (action.getName() == OfficeAction.Name.GO_TO_STATION) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                        }
+                        }else if (agentMovement.getCurrentAction().getDuration() > 100){
+                            double CHANCE = Simulator.roll();
 
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                            if(CHANCE < 0.15 && agentMovement.getRoutePlan().getBATH_PM() > 0){
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                                agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                        agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                                agentMovement.getRoutePlan().setBATH_PM(1);
+                                agentMovement.getRoutePlan().setFromUrgent(true);
                             }
                         }
                     }
                 }
                 else if (state.getName() == OfficeState.Name.EATING_LUNCH) {
-                    if (action.getName() == OfficeAction.Name.GO_TO_OFFICE_ROOM) {
+                    if (action.getName() == OfficeAction.Name.GO_TO_LUNCH) {
                         if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                        }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
+                            agentMovement.getRoutePlan().setFromWorking(false);
+                            if(persona == OfficeAgent.Persona.PROFESSIONAL_BOSS){
+                                agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            }else{
+                                if(!agentMovement.chooseBreakroomSeat()){
+                                    agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                                    agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
                                 }
                             }
                         }
-                    }
-                    if (action.getName() == OfficeAction.Name.GO_TO_LUNCH) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                        }
 
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                agentMovement.reachPatchInPath();
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
+                                    if(!agentMovement.getRoutePlan().isFromUrgent()){
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }else{
+                                        agentMovement.getRoutePlan().setFromUrgent(false);
+                                    }
+                                        agentMovement.getRoutePlan().setFromEating(true);
                                 }
                             }
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.EAT_LUNCH) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            if (persona == OfficeAgent.Persona.PROFESSIONAL_BOSS) {
-                                agentMovement.setGoalAmenity(office.getChairs().get(4));
-                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                            }
-                            else {
-                                agentMovement.chooseBreakroomSeat();
-                            }
-                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                        }
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
 
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.getRoutePlan().setFromEating(false);
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
+                        }
+                        else if(agentMovement.getDuration() > 100){
+                            double CHANCE = Simulator.roll();
+
+                            if(CHANCE < 0.15 && agentMovement.getRoutePlan().getBATH_LUNCH() > 0){
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                                agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                        agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                                agentMovement.getRoutePlan().setBATH_LUNCH(1);
+                                agentMovement.getRoutePlan().setFromUrgent(true);
                             }
                         }
-                        else {
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                if (persona == OfficeAgent.Persona.PROFESSIONAL_BOSS) {
-                                    agentMovement.setNextState();
-                                    agentMovement.setActionIndex(0);
+                    }
+                }
+                else if(state.getName() == OfficeState.Name.NEEDS_BATHROOM){
+                    if (action.getName()== OfficeAction.Name.GO_TO_BATHROOM){
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if(!agentMovement.chooseGoal(Toilet.class)){
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }else{
+                                if(agentMovement.getRoutePlan().isFromWorking()){
+                                    agentMovement.getRoutePlan().setFromWorking(false);
+                                }else if(agentMovement.getRoutePlan().isFromEating()){
+                                    agentMovement.getRoutePlan().setFromEating(false);
                                 }
-                                else {
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            }
+                        }
+                        if(isFull){
+                            isFull = false;
+                        }else{
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }
                                 }
+                            }
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.RELIEVE_IN_CUBICLE){
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() <= 0) {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.FIND_SINK){
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if(!agentMovement.chooseGoal(Sink.class)){
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
                             }
                         }
-                    }
-                    else if (action.getName() == OfficeAction.Name.EXIT_LUNCH) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                        }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setNextState();
-                                    agentMovement.setActionIndex(0);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
+                        if(isFull){
+                            isFull = false;
+                        }else{
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }
                                 }
                             }
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.WASH_IN_SINK){
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() <= 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                    get(agentMovement.getActionIndex()));
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
                         }
                     }
                 }
@@ -461,15 +621,33 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                agentMovement.reachPatchInPath();
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                     agentMovement.despawn();
                                 }
                             }
                         }
                     }
-                }
+                    else if (state.getName() == OfficeState.Name.GOING_HOME) {
+                        if (action.getName() == OfficeAction.Name.LEAVE_OFFICE) {
+                            if (agentMovement.getGoalAmenity() == null) {
+                                agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getOfficeGates().get(0));
+                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            }
 
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.despawn();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
 
             case MANAGER: case BUSINESS: case RESEARCHER: case TECHNICAL:
@@ -501,16 +679,17 @@ public class OfficeSimulator extends Simulator {
                                 agentMovement.reachPatchInPath();
                             }
                         }
-                        else {
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.leaveQueue();
-                                agentMovement.setNextState();
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                            }
+                    }
+                    else {
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.leaveQueue();
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
                         }
                     }
                 }
@@ -520,89 +699,456 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
                         }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                                if(agentMovement.hasAgentReachedFinalPatchInPath()){
+                                    agentMovement.getRoutePlan().setFromWorking(true);
+                                    if(agentMovement.getRoutePlan().isFromUrgent()){
+                                        agentMovement.getRoutePlan().setFromUrgent(false);
+                                    }
+                                }
+                            }
+                        }else if(currentTick < 2060 ||
+                                (currentTick < 5660 && currentTick > 2520)){ // add allowance before lunch and dismissal
+                            double CHANCE = Simulator.roll();
+
+                            if(currentTick < 2160){ // Morning
+                                if(CHANCE < 0.15 && agentMovement.getRoutePlan().getBATH_AM() > 0){
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                            agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setBATH_AM(1);
+                                    agentMovement.getRoutePlan().setFromUrgent(true);
+                                }
+                            }else{// Afternoon
+                                if(CHANCE < 0.15 && agentMovement.getRoutePlan().getBATH_PM() > 0){
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                            agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setBATH_PM(1);
+                                    agentMovement.getRoutePlan().setFromUrgent(true);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (state.getName() == OfficeState.Name.NEEDS_COLLAB) {
+                    if (action.getName() == OfficeAction.Name.GO_TO_COLLAB) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if(agentMovement.chooseCollaborationChair()){
+                                if(agentMovement.getRoutePlan().isFromWorking()){
+                                    agentMovement.getRoutePlan().setFromWorking(false);
+                                }else if(agentMovement.getRoutePlan().isFromEating()){
+                                    agentMovement.getRoutePlan().setFromEating(false);
+                                }
+                            }else{
+                                // TODO cancel collab for all members
+                            }
+                        }
 
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                            get(agentMovement.getActionIndex()));
+                                    agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                                }
                             }
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.WAIT_FOR_COLLAB){
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                    get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.COLLABORATE){
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                    get(agentMovement.getActionIndex()));
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
+                            agentMovement.removeCollaborationTeam();
+                        }
+                    }
+                }
+                else if(state.getName() == OfficeState.Name.MEETING){
+                    if (action.getName() == OfficeAction.Name.GO_MEETING) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if(!agentMovement.chooseMeetingGoal()){
+                                // TODO cancel meeting for all members in team
+                            }else{
+                                if(agentMovement.getRoutePlan().isFromWorking()){
+                                    agentMovement.getRoutePlan().setFromWorking(false);
+                                }else if(agentMovement.getRoutePlan().isFromEating()){
+                                    agentMovement.getRoutePlan().setFromEating(false);
+                                }
+                            }
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                            get(agentMovement.getActionIndex()));
+                                    agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                                }
+                            }
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.WAIT_MEETING){
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                    get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.MEETING){
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() == 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                    get(agentMovement.getActionIndex()));
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
+                            agentMovement.removeMeetingTeam();
+                        }
+                    }
+                }
+                else if (state.getName() == OfficeState.Name.NEEDS_PRINT){
+                    if(action.getName() == OfficeAction.Name.GO_TO_PRINTER){
+                        if (agentMovement.getGoalQueueingPatchField() == null) {
+                            if(!agentMovement.chooseGoal(Printer.class)){
+                                isFull = true;
+                            }else{
+                                if(agentMovement.getRoutePlan().isFromWorking()){
+                                    agentMovement.getRoutePlan().setFromWorking(false);
+                                }else if(agentMovement.getRoutePlan().isFromEating()){
+                                    agentMovement.getRoutePlan().setFromEating(false);
+                                }
+                            }
+                        }
+                        if(isFull){
+                            isFull = false;
+                        }else{
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState()
+                                                .getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.PRINTING){
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
                         }
                     }
                 }
                 else if (state.getName() == OfficeState.Name.EATING_LUNCH) {
                     if (action.getName() == OfficeAction.Name.GO_TO_LUNCH) {
                         if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            agentMovement.getRoutePlan().setFromWorking(false);
+                            if(persona == OfficeAgent.Persona.EXT_TECHNICAL || persona == OfficeAgent.Persona.EXT_BUSINESS
+                            || persona == OfficeAgent.Persona.EXT_RESEARCHER || persona == OfficeAgent.Persona.MANAGER){
+                                if(!agentMovement.chooseBreakroomSeat()){
+                                    agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                                    agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                                }
+                            }else{
+                                agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
+                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
+                            }
                         }
 
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                agentMovement.reachPatchInPath();
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
+                                    if(!agentMovement.getRoutePlan().isFromUrgent()){
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }else{
+                                        agentMovement.getRoutePlan().setFromUrgent(false);
+                                    }
+                                    agentMovement.getRoutePlan().setFromEating(true);
                                 }
                             }
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.EAT_LUNCH) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            if (persona == OfficeAgent.Persona.INT_BUSINESS || persona == OfficeAgent.Persona.INT_RESEARCHER) {
-                                agentMovement.setGoalAmenity(agentMovement.getAssignedCubicle());
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.getRoutePlan().setFromEating(false);
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
+                        }else if(agentMovement.getDuration() > 100){
+                            double CHANCE = Simulator.roll();
+
+                            if(CHANCE < 0.15 && agentMovement.getRoutePlan().getBATH_LUNCH() > 0){
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                                agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                        agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                                agentMovement.getRoutePlan().setBATH_LUNCH(1);
+                                agentMovement.getRoutePlan().setFromUrgent(true);
+                            }
+                        }
+                        else if (action.getName() == OfficeAction.Name.EXIT_LUNCH) {
+                            if (agentMovement.getGoalAmenity() == null) {
+                                agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                                 agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
                             }
-                            else {
-                                agentMovement.chooseBreakroomSeat();
-                            }
-                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                        }
 
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setNextState();
+                                        agentMovement.setActionIndex(0);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.resetGoal();
+                                    }
+                                }
                             }
                         }
-                        else {
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                if (persona == OfficeAgent.Persona.INT_BUSINESS || persona == OfficeAgent.Persona.INT_RESEARCHER) {
-                                    agentMovement.setNextState();
-                                    agentMovement.setActionIndex(0);
+                    }
+                }
+                else if(state.getName() == OfficeState.Name.NEEDS_BATHROOM){
+                    if (action.getName()== OfficeAction.Name.GO_TO_BATHROOM){
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if(!agentMovement.chooseGoal(Toilet.class)){
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }else{
+                                if(agentMovement.getRoutePlan().isFromWorking()){
+                                    agentMovement.getRoutePlan().setFromWorking(false);
+                                }else if(agentMovement.getRoutePlan().isFromEating()){
+                                    agentMovement.getRoutePlan().setFromEating(false);
                                 }
-                                else {
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            }
+                        }
+                        if(isFull){
+                            isFull = false;
+                        }else{
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }
                                 }
+                            }
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.RELIEVE_IN_CUBICLE){
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() <= 0) {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.FIND_SINK){
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if(!agentMovement.chooseGoal(Sink.class)){
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
                             }
                         }
-                    }
-                    else if (action.getName() == OfficeAction.Name.EXIT_LUNCH) {
-                        if (agentMovement.getGoalAmenity() == null) {
-                            agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
-                            agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                        }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setNextState();
-                                    agentMovement.setActionIndex(0);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
+                        if(isFull){
+                            isFull = false;
+                        }else{
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }
                                 }
                             }
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.WASH_IN_SINK){
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() <= 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                    get(agentMovement.getActionIndex()));
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
+                        }
+                    }
+                }
+                else if (state.getName() == OfficeState.Name.NEEDS_FIX_PRINTER) {
+                    if (action.getName() == OfficeAction.Name.TECHNICAL_GO_PRINTER) {
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if(!agentMovement.chooseGoal(Printer.class)){
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                        get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }
+                        }
+                        if(isFull){
+                            isFull = false;
+                        }else{
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions()
+                                                .get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == OfficeAction.Name.FIX_PRINTER) {
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() <= 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                    get(agentMovement.getActionIndex()));
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
+                        }
+                    }
+                }
+                else if (state.getName() == OfficeState.Name.NEEDS_FIX_CUBICLE) {
+                    if (action.getName()== OfficeAction.Name.GO_TO_BATHROOM){
+                        if (agentMovement.getGoalAmenity() == null) {
+                            if(!agentMovement.chooseGoal(Toilet.class)){
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }
+                        }
+                        if(isFull){
+                            isFull = false;
+                        }else{
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == OfficeAction.Name.FIX_CUBICLE) {
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                        if (agentMovement.getCurrentAction().getDuration() <= 0) {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
                         }
                     }
                 }
@@ -617,7 +1163,7 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                agentMovement.reachPatchInPath();
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                     agentMovement.despawn();
                                 }
@@ -625,8 +1171,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                 }
-
-                break;
+                    break;
 
             case SECRETARY:
                 if (state.getName() == OfficeState.Name.GOING_TO_SECURITY) {
@@ -820,6 +1365,10 @@ public class OfficeSimulator extends Simulator {
                                 agentMovement.resetGoal();
                             }
                         }
+                        agentMovement.getGoalAttractor().setIsReserved(false);
+                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                        agentMovement.resetGoal();
+                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
                     }
                 }
                 else if (state.getName() == OfficeState.Name.CLIENT) {
@@ -854,6 +1403,10 @@ public class OfficeSimulator extends Simulator {
                                 agentMovement.resetGoal();
                             }
                         }
+                        agentMovement.getGoalAttractor().setIsReserved(false);
+                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                        agentMovement.resetGoal();
+                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
                     }
                     else if (action.getName() == OfficeAction.Name.GO_TO_OFFICE_ROOM) {
                         if (agentMovement.getGoalAmenity() == null) {
@@ -980,6 +1533,9 @@ public class OfficeSimulator extends Simulator {
                                 agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
                             }
                         }
+                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                        agentMovement.resetGoal();
+                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
                     }
                 }
                 else if (state.getName() == OfficeState.Name.GOING_HOME) {
@@ -1004,142 +1560,275 @@ public class OfficeSimulator extends Simulator {
 
                 break;
         }
+            // TODO meeting, collab chances
+
+            // Bathroom 15%
+            if(agentMovement.getRoutePlan().isFromEating() && agentMovement.getCurrentAction().getDuration() > 100){
+                double CHANCE = Simulator.roll();
+
+                if(CHANCE < 0.15 && agentMovement.getRoutePlan().getBATH_LUNCH() > 0){
+                    agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                            agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                    agentMovement.setNextState(agentMovement.getStateIndex());
+                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                    agentMovement.setActionIndex(0);
+                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                    agentMovement.resetGoal();
+                    agentMovement.getRoutePlan().setBATH_LUNCH(1);
+                }
+
+            } else if(agentMovement.getRoutePlan().isFromWorking() && agentMovement.getCurrentAction().getDuration() > 80){
+                double CHANCE = Simulator.roll();
+
+                if(currentTick < 2160){ // Morning
+                    if(CHANCE < 0.15 && agentMovement.getRoutePlan().getBATH_AM() > 0){
+                        agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                        agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                        agentMovement.setNextState(agentMovement.getStateIndex());
+                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                        agentMovement.setActionIndex(0);
+                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                        agentMovement.resetGoal();
+                        agentMovement.getRoutePlan().setBATH_AM(1);
+                    }
+                }else{// Afternoon
+                    if(CHANCE < 0.15 && agentMovement.getRoutePlan().getBATH_PM() > 0){
+                        agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                        agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                        agentMovement.setNextState(agentMovement.getStateIndex());
+                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                        agentMovement.setActionIndex(0);
+                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                        agentMovement.resetGoal();
+                        agentMovement.getRoutePlan().setBATH_PM(1);
+                    }
+                }
+            }
+
+            // Printing 10% - business and research
+            if(agentMovement.getRoutePlan().isFromWorking() && agentMovement.getCurrentAction().getDuration() > 80){
+                double CHANCE = Simulator.roll();
+                double left = 2;
+
+                if(persona == OfficeAgent.Persona.EXT_BUSINESS || persona == OfficeAgent.Persona.INT_BUSINESS){
+                    left = agentMovement.getRoutePlan().getPRINT_BUSINESS();
+                }else if (persona == OfficeAgent.Persona.EXT_RESEARCHER || persona == OfficeAgent.Persona.INT_RESEARCHER){
+                    left = agentMovement.getRoutePlan().getPRINT_RESEARCH();
+                }
+
+                if(CHANCE < 0.10 && left > 0){
+                    agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                            agentMovement.getRoutePlan().addUrgentRoute("PRINT", agent));
+                    agentMovement.setNextState(agentMovement.getStateIndex());
+                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                    agentMovement.setActionIndex(0);
+                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get
+                            (agentMovement.getActionIndex()));
+                    agentMovement.resetGoal();
+
+                    // TODO execute only when a printer is found
+                    /*if(persona == OfficeAgent.Persona.EXT_BUSINESS || persona == OfficeAgent.Persona.INT_BUSINESS){
+                        agentMovement.getRoutePlan().setPRINT_BUSINESS();
+                    }else if (persona == OfficeAgent.Persona.EXT_RESEARCHER || persona == OfficeAgent.Persona.INT_RESEARCHER){
+                        agentMovement.getRoutePlan().setPRINT_RESEARCH();
+                    }*/
+                }
+            }    
+        }
+
+        
+        
+        if (agentMovement.isInteracting()){
+            // cases: early termination of interaction
+            //reducing of interaction duration
+            // termination of interaction
+            if (agentMovement.getDuration() == 0){
+                agentMovement.setInteracting(false);
+                agentMovement.setInteractionType(null);
+            }
+            else{
+                agentMovement.interact();
+            }
+
+        }
+        else{
+            List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
+            for (Patch patch: patches){
+                for (Agent otherAgent: patch.getAgents()){
+                    OfficeAgent officeAgent = (OfficeAgent) otherAgent;
+                    if (!officeAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
+                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), officeAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
+                            if (Coordinates.isWithinFieldOfView(officeAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), officeAgent.getAgentMovement().getProposedHeading(), officeAgent.getAgentMovement().getFieldOfViewAngle()))
+                                agentMovement.rollAgentInteraction(officeAgent);
+                    if (agentMovement.isInteracting())
+                        break;
+                }
+                if (agentMovement.isInteracting())
+                    break;
+            }
+        }
     }
 
     private void spawnAgent(Office office, long currentTick) {
         OfficeGate gate = office.getOfficeGates().get(1);
         OfficeAgent agent = null;
 
-        for (int i = 0; i < 4; i++){ // 4 gates
+        for (int i = 0; i < 4; i++) { // 4 gates
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             int spawnChance = (int) gate.getChancePerTick();
             int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-            int type = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(9); // 0 = Boss; 1 = Manager; 2 = Business; 3 = Researcher; 4 = Technical; 5 = Secretary; 6 = Client; 7 = Driver; 8 = Visitor
             int team = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
-
             if (CHANCE > spawnChance) {
-                if (type == 0 && OfficeAgent.bossCount != this.MAX_BOSSES) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.BOSS, spawner.getPatch(), false, currentTick, 0, null);
-                    office.getAgents().add(agent);
+                agent = office.getUnspawnedWorkingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedWorkingAgents().size()));
+                int team = agent.getTeam();
+                if (agent.getType() == OfficeAgent.Type.BOSS && OfficeAgent.bossCount != MAX_BOSSES) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    OfficeAgent.bossCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 1 && team == 1 && MANAGERS_1.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.MANAGER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(MANAGERS_1.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 1 && MANAGERS_1.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_1.remove(0);
+                    OfficeAgent.managerCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 2 && team == 1 && BUSINESS_1.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.BUSINESS, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(BUSINESS_1.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 1 && BUSINESS_1.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_1.remove(0);
+                    OfficeAgent.businessCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 3 && team == 1 && RESEARCH_1.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RESEARCHER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(RESEARCH_1.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 1 && RESEARCH_1.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_1.remove(0);
+                    OfficeAgent.researcherCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 4 && team == 1 && TECHNICAL_1.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.TECHNICAL, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(TECHNICAL_1.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 1 && TECHNICAL_1.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_1.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_1.remove(0);
+                    OfficeAgent.technicalCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 1 && team == 2 && MANAGERS_2.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.MANAGER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(MANAGERS_2.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 2 && MANAGERS_2.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_2.remove(0);
+                    OfficeAgent.managerCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 2 && team == 2 && BUSINESS_2.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.BUSINESS, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(BUSINESS_2.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 2 && BUSINESS_2.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_2.remove(0);
+                    OfficeAgent.businessCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 3 && team == 2 && RESEARCH_2.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RESEARCHER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(RESEARCH_2.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 2 && RESEARCH_2.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_2.remove(0);
+                    OfficeAgent.researcherCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 4 && team == 2 && TECHNICAL_2.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.TECHNICAL, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(TECHNICAL_2.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 2 && TECHNICAL_2.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_2.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_2.remove(0);
+                    OfficeAgent.technicalCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 1 && team == 3 && MANAGERS_3.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.MANAGER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(MANAGERS_3.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 3 && MANAGERS_3.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_3.remove(0);
+                    OfficeAgent.managerCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 2 && team == 3 && BUSINESS_3.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.BUSINESS, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(BUSINESS_3.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 3 && BUSINESS_3.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_3.remove(0);
+                    OfficeAgent.businessCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 3 && team == 3 && RESEARCH_3.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RESEARCHER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(RESEARCH_3.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 3 && RESEARCH_3.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_3.remove(0);
+                    OfficeAgent.researcherCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 4 && team == 3 && TECHNICAL_3.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.TECHNICAL, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(TECHNICAL_3.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 3 && TECHNICAL_3.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_3.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_3.remove(0);
+                    OfficeAgent.technicalCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 1 && team == 4 && MANAGERS_4.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.MANAGER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(MANAGERS_4.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 4 && MANAGERS_4.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     MANAGERS_4.remove(0);
+                    OfficeAgent.managerCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 2 && team == 4 && BUSINESS_4.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.BUSINESS, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(BUSINESS_4.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 4 && BUSINESS_4.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     BUSINESS_4.remove(0);
+                    OfficeAgent.businessCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 3 && team == 4 && RESEARCH_4.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.RESEARCHER, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(RESEARCH_4.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.RESEARCHER && team == 4 && RESEARCH_4.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     RESEARCH_4.remove(0);
+                    OfficeAgent.researcherCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 4 && team == 4 && TECHNICAL_4.size() != 0) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.TECHNICAL, spawner.getPatch(), false, currentTick, team, office.getCubicles().get(TECHNICAL_4.get(0)));
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.TECHNICAL && team == 4 && TECHNICAL_4.size() != 0) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_4.get(0))));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                     TECHNICAL_4.remove(0);
+                    OfficeAgent.technicalCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (type == 5 && OfficeAgent.secretaryCount != this.MAX_SECRETARIES) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.SECRETARY, spawner.getPatch(), false, currentTick, 0, null);
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.SECRETARY && OfficeAgent.secretaryCount != MAX_SECRETARIES) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    OfficeAgent.secretaryCount++;
+                    OfficeAgent.agentCount++;
                 }
             }
             else {
-                if (((currentTick >= 720 && currentTick < 1800) ||  (currentTick >= 2880 && currentTick < 4320)) && OfficeAgent.clientCount != this.MAX_CLIENTS) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.CLIENT, spawner.getPatch(), false, currentTick, 0, null);
-                    office.getAgents().add(agent);
+                agent = office.getUnspawnedVisitingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedVisitingAgents().size()));
+                if (agent.getType() == OfficeAgent.Type.CLIENT && ((currentTick >= 720 && currentTick < 1800) ||  (currentTick >= 2880 && currentTick < 4320)) && OfficeAgent.clientCount < MAX_CLIENTS) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    OfficeAgent.clientCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (OfficeAgent.driverCount != this.MAX_DRIVERS) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.DRIVER, spawner.getPatch(), false, currentTick, 0, null);
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.DRIVER && OfficeAgent.driverCount < MAX_DRIVERS) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    OfficeAgent.driverCount++;
+                    OfficeAgent.agentCount++;
                 }
-                else if (currentTick >= 3600 && currentTick < 5040 && OfficeAgent.visitorCount != this.MAX_VISITORS) {
-                    agent = OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.VISITOR, spawner.getPatch(), false, currentTick, 0, null);
-                    office.getAgents().add(agent);
+                else if (agent.getType() == OfficeAgent.Type.VISITOR && currentTick >= 3600 && currentTick < 5040 && OfficeAgent.visitorCount < MAX_VISITORS) {
+                    agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                     office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                    OfficeAgent.visitorCount++;
+                    OfficeAgent.agentCount++;
                 }
             }
         }
