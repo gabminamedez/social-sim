@@ -42,7 +42,7 @@ public class UniversityRoutePlan {
     public static final double PROF_CHANCE_WANDERING_AROUND = 0.80, PROF_CHANCE_GOING_TO_STUDY = 0.10,
             PROF_NEED_BATHROOM_NO_CLASSES = 0.10, PROF_NEEDS_DRINK_NO_CLASSES = 0,
             PROF_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, PROF_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
-  
+    public static final double THROW_CHANCE = 0.02;
     public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch, int tickEntered) {
         this.routePlan = new ArrayList<>();
         //List<UniversityState> routePlan = new ArrayList<>();
@@ -71,9 +71,7 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2));
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
 
-            actions = new ArrayList<>();
-            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_TRASH,5));
-            routePlan.add(new UniversityState(UniversityState.Name.THROW_TRASH, this, agent, actions));
+
 
 //            actions = new ArrayList<>();
 //            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM));
@@ -604,7 +602,12 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK,12));
             return new UniversityState(UniversityState.Name.NEEDS_BATHROOM,this,agent,actions);
         }
-        else //TODO: Fountain add urgent
+        else if(s.equals("TRASH")){
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_TRASH,3));
+            return new UniversityState(UniversityState.Name.THROW_TRASH, this, agent, actions);
+        }
+        else //DRINK
         {
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_DRINKING_FOUNTAIN));

@@ -59,6 +59,13 @@ public class OfficeAction {
 
         TECHNICAL_GO_CUBICLE(),
         FIX_CUBICLE(),
+        FIND_SINK(),
+        GO_BOSS(),
+        ASK_BOSS(),
+        GO_WORKER(),
+        ASK_WORKER(),
+        GO_MANAGER(),
+        ASK_MANAGER(),
 
         GO_MEETING(),
         WAIT_MEETING(),

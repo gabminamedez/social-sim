@@ -780,8 +780,10 @@ public class UniversitySimulator extends Simulator {
 
                                 double CHANCE = Simulator.roll();
                                 double CHANCE2 = Simulator.roll();
+                                double CHANCE3 = Simulator.roll();
                                 double MAX = 0;
                                 double MAX_DRINK = 0;
+                                double MAX_THROW = UniversityRoutePlan.THROW_CHANCE;
                                 if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_STUDENT) {
                                     //EXT STUDENT
                                     MAX = UniversityRoutePlan.EXT_CHANCE_NEEDS_BATHROOM_STUDYING;
@@ -804,7 +806,7 @@ public class UniversitySimulator extends Simulator {
                                 }
                                 if (CHANCE < MAX && agentMovement.getRoutePlan().getUrgentCtr() >= 1)
                                 {
-                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 2); //Need -2 because need to go through the go to study room index
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 2);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -816,8 +818,20 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
                                 }
                                 else if(CHANCE2 < MAX_DRINK && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
-                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 2); //Need -2 because need to go through the go to study room index
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 2);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("DRINK", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setFromStudying(true);
+                                    agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
+                                }
+                                else if(CHANCE3 < MAX_THROW && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 2);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("TRASH", agent));
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
@@ -893,8 +907,10 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                                 double CHANCE = Simulator.roll();
                                 double CHANCE2 = Simulator.roll();
+                                double CHANCE3 = Simulator.roll();
                                 double MAX = 0;
                                 double MAX_DRINK = 0;
+                                double MAX_THROW = UniversityRoutePlan.THROW_CHANCE;
                                 if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_STUDENT) {
                                     //EXT STUDENT
                                     MAX = UniversityRoutePlan.EXT_CHANCE_NEEDS_BATHROOM_STUDYING;
@@ -929,7 +945,7 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
                                 }
                                 else if(CHANCE2 < MAX_DRINK && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
-                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 3); //Need -2 because need to go through the go to study room index
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 3);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("DRINK", agent));
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -937,7 +953,19 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
-                                    agentMovement.getRoutePlan().setFromStudying(true);
+                                    agentMovement.getRoutePlan().setFromClass(true);
+                                    agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
+                                }
+                                else if(CHANCE3 < MAX_THROW && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 3);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("TRASH", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setFromClass(true);
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
                                 }
                             }
@@ -1111,8 +1139,10 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                                 double CHANCE = Simulator.roll();
                                 double CHANCE2 = Simulator.roll();
+                                double CHANCE3 = Simulator.roll();
                                 double MAX = 0;
                                 double MAX_DRINK = 0;
+                                double MAX_THROW = UniversityRoutePlan.THROW_CHANCE;
                                 if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_STUDENT) {
                                     //EXT STUDENT
                                     MAX = UniversityRoutePlan.EXT_CHANCE_NEEDS_BATHROOM_STUDYING;
@@ -1147,7 +1177,7 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
                                 }
                                 else if(CHANCE2 < MAX_DRINK && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
-                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 1); //Need -2 because need to go through the go to study room index
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 1);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("DRINK", agent));
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -1155,7 +1185,19 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
-                                    agentMovement.getRoutePlan().setFromStudying(true);
+                                    agentMovement.getRoutePlan().setFromLunch(true);
+                                    agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
+                                }
+                                else if(CHANCE3 < MAX_THROW && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 1);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("TRASH", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setFromLunch(true);
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
                                 }
                             }
@@ -1577,12 +1619,14 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                                 double CHANCE = Simulator.roll();
                                 double CHANCE2 = Simulator.roll();
+                                double CHANCE3 = Simulator.roll();
                                 double MAX = UniversityRoutePlan.PROF_CHANCE_NEEDS_BATHROOM_STUDYING;
                                 double MAX_DRINK = UniversityRoutePlan.PROF_CHANCE_NEEDS_DRINK_STUDYING;
+                                double MAX_THROW = UniversityRoutePlan.THROW_CHANCE;
 
                                 if (CHANCE < MAX && agentMovement.getRoutePlan().getUrgentCtr() >= 1)
                                 {
-                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 2); //Need -2 because need to go through the go to study room index
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 2);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -1594,8 +1638,20 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
                                 }
                                 else if(CHANCE2 < MAX_DRINK && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
-                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 2); //Need -2 because need to go through the go to study room index
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 2);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("DRINK", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setFromStudying(true);
+                                    agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
+                                }
+                                else if(CHANCE3 < MAX_THROW && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 2);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("TRASH", agent));
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
@@ -1672,8 +1728,10 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                                 double CHANCE = Simulator.roll();
                                 double CHANCE2 = Simulator.roll();
+                                double CHANCE3 = Simulator.roll();
                                 double MAX = UniversityRoutePlan.PROF_CHANCE_NEEDS_BATHROOM_STUDYING;
                                 double MAX_DRINK = UniversityRoutePlan.PROF_CHANCE_NEEDS_DRINK_STUDYING;
+                                double MAX_THROW = UniversityRoutePlan.THROW_CHANCE;
                                 if (CHANCE < MAX && agentMovement.getRoutePlan().getUrgentCtr() >= 1)
                                 {
                                     agentMovement.setReturnIndex(agentMovement.getStateIndex() - 3);
@@ -1688,7 +1746,7 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
                                 }
                                 else if(CHANCE2 < MAX_DRINK && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
-                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 3); //Need -2 because need to go through the go to study room index
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 3);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("DRINK", agent));
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -1696,7 +1754,19 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
-                                    agentMovement.getRoutePlan().setFromStudying(true);
+                                    agentMovement.getRoutePlan().setFromClass(true);
+                                    agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
+                                }
+                                else if(CHANCE3 < MAX_THROW && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 3);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("TRASH", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setFromClass(true);
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
                                 }
                             }
@@ -1779,8 +1849,10 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
                                 double CHANCE = Simulator.roll();
                                 double CHANCE2 = Simulator.roll();
+                                double CHANCE3 = Simulator.roll();
                                 double MAX = UniversityRoutePlan.PROF_CHANCE_NEEDS_BATHROOM_STUDYING;
                                 double MAX_DRINK = UniversityRoutePlan.PROF_CHANCE_NEEDS_DRINK_STUDYING;
+                                double MAX_THROW = UniversityRoutePlan.THROW_CHANCE;
                                 if (CHANCE < MAX && agentMovement.getRoutePlan().getUrgentCtr() >= 1)
                                 {
                                     agentMovement.setReturnIndex(agentMovement.getStateIndex() - 1);
@@ -1795,7 +1867,7 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
                                 }
                                 else if(CHANCE2 < MAX_DRINK && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
-                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 1); //Need -2 because need to go through the go to study room index
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 1);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("DRINK", agent));
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -1803,9 +1875,22 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.getGoalAttractor().setIsReserved(false);
                                     agentMovement.resetGoal();
-                                    agentMovement.getRoutePlan().setFromStudying(true);
+                                    agentMovement.getRoutePlan().setFromLunch(true);
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
                                 }
+                                else if(CHANCE3 < MAX_THROW && agentMovement.getRoutePlan().getUrgentCtr() >= 1){
+                                    agentMovement.setReturnIndex(agentMovement.getStateIndex() - 1);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("TRASH", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setFromLunch(true);
+                                    agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
+                                }
+
                             }
                         }
                     } else if (state.getName() == UniversityState.Name.GOING_HOME) {
