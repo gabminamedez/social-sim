@@ -16,9 +16,7 @@ public class OfficeAction {
         GUARD_STAY_PUT(),
         GREET_PERSON(),
 
-        JANITOR_GO_TOILET(),
         JANITOR_CLEAN_TOILET(),
-        JANITOR_GO_PLANT(),
         JANITOR_WATER_PLANT(),
 
         CLIENT_GO_RECEPTIONIST(),
@@ -30,21 +28,30 @@ public class OfficeAction {
 
         VISITOR_GO_RECEPTIONIST(),
         VISITOR_GO_OFFICE(),
-
         RECEPTIONIST_STAY_PUT(),
 
         SECRETARY_STAY_PUT(),
         SECRETARY_CHECK_CABINET(),
-        SECRETARY_GO_BOSS(),
 
         GO_TO_STATION(),
         GO_TO_OFFICE_ROOM(),
+        GO_BOSS(),
+        ASK_BOSS(),
+        SECRETARY_GO_BOSS(),
+
+        GO_WORKER(),
+        GO_MANAGER(),
+        ASK_WORKER(),
+        ASK_MANAGER(),
+        ANSWER_BOSS(),
+
+        ANSWER_MANAGER(),
+        ANSWER_WORKER(),
 
         GO_TO_BATHROOM(),
-        FIND_CUBICLE(),
         RELIEVE_IN_CUBICLE(),
+        FIND_SINK(),
         WASH_IN_SINK(),
-        LEAVE_BATHROOM(),
 
         GO_TO_PRINTER(),
         QUEUE_PRINTER(),
@@ -56,8 +63,6 @@ public class OfficeAction {
 
         TECHNICAL_GO_PRINTER(),
         FIX_PRINTER(),
-
-        TECHNICAL_GO_CUBICLE(),
         FIX_CUBICLE(),
         FIND_SINK(),
         GO_BOSS(),
@@ -69,8 +74,7 @@ public class OfficeAction {
 
         GO_MEETING(),
         WAIT_MEETING(),
-        MEETING(),
-        LEAVE_MEETING();
+        MEETING();
 
         final int ID;
         Name(int ID){

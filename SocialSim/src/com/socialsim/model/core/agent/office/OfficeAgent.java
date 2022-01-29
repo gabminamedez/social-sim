@@ -194,6 +194,7 @@ public class OfficeAgent extends Agent {
     private OfficeAgent(OfficeAgent.Type type, boolean inOnStart, int team) {
         this.id = agentCount;
         this.type = type;
+        this.team = team;
         this.inOnStart = inOnStart;
 //
 //        if (type == Type.BOSS) {

@@ -127,6 +127,17 @@ public class Office extends Environment {
         return unspawned;
     }
 
+    public ArrayList<OfficeAgent> getTeamMembers(int team){
+        ArrayList<OfficeAgent> agents = new ArrayList<>();
+        for (OfficeAgent agent: getAgents()){
+            if (agent.getTeam() == team){
+                agents.add(agent);
+            }
+        }
+
+        return agents;
+    }
+
     @Override
     public SortedSet<Patch> getAmenityPatchSet() {
         return amenityPatchSet;
