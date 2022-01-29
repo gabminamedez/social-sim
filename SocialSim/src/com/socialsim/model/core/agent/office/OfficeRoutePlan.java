@@ -3,39 +3,87 @@ package com.socialsim.model.core.agent.office;
 import com.socialsim.model.core.agent.university.UniversityAction;
 import com.socialsim.model.core.agent.university.UniversityState;
 import com.socialsim.model.core.environment.generic.Patch;
+import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Cubicle;
 import com.socialsim.model.core.environment.university.patchfield.Bathroom;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Door;
 import com.socialsim.model.simulator.Simulator;
+import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class OfficeRoutePlan {
 
     private OfficeState currentState; // Denotes the current class of the amenity/patchfield in the route plan
     private ArrayList<OfficeState> routePlan; // Denotes the current route plan of the agent which owns this
-    private boolean fromEating, fromWorking, fromUrgent;
+    private boolean fromBathPM, fromBathAM;
+    private int lastDuration = -1;
+    private int canUrgent = 2;
+    private long collaborationEnd = 0, meetingStart = -1, meetingEnd, meetingRoom;
 
     private int BATH_AM = 2, BATH_PM = 2, BATH_LUNCH = 1;
     private int PRINT_BUSINESS = 5, PRINT_RESEARCH = 2;
+    private int TECHNICAL_PRINTER_COUNT = 1, TECHNICAL_CUBICLE_COUNT = 1;
+    private int COLLABORATE_COUNT = 0;
+
+    private Amenity.AmenityBlock lunchAttractor;
+    private Amenity lunchAmenity;
 
     // Chances
-    public static final double PRO_BOSS_LUNCH = 0.40, PRO_BOSS_COOPERATE = 0.10, PRO_BOSS_ONE = 0.20;
-    public static final double APP_BOSS_LUNCH = 0.7, APP_BOSS_COOPERATE = 0.30, APP_BOSS_ONE = 0.3;
+    public static final double PRO_BOSS_COOPERATE = 0.1, PRO_BOSS_ONE = 0.2;
+    public static final double APP_BOSS_LUNCH = 0.7, APP_BOSS_COOPERATE = 0.3, APP_BOSS_ONE = 0.3;
+    public static final double INT_LUNCH = 0.3;
+    public static final double EXT_LUNCH = 1.0;
     public static final double INT_BUSINESS_COOPERATE = 0.6;
     public static final double EXT_BUSINESS_COOPERATE = 0.9;
     public static final double INT_RESEARCHER_COOPERATE = 0.6;
     public static final double EXT_RESEARCHER_COOPERATE = 0.9;
-    public static final double INT_LUNCH = 0.3;
-    public static final double EXT_LUNCH = 1.0;
+    public static final double BATH_CHANCE = 0.15, PRINT_CHANCE = 0.1, TECHNICAL_CUBICLE_CHANCE = 0.1,
+    TECHNICAL_PRINTER_CHANCE = 0.1;
+
+    public static ArrayList<ArrayList<Long>> meetingTimes = new ArrayList<>();
 
 
     public OfficeRoutePlan(OfficeAgent agent, Office office, Patch spawnPatch, int tickEntered, int team, Cubicle assignedCubicle) {
         this.routePlan = new ArrayList<>();
         ArrayList<OfficeAction> actions;
+
+        if(meetingTimes.size() == 0){
+            long start = 0, end = 0;
+
+            // meeting can start at either of these times
+            start = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(600 - 300 + 1) + 300;
+            // meeting duration + start time
+            end = (Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1440 - 720 + 1) + 720) + start;
+
+            // pair times with possible room numbers
+            meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,1L)));
+            meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,2L)));
+            meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,3L)));
+
+            start = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2690 - 2550 + 1) + 2550;
+            end = (Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1440 - 720 + 1) + 720) + start;
+
+            meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,1L)));
+            meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,2L)));
+            meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,3L)));
+
+            start = end + 60;
+            end = (Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1440 - 720 + 1) + 720) + start;
+
+            meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,1L)));
+            meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,2L)));
+            meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,3L)));
+
+            Collections.shuffle(meetingTimes, new Random());
+        }
+
+        if(team > 0){
+            meetingStart = meetingTimes.get(team-1).get(0);
+            meetingEnd = meetingTimes.get(team-1).get(1);
+            meetingRoom = meetingTimes.get(team-1).get(2);
+        }
 
         if (agent.getPersona() == OfficeAgent.Persona.GUARD) {
             actions = new ArrayList<>();
@@ -101,14 +149,13 @@ public class OfficeRoutePlan {
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getChairs().get(3).getAttractors().get(0).getPatch()));
-            actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_STAY_PUT, 360, 720));
+            actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_STAY_PUT, office.getChairs().get(3).getAttractors().get(0).getPatch(), 360, 720));
             actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_CHECK_CABINET, 12, 36));
             routePlan.add(new OfficeState(OfficeState.Name.SECRETARY, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.PROFESSIONAL_BOSS || agent.getPersona() == OfficeAgent.Persona.APPROACHABLE_BOSS) {
-            setFromEating(false);
-            setFromWorking(false);
-            setFromUrgent(false);
+            setFromBathAM(false);
+            setFromBathPM(false);
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GOING_TO_SECURITY_QUEUE));
@@ -128,9 +175,9 @@ public class OfficeRoutePlan {
         }
         else if (agent.getPersona() == OfficeAgent.Persona.INT_BUSINESS || agent.getPersona() == OfficeAgent.Persona.EXT_BUSINESS ||
                 agent.getPersona() == OfficeAgent.Persona.INT_RESEARCHER || agent.getPersona() == OfficeAgent.Persona.EXT_RESEARCHER) {
-            setFromEating(false);
-            setFromWorking(false);
-            setFromUrgent(false);
+            setFromBathAM(false);
+            setFromBathPM(false);
+            setCOLLABORATE_COUNT(2);
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GOING_TO_SECURITY_QUEUE));
@@ -151,9 +198,8 @@ public class OfficeRoutePlan {
             routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.INT_TECHNICAL || agent.getPersona() == OfficeAgent.Persona.EXT_TECHNICAL) {
-            setFromEating(false);
-            setFromWorking(false);
-            setFromUrgent(false);
+            setFromBathAM(false);
+            setFromBathPM(false);
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GOING_TO_SECURITY_QUEUE));
@@ -174,9 +220,9 @@ public class OfficeRoutePlan {
             routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.MANAGER) {
-            setFromEating(false);
-            setFromWorking(false);
-            setFromUrgent(false);
+            setFromBathAM(false);
+            setFromBathPM(false);
+            setCOLLABORATE_COUNT(2);
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GOING_TO_SECURITY_QUEUE));
@@ -238,16 +284,15 @@ public class OfficeRoutePlan {
             }
             case "COLLABORATION" -> {
                 actions = new ArrayList<>();
-                actions.add(new OfficeAction(OfficeAction.Name.GO_TO_COLLAB));
-                actions.add(new OfficeAction(OfficeAction.Name.WAIT_FOR_COLLAB, 10));
-                actions.add(new OfficeAction(OfficeAction.Name.COLLABORATE, 10));
+                actions.add(new OfficeAction(OfficeAction.Name.GO_TO_COLLAB, 60));
+                actions.add(new OfficeAction(OfficeAction.Name.COLLABORATE, 60, 300));
                 officeState = new OfficeState(OfficeState.Name.NEEDS_COLLAB, this, agent, actions);
             }
             case "PRINT" -> {
                 actions = new ArrayList<>();
                 actions.add(new OfficeAction(OfficeAction.Name.GO_TO_PRINTER));
                 actions.add(new OfficeAction(OfficeAction.Name.QUEUE_PRINTER));
-                actions.add(new OfficeAction(OfficeAction.Name.PRINTING, 10));
+                actions.add(new OfficeAction(OfficeAction.Name.PRINTING, 4, 36));
                 officeState = new OfficeState(OfficeState.Name.NEEDS_PRINT, this, agent, actions);
             }
             case "INQUIRE_BOSS" -> {
@@ -270,15 +315,15 @@ public class OfficeRoutePlan {
             }
             case "TECHNICAL_PRINTER" -> {
                 actions = new ArrayList<>();
-                actions.add(new OfficeAction(OfficeAction.Name.TECHNICAL_GO_PRINTER, 10));
+                actions.add(new OfficeAction(OfficeAction.Name.TECHNICAL_GO_PRINTER, 12, 120));
                 actions.add(new OfficeAction(OfficeAction.Name.FIX_PRINTER));
                 officeState = new OfficeState(OfficeState.Name.NEEDS_FIX_PRINTER, this, agent, actions);
             }
             default -> {
                 actions = new ArrayList<>();
                 actions.add(new OfficeAction(OfficeAction.Name.GO_MEETING));
-                actions.add(new OfficeAction(OfficeAction.Name.WAIT_MEETING, 10));
-                actions.add(new OfficeAction(OfficeAction.Name.MEETING, 10));
+                actions.add(new OfficeAction(OfficeAction.Name.WAIT_MEETING, 60));
+                actions.add(new OfficeAction(OfficeAction.Name.MEETING));
                 officeState = new OfficeState(OfficeState.Name.MEETING, this, agent, actions);
             }
         }
@@ -286,40 +331,30 @@ public class OfficeRoutePlan {
         return officeState;
     }
 
-    public OfficeState addUrgentRoute(String s, OfficeAgent agent, Office office) { // technical fix cubicle
+    public OfficeState addUrgentRoute(OfficeAgent agent, Office office) { // technical fix cubicle
         ArrayList<OfficeAction> actions;
 
         actions = new ArrayList<>();
         Patch randomCubicle = office.getCubicles().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3)).
                 getAmenityBlocks().get(0).getPatch();
-        actions.add(new OfficeAction(OfficeAction.Name.GO_TO_BATHROOM, randomCubicle, 10));
-        actions.add(new OfficeAction(OfficeAction.Name.FIX_CUBICLE));
-
+        actions.add(new OfficeAction(OfficeAction.Name.FIX_CUBICLE, randomCubicle, 120));
         return new OfficeState(OfficeState.Name.NEEDS_FIX_CUBICLE, this, agent, actions);
     }
 
-    public boolean isFromEating() {
-        return fromEating;
+    public boolean isFromBathPM() {
+        return fromBathPM;
     }
 
-    public void setFromEating(boolean fromEating) {
-        this.fromEating = fromEating;
+    public void setFromBathPM(boolean fromBathPM) {
+        this.fromBathPM = fromBathPM;
     }
 
-    public boolean isFromWorking() {
-        return fromWorking;
+    public boolean isFromBathAM() {
+        return fromBathAM;
     }
 
-    public void setFromWorking(boolean fromWorking) {
-        this.fromWorking = fromWorking;
-    }
-
-    public boolean isFromUrgent() {
-        return fromUrgent;
-    }
-
-    public void setFromUrgent(boolean fromUrgent) {
-        this.fromUrgent = fromUrgent;
+    public void setFromBathAM(boolean fromBathAM) {
+        this.fromBathAM = fromBathAM;
     }
 
     public int getBATH_AM() {
@@ -361,4 +396,97 @@ public class OfficeRoutePlan {
     public void setPRINT_RESEARCH() {
         this.PRINT_RESEARCH -= 1;
     }
+
+    public int getLastDuration() {
+        return lastDuration;
+    }
+
+    public void setLastDuration(int lastDuration) {
+        this.lastDuration = lastDuration;
+    }
+
+    public int getCanUrgent() {
+        return canUrgent;
+    }
+
+    public void setCanUrgent(int canUrgent) {
+        this.canUrgent += canUrgent;
+    }
+
+    public int getTECHNICAL_PRINTER_COUNT() {
+        return TECHNICAL_PRINTER_COUNT;
+    }
+
+    public void setTECHNICAL_PRINTER_COUNT() {
+        this.TECHNICAL_PRINTER_COUNT -= 1;
+    }
+
+    public int getTECHNICAL_CUBICLE_COUNT() {
+        return TECHNICAL_CUBICLE_COUNT;
+    }
+
+    public void setTECHNICAL_CUBICLE_COUNT() {
+        this.TECHNICAL_CUBICLE_COUNT -= 1;
+    }
+
+    public int getCOLLABORATE_COUNT() {
+        return COLLABORATE_COUNT;
+    }
+
+    public void setCOLLABORATE_COUNT(int count) {
+        this.COLLABORATE_COUNT += count;
+    }
+
+    public long getCollaborationEnd() {
+        return collaborationEnd;
+    }
+
+    public void setCollaborationEnd(long tick, int duration) {
+        this.collaborationEnd = tick + duration;
+    }
+
+    public long getMeetingStart() {
+        return meetingStart;
+    }
+
+    public long getMeetingEnd() {
+        return meetingEnd;
+    }
+
+    public int getMeetingRoom() {
+        return (int) meetingRoom;
+    }
+
+    public Amenity.AmenityBlock getLunchAttractor() {
+        return lunchAttractor;
+    }
+
+    public void setLunchAttractor(Amenity.AmenityBlock lunchAttractor) {
+        this.lunchAttractor = lunchAttractor;
+    }
+
+    public Amenity getLunchAmenity() {
+        return lunchAmenity;
+    }
+
+    public void setLunchAmenity(Amenity lunchAmenity) {
+        this.lunchAmenity = lunchAmenity;
+    }
+
+    public double getCooperate(OfficeAgent.Persona persona){
+
+        double chance = 0;
+
+        switch (persona){
+            case EXT_BUSINESS -> chance = EXT_BUSINESS_COOPERATE;
+            case MANAGER -> chance = 1.0;
+            case INT_BUSINESS -> chance = INT_BUSINESS_COOPERATE;
+            case EXT_RESEARCHER -> chance = EXT_RESEARCHER_COOPERATE;
+            case INT_RESEARCHER -> chance = INT_RESEARCHER_COOPERATE;
+            default -> chance = 0;
+        }
+
+        return chance;
+    }
+
 }
