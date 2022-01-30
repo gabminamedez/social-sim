@@ -23,6 +23,7 @@ public class GroceryRoutePlan {
     public static final int COMPLETE_FAMILY_ALL_AISLE_CHANCE = 60, COMPLETE_FAMILY_CHANCE_SERVICE = 20, COMPLETE_FAMILY_CHANCE_FOOD = 30, COMPLETE_FAMILY_CHANCE_EAT_TABLE = 50;
     public static final int HELP_FAMILY_ALL_AISLE_CHANCE = 50, HELP_FAMILY_CHANCE_SERVICE = 20, HELP_FAMILY_CHANCE_FOOD = 30, HELP_FAMILY_CHANCE_EAT_TABLE = 50;
     public static final int DUO_FAMILY_ALL_AISLE_CHANCE = 50, DUO_FAMILY_CHANCE_SERVICE = 20, DUO_FAMILY_CHANCE_FOOD = 30, DUO_FAMILY_CHANCE_EAT_TABLE = 50;
+    public static final int CHANCE_BAGGER_INTERACT = 30, CHANCE_GUARD_INTERACT = 50, CHANCE_GUARD_VERBAL = 30;
 
     public GroceryRoutePlan(GroceryAgent agent, GroceryAgent leaderAgent, Grocery grocery, Patch spawnPatch) { //leaderAgent is only for agents that follow and deviate
         this.routePlan = new ArrayList<>();
@@ -229,7 +230,7 @@ public class GroceryRoutePlan {
                         }
                     }
                 }
-                else{ // deviating or following
+                else { // deviating or following
                     routePlan = createFollowingRoute(agent, leaderAgent);
                 }
             }

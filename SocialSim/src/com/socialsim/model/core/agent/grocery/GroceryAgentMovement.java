@@ -1918,6 +1918,68 @@ public class GroceryAgentMovement extends AgentMovement {
             this.interactionDuration = duration;
 
     }
+
+    public void forceStationedInteraction(GroceryAgent.Persona agentPersona) {
+        if (agentPersona == GroceryAgent.Persona.CASHIER) {
+            GrocerySimulator.currentCustomerCashierCount++;
+            this.heading = 0;
+            this.interactionDuration = this.duration * 2 / 3;
+        }
+        else if (agentPersona == GroceryAgent.Persona.BAGGER) {
+            GrocerySimulator.currentCustomerBaggerCount++;
+            this.heading = 0;
+            this.interactionDuration = this.duration / 3;
+        }
+        else if (agentPersona == GroceryAgent.Persona.CUSTOMER_SERVICE) {
+            GrocerySimulator.currentCustomerServiceCount++;
+            this.heading = 90;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == GroceryAgent.Persona.STAFF_FOOD) {
+            GrocerySimulator.currentCustomerFoodCount++;
+            this.heading = 270;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == GroceryAgent.Persona.BUTCHER) {
+            GrocerySimulator.currentCustomerButcherCount++;
+            this.heading = 180;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == GroceryAgent.Persona.GUARD_ENTRANCE) {
+            GrocerySimulator.currentCustomerGuardCount++;
+            this.heading = 0;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == GroceryAgent.Persona.GUARD_EXIT) {
+            GrocerySimulator.currentCustomerGuardCount++;
+            this.heading = 90;
+            this.interactionDuration = this.duration;
+        }
+
+        if (agentPersona != GroceryAgent.Persona.GUARD_ENTRANCE) {
+            GrocerySimulator.currentExchangeCount++;
+            GrocerySimulator.averageExchangeDuration = (GrocerySimulator.averageExchangeDuration * (GrocerySimulator.currentExchangeCount - 1) + this.interactionDuration) / GrocerySimulator.currentExchangeCount;
+        }
+        else {
+            int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            if (x < GroceryRoutePlan.CHANCE_GUARD_VERBAL) {
+                GrocerySimulator.currentExchangeCount++;
+                GrocerySimulator.averageExchangeDuration = (GrocerySimulator.averageExchangeDuration * (GrocerySimulator.currentExchangeCount - 1) + this.interactionDuration) / GrocerySimulator.currentExchangeCount;
+            }
+            else {
+                GrocerySimulator.currentNonverbalCount++;
+                GrocerySimulator.averageNonverbalDuration = (GrocerySimulator.averageNonverbalDuration * (GrocerySimulator.currentNonverbalCount - 1) + this.interactionDuration) / GrocerySimulator.currentNonverbalCount;
+            }
+        }
+
+        if (agentPersona == GroceryAgent.Persona.BAGGER) {
+            this.interactionDuration = this.duration;
+        }
+
+        this.isInteracting = true;
+        this.duration = 0;
+    }
+
     public void rollAgentInteraction(GroceryAgent agent){
         //TODO: Statistics in interaction
 

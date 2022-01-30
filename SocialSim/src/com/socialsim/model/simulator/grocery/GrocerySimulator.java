@@ -3,10 +3,8 @@ package com.socialsim.model.simulator.grocery;
 import com.socialsim.controller.Main;
 import com.socialsim.controller.grocery.controls.GroceryScreenController;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.agent.grocery.GroceryAgent;
-import com.socialsim.model.core.agent.grocery.GroceryAction;
-import com.socialsim.model.core.agent.grocery.GroceryAgentMovement;
-import com.socialsim.model.core.agent.grocery.GroceryState;
+import com.socialsim.model.core.agent.grocery.*;
+import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
@@ -16,6 +14,7 @@ import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -487,6 +486,15 @@ public class GrocerySimulator extends Simulator {
                                 }
                             }
                             else {
+                                if (!agentMovement.isInteracting()) {
+                                    if (persona == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER || persona == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER || persona == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER || persona == GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER) {
+                                        int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                                        if (x < GroceryRoutePlan.CHANCE_GUARD_INTERACT) {
+                                            agentMovement.forceStationedInteraction(GroceryAgent.Persona.GUARD_ENTRANCE);
+                                        }
+                                    }
+                                }
+
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
@@ -555,6 +563,10 @@ public class GrocerySimulator extends Simulator {
                     else if (state.getName() == GroceryState.Name.IN_PRODUCTS_WALL || state.getName() == GroceryState.Name.IN_PRODUCTS_AISLE || state.getName() == GroceryState.Name.IN_PRODUCTS_FROZEN || state.getName() == GroceryState.Name.IN_PRODUCTS_FRESH || state.getName() == GroceryState.Name.IN_PRODUCTS_MEAT) {
                         if (action.getName() == GroceryAction.Name.CHECK_PRODUCTS) {
                             if (agentMovement.getGoalAmenity() != null) {
+                                if (agentMovement.getLeaderAgent() == null && !agentMovement.isInteracting() && state.getName() == GroceryState.Name.IN_PRODUCTS_MEAT) {
+                                    agentMovement.forceStationedInteraction(GroceryAgent.Persona.BUTCHER);
+                                }
+
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
                                     agentMovement.setNextState(agentMovement.getStateIndex());
@@ -562,6 +574,7 @@ public class GrocerySimulator extends Simulator {
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
+                                    agentMovement.setInteracting(false);
                                 }
                             }
                         }
@@ -611,9 +624,23 @@ public class GrocerySimulator extends Simulator {
                         }
                         else if (action.getName() == GroceryAction.Name.CHECKOUT || action.getName() == GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE || action.getName() == GroceryAction.Name.BUY_FOOD) {
                             if (agentMovement.getGoalAmenity() != null) {
-//                                if (agentMovement.getLeaderAgent() == null && !agentMovement.isInteracting()) {
-//                                    agentMovement.forceActionInteraction(someAgent, GroceryAgentMovement.InteractionType.EXCHANGE, agentMovement.getDuration());
-//                                }
+                                if (agentMovement.getLeaderAgent() == null && !agentMovement.isInteracting()) {
+                                    if (action.getName() == GroceryAction.Name.CHECKOUT) {
+                                        agentMovement.forceStationedInteraction(GroceryAgent.Persona.CASHIER);
+                                        if (persona == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER || persona == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER || persona == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER || persona == GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER) {
+                                            int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                                            if (x < GroceryRoutePlan.CHANCE_BAGGER_INTERACT) {
+                                                agentMovement.forceStationedInteraction(GroceryAgent.Persona.BAGGER);
+                                            }
+                                        }
+                                    }
+                                    else if (action.getName() == GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE) {
+                                        agentMovement.forceStationedInteraction(GroceryAgent.Persona.CUSTOMER_SERVICE);
+                                    }
+                                    else if (action.getName() == GroceryAction.Name.BUY_FOOD) {
+                                        agentMovement.forceStationedInteraction(GroceryAgent.Persona.STAFF_FOOD);
+                                    }
+                                }
 
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
@@ -624,6 +651,7 @@ public class GrocerySimulator extends Simulator {
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
+                                    agentMovement.setInteracting(false);
                                 }
                             }
                         }
@@ -692,6 +720,10 @@ public class GrocerySimulator extends Simulator {
                                 }
                             }
                             else {
+                                if (agentMovement.getLeaderAgent() == null && !agentMovement.isInteracting()) {
+                                    agentMovement.forceStationedInteraction(GroceryAgent.Persona.GUARD_EXIT);
+                                }
+
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
@@ -699,6 +731,7 @@ public class GrocerySimulator extends Simulator {
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
+                                    agentMovement.setInteracting(false);
                                 }
                             }
                         }
