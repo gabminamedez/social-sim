@@ -52,10 +52,10 @@ public class UniversitySimulator extends Simulator {
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
     public static int[][] currentPatchCount;
-    public static final int MAX_STUDENTS = 50; //250
-    public static final int MAX_PROFESSORS = 0;
-    public static final int MAX_CURRENT_STUDENTS = 3; //250
-    public static final int MAX_CURRENT_PROFESSORS = 0;
+    public static final int MAX_STUDENTS = 250; //250
+    public static final int MAX_PROFESSORS = 15;
+    public static final int MAX_CURRENT_STUDENTS = 250; //250
+    public static final int MAX_CURRENT_PROFESSORS = 10;
 
     public UniversitySimulator() {
         this.university = null;
@@ -192,7 +192,6 @@ public class UniversitySimulator extends Simulator {
                         agent.getAgentMovement().setActionIndex(0);
                         agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(0));
                         agent.getAgentMovement().resetGoal();
-                        System.out.println("SKIP ACTION: GOING TO CLASS NOW");
                     }
                 }
 

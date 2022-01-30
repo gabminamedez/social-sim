@@ -511,10 +511,11 @@ public class UniversityRoutePlan {
                     actions = new ArrayList<>();
                     actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
                     int classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
-                    while (CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID] == 0) {
+                    while (CLASSROOM_SIZES_PROF[classes.get(i)][classroomID] == 0) {
                         classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        System.out.println("HERE");//TODO:FOUND ERROR WHERE LOOP GET STUCK
                     }
-                    CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID]--;
+                    CLASSROOM_SIZES_PROF[classes.get(i)][classroomID]--;
                     int tickClassStart = switch (classes.get(i)) {
                         case 0 -> 720; case 1 -> 1980; case 2 -> 3240; case 3 -> 4500; case 4 -> 5760; default -> 7020;
                     };
