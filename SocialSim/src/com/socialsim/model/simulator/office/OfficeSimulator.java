@@ -10,8 +10,6 @@ import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.*;
-import com.socialsim.model.core.environment.office.patchobject.passable.goal.Sink;
-import com.socialsim.model.core.environment.office.patchobject.passable.goal.Toilet;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 
@@ -163,6 +161,7 @@ public class OfficeSimulator extends Simulator {
     public static int currentReceptionistSecretaryCount = 0;
 
     public static int currentSecretarySecretaryCount = 0;
+    public static int[][] currentPatchCount;
 
 
     public OfficeSimulator() {
@@ -205,6 +204,7 @@ public class OfficeSimulator extends Simulator {
         this.office = office;
         this.time.reset();
         this.running.set(false);
+        currentPatchCount = new int[office.getRows()][office.getColumns()];
     }
 
     public void spawnInitialAgents(Office office) {
@@ -1066,6 +1066,7 @@ public class OfficeSimulator extends Simulator {
                     }
                     else if (action.getName() == OfficeAction.Name.EAT_LUNCH) {
                         agentMovement.setDuration(agentMovement.getDuration() - 1);
+
                         if (agentMovement.getDuration() <= 0) {
                             agentMovement.setNextState(agentMovement.getStateIndex());
                             agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -1075,7 +1076,8 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.resetGoal();
                             agentMovement.getRoutePlan().setLunchAmenity(null);
                             agentMovement.getRoutePlan().setLunchAttractor(null);
-                        }else if(agentMovement.getDuration() > 100 && agentMovement.getRoutePlan().getCanUrgent() <= 0){
+                        }
+                        else if (agentMovement.getRoutePlan().getCanUrgent() <= 0){
                             double CHANCE = Simulator.roll();
 
                             if(CHANCE < OfficeRoutePlan.BATH_CHANCE && agentMovement.getRoutePlan().getBATH_LUNCH() > 0){
@@ -1322,7 +1324,7 @@ public class OfficeSimulator extends Simulator {
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.leaveQueue();
                                 agentMovement.setNextState(agentMovement.getStateIndex());
-                                agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1442,7 +1444,7 @@ public class OfficeSimulator extends Simulator {
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.leaveQueue();
                                 agentMovement.setNextState(agentMovement.getStateIndex());
-                                agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1612,7 +1614,7 @@ public class OfficeSimulator extends Simulator {
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.leaveQueue();
                                 agentMovement.setNextState(agentMovement.getStateIndex());
-                                agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
@@ -1709,6 +1711,26 @@ public class OfficeSimulator extends Simulator {
                 if (agentMovement.isInteracting())
                     break;
             }
+            patches = agentMovement.get3x3Field(agentMovement.getHeading(), true, Math.toRadians(270));
+            for (Patch patch: patches){
+                for (Agent otherAgent: patch.getAgents()){
+                    OfficeAgent officeAgent = (OfficeAgent) otherAgent;
+                    if (!officeAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
+                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), officeAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
+                            if (Coordinates.isWithinFieldOfView(officeAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), officeAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
+                                agentMovement.rollAgentInteraction(officeAgent);
+                                if (agentMovement.isInteracting()){ // interaction was successful
+                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                    currentPatchCount[officeAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][officeAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                }
+                            }
+                    if (agentMovement.isInteracting())
+                        break;
+                }
+
+                if (agentMovement.isInteracting())
+                    break;
+            }
         }
     }
 
@@ -1720,7 +1742,8 @@ public class OfficeSimulator extends Simulator {
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             int spawnChance = (int) gate.getChancePerTick();
             int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
-            //int team = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
+            // int team = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1;
+
             if (CHANCE > spawnChance) {
                 if (office.getUnspawnedWorkingAgents().size() > 0){
                     agent = office.getUnspawnedWorkingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedWorkingAgents().size()));

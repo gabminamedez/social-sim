@@ -1278,6 +1278,21 @@ public class OfficeAgentMovement extends AgentMovement {
         return patchesToExplore;
     }
 
+    public List<Patch> get3x3Field(double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
+        Patch centerPatch = this.currentPatch;
+        List<Patch> patchesToExplore = new ArrayList<>();
+        boolean isCenterPatch;
+
+        for (Patch patch : centerPatch.get3x3Neighbors(includeCenterPatch)) {
+            // Make sure that the patch to be added is within the field of view of the agent which invoked this method
+            isCenterPatch = patch.equals(centerPatch);
+            if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(centerPatch.getPatchCenterCoordinates(), patch.getPatchCenterCoordinates(), heading, fieldOfViewAngle)) {
+                patchesToExplore.add(patch);
+            }
+        }
+        return patchesToExplore;
+    }
+
     private Vector computeAttractiveForce(final Coordinates startingPosition, final double proposedHeading, final Coordinates proposedNewPosition, final double preferredWalkingDistance) {
         return new Vector(startingPosition, proposedHeading, proposedNewPosition, preferredWalkingDistance);
     }
@@ -1860,72 +1875,197 @@ public class OfficeAgentMovement extends AgentMovement {
             this.isInteracting = true;
             // set other agent interaction parameters
             agent.getAgentMovement().setInteracting(true);
-            //TODO: Identify which statistics are needed
-//            if (this.parent.getType() == OfficeAgent.Type.BOSS){
-//                switch (agent.getType()){
-//                    case BOSS -> OfficeSimulator.currentStudentStudentCount++;
-//                    case MANAGER -> OfficeSimulator.currentStudentProfCount++;
-//                    case BUSINESS -> OfficeSimulator.currentStudentGuardCount++;
-//                    case RESEARCHER -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case JANITOR -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case TECHNICAL -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case CLIENT -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case DRIVER -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case VISITOR -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case GUARD -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case RECEPTIONIST -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case SECRETARY -> OfficeSimulator.currentStudentJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == OfficeAgent.Type.MANAGER){
-//                switch (agent.getType()){
-//                    case BOSS -> OfficeSimulator.currentStudentStudentCount++;
-//                    case MANAGER -> OfficeSimulator.currentStudentProfCount++;
-//                    case BUSINESS -> OfficeSimulator.currentStudentGuardCount++;
-//                    case RESEARCHER -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case JANITOR -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case TECHNICAL -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case CLIENT -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case DRIVER -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case VISITOR -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case GUARD -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case RECEPTIONIST -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case SECRETARY -> OfficeSimulator.currentStudentJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == OfficeAgent.Type.GUARD){
-//                switch (agent.getType()){
-//                    case BOSS -> OfficeSimulator.currentStudentStudentCount++;
-//                    case MANAGER -> OfficeSimulator.currentStudentProfCount++;
-//                    case BUSINESS -> OfficeSimulator.currentStudentGuardCount++;
-//                    case RESEARCHER -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case JANITOR -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case TECHNICAL -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case CLIENT -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case DRIVER -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case VISITOR -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case GUARD -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case RECEPTIONIST -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case SECRETARY -> OfficeSimulator.currentStudentJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == OfficeAgent.Type.JANITOR){
-//                switch (agent.getType()){
-//                    case BOSS -> OfficeSimulator.currentStudentStudentCount++;
-//                    case MANAGER -> OfficeSimulator.currentStudentProfCount++;
-//                    case BUSINESS -> OfficeSimulator.currentStudentGuardCount++;
-//                    case RESEARCHER -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case JANITOR -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case TECHNICAL -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case CLIENT -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case DRIVER -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case VISITOR -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case GUARD -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case RECEPTIONIST -> OfficeSimulator.currentStudentJanitorCount++;
-//                    case SECRETARY -> OfficeSimulator.currentStudentJanitorCount++;
-//                }
-//            }
-
+            if (this.parent.getType() == OfficeAgent.Type.BOSS){
+                switch (agent.getType()){
+                    case MANAGER -> OfficeSimulator.currentBossManagerCount++;
+                    case BUSINESS -> OfficeSimulator.currentBossBusinessCount++;
+                    case RESEARCHER -> OfficeSimulator.currentBossResearcherCount++;
+                    case TECHNICAL -> OfficeSimulator.currentBossTechnicalCount++;
+                    case JANITOR -> OfficeSimulator.currentBossJanitorCount++;
+                    case CLIENT -> OfficeSimulator.currentBossClientCount++;
+                    case DRIVER -> OfficeSimulator.currentBossDriverCount++;
+                    case VISITOR -> OfficeSimulator.currentBossVisitorCount++;
+                    case GUARD -> OfficeSimulator.currentBossGuardCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentBossReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentBossSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.MANAGER){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossManagerCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerManagerCount++;
+                    case BUSINESS -> OfficeSimulator.currentManagerBusinessCount++;
+                    case RESEARCHER -> OfficeSimulator.currentManagerResearcherCount++;
+                    case TECHNICAL -> OfficeSimulator.currentManagerTechnicalCount++;
+                    case JANITOR -> OfficeSimulator.currentManagerJanitorCount++;
+                    case CLIENT -> OfficeSimulator.currentManagerClientCount++;
+                    case DRIVER -> OfficeSimulator.currentManagerDriverCount++;
+                    case VISITOR -> OfficeSimulator.currentManagerVisitorCount++;
+                    case GUARD -> OfficeSimulator.currentManagerGuardCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentManagerReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentManagerSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.BUSINESS){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossBusinessCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerBusinessCount++;
+                    case BUSINESS -> OfficeSimulator.currentBusinessBusinessCount++;
+                    case RESEARCHER -> OfficeSimulator.currentBusinessResearcherCount++;
+                    case TECHNICAL -> OfficeSimulator.currentBusinessTechnicalCount++;
+                    case JANITOR -> OfficeSimulator.currentBusinessJanitorCount++;
+                    case CLIENT -> OfficeSimulator.currentBusinessClientCount++;
+                    case DRIVER -> OfficeSimulator.currentBusinessDriverCount++;
+                    case VISITOR -> OfficeSimulator.currentBusinessVisitorCount++;
+                    case GUARD -> OfficeSimulator.currentBusinessGuardCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentBusinessReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentBusinessSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.RESEARCHER){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossResearcherCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerResearcherCount++;
+                    case BUSINESS -> OfficeSimulator.currentBusinessResearcherCount++;
+                    case RESEARCHER -> OfficeSimulator.currentResearcherResearcherCount++;
+                    case TECHNICAL -> OfficeSimulator.currentResearcherTechnicalCount++;
+                    case JANITOR -> OfficeSimulator.currentResearcherJanitorCount++;
+                    case CLIENT -> OfficeSimulator.currentResearcherClientCount++;
+                    case DRIVER -> OfficeSimulator.currentResearcherDriverCount++;
+                    case VISITOR -> OfficeSimulator.currentResearcherVisitorCount++;
+                    case GUARD -> OfficeSimulator.currentResearcherGuardCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentResearcherReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentResearcherSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.TECHNICAL){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossTechnicalCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerTechnicalCount++;
+                    case BUSINESS -> OfficeSimulator.currentBusinessTechnicalCount++;
+                    case RESEARCHER -> OfficeSimulator.currentResearcherTechnicalCount++;
+                    case TECHNICAL -> OfficeSimulator.currentTechnicalTechnicalCount++;
+                    case JANITOR -> OfficeSimulator.currentTechnicalJanitorCount++;
+                    case CLIENT -> OfficeSimulator.currentTechnicalClientCount++;
+                    case DRIVER -> OfficeSimulator.currentTechnicalDriverCount++;
+                    case VISITOR -> OfficeSimulator.currentTechnicalVisitorCount++;
+                    case GUARD -> OfficeSimulator.currentTechnicalGuardCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentTechnicalReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentTechnicalSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.JANITOR){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossJanitorCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerJanitorCount++;
+                    case BUSINESS -> OfficeSimulator.currentBusinessJanitorCount++;
+                    case RESEARCHER -> OfficeSimulator.currentResearcherJanitorCount++;
+                    case TECHNICAL -> OfficeSimulator.currentTechnicalJanitorCount++;
+                    case JANITOR -> OfficeSimulator.currentJanitorJanitorCount++;
+                    case CLIENT -> OfficeSimulator.currentJanitorClientCount++;
+                    case DRIVER -> OfficeSimulator.currentJanitorDriverCount++;
+                    case VISITOR -> OfficeSimulator.currentJanitorVisitorCount++;
+                    case GUARD -> OfficeSimulator.currentJanitorGuardCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentJanitorReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentJanitorSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.CLIENT){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossClientCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerClientCount++;
+                    case BUSINESS -> OfficeSimulator.currentBusinessClientCount++;
+                    case RESEARCHER -> OfficeSimulator.currentResearcherClientCount++;
+                    case TECHNICAL -> OfficeSimulator.currentTechnicalClientCount++;
+                    case JANITOR -> OfficeSimulator.currentJanitorClientCount++;
+                    case CLIENT -> OfficeSimulator.currentClientClientCount++;
+                    case DRIVER -> OfficeSimulator.currentClientDriverCount++;
+                    case VISITOR -> OfficeSimulator.currentClientVisitorCount++;
+                    case GUARD -> OfficeSimulator.currentClientGuardCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentClientReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentClientSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.DRIVER){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossDriverCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerDriverCount++;
+                    case BUSINESS -> OfficeSimulator.currentBusinessDriverCount++;
+                    case RESEARCHER -> OfficeSimulator.currentResearcherDriverCount++;
+                    case TECHNICAL -> OfficeSimulator.currentTechnicalDriverCount++;
+                    case JANITOR -> OfficeSimulator.currentJanitorDriverCount++;
+                    case CLIENT -> OfficeSimulator.currentClientDriverCount++;
+                    case DRIVER -> OfficeSimulator.currentDriverDriverCount++;
+                    case VISITOR -> OfficeSimulator.currentDriverVisitorCount++;
+                    case GUARD -> OfficeSimulator.currentDriverGuardCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentDriverReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentDriverSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.VISITOR){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossVisitorCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerVisitorCount++;
+                    case BUSINESS -> OfficeSimulator.currentBusinessVisitorCount++;
+                    case RESEARCHER -> OfficeSimulator.currentResearcherVisitorCount++;
+                    case TECHNICAL -> OfficeSimulator.currentTechnicalVisitorCount++;
+                    case JANITOR -> OfficeSimulator.currentJanitorVisitorCount++;
+                    case CLIENT -> OfficeSimulator.currentClientVisitorCount++;
+                    case DRIVER -> OfficeSimulator.currentDriverVisitorCount++;
+                    case VISITOR -> OfficeSimulator.currentVisitorVisitorCount++;
+                    case GUARD -> OfficeSimulator.currentVisitorGuardCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentVisitorReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentVisitorSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.GUARD){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossGuardCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerGuardCount++;
+                    case BUSINESS -> OfficeSimulator.currentBusinessGuardCount++;
+                    case RESEARCHER -> OfficeSimulator.currentResearcherGuardCount++;
+                    case TECHNICAL -> OfficeSimulator.currentTechnicalGuardCount++;
+                    case JANITOR -> OfficeSimulator.currentJanitorGuardCount++;
+                    case CLIENT -> OfficeSimulator.currentClientGuardCount++;
+                    case DRIVER -> OfficeSimulator.currentDriverGuardCount++;
+                    case VISITOR -> OfficeSimulator.currentVisitorGuardCount++;
+                    case GUARD -> OfficeSimulator.currentGuardGuardCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentGuardReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentGuardSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.RECEPTIONIST){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossReceptionistCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerReceptionistCount++;
+                    case BUSINESS -> OfficeSimulator.currentBusinessReceptionistCount++;
+                    case RESEARCHER -> OfficeSimulator.currentResearcherReceptionistCount++;
+                    case TECHNICAL -> OfficeSimulator.currentTechnicalReceptionistCount++;
+                    case JANITOR -> OfficeSimulator.currentJanitorReceptionistCount++;
+                    case CLIENT -> OfficeSimulator.currentClientReceptionistCount++;
+                    case DRIVER -> OfficeSimulator.currentDriverReceptionistCount++;
+                    case VISITOR -> OfficeSimulator.currentVisitorReceptionistCount++;
+                    case GUARD -> OfficeSimulator.currentGuardReceptionistCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentReceptionistReceptionistCount++;
+                    case SECRETARY -> OfficeSimulator.currentReceptionistSecretaryCount++;
+                }
+            }
+            else if (this.parent.getType() == OfficeAgent.Type.SECRETARY){
+                switch (agent.getType()){
+                    case BOSS -> OfficeSimulator.currentBossSecretaryCount++;
+                    case MANAGER -> OfficeSimulator.currentManagerSecretaryCount++;
+                    case BUSINESS -> OfficeSimulator.currentBusinessSecretaryCount++;
+                    case RESEARCHER -> OfficeSimulator.currentResearcherSecretaryCount++;
+                    case TECHNICAL -> OfficeSimulator.currentTechnicalSecretaryCount++;
+                    case JANITOR -> OfficeSimulator.currentJanitorSecretaryCount++;
+                    case CLIENT -> OfficeSimulator.currentClientSecretaryCount++;
+                    case DRIVER -> OfficeSimulator.currentDriverSecretaryCount++;
+                    case VISITOR -> OfficeSimulator.currentVisitorSecretaryCount++;
+                    case GUARD -> OfficeSimulator.currentGuardSecretaryCount++;
+                    case RECEPTIONIST -> OfficeSimulator.currentReceptionistSecretaryCount++;
+                    case SECRETARY -> OfficeSimulator.currentSecretarySecretaryCount++;
+                }
+            }
             // roll duration (NOTE GAUSSIAN)
             this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
             if (agent.getAgentMovement().getInteractionType() == OfficeAgentMovement.InteractionType.NON_VERBAL)

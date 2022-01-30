@@ -11,6 +11,7 @@ import java.util.Objects;
 
 public class UniversityAgent extends Agent {
 
+    private int idCtr = 0;
     public static int agentCount = 0;
     public static int guardCount = 0;
     public static int janitorCount = 0;
@@ -150,7 +151,7 @@ public class UniversityAgent extends Agent {
 
 
     private UniversityAgent(UniversityAgent.Type type, boolean inOnStart) {
-        this.id = agentCount;
+        this.id = idCtr++;
         this.type = type;
         this.inOnStart = inOnStart;
 
@@ -278,6 +279,15 @@ public class UniversityAgent extends Agent {
         public static UniversityAgent create(UniversityAgent.Type type, boolean inOnStart) {
             return new UniversityAgent(type, inOnStart);
         }
+    }
+
+    public static void clearUniversityAgentCounts() {
+        agentCount = 0;
+        guardCount = 0;
+        janitorCount = 0;
+        professorCount = 0;
+        studentCount = 0;
+        UniversityRoutePlan.resetClassroomSizes();
     }
 
     @Override

@@ -1,14 +1,12 @@
 package com.socialsim.model.core.agent.mall;
 
-import com.socialsim.model.core.agent.grocery.GroceryState;
-
 import java.util.ArrayList;
 
 public class MallState {
 
     public enum Name {
         GOING_TO_SECURITY, WANDERING_AROUND, NEEDS_BATHROOM, GOING_HOME,
-        GOING_TO_STORE, IN_STORE, GOING_TO_RESTO, IN_RESTO, GOING_TO_SHOWCASE, IN_SHOWCASE, GOING_TO_DINING, IN_DINING,
+        GOING_TO_STORE, NEED_HELP_STORE, IN_STORE, GOING_TO_RESTO, NEED_HELP_RESTO, IN_RESTO, GOING_TO_SHOWCASE, IN_SHOWCASE, GOING_TO_DINING, IN_DINING,
         GUARD, STAFF_KIOSK, STAFF_RESTO, STAFF_STORE_SALES, STAFF_STORE_CASHIER
     }
 
@@ -23,9 +21,7 @@ public class MallState {
         Store8(7),
         Store9(8),
         Store10(9),
-        Store11(10),
-        Store12(11),
-        Store13(12);
+        Store11(10);
 
         public final int ID;
         Shop(int ID) {
@@ -41,6 +37,7 @@ public class MallState {
     private MallRoutePlan routePlan;
     private MallAgent agent;
     private ArrayList<MallAction> actions;
+    private int storeNum;
 
     public MallState(MallState mallState, MallRoutePlan routePlan, MallAgent agent) {
         this.name = mallState.getName();
@@ -61,6 +58,14 @@ public class MallState {
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = actions;
+    }
+
+    public MallState(Name a, MallRoutePlan routePlan, MallAgent agent, ArrayList<MallAction> actions, int storeNum) {
+        this.name = a;
+        this.routePlan = routePlan;
+        this.agent = agent;
+        this.actions = actions;
+        this.storeNum = storeNum;
     }
 
     public Name getName() {
@@ -95,6 +100,14 @@ public class MallState {
         actions.add(a);
     }
 
+    public int getStoreNum() {
+        return storeNum;
+    }
+
+    public void setStoreNum(int storeNum) {
+        this.storeNum = storeNum;
+    }
+
     public static Shop[] eatShopLeft() {
         return new Shop[] {
                 Shop.Store4,
@@ -106,8 +119,6 @@ public class MallState {
                 Shop.Store7,
                 Shop.Store8,
                 Shop.Store9,
-                Shop.Store12,
-                Shop.Store13,
                 Shop.Store11,
                 Shop.Store10
         };
@@ -117,8 +128,6 @@ public class MallState {
         return new Shop[] {
                 Shop.Store10,
                 Shop.Store11,
-                Shop.Store13,
-                Shop.Store12,
                 Shop.Store9,
                 Shop.Store8,
                 Shop.Store7,
@@ -140,8 +149,6 @@ public class MallState {
                 Shop.Store7,
                 Shop.Store8,
                 Shop.Store9,
-                Shop.Store12,
-                Shop.Store13,
                 Shop.Store11,
                 Shop.Store10,
                 Shop.Store4,
@@ -155,8 +162,6 @@ public class MallState {
                 Shop.Store4,
                 Shop.Store10,
                 Shop.Store11,
-                Shop.Store13,
-                Shop.Store12,
                 Shop.Store9,
                 Shop.Store8,
                 Shop.Store7,
