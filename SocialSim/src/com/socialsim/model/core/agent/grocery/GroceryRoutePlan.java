@@ -6,11 +6,10 @@ import com.socialsim.model.simulator.Simulator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class GroceryRoutePlan {
 
-    private ListIterator<GroceryState> currentRoutePlan; // Denotes the current route plan of the agent which owns this
+    private ArrayList<GroceryState> routePlan;
     private GroceryState currentState; // Denotes the current class of the amenity/patchfield in the route plan
 
     private static final int MIN_AISLE_ORGANIZE = 10;
@@ -26,7 +25,7 @@ public class GroceryRoutePlan {
     public static final int DUO_FAMILY_ALL_AISLE_CHANCE = 50, DUO_FAMILY_CHANCE_SERVICE = 20, DUO_FAMILY_CHANCE_FOOD = 30, DUO_FAMILY_CHANCE_EAT_TABLE = 50;
 
     public GroceryRoutePlan(GroceryAgent agent, GroceryAgent leaderAgent, Grocery grocery, Patch spawnPatch) { //leaderAgent is only for agents that follow and deviate
-        List<GroceryState> routePlan = new ArrayList<>();
+        this.routePlan = new ArrayList<>();
         ArrayList<GroceryAction> actions;
 
         if (agent.getPersona() == GroceryAgent.Persona.GUARD_ENTRANCE) {
@@ -161,7 +160,7 @@ public class GroceryRoutePlan {
                     }
                 }
                 else{ // deviating or following
-                    routePlan = createFollowingRoute2(agent, leaderAgent);
+                    routePlan = createFollowingRoute(agent, leaderAgent);
                 }
             }
             else if (agent.getPersona() == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER){
@@ -196,7 +195,7 @@ public class GroceryRoutePlan {
                     }
                 }
                 else{ // deviating or following
-                    routePlan = createFollowingRoute2(agent, leaderAgent);
+                    routePlan = createFollowingRoute(agent, leaderAgent);
                 }
             }
             else if (agent.getPersona() == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER){
@@ -231,7 +230,7 @@ public class GroceryRoutePlan {
                     }
                 }
                 else{ // deviating or following
-                    routePlan = createFollowingRoute2(agent, leaderAgent);
+                    routePlan = createFollowingRoute(agent, leaderAgent);
                 }
             }
 
@@ -245,32 +244,31 @@ public class GroceryRoutePlan {
             routePlan.add(new GroceryState(GroceryState.Name.GOING_HOME, this, agent, actions));
         }
 
-        this.currentRoutePlan = routePlan.listIterator();
-        setNextState();
+        setNextState(-1);
     }
 
-    public GroceryState setNextState() { // Set the next class in the route plan
-        this.currentState = this.currentRoutePlan.next();
+    public void addUrgentRoute(GroceryState s) {
+        this.currentState = s;
+    }
 
+    public GroceryState setNextState(int i) { // Set the next class in the route plan
+        // this.currentState = this.currentRoutePlan.next();
+        this.currentState = this.routePlan.get(i+1);
         return this.currentState;
     }
 
-    public GroceryState setPreviousState(){
-        this.currentState = this.currentRoutePlan.previous();
-
+    public GroceryState setPreviousState(int i) {
+        // this.currentState = this.currentRoutePlan.previous();
+        this.currentState = this.routePlan.get(i-1);
         return this.currentState;
     }
 
-    public ListIterator<GroceryState> getCurrentRoutePlan() {
-        return currentRoutePlan;
+    public ArrayList<GroceryState> getCurrentRoutePlan() {
+        return this.routePlan;
     }
 
     public GroceryState getCurrentState() {
         return currentState;
-    }
-
-    public void addUrgentRoute(GroceryState s){
-        this.currentState = s;
     }
 
     public ArrayList<GroceryState> createSTTPRoute(GroceryAgent agent, Patch spawnPatch, Grocery grocery) {
@@ -774,54 +772,12 @@ public class GroceryRoutePlan {
         return routePlan;
     }
 
-    public ArrayList<GroceryState> createFollowingRoute(GroceryAgent agent, GroceryAgent leaderAgent, Patch spawnPatch) {
+    public ArrayList<GroceryState> createFollowingRoute(GroceryAgent agent, GroceryAgent leaderAgent) {
         ArrayList<GroceryState> routePlan = new ArrayList<>();
-        ArrayList<GroceryAction> actions = new ArrayList<>();
-        //TODO: Deviating is randomized and is only added through the GrocerySimulator
-        ListIterator<GroceryState> leaderRoutePlan = leaderAgent.getAgentMovement().getRoutePlan().getCurrentRoutePlan();
-        actions.add(new GroceryAction(GroceryAction.Name.GOING_TO_SECURITY_QUEUE));
-        actions.add(new GroceryAction(GroceryAction.Name.GO_THROUGH_SCANNER, (GroceryAgent) null, 2));
-        routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SECURITY, this, agent, actions));
-        actions = new ArrayList<>();
-        actions.add(new GroceryAction(GroceryAction.Name.FOLLOW_LEADER_SHOP, leaderAgent, 0));
-        routePlan.add(new GroceryState(GroceryState.Name.FOLLOW_LEADER_SHOP, this, agent, actions));
+        ArrayList<GroceryState> leaderRoutePlan = leaderAgent.getAgentMovement().getRoutePlan().getCurrentRoutePlan();
 
-        //TODO Make sure that leaderRoutePlan has eating food before adding this
-        while (leaderRoutePlan.hasNext()){
-            GroceryState state = leaderRoutePlan.next();
-            if (state.getName() == GroceryState.Name.GOING_TO_SERVICE){
-                actions = new ArrayList<>();
-                actions.add(new GroceryAction(GroceryAction.Name.FOLLOW_LEADER_SERVICE, leaderAgent, 0));
-                routePlan.add(new GroceryState(GroceryState.Name.FOLLOW_LEADER_SERVICE, this, agent, actions));
-            }
-            else if (state.getName() == GroceryState.Name.GOING_TO_EAT){
-                actions.add(new GroceryAction(GroceryAction.Name.FOLLOW_LEADER_EAT, leaderAgent, 0));
-                actions.add(new GroceryAction(GroceryAction.Name.FIND_SEAT_FOOD_COURT, leaderAgent));
-                routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_EAT, this, agent, actions));
-            }
-            else if (state.getName() == GroceryState.Name.EATING){
-                actions = new ArrayList<>();
-                actions.add(new GroceryAction(GroceryAction.Name.EATING_FOOD, leaderAgent));
-                routePlan.add(new GroceryState(GroceryState.Name.EATING, this, agent, actions));
-            }
-        }
-        return routePlan;
-    }
-
-    public ArrayList<GroceryState> createFollowingRoute2(GroceryAgent agent, GroceryAgent leaderAgent) {
-        ArrayList<GroceryState> routePlan = new ArrayList<>();
-        ListIterator<GroceryState> leaderRoutePlan = leaderAgent.getAgentMovement().getRoutePlan().getCurrentRoutePlan();
-
-        while (leaderRoutePlan.hasPrevious()) {
-            leaderRoutePlan.previous();
-        }
-
-        while (leaderRoutePlan.hasNext()) {
-            routePlan.add(new GroceryState(leaderRoutePlan.next(), this, agent));
-        }
-
-        while (leaderRoutePlan.hasPrevious()) {
-            leaderRoutePlan.previous();
+        for (GroceryState mallState : leaderRoutePlan) {
+            routePlan.add(new GroceryState(mallState, this, agent));
         }
 
         return routePlan;

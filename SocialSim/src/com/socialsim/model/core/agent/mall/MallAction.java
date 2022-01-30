@@ -8,6 +8,7 @@ public class MallAction {
     public enum Name {
         GOING_TO_SECURITY_QUEUE(),
         GO_THROUGH_SCANNER(),
+        GREET_GUARD(),
 
         FIND_DIRECTORY(),
         VIEW_DIRECTORY(),
@@ -23,6 +24,7 @@ public class MallAction {
         ASK_STAFF_SALES(),
         GO_TO_AISLE(),
         CHECKOUT_STORE(),
+        TALK_TO_CASHIER(),
 
         GO_TO_KIOSK(),
         QUEUE_KIOSK(),
@@ -38,14 +40,17 @@ public class MallAction {
         LEAVE_BUILDING(),
 
         GUARD_STATION(),
+        GREET_PERSON(),
 
         STAFF_KIOSK_STATION(),
+        STAFF_KIOSK_ANSWER(),
 
         STAFF_RESTO_SERVE(),
         STAFF_RESTO_ANSWER(),
 
         STAFF_STORE_STATION(),
-        STAFF_SALES_ANSWER();
+        STAFF_SALES_ANSWER(),
+        STAFF_CASHIER_ANSWER();
 
         final int ID;
         Name(int ID){

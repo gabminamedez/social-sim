@@ -59,6 +59,7 @@ public class GroceryAgentMovement extends AgentMovement {
     private AgentPath currentPath; // Denotes the current path followed by this agent, if any
     private int stateIndex;
     private int actionIndex;
+    private int returnIndex;
     private GroceryState currentState;
     private GroceryAction currentAction; // Low-level description of what the agent is doing
 
@@ -229,6 +230,14 @@ public class GroceryAgentMovement extends AgentMovement {
         this.currentPath = currentPath;
     }
 
+    public int getReturnIndex() {
+        return returnIndex;
+    }
+
+    public void setReturnIndex(int stateIndex) {
+        this.returnIndex = stateIndex;
+    }
+
     public int getStateIndex() {
         return stateIndex;
     }
@@ -249,12 +258,12 @@ public class GroceryAgentMovement extends AgentMovement {
         return currentState;
     }
 
-    public void setNextState() {
-        this.currentState = this.currentState.getRoutePlan().setNextState();
+    public void setNextState(int i) {
+        this.currentState = this.currentState.getRoutePlan().setNextState(i);
     }
 
-    public void setPreviousState() {
-        this.currentState = this.currentState.getRoutePlan().setPreviousState();
+    public void setPreviousState(int i) {
+        this.currentState = this.currentState.getRoutePlan().setPreviousState(i);
     }
 
     public GroceryAction getCurrentAction() {
@@ -1539,9 +1548,9 @@ public class GroceryAgentMovement extends AgentMovement {
         }
     }
 
-    public boolean hasReachedFinalGoal() { // Check if this agent has reached its final goal
-        return !this.routePlan.getCurrentRoutePlan().hasNext();
-    }
+//    public boolean hasReachedFinalGoal() { // Check if this agent has reached its final goal
+//        return !this.routePlan.getCurrentRoutePlan().hasNext();
+//    }
 
     public boolean hasAgentReachedFinalPatchInPath() { // Check if this agent has reached the final patch in its current path
         return this.currentPath.getPath().isEmpty();
@@ -1874,7 +1883,7 @@ public class GroceryAgentMovement extends AgentMovement {
         this.duration = getDuration() - 1;
     }
 
-    public void forceActionInteraction(GroceryAgent agent, GroceryAgentMovement.InteractionType interactionType, int duration, GrocerySimulator GrocerySimulator){
+    public void forceActionInteraction(GroceryAgent agent, GroceryAgentMovement.InteractionType interactionType, int duration) {
         //TODO: Statistics in interaction
 
         // set own agent interaction parameters
