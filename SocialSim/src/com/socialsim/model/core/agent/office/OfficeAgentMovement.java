@@ -349,7 +349,7 @@ public class OfficeAgentMovement extends AgentMovement {
     }
 
     public int getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public void setDuration(int duration) {
