@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class GroceryAgent extends Agent {
 
-    private int idCtr = 0;
+    private static int idCtr = 0;
     public static int agentCount = 0;
     public static int customerCount = 0;
     public static int staffAisleCount = 0;

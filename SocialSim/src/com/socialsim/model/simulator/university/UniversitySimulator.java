@@ -25,6 +25,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UniversitySimulator extends Simulator {
 
+    public static int defaultMaxStudents = 500; //250
+    public static int defaultMaxProfessors = 6;
+    public static int defaultMaxCurrentStudents = 250; //250
+    public static int defaultMaxCurrentProfessors = 6;
+
     private University university;
 
     // Simulator variables

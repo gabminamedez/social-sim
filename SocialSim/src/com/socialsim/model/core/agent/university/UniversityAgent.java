@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class UniversityAgent extends Agent {
 
-    private int idCtr = 0;
+    private static int idCtr = 0;
     public static int agentCount = 0;
     public static int guardCount = 0;
     public static int janitorCount = 0;
