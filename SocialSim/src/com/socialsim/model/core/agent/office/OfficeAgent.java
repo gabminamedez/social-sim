@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class OfficeAgent extends Agent {
 
-    private int idCtr = 0;
+    private static int idCtr = 0;
     public static int agentCount = 0;
     public static int bossCount = 0;
     public static int managerCount = 0;

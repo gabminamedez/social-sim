@@ -2105,8 +2105,8 @@ public class GroceryAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.COOPERATIVE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
+                interactionStdDeviation = 12;
+                interactionMean = 24;
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
                 GrocerySimulator.currentExchangeCount++;
@@ -2114,8 +2114,8 @@ public class GroceryAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.EXCHANGE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
+                interactionStdDeviation = 24;
+                interactionMean = 60;
             }
             else{
                 return;

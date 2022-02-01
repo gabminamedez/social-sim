@@ -24,6 +24,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class UniversityAgentMovement extends AgentMovement {
 
+    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalStdDev = 1;
+    public static int defaultCooperativeMean = 24;
+    public static int defaultCooperativeStdDev = 12;
+    public static int defaultExchangeMean = 24;
+    public static int defaultExchangeStdDev = 12;
+    public static int defaultFieldOfView = 30;
+
     private final UniversityAgent parent;
     private final Coordinates position; // Denotes the position of the agent
     private final University university;
@@ -1828,6 +1836,7 @@ public class UniversityAgentMovement extends AgentMovement {
                     CHANCE_COOPERATIVE2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
                     CHANCE_EXCHANGE2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
             if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
+//                System.out.println(CHANCE + " Nonverbal");
                 UniversitySimulator.currentNonverbalCount++;
                 this.getParent().getAgentMovement().setInteractionType(InteractionType.NON_VERBAL);
                 agent.getAgentMovement().setInteractionType(InteractionType.NON_VERBAL);
@@ -1835,6 +1844,7 @@ public class UniversityAgentMovement extends AgentMovement {
                 interactionMean = 2;
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
+//                System.out.println(CHANCE + " Cooperative");
                 UniversitySimulator.currentCooperativeCount++;
                 this.getParent().getAgentMovement().setInteractionType(InteractionType.COOPERATIVE);
                 agent.getAgentMovement().setInteractionType(InteractionType.COOPERATIVE);
@@ -1844,6 +1854,7 @@ public class UniversityAgentMovement extends AgentMovement {
                 interactionMean = 19;
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
+//                System.out.println(CHANCE + " Exchange");
                 UniversitySimulator.currentExchangeCount++;
                 this.getParent().getAgentMovement().setInteractionType(InteractionType.EXCHANGE);
                 agent.getAgentMovement().setInteractionType(InteractionType.EXCHANGE);
@@ -1909,6 +1920,7 @@ public class UniversityAgentMovement extends AgentMovement {
         if (this.interactionDuration == 0){
             this.isInteracting = false;
             this.interactionType = null;
+            System.out.println("Done Interacting");
         }
         // -- interaction
         else{

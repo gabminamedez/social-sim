@@ -19,10 +19,12 @@ import static com.socialsim.model.core.agent.university.UniversityAgent.*;
 public class University extends Environment {
 
 
+    public static CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> defaultIOS;
+    private static CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales;
     private final CopyOnWriteArrayList<UniversityAgent> agents;
     private final SortedSet<Patch> amenityPatchSet;
     private final SortedSet<Patch> agentPatchSet;
-    private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOS;
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOSInteractionChances;
 
     private final List<UniversityGate> universityGates;
     private final List<Bench> benches;
@@ -62,7 +64,7 @@ public class University extends Environment {
         super(rows, columns);
 
         this.agents = new CopyOnWriteArrayList<>();
-        this.IOS = new CopyOnWriteArrayList<>();
+        this.IOSInteractionChances = new CopyOnWriteArrayList<>();
 
         this.amenityPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
         this.agentPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
@@ -110,7 +112,7 @@ public class University extends Environment {
     }
 
     public CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> getIOS() {
-        return IOS;
+        return IOSInteractionChances;
     }
 
     public CopyOnWriteArrayList<UniversityAgent> getUnspawnedAgents() {
@@ -319,549 +321,549 @@ public class University extends Environment {
             this.getAgents().add(newAgent);
         }
 
-        for (int i = 0; i < this.getAgents().size(); i++){
-            Persona agent1 = agents.get(i).getPersona();
-            ArrayList<Integer> IOSScales = new ArrayList<>();
-            for (int j = 0 ; j < this.getAgents().size(); j++){
-                if (i == j){
-                    IOSScales.add(0);
-                }
-                else {
-                    Persona agent2 = agents.get(j).getPersona();
-                    if (agent1 == Persona.GUARD){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.JANITOR){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.INT_Y1_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(1);
-                            case JANITOR -> IOSScales.add(1);
-                            case INT_Y1_STUDENT -> {
-                                int[] listIOS = new int[]{1, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y1_ORG_STUDENT -> {
-                                int[] listIOS = new int[]{1, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(1);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.INT_Y2_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(1);
-                            case JANITOR -> IOSScales.add(1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y2_STUDENT -> {
-                                int[] listIOS = new int[]{1, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y2_ORG_STUDENT -> {
-                                int[] listIOS = new int[]{1, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y1_STUDENT -> IOSScales.add(1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.INT_Y3_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(1);
-                            case JANITOR -> IOSScales.add(1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y3_STUDENT -> {
-                                int[] listIOS = new int[]{1, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y3_ORG_STUDENT -> {
-                                int[] listIOS = new int[]{1, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y1_STUDENT -> IOSScales.add(1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.INT_Y4_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(1);
-                            case JANITOR -> IOSScales.add(1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y4_STUDENT -> {
-                                int[] listIOS = new int[]{1, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y4_ORG_STUDENT -> {
-                                int[] listIOS = new int[]{1, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case EXT_Y1_STUDENT -> IOSScales.add(1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.INT_Y1_ORG_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y1_STUDENT -> {
-                                int[] listIOS = new int[]{1, 2, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y1_ORG_STUDENT -> {
-                                int[] listIOS = new int[]{1, 2, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(6) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.INT_Y2_ORG_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y2_STUDENT -> {
-                                int[] listIOS = new int[]{1, 2, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y2_ORG_STUDENT -> {
-                                int[] listIOS = new int[]{1, 2, 3, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(6) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.INT_Y3_ORG_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y3_STUDENT -> {
-                                int[] listIOS = new int[]{1, 2, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y3_ORG_STUDENT -> {
-                                int[] listIOS = new int[]{1, 2, 3, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y1_STUDENT -> IOSScales.add(1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(6) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.INT_Y4_ORG_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y4_STUDENT -> {
-                                int[] listIOS = new int[]{1, 2, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y4_ORG_STUDENT -> {
-                                int[] listIOS = new int[]{1, 2, 3, 5, 6};
-                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                            }
-                            case EXT_Y1_STUDENT -> IOSScales.add(1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(6) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                        }
-                    }
-                    else if (agent1 == Persona.EXT_Y1_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y4_STUDENT -> IOSScales.add(2);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(2);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 3);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 3);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                        }
-                    }
-                    else if (agent1 == Persona.EXT_Y2_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                        }
-                    }
-                    else if (agent1 == Persona.EXT_Y3_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                        }
-                    }
-                    else if (agent1 == Persona.EXT_Y4_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(2);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(2);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 3);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 3);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                        }
-                    }
-                    else if (agent1 == Persona.EXT_Y1_ORG_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y4_STUDENT -> IOSScales.add(2);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 2);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 3);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 3);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                        }
-                    }
-                    else if (agent1 == Persona.EXT_Y2_ORG_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 2);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                        }
-                    }
-                    else if (agent1 == Persona.EXT_Y3_ORG_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 2);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                        }
-                    }
-                    else if (agent1 == Persona.EXT_Y4_ORG_STUDENT){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(2);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 2);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 3);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 3);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 3);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                        }
-                    }
-                    else if (agent1 == Persona.STRICT_PROFESSOR){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                        }
-                    }
-                    else if (agent1 == Persona.APPROACHABLE_PROFESSOR){
-                        switch (agent2){
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case INT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case INT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case INT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case INT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y1_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y2_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y3_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y4_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
-                            case EXT_Y1_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(6) + 1);
-                            case EXT_Y2_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(6) + 1);
-                            case EXT_Y3_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(6) + 1);
-                            case EXT_Y4_ORG_STUDENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(6) + 1);
-                            case STRICT_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case APPROACHABLE_PROFESSOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                        }
-                    }
-                }
-            }
-            IOS.add(convertToChanceInteraction(IOSScales));
-        }
+//        for (int i = 0; i < this.getAgents().size(); i++){
+//            Persona agent1 = agents.get(i).getPersona();
+//            ArrayList<Integer> IOSScales = new ArrayList<>();
+//            for (int j = 0 ; j < this.getAgents().size(); j++){
+//                if (i == j){
+//                    IOSScales.add(0);
+//                }
+//                else {
+//                    Persona persona2 = agents.get(j).getPersona();
+//                    if (agent1 == Persona.GUARD){
+//                        //1. Get IOS Scale of each agent then put in an array
+//                        //2. Place in convert function and replace IOS
+//                        switch (persona2){
+//                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.JANITOR){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.INT_Y1_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case INT_Y1_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y1_ORG_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.INT_Y2_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y2_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y2_ORG_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.INT_Y3_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y3_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y3_ORG_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.INT_Y4_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y4_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y4_ORG_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.INT_Y1_ORG_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y1_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 2, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y1_ORG_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 2, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.INT_Y2_ORG_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y2_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 2, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y2_ORG_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 2, 3, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.INT_Y3_ORG_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y3_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 2, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y3_ORG_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 2, 3, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.INT_Y4_ORG_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y4_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 2, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y4_ORG_STUDENT -> {
+//                                int[] listIOS = new int[]{1, 2, 3, 5, 6};
+//                                IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
+//                            }
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.EXT_Y1_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.EXT_Y2_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.EXT_Y3_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.EXT_Y4_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.EXT_Y1_ORG_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5, 6)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.EXT_Y2_ORG_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5, 6)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.EXT_Y3_ORG_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5, 6)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.EXT_Y4_ORG_STUDENT){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5, 6)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.STRICT_PROFESSOR){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+//                        }
+//                    }
+//                    else if (agent1 == Persona.APPROACHABLE_PROFESSOR){
+//                        switch (persona2){
+//                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+//                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+//                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+//                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+//                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+//                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+//                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+//                        }
+//                    }
+//                }
+//            }
+//            IOSInteractionChances.add(convertToChanceInteraction(IOSScales));
+//        }
     }
 
     public CopyOnWriteArrayList<Double> convertToChanceInteraction(ArrayList<Integer> IOSScales){// Convert IOS to chance based only on threshold, not 0 to said scale
@@ -874,6 +876,501 @@ public class University extends Environment {
 //            listIOS.add(Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * iosScale / 7);
          }
         return listIOS;
+    }
+
+    public void configureDefaultIOS(){
+        defaultIOS = new CopyOnWriteArrayList<>();
+        for (int i = 0; i < Persona.values().length; i++){
+            CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>> personaIOS = new CopyOnWriteArrayList<>();
+            ArrayList<Integer> IOSScales = new ArrayList<>();
+            for (int j = 0 ; j < Persona.values().length; j++){
+                Persona persona1 = Persona.values()[i];
+                Persona persona2 = Persona.values()[j];
+                switch (persona1){
+                    case GUARD -> {
+                        switch(persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                        }
+                    }
+                    case JANITOR -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                        }
+                    }
+                    case INT_Y1_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 5, 6)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 5, 6)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        }
+                    }
+                    case INT_Y2_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 5, 6)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 5, 6)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        }
+                    }
+                    case INT_Y3_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 5, 6)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 5, 6)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                        }
+                    }
+                    case INT_Y4_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 5, 6)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 5, 6)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                        }
+                    }
+                    case INT_Y1_ORG_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                        }
+                    }
+                    case INT_Y2_ORG_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 5, 6)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                        }
+                    }
+                    case INT_Y3_ORG_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 5, 6)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                        }
+                    }
+                    case INT_Y4_ORG_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 5, 6)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                        }
+                    }
+                    case EXT_Y1_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                        }
+                    }
+                    case EXT_Y2_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                        }
+                    }
+                    case EXT_Y3_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                        }
+                    }
+                    case EXT_Y4_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                        }
+                    }
+                    case EXT_Y1_ORG_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5, 6)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                        }
+                    }
+                    case EXT_Y2_ORG_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5, 6)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                        }
+                    }
+                    case EXT_Y3_ORG_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5, 6)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                        }
+                    }
+                    case EXT_Y4_ORG_STUDENT -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5, 6)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                        }
+                    }
+                    case STRICT_PROFESSOR -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                        }
+                    }
+                    case APPROACHABLE_PROFESSOR -> {
+                        switch (persona2){
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case INT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case INT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case INT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case INT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y1_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y2_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y3_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y4_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
+                            case EXT_Y1_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+                            case EXT_Y2_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+                            case EXT_Y3_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+                            case EXT_Y4_ORG_STUDENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5, 6)));
+                            case STRICT_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case APPROACHABLE_PROFESSOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                        }
+                    }
+                }
+                defaultIOS.add(personaIOS);
+            }
+        }
     }
 
     public static class UniversityFactory extends BaseObject.ObjectFactory {
