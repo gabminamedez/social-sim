@@ -11,6 +11,7 @@ public class GroceryRoutePlan {
 
     private ArrayList<GroceryState> routePlan;
     private GroceryState currentState; // Denotes the current class of the amenity/patchfield in the route plan
+    public int MAX_AISLE_HELP = 1;
 
     private static final int MIN_AISLE_ORGANIZE = 10;
     private static final int MAX_BUTCHER_STATION = 10;
@@ -23,7 +24,8 @@ public class GroceryRoutePlan {
     public static final int COMPLETE_FAMILY_ALL_AISLE_CHANCE = 60, COMPLETE_FAMILY_CHANCE_SERVICE = 20, COMPLETE_FAMILY_CHANCE_FOOD = 30, COMPLETE_FAMILY_CHANCE_EAT_TABLE = 50;
     public static final int HELP_FAMILY_ALL_AISLE_CHANCE = 50, HELP_FAMILY_CHANCE_SERVICE = 20, HELP_FAMILY_CHANCE_FOOD = 30, HELP_FAMILY_CHANCE_EAT_TABLE = 50;
     public static final int DUO_FAMILY_ALL_AISLE_CHANCE = 50, DUO_FAMILY_CHANCE_SERVICE = 20, DUO_FAMILY_CHANCE_FOOD = 30, DUO_FAMILY_CHANCE_EAT_TABLE = 50;
-    public static final int CHANCE_BAGGER_INTERACT = 30, CHANCE_GUARD_INTERACT = 50, CHANCE_GUARD_VERBAL = 30;
+    public static final int AISLE_HELP_CHANCE_STTP = 2, AISLE_HELP_CHANCE_MODERATE = 6, AISLE_HELP_CHANCE_COMPLETE = 10, AISLE_HELP_CHANCE_HELP = 10, AISLE_HELP_CHANCE_DUO = 8;
+    public static final int CHANCE_BAGGER_INTERACT = 30, CHANCE_GUARD_INTERACT = 50, CHANCE_GUARD_VERBAL = 10;
 
     public GroceryRoutePlan(GroceryAgent agent, GroceryAgent leaderAgent, Grocery grocery, Patch spawnPatch) { //leaderAgent is only for agents that follow and deviate
         this.routePlan = new ArrayList<>();

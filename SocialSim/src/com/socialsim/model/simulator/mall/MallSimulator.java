@@ -3,10 +3,7 @@ package com.socialsim.model.simulator.mall;
 import com.socialsim.controller.Main;
 import com.socialsim.controller.mall.controls.MallScreenController;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.agent.mall.MallAgent;
-import com.socialsim.model.core.agent.mall.MallAction;
-import com.socialsim.model.core.agent.mall.MallAgentMovement;
-import com.socialsim.model.core.agent.mall.MallState;
+import com.socialsim.model.core.agent.mall.*;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
@@ -61,10 +58,10 @@ public class MallSimulator extends Simulator {
     public static int currentStaffKioskGuardCount = 0;
     public static int[][] currentPatchCount;
 
-    public static final int MAX_FAMILY = 1;
-    public static final int MAX_FRIENDS = 1;
-    public static final int MAX_COUPLE = 1;
-    public static final int MAX_ALONE = 1;
+    public static final int MAX_FAMILY = 10;
+    public static final int MAX_FRIENDS = 10;
+    public static final int MAX_COUPLE = 10;
+    public static final int MAX_ALONE = 10;
 
     public MallSimulator() {
         this.mall = null;
@@ -470,6 +467,15 @@ public class MallSimulator extends Simulator {
                                 }
                             }
                             else {
+                                if (!agentMovement.isStationInteracting()) {
+                                    if (persona == MallAgent.Persona.LOITER_ALONE || persona == MallAgent.Persona.LOITER_COUPLE || persona == MallAgent.Persona.LOITER_FAMILY || persona == MallAgent.Persona.LOITER_FRIENDS) {
+                                        int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                                        if (x < MallRoutePlan.CHANCE_GUARD_INTERACT) {
+                                            agentMovement.forceStationedInteraction(MallAgent.Persona.GUARD);
+                                        }
+                                    }
+                                }
+
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
@@ -479,6 +485,7 @@ public class MallSimulator extends Simulator {
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
+                                    agentMovement.setStationInteracting(false);
                                 }
                             }
                         }
@@ -652,6 +659,10 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.CHECKOUT_KIOSK) {
+                            if (agentMovement.getLeaderAgent() == null && !agentMovement.isStationInteracting()) {
+                                agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_KIOSK);
+                            }
+
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
@@ -661,6 +672,7 @@ public class MallSimulator extends Simulator {
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
+                                agentMovement.setStationInteracting(false);
                             }
                         }
                     }
@@ -698,14 +710,22 @@ public class MallSimulator extends Simulator {
                     else if (state.getName() == MallState.Name.IN_RESTO) {
                         if (action.getName() == MallAction.Name.RESTAURANT_STAY_PUT) {
                             if (agentMovement.getGoalAmenity() != null) {
+                                if (agentMovement.getLeaderAgent() == null && !agentMovement.isStationInteracting()) {
+                                    agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_RESTO);
+                                }
+
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
+                                    if (agentMovement.getLeaderAgent() == null) {
+                                        agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_RESTO);
+                                    }
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.getGoalAmenity().getAttractors().get(0).setIsReserved(false);
                                     agentMovement.resetGoal();
+                                    agentMovement.setStationInteracting(false);
                                 }
                             }
                         }
@@ -746,6 +766,10 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.CHECKOUT_KIOSK) {
+                            if (agentMovement.getLeaderAgent() == null && !agentMovement.isStationInteracting()) {
+                                agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_KIOSK);
+                            }
+
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
@@ -755,6 +779,7 @@ public class MallSimulator extends Simulator {
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
+                                agentMovement.setStationInteracting(false);
                             }
                         }
                     }
@@ -791,6 +816,7 @@ public class MallSimulator extends Simulator {
                         }
                     }
                     else if (state.getName() == MallState.Name.GOING_TO_STORE) {
+                        agentMovement.getRoutePlan().MAX_STORE_HELP = 1;
                         if (action.getName() == MallAction.Name.GO_TO_STORE) {
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
@@ -835,6 +861,23 @@ public class MallSimulator extends Simulator {
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
+                            }
+                            else {
+                                int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                                if (persona == MallAgent.Persona.LOITER_ALONE || persona == MallAgent.Persona.LOITER_FRIENDS || persona == MallAgent.Persona.LOITER_FAMILY || persona == MallAgent.Persona.LOITER_COUPLE) {
+                                    if (x < MallRoutePlan.STORE_HELP_CHANCE_LOITER && agentMovement.getRoutePlan().MAX_STORE_HELP > 0) {
+                                        agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_STORE_SALES);
+                                        agentMovement.setStationInteracting(false);
+                                        agentMovement.getRoutePlan().MAX_STORE_HELP--;
+                                    }
+                                }
+                                else {
+                                    if (x < MallRoutePlan.STORE_HELP_CHANCE_ERRAND && agentMovement.getRoutePlan().MAX_STORE_HELP > 0) {
+                                        agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_STORE_SALES);
+                                        agentMovement.setStationInteracting(false);
+                                        agentMovement.getRoutePlan().MAX_STORE_HELP--;
+                                    }
+                                }
                             }
                         }
                         else if (action.getName() == MallAction.Name.GO_TO_AISLE) {
@@ -892,6 +935,10 @@ public class MallSimulator extends Simulator {
                                     }
                                 }
                                 else {
+                                    if (agentMovement.getLeaderAgent() == null && !agentMovement.isStationInteracting()) {
+                                        agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_STORE_CASHIER);
+                                    }
+
                                     agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                     agentMovement.setDuration(agentMovement.getDuration() - 1);
                                     if (agentMovement.getDuration() <= 0) {
@@ -900,6 +947,7 @@ public class MallSimulator extends Simulator {
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                         agentMovement.resetGoal();
+                                        agentMovement.setStationInteracting(false);
                                     }
                                 }
                             }

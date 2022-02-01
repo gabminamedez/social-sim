@@ -13,6 +13,7 @@ public class MallRoutePlan {
     private MallState currentState; // Denotes the current class of the amenity/patchfield in the route plan
     private ArrayList<MallState> routePlan;
     private int MAX_BATHROOM = 2;
+    public int MAX_STORE_HELP = 1;
 
     private static final int MIN_ERRAND_PRODUCTS = 2;
     private static final int MIN_LOITER_PRODUCTS = 9;
@@ -26,7 +27,8 @@ public class MallRoutePlan {
     public static final int LCOUPLE_RESTO_CHANCE = 100, LCOUPLE_WANDERING_CHANCE = 100;
     public static final int EALONE_RESTO_CHANCE = 30, EALONE_WANDERING_CHANCE = 15;
     public static final int LALONE_RESTO_CHANCE = 80, LALONE_WANDERING_CHANCE = 100;
-    public static final int BATHROOM_CHANCE = 10;
+    public static final int BATHROOM_CHANCE = 10, STORE_HELP_CHANCE_LOITER = 8, STORE_HELP_CHANCE_ERRAND = 2;
+    public static final int CHANCE_GUARD_INTERACT = 50, CHANCE_GUARD_VERBAL = 10;
 
     private static ArrayList<StoreAisle> aisles1 = new ArrayList<>();
     private static ArrayList<StoreAisle> aisles2 = new ArrayList<>();

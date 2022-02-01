@@ -4,7 +4,8 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.grocery.controls.GroceryScreenController;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.grocery.*;
-import com.socialsim.model.core.agent.mall.MallAgent;
+import com.socialsim.model.core.agent.grocery.GroceryAgent;
+import com.socialsim.model.core.agent.grocery.GroceryRoutePlan;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
@@ -537,6 +538,7 @@ public class GrocerySimulator extends Simulator {
                         }
                     }
                     else if (state.getName() == GroceryState.Name.GOING_TO_PRODUCTS) {
+                        agentMovement.getRoutePlan().MAX_AISLE_HELP = 1;
                         if (action.getName() == GroceryAction.Name.GO_TO_PRODUCT_WALL || action.getName() == GroceryAction.Name.GO_TO_AISLE || action.getName() == GroceryAction.Name.GO_TO_FROZEN || action.getName() == GroceryAction.Name.GO_TO_FRESH || action.getName() == GroceryAction.Name.GO_TO_MEAT) {
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
@@ -576,6 +578,44 @@ public class GrocerySimulator extends Simulator {
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
                                     agentMovement.setStationInteracting(false);
+                                }
+                                else {
+                                    int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                                    if (persona == GroceryAgent.Persona.STTP_ALONE_CUSTOMER) {
+                                        if (x < GroceryRoutePlan.AISLE_HELP_CHANCE_STTP && agentMovement.getRoutePlan().MAX_AISLE_HELP > 0) {
+                                            agentMovement.forceStationedInteraction(GroceryAgent.Persona.STAFF_AISLE);
+                                            agentMovement.setStationInteracting(false);
+                                            agentMovement.getRoutePlan().MAX_AISLE_HELP--;
+                                        }
+                                    }
+                                    else if (persona == GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER) {
+                                        if (x < GroceryRoutePlan.AISLE_HELP_CHANCE_MODERATE && agentMovement.getRoutePlan().MAX_AISLE_HELP > 0) {
+                                            agentMovement.forceStationedInteraction(GroceryAgent.Persona.STAFF_AISLE);
+                                            agentMovement.setStationInteracting(false);
+                                            agentMovement.getRoutePlan().MAX_AISLE_HELP--;
+                                        }
+                                    }
+                                    else if (persona == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER) {
+                                        if (x < GroceryRoutePlan.AISLE_HELP_CHANCE_COMPLETE && agentMovement.getRoutePlan().MAX_AISLE_HELP > 0) {
+                                            agentMovement.forceStationedInteraction(GroceryAgent.Persona.STAFF_AISLE);
+                                            agentMovement.setStationInteracting(false);
+                                            agentMovement.getRoutePlan().MAX_AISLE_HELP--;
+                                        }
+                                    }
+                                    else if (persona == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER) {
+                                        if (x < GroceryRoutePlan.AISLE_HELP_CHANCE_HELP && agentMovement.getRoutePlan().MAX_AISLE_HELP > 0) {
+                                            agentMovement.forceStationedInteraction(GroceryAgent.Persona.STAFF_AISLE);
+                                            agentMovement.setStationInteracting(false);
+                                            agentMovement.getRoutePlan().MAX_AISLE_HELP--;
+                                        }
+                                    }
+                                    else if (persona == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER) {
+                                        if (x < GroceryRoutePlan.AISLE_HELP_CHANCE_DUO && agentMovement.getRoutePlan().MAX_AISLE_HELP > 0) {
+                                            agentMovement.forceStationedInteraction(GroceryAgent.Persona.STAFF_AISLE);
+                                            agentMovement.setStationInteracting(false);
+                                            agentMovement.getRoutePlan().MAX_AISLE_HELP--;
+                                        }
+                                    }
                                 }
                             }
                         }

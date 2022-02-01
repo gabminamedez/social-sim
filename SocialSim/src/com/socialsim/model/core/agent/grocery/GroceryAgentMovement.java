@@ -3,6 +3,7 @@ package com.socialsim.model.core.agent.grocery;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentMovement;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
+import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
@@ -18,9 +19,9 @@ import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterFie
 import com.socialsim.model.core.environment.grocery.patchfield.StallField;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable;
 import com.socialsim.model.simulator.Simulator;
 import com.socialsim.model.simulator.grocery.GrocerySimulator;
+import com.socialsim.model.simulator.mall.MallSimulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,7 +54,7 @@ public class GroceryAgentMovement extends AgentMovement {
     private CashierCounterField chosenCashierField = null;
     private ServiceCounterField chosenServiceField = null;
     private StallField chosenStallField = null;
-    private EatTable chosenEatTable = null;
+    private Table chosenEatTable = null;
 
     private GroceryRoutePlan routePlan;
     private AgentPath currentPath; // Denotes the current path followed by this agent, if any
@@ -307,7 +308,7 @@ public class GroceryAgentMovement extends AgentMovement {
         return chosenStallField;
     }
 
-    public EatTable getChosenEatTable() {
+    public Table getChosenEatTable() {
         return chosenEatTable;
     }
 
@@ -799,7 +800,7 @@ public class GroceryAgentMovement extends AgentMovement {
 
                 this.goalAmenity = chosenAmenity;
                 this.goalAttractor = chosenAttractor;
-                this.chosenEatTable = (EatTable) chosenAmenity;
+                this.chosenEatTable = (Table) chosenAmenity;
             }
             else {
                 if (leaderAgent.getAgentMovement().getChosenEatTable() != null) {
@@ -2045,6 +2046,10 @@ public class GroceryAgentMovement extends AgentMovement {
             GrocerySimulator.currentCustomerGuardCount++;
             this.heading = 90;
             this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == GroceryAgent.Persona.STAFF_AISLE) {
+            GrocerySimulator.currentCustomerAisleCount++;
+            this.interactionDuration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(7);
         }
 
         if (agentPersona != GroceryAgent.Persona.GUARD_ENTRANCE) {
