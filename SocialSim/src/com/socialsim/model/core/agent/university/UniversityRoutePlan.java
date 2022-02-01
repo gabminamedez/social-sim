@@ -219,7 +219,7 @@ public class UniversityRoutePlan {
             if (agent.getPersona() == UniversityAgent.Persona.INT_Y1_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y2_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y3_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y4_STUDENT) {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
                         if (x < INT_CHANCE_WANDERING_AROUND) {
                             actions = new ArrayList<>();
@@ -285,7 +285,7 @@ public class UniversityRoutePlan {
             else if (agent.getPersona() == UniversityAgent.Persona.INT_Y1_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y2_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y3_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y4_ORG_STUDENT) {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
                         if (x < INT_ORG_CHANCE_WANDERING_AROUND) {
                             actions = new ArrayList<>();
@@ -351,7 +351,7 @@ public class UniversityRoutePlan {
             else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_STUDENT) {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
                         if (x < EXT_CHANCE_WANDERING_AROUND) {
                             actions = new ArrayList<>();
@@ -417,7 +417,7 @@ public class UniversityRoutePlan {
             else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_ORG_STUDENT) {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
                         if (x < EXT_ORG_CHANCE_WANDERING_AROUND) {
                             actions = new ArrayList<>();
@@ -483,7 +483,7 @@ public class UniversityRoutePlan {
             else {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
                         if (x < PROF_CHANCE_WANDERING_AROUND) {
                             actions = new ArrayList<>();
