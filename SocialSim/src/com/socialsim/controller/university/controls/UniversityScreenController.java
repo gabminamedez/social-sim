@@ -31,6 +31,7 @@ import javax.imageio.plugins.tiff.BaselineTIFFTagSet;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class UniversityScreenController extends ScreenController {
 
@@ -85,6 +86,15 @@ public class UniversityScreenController extends ScreenController {
         });
         resetToDefault();
         playButton.setDisable(true);
+
+        int width = 60; // Value may be from 25-100
+        int length = 120; // Value may be from 106-220
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
+        University university = University.UniversityFactory.create(rows, columns);
+        Main.universitySimulator.resetToDefaultConfiguration(university);
+        University.configureDefaultIOS();
+        university.copyDefaultToIOS();
     }
 
     @FXML
@@ -93,20 +103,15 @@ public class UniversityScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
-
-        int width = 60; // Value may be from 25-100
-        int length = 120; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
-        University university = University.UniversityFactory.create(rows, columns);
+        University university = Main.universitySimulator.getUniversity();
         initializeUniversity(university);
+        university.convertIOSToChances();
         setElements();
         playButton.setDisable(false);
         disableEdits();
     }
 
     public void initializeUniversity(University university) {
-        Main.universitySimulator.resetToDefaultConfiguration(university);
         UniversityGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.universitySimulator.getUniversity().getRows();
         mapUniversity();
         Main.universitySimulator.spawnInitialAgents(university);
@@ -661,7 +666,6 @@ public class UniversityScreenController extends ScreenController {
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setAlwaysOnTop(true);
             stage.setTitle("Configure IOS Levels");
             stage.setScene(new Scene(root));
             stage.showAndWait();
@@ -676,10 +680,9 @@ public class UniversityScreenController extends ScreenController {
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setAlwaysOnTop(true);
             stage.setTitle("Edit Interaction Type Chances");
             stage.setScene(new Scene(root));
-            stage.showAndWait();
+            stage.show();
         }
         catch(Exception e){
             e.printStackTrace();

@@ -1,25 +1,25 @@
 package com.socialsim.controller.university.controls;
 
+import com.socialsim.controller.Main;
 import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.university.University;
-import com.socialsim.model.simulator.SimulationTime;
-import javafx.beans.property.*;
-import javafx.beans.value.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.*;
-import javafx.util.*;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class IOSController {
 
-    @FXML TableView tableView;
-    @FXML Button btnCancel;;
+    @FXML VBox container;
+    @FXML GridPane gridPane;
+    @FXML Button btnCancel;
     @FXML Button btnResetToDefault;
     @FXML Button btnSave;
 
@@ -29,7 +29,24 @@ public class IOSController {
     @FXML
     private void initialize() {
         //TODO: Create columns of IOS levels
-        resetToDefault();
+        University university = Main.universitySimulator.getUniversity();
+        for (int i = 0; i < UniversityAgent.Persona.values().length + 1; i++) {
+            for (int j = 0; j < UniversityAgent.Persona.values().length + 1; j++) {
+                if (i == 0 || j == 0){
+                    if (i == 0 && j == 0)
+                        gridPane.add(new Label(""), i, j);
+                    else{
+                        if (i == 0)
+                            gridPane.add(new Label(UniversityAgent.Persona.values()[j - 1].name()), i, j);
+                        else
+                            gridPane.add(new Label(UniversityAgent.Persona.values()[i - 1].name()), i, j);
+                    }
+                }
+                else{
+                    gridPane.add(new TextField(university.getIOSScales().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
+                }
+            }
+        }
     }
 
     public void cancelChanges(){
@@ -38,48 +55,69 @@ public class IOSController {
     }
 
     public void resetToDefault(){
-
-//        ObservableList<String> headerCells = FXCollections.observableArrayList();
-
-        String[] headerCells = new String[UniversityAgent.Persona.values().length];
-        for (int i = 0; i < UniversityAgent.Persona.values().length; i++) {
-            headerCells[i] = UniversityAgent.Persona.values()[i].name();
-        }
-        ObservableList<String[]> data = FXCollections.observableArrayList();
-        data.add(headerCells);
-        for (int i = 0; i < UniversityAgent.Persona.values().length; i++) {
-            TableColumn tc = new TableColumn();
-            final int colNo = i;
-            tc.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<String[], String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<String[], String> p) {
-                    return new SimpleStringProperty((UniversityAgent.Persona.values()[colNo].name()));
-                }
-            });
-            tc.setCellFactory(TextFieldTableCell.forTableColumn());
-            tc.setPrefWidth(90);
-            tableView.getColumns().add(tc);
-        }
-        tableView.setItems(data);
-        tableView.setEditable(true);
-        tableView.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-                // Get the table header
-                Pane header = (Pane)tableView.lookup("TableHeaderRow");
-                if(header!=null && header.isVisible()) {
-                    header.setMaxHeight(0);
-                    header.setMinHeight(0);
-                    header.setPrefHeight(0);
-                    header.setVisible(false);
-                    header.setManaged(false);
-                }
+        for (Node node: gridPane.getChildren()){
+            if (node.getClass() == TextField.class){
+                int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
+                if (row > 0 && column > 0)
+                    ((TextField) node).setText(University.defaultIOS.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
             }
-        });
+        }
     }
 
     public void saveChanges(){
-        Stage stage = (Stage) btnSave.getScene().getWindow();
-        stage.close();
+        boolean validIOS = false;
+
+        for (Node node: gridPane.getChildren()){
+            if (node.getClass() == TextField.class){
+                validIOS = this.checkValidIOS(((TextField) node).getText());
+                if (!validIOS){
+                    break;
+                }
+            }
+        }
+        if (!validIOS){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
+            Label label = new Label("Failed to parse. Please make sure IOS levels are from 1-7 only, and separate them with commas (,). Also ensure there are no duplicates in a field.");
+            label.setWrapText(true);
+            alert.getDialogPane().setContent(label);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+        else{
+            University university = Main.universitySimulator.getUniversity();
+            for (Node node: gridPane.getChildren()){
+                if (node.getClass() == TextField.class){
+                    int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
+                    String s = ((TextField) node).getText();
+                    Integer[] IOSArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+                    if (row > 0 && column > 0)
+                        university.getIOSScales().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(IOSArr)));
+                }
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            Label label = new Label("IOS Levels successfully parsed.");
+            label.setWrapText(true);
+            alert.getDialogPane().setContent(label);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+            Stage stage = (Stage) btnSave.getScene().getWindow();
+            stage.close();
+        }
+    }
+
+    public boolean checkValidIOS(String s){
+        s = s.replace(" ", "");
+        if (s.matches("^[1-7](,[1-7])*$")){
+            Integer[] IOSArr = Arrays.stream(s.split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+            HashSet<Integer> IOSSet = new HashSet<>(List.of((IOSArr)));
+            return IOSSet.size() == IOSArr.length;
+        }
+        else{
+            return false;
+        }
     }
 }

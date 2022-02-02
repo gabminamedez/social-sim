@@ -20,7 +20,7 @@ public class University extends Environment {
 
 
     public static CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> defaultIOS;
-    private static CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales;
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales;
     private final CopyOnWriteArrayList<UniversityAgent> agents;
     private final SortedSet<Patch> amenityPatchSet;
     private final SortedSet<Patch> agentPatchSet;
@@ -866,23 +866,27 @@ public class University extends Environment {
 //        }
     }
 
-    public CopyOnWriteArrayList<Double> convertToChanceInteraction(ArrayList<Integer> IOSScales){// Convert IOS to chance based only on threshold, not 0 to said scale
-        CopyOnWriteArrayList<Double> listIOS = new CopyOnWriteArrayList<>();
-        for (int iosScale : IOSScales) {
-            if (iosScale <= 0)
-                listIOS.add((double) 0);
-            else
-                listIOS.add((iosScale - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7);
-//            listIOS.add(Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * iosScale / 7);
-         }
-        return listIOS;
+    public double convertToChanceInteraction(int x){// Convert IOS to chance based only on threshold, not 0 to said scale
+        double CHANCE = ((double) x - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7;
+        return CHANCE;
     }
 
-    public void configureDefaultIOS(){
+    public void convertIOSToChances(){
+        IOSInteractionChances = new CopyOnWriteArrayList<>();
+        IOSScales.toString();
+        for(int i = 0; i < IOSScales.size(); i++){
+            IOSInteractionChances.add(new CopyOnWriteArrayList<>());
+            for(int j = 0; j < IOSScales.get(i).size(); j++){
+               int IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                IOSInteractionChances.get(i).add(this.convertToChanceInteraction(IOS));
+            }
+        }
+    }
+
+    public static void configureDefaultIOS(){
         defaultIOS = new CopyOnWriteArrayList<>();
         for (int i = 0; i < Persona.values().length; i++){
             CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>> personaIOS = new CopyOnWriteArrayList<>();
-            ArrayList<Integer> IOSScales = new ArrayList<>();
             for (int j = 0 ; j < Persona.values().length; j++){
                 Persona persona1 = Persona.values()[i];
                 Persona persona2 = Persona.values()[j];
@@ -1368,7 +1372,24 @@ public class University extends Environment {
                         }
                     }
                 }
-                defaultIOS.add(personaIOS);
+            }
+            defaultIOS.add(personaIOS);
+        }
+    }
+
+    public CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> getIOSScales(){
+        return this.IOSScales;
+    }
+
+    public void copyDefaultToIOS(){
+        this.IOSScales = new CopyOnWriteArrayList<>();
+        for(int i = 0; i < defaultIOS.size(); i++){
+            this.IOSScales.add(new CopyOnWriteArrayList<>());
+            for(int j = 0; j < defaultIOS.get(i).size(); j++){
+                this.IOSScales.get(i).add(new CopyOnWriteArrayList<>());
+                for (int k = 0; k < defaultIOS.get(i).get(j).size(); k++){
+                    this.IOSScales.get(i).get(j).add(defaultIOS.get(i).get(j).get(k));
+                }
             }
         }
     }
