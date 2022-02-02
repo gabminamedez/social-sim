@@ -16,7 +16,7 @@ public class UniversityRoutePlan {
     private ArrayList<UniversityState> routePlan;
     private boolean fromStudying, fromClass, fromLunch;
     private static final int MAX_CLASSES = 6;
-    private static final int MAX_CLASSROOMS = 5;
+    private static final int MAX_CLASSROOMS = 6;
     private static final int MAX_JANITOR_ROUNDS = 6;
     private static int CLASSROOM_SIZES_STUDENT[][] = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
     private static int CLASSROOM_SIZES_PROF[][] = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
@@ -253,9 +253,9 @@ public class UniversityRoutePlan {
 
                     actions = new ArrayList<>();
                     actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
-                    int classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                    int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     while (CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID] == 0) {
-                        classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     }
                     CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID]--;
                     int tickClassStart = switch (classes.get(i)) {
@@ -319,9 +319,9 @@ public class UniversityRoutePlan {
 
                     actions = new ArrayList<>();
                     actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
-                    int classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                    int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     while (CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID] == 0) {
-                        classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     }
                     CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID]--;
                     int tickClassStart = switch (classes.get(i)) {
@@ -385,9 +385,9 @@ public class UniversityRoutePlan {
 
                     actions = new ArrayList<>();
                     actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
-                    int classroomID = 1 +Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                    int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     while (CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID] == 0) {
-                        classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     }
                     CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID]--;
                     int tickClassStart = switch (classes.get(i)) {
@@ -451,9 +451,9 @@ public class UniversityRoutePlan {
 
                     actions = new ArrayList<>();
                     actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
-                    int classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                    int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     while (CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID] == 0) {
-                        classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     }
                     CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID]--;
                     int tickClassStart = switch (classes.get(i)) {
@@ -507,25 +507,35 @@ public class UniversityRoutePlan {
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         }
                     }
-
-                    actions = new ArrayList<>();
-                    actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
-                    int classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
-                    while (CLASSROOM_SIZES_PROF[classes.get(i)][classroomID] == 0) {
-                        classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
-                        System.out.println("HERE");//TODO:FOUND ERROR WHERE LOOP GET STUCK
+                    int availableClass = 6;
+                    for(int ctr = 0; ctr < MAX_CLASSES; ctr++)
+                    {
+                        if(CLASSROOM_SIZES_PROF[classes.get(i)][ctr] == 0){
+                            availableClass--;
+                        }
                     }
-                    CLASSROOM_SIZES_PROF[classes.get(i)][classroomID]--;
-                    int tickClassStart = switch (classes.get(i)) {
-                        case 0 -> 720; case 1 -> 1980; case 2 -> 3240; case 3 -> 4500; case 4 -> 5760; default -> 7020;
-                    };
-                    routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, tickClassStart, classroomID, actions));
-                    actions = new ArrayList<>();
-                    actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, 150));
-                    routePlan.add(new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent, actions));
-                    actions = new ArrayList<>();
-                    actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
-                    routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent, actions));
+                    if(availableClass>0){
+                        int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        while (CLASSROOM_SIZES_PROF[classes.get(i)][classroomID] == 0) {
+                            classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+
+                        }
+                        CLASSROOM_SIZES_PROF[classes.get(i)][classroomID]--;
+                        int tickClassStart = switch (classes.get(i)) {
+                            case 0 -> 720; case 1 -> 1980; case 2 -> 3240; case 3 -> 4500; case 4 -> 5760; default -> 7020;
+                        };
+                        actions = new ArrayList<>();
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
+                        routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, tickClassStart, classroomID, actions));
+                        actions = new ArrayList<>();
+                        actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, 150));
+                        routePlan.add(new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent, actions));
+                        actions = new ArrayList<>();
+                        actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
+                        routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent, actions));
+                    }
+
+
 
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
