@@ -9,10 +9,10 @@ import java.util.List;
 
 public class UniversityAgentGraphic extends Graphic {
 
-    public static final String AGENTS_URL_1 = "com/socialsim/view/image/University/male_students2.png";
-    public static final String AGENTS_URL_2 = "com/socialsim/view/image/University/female_students2.png";
-    public static final String AGENTS_URL_3 = "com/socialsim/view/image/University/professors2.png";
-    public static final String AGENTS_URL_4 = "com/socialsim/view/image/University/guard_janitor_officer2.png";
+    public static final String AGENTS_URL_1 = "com/socialsim/view/image/University/male_students.png";
+    public static final String AGENTS_URL_2 = "com/socialsim/view/image/University/female_students.png";
+    public static final String AGENTS_URL_3 = "com/socialsim/view/image/University/professors.png";
+    public static final String AGENTS_URL_4 = "com/socialsim/view/image/University/guard_janitor_officer.png";
 
     public static final List<AgentGraphicLocation> intY1MaleStudents;
     public static final List<AgentGraphicLocation> extY1MaleStudents;
