@@ -275,34 +275,42 @@ public class OfficeSimulator extends Simulator {
     private static void moveAll(Office office, long currentTick) { // Make all agents move for one tick
         for (OfficeAgent agent : office.getMovableAgents()) {
             try {
-                if (currentTick == 2160 && (agent.getType() == OfficeAgent.Type.BOSS || agent.getType() == OfficeAgent.Type.MANAGER || agent.getType() == OfficeAgent.Type.BUSINESS || agent.getType() == OfficeAgent.Type.RESEARCHER || agent.getType() == OfficeAgent.Type.TECHNICAL)) {
-                    agent.getAgentMovement().setNextState(agent.getAgentMovement().getStateIndex());
-                    agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
+
+                if (currentTick == 2160 && agent.getAgentMovement().getRoutePlan().getLUNCH_INSTANCE() != null) {
+                    agent.getAgentMovement().setNextState(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().indexOf(
+                            agent.getAgentMovement().getRoutePlan().getLUNCH_INSTANCE()
+                    ) - 1);
+                    agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().indexOf(
+                            agent.getAgentMovement().getRoutePlan().getLUNCH_INSTANCE()
+                    ));
                     agent.getAgentMovement().setActionIndex(0);
                     agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(0));
                     agent.getAgentMovement().resetGoal();
                 }
 
                 if (currentTick == 5760) {
-                    agent.getAgentMovement().setNextState(agent.getAgentMovement().getStateIndex());
-                    agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
+                    agent.getAgentMovement().setNextState(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size()-2);
+                    agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size()-1);
                     agent.getAgentMovement().setActionIndex(0);
                     agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(0));
                     agent.getAgentMovement().resetGoal();
                 }
 
-                if(agent.getAgentMovement() != null &&
+                if(agent.getAgentMovement() != null && agent.getTeam()>0 &&
                         currentTick == agent.getAgentMovement().getRoutePlan().getMeetingStart()){
 
                     // force agents to stop what they are doing and go to meeting
-                    if(agent.getAgentMovement().getCurrentState().getName() == OfficeState.Name.EATING_LUNCH ||
-                            agent.getAgentMovement().getCurrentState().getName() == OfficeState.Name.WORKING){
+                    if(agent.getAgentMovement().getCurrentState().getName() == OfficeState.Name.WORKING){
                         agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() - 1);
+                    }else if(agent.getAgentMovement().getCurrentState().getName() == OfficeState.Name.EATING_LUNCH){
                         agent.getAgentMovement().getRoutePlan().setLunchAmenity(null);
                         agent.getAgentMovement().getRoutePlan().setLunchAttractor(null);
-                    } // if current state is urgent, just consider it as finished
+                    }
+                    // if current state is urgent, just consider it as finished
 
-                    agent.getAgentMovement().getGoalAttractor().setIsReserved(false);
+                    if(agent.getAgentMovement().getGoalAttractor() != null){
+                        agent.getAgentMovement().getGoalAttractor().setIsReserved(false);
+                    }
                     agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().add(agent.getAgentMovement().getStateIndex() + 1,
                             agent.getAgentMovement().getRoutePlan().addUrgentRoute("MEETING", agent));
                     agent.getAgentMovement().setNextState(agent.getAgentMovement().getStateIndex());
@@ -332,16 +340,12 @@ public class OfficeSimulator extends Simulator {
 
         boolean isFull = false;
 
-        if(agent.getTeam()>0){
-            System.out.println("State:" + agent.getAgentMovement().getCurrentState().getName() + " Action: " +
-                    agent.getAgentMovement().getCurrentAction().getName());
-        }
-
         if (!agentMovement.isInteracting() || agentMovement.isSimultaneousInteractionAllowed()){
             switch (type) {
             case JANITOR:
                 if (state.getName() == OfficeState.Name.MAINTENANCE_BATHROOM) {
                     if (action.getName() == OfficeAction.Name.JANITOR_CLEAN_TOILET) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -372,6 +376,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.MAINTENANCE_PLANT) {
                     if (action.getName() == OfficeAction.Name.JANITOR_WATER_PLANT) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -404,6 +409,7 @@ public class OfficeSimulator extends Simulator {
             case BOSS:
                 if (state.getName() == OfficeState.Name.GOING_TO_SECURITY) {
                     if (action.getName() == OfficeAction.Name.GOING_TO_SECURITY_QUEUE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalQueueingPatchField() == null) {
                             agentMovement.setGoalQueueingPatchField(Main.officeSimulator.getOffice().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
                             agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getSecurities().get(0));
@@ -423,6 +429,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.GO_THROUGH_SCANNER) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
@@ -447,6 +454,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.WORKING) {
                     if (action.getName() == OfficeAction.Name.GO_TO_OFFICE_ROOM) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination()
                                     .getAmenityBlock().getParent());
@@ -462,7 +470,14 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.getRoutePlan().setCanUrgent(-1);
                                 }
                             }
-                        }else if ((currentTick < 2060 || (currentTick < 5660 && currentTick > 2520)) &&
+                        }else if(currentTick >= 5760){
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.resetGoal();
+                        }
+                        else if ((currentTick < 2060 || (currentTick < 5660 && currentTick > 2520)) &&
                                 agentMovement.getRoutePlan().getCanUrgent() <= 0){
                             double CHANCE = Simulator.roll();
 
@@ -482,6 +497,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.EATING_LUNCH) {
                     if (action.getName() == OfficeAction.Name.GO_TO_LUNCH) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
 
                             if(agentMovement.getRoutePlan().getLunchAmenity() == null){
@@ -540,8 +556,8 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.EAT_LUNCH) {
+                        agentMovement.setSimultaneousInteractionAllowed(true);
                         agentMovement.setDuration(agentMovement.getDuration() - 1);
-
                         if (agentMovement.getDuration() <= 0) {
                             agentMovement.setNextState(agentMovement.getStateIndex());
                             agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -571,6 +587,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if(state.getName() == OfficeState.Name.NEEDS_BATHROOM){
                     if (action.getName()== OfficeAction.Name.GO_TO_BATHROOM){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             if(!agentMovement.chooseGoal(Toilet.class)){
                                 isFull = true;
@@ -587,7 +604,7 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.getRoutePlan().setBATH_LUNCH(1);
                                 }
 
-                                agentMovement.getRoutePlan().setCanUrgent(2);
+                                agentMovement.getRoutePlan().resetCanUrgent();
                             }
                         }
                         if(isFull){
@@ -608,8 +625,9 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if(action.getName()==OfficeAction.Name.RELIEVE_IN_CUBICLE){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                        agentMovement.getCurrentAction().setDuration(agentMovement.getDuration() - 1);
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
                         if (agentMovement.getDuration() <= 0) {
                             agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -619,6 +637,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if(action.getName()==OfficeAction.Name.FIND_SINK){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             if(!agentMovement.chooseGoal(Sink.class)){
                                 isFull = true;
@@ -647,11 +666,12 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if(action.getName()==OfficeAction.Name.WASH_IN_SINK){
+                        agentMovement.setSimultaneousInteractionAllowed(true);
                         agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                        agentMovement.getCurrentAction().setDuration(agentMovement.getDuration() - 1);
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
                         if (agentMovement.getDuration() <= 0) {
                             agentMovement.setNextState(agentMovement.getStateIndex());
-                            agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                             agentMovement.setActionIndex(0);
                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
                                     get(agentMovement.getActionIndex()));
@@ -660,8 +680,68 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                 }
+                else if(state.getName() == OfficeState.Name.MEETING){
+                    if (action.getName() == OfficeAction.Name.GO_MEETING) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
+                        if (agentMovement.getGoalAmenity() == null) {
+                            agentMovement.chooseMeetingGoal(agentMovement.getRoutePlan().getMeetingRoom());
+                        }
+                        if (agentMovement.chooseNextPatchInPath()) {
+                            agentMovement.faceNextPosition();
+                            agentMovement.moveSocialForce();
+                            if (agentMovement.hasReachedNextPatchInPath()) {
+                                agentMovement.reachPatchInPath();
+                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                            get(agentMovement.getActionIndex()));
+                                    agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                }
+                            }
+                            else {
+                                if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                    while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                        agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                        agentMovement.reachPatchInPath();
+                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                                    get(agentMovement.getActionIndex()));
+                                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.WAIT_MEETING){
+                        agentMovement.setSimultaneousInteractionAllowed(true);
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                    get(agentMovement.getActionIndex()));
+                        }
+                    }
+                    else if(action.getName()==OfficeAction.Name.MEETING){
+                        agentMovement.setSimultaneousInteractionAllowed(true);
+                        if (agentMovement.getRoutePlan().getMeetingEnd() <= currentTick) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                    get(agentMovement.getActionIndex()));
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
+                            agentMovement.getRoutePlan().setCanUrgent(-1);
+                        }
+                    }
+                }
                 else if (state.getName() == OfficeState.Name.GOING_HOME) {
                     if (action.getName() == OfficeAction.Name.LEAVE_OFFICE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getOfficeGates().get(0));
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -678,31 +758,14 @@ public class OfficeSimulator extends Simulator {
                             }
                         }
                     }
-                    else if (state.getName() == OfficeState.Name.GOING_HOME) {
-                        if (action.getName() == OfficeAction.Name.LEAVE_OFFICE) {
-                            if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getOfficeGates().get(0));
-                                agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                            }
-
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                        agentMovement.despawn();
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
                 break;
 
             case MANAGER: case BUSINESS: case RESEARCHER: case TECHNICAL:
+
                 if (state.getName() == OfficeState.Name.GOING_TO_SECURITY) {
                     if (action.getName() == OfficeAction.Name.GOING_TO_SECURITY_QUEUE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalQueueingPatchField() == null) {
                             agentMovement.setGoalQueueingPatchField(Main.officeSimulator.getOffice().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
                             agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getSecurities().get(0));
@@ -722,6 +785,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.GO_THROUGH_SCANNER) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
@@ -729,27 +793,29 @@ public class OfficeSimulator extends Simulator {
                                 agentMovement.reachPatchInPath();
                             }
                         }
-                    }
-                    else {
-                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                        agentMovement.setDuration(agentMovement.getDuration() - 1);
-                        if (agentMovement.getDuration() <= 0) {
-                            agentMovement.leaveQueue();
-                            agentMovement.setNextState(agentMovement.getStateIndex());
-                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                            agentMovement.setActionIndex(0);
-                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                            agentMovement.resetGoal();
-                            agentMovement.getRoutePlan().setCanUrgent(-1);
+                        else {
+                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
+                            if (agentMovement.getDuration() <= 0) {
+                                agentMovement.leaveQueue();
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                                agentMovement.getRoutePlan().setCanUrgent(-1);
+                            }
                         }
                     }
                 }
                 else if (state.getName() == OfficeState.Name.WORKING) {
                     if (action.getName() == OfficeAction.Name.GO_TO_STATION) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
                         }
+
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
@@ -761,39 +827,37 @@ public class OfficeSimulator extends Simulator {
                             }
                         }else if((currentTick < 2060 ||
                                 (currentTick < 5660 && currentTick > 2520)) && agentMovement.getRoutePlan().getCanUrgent()
-                                <= 0){
-                            // add allowance before lunch and dismissal
+                                <= 0){// if time is before 12pm and after 1230pm
+
                             double CHANCE = Simulator.roll();
 
-                            if(currentTick < 2160 && CHANCE < OfficeRoutePlan.BATH_CHANCE &&
-                                    agentMovement.getRoutePlan().getBATH_AM() > 0){ // Morning
+                            if(CHANCE < OfficeRoutePlan.BATH_CHANCE){
 
-                                agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
-                                agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
-                                        agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
-                                agentMovement.setNextState(agentMovement.getStateIndex());
-                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                                agentMovement.getRoutePlan().setFromBathAM(true);
+                                if(currentTick < 2160 && agentMovement.getRoutePlan().getBATH_AM() > 0){
 
-                            }else if(CHANCE < OfficeRoutePlan.BATH_CHANCE && agentMovement.getRoutePlan().getBATH_PM()
-                                    > 0){// Afternoon
+                                    agentMovement.getRoutePlan().setFromBathAM(true);
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                            agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }else if(agentMovement.getRoutePlan().getBATH_PM() > 0){
 
-                                agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
-                                agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
-                                        agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
-                                agentMovement.setNextState(agentMovement.getStateIndex());
-                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                                agentMovement.getRoutePlan().setFromBathPM(true);
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                            agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setFromBathPM(true);
+                                }
                             }
                             else{
-                                double CHANCE2 = Simulator.roll();
-                                double CHANCE3 = Simulator.roll();
 
                                 int left = 0;
                                 if(persona == OfficeAgent.Persona.EXT_BUSINESS || persona == OfficeAgent.Persona.INT_BUSINESS){
@@ -802,7 +866,9 @@ public class OfficeSimulator extends Simulator {
                                     left = agentMovement.getRoutePlan().getPRINT_RESEARCH();
                                 }
 
-                                if(CHANCE2 < OfficeRoutePlan.PRINT_CHANCE && left > 0){
+                                if(CHANCE < OfficeRoutePlan.BATH_CHANCE +
+                                        OfficeRoutePlan.PRINT_CHANCE && left > 0){
+
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
                                             agentMovement.getRoutePlan().addUrgentRoute("PRINT", agent));
@@ -815,8 +881,8 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.getRoutePlan().setLastDuration(agentMovement.getDuration());
                                 }
 
-                                if(CHANCE3 < OfficeRoutePlan.TECHNICAL_CUBICLE_CHANCE && (persona ==
-                                        OfficeAgent.Persona.EXT_TECHNICAL || persona == OfficeAgent.Persona.INT_TECHNICAL)
+                                if(CHANCE < OfficeRoutePlan.BATH_CHANCE +
+                                        OfficeRoutePlan.PRINT_CHANCE + OfficeRoutePlan.TECHNICAL_CUBICLE_CHANCE
                                         && agentMovement.getRoutePlan().getTECHNICAL_CUBICLE_COUNT() > 0){
 
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
@@ -830,9 +896,9 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setLastDuration(agentMovement.getDuration());
 
-                                }else if(CHANCE3 < OfficeRoutePlan.TECHNICAL_PRINTER_CHANCE && (persona ==
-                                        OfficeAgent.Persona.EXT_TECHNICAL || persona == OfficeAgent.Persona.INT_TECHNICAL)
-                                        && agentMovement.getRoutePlan().getTECHNICAL_PRINTER_COUNT() > 0){
+                                }else if(CHANCE < OfficeRoutePlan.TECHNICAL_PRINTER_CHANCE + OfficeRoutePlan.BATH_CHANCE +
+                                        OfficeRoutePlan.PRINT_CHANCE + OfficeRoutePlan.TECHNICAL_CUBICLE_CHANCE &&
+                                        agentMovement.getRoutePlan().getTECHNICAL_PRINTER_COUNT() > 0){
 
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
@@ -844,33 +910,32 @@ public class OfficeSimulator extends Simulator {
                                             (agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setLastDuration(agentMovement.getDuration());
-                                }
-                            }
-                        }
-                        else if((currentTick < 1660 || (currentTick < 5260 && currentTick > 2520)) &&
-                                agentMovement.getRoutePlan().getCOLLABORATE_COUNT()
-                                > 0 && agentMovement.getRoutePlan().getCanUrgent() <= 0){
-                            double CHANCE2 = Simulator.roll(); // regardless if other team members can urgent,
-                            // they will be gathered
+                                }else if((currentTick < 1660 || (currentTick < 5260 && currentTick > 2520)) &&
+                                        agentMovement.getRoutePlan().getCOLLABORATE_COUNT() > 0 &&
+                                        agentMovement.getRoutePlan().getCanUrgent() <= 0 &&
+                                        CHANCE < agentMovement.getRoutePlan().getCooperate(persona) +
+                                        OfficeRoutePlan.TECHNICAL_PRINTER_CHANCE + OfficeRoutePlan.BATH_CHANCE +
+                                        OfficeRoutePlan.PRINT_CHANCE + OfficeRoutePlan.TECHNICAL_CUBICLE_CHANCE){
 
-                            if(CHANCE2 < agentMovement.getRoutePlan().getCooperate(persona)){
-                                ArrayList<OfficeAgent> agents = officeInstance.getTeamMembers(agent.getTeam());
-                                for(OfficeAgent agent1 : agents){
-                                    if(agent1.getAgentMovement().getCurrentAction().getName() ==
-                                            OfficeAction.Name.GO_TO_STATION){
-                                        agent1.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() - 1);
-                                        agent1.getAgentMovement().getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
-                                                agentMovement.getRoutePlan().addUrgentRoute("COLLABORATION", agent));
-                                        agent1.getAgentMovement().setNextState(agentMovement.getStateIndex());
-                                        agent1.getAgentMovement().setStateIndex(agentMovement.getStateIndex() + 1);
-                                        agent1.getAgentMovement().setActionIndex(0);
-                                        agent1.getAgentMovement().setCurrentAction(agentMovement.getCurrentState().getActions().get
-                                                (agentMovement.getActionIndex()));
-                                        agent1.getAgentMovement().resetGoal();
-                                    }else{
-                                        agent1.getAgentMovement().getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
-                                                agentMovement.getRoutePlan().addUrgentRoute("COLLABORATION", agent));
+                                    ArrayList<OfficeAgent> agents = officeInstance.getTeamMembers(agent.getTeam());
+                                    for(OfficeAgent agent1 : agents){
+                                        if(agent1.getAgentMovement().getCurrentAction().getName() ==
+                                                OfficeAction.Name.GO_TO_STATION){
+                                            agent1.getAgentMovement().setStateIndex(agent1.getAgentMovement().getStateIndex() - 1);
+                                            agent1.getAgentMovement().getRoutePlan().getCurrentRoutePlan().add(agent1.getAgentMovement().getStateIndex() + 1,
+                                                    agent1.getAgentMovement().getRoutePlan().addUrgentRoute("COLLABORATION", agent));
+                                            agent1.getAgentMovement().setNextState(agent1.getAgentMovement().getStateIndex());
+                                            agent1.getAgentMovement().setStateIndex(agent1.getAgentMovement().getStateIndex() + 1);
+                                            agent1.getAgentMovement().setActionIndex(0);
+                                            agent1.getAgentMovement().setCurrentAction(agent1.getAgentMovement().getCurrentState().getActions().get
+                                                    (agent1.getAgentMovement().getActionIndex()));
+                                            agent1.getAgentMovement().resetGoal();
+                                        }else{
+                                            agent1.getAgentMovement().getRoutePlan().getCurrentRoutePlan().add(agent1.getAgentMovement().getStateIndex() + 1,
+                                                    agent1.getAgentMovement().getRoutePlan().addUrgentRoute("COLLABORATION", agent));
+                                        }
                                     }
+
                                 }
                             }
                         }
@@ -878,36 +943,61 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.NEEDS_COLLAB) {
                     if (action.getName() == OfficeAction.Name.GO_TO_COLLAB) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             if(agentMovement.chooseCollaborationChair()){
-                                agentMovement.getRoutePlan().setCanUrgent(2);
+                                agentMovement.getRoutePlan().resetCanUrgent();
                                 agentMovement.getRoutePlan().setCOLLABORATE_COUNT(-1);
+                            }else{ // no vacant table
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
                             }
                         }
 
-                        if (agentMovement.chooseNextPatchInPath()) {
-                            agentMovement.faceNextPosition();
-                            agentMovement.moveSocialForce();
-                            if (agentMovement.hasReachedNextPatchInPath()) {
-                                agentMovement.reachPatchInPath();
-                                if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                        if(isFull){
+                            isFull = false;
+                        }else{
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                    }
+                                }
+                                else { // snap to goal patch
+                                    if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                        while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                            agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                            agentMovement.reachPatchInPath();
+                                            if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                                agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                            }
+                                        }
+                                    }
+                                }
+                            }else{ // waiting to start collab
+                                agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                if (agentMovement.getDuration() <= 0) {
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                            get(agentMovement.getActionIndex()));
+                                    agentMovement.getRoutePlan().setCollaborationEnd(currentTick,
+                                            agentMovement.getCurrentAction().getDuration());
                                     agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 }
-                            }
-                        }else{
-                            agentMovement.getCurrentAction().setDuration(agentMovement.getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
-                                        get(agentMovement.getActionIndex()));
-                                agentMovement.getRoutePlan().setCollaborationEnd(currentTick,
-                                        agentMovement.getCurrentAction().getDuration());
-                                agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             }
                         }
                     }
                     else if(action.getName()==OfficeAction.Name.COLLABORATE){
+                        agentMovement.setSimultaneousInteractionAllowed(true);
                         if (agentMovement.getRoutePlan().getCollaborationEnd() <= currentTick) {
                             agentMovement.setNextState(agentMovement.getStateIndex());
                             agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -922,6 +1012,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if(state.getName() == OfficeState.Name.MEETING){
                     if (action.getName() == OfficeAction.Name.GO_MEETING) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.chooseMeetingGoal(agentMovement.getRoutePlan().getMeetingRoom());
                         }
@@ -938,10 +1029,26 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 }
                             }
+                            else {
+                                if (agentMovement.getCurrentPath().getPath().size() <= 2) {
+                                    while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                        agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                        agentMovement.reachPatchInPath();
+                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
+                                                    get(agentMovement.getActionIndex()));
+                                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     else if(action.getName()==OfficeAction.Name.WAIT_MEETING){
-                        agentMovement.getCurrentAction().setDuration(agentMovement.getDuration() - 1);
+                        agentMovement.setSimultaneousInteractionAllowed(true);
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
                         if (agentMovement.getDuration() <= 0) {
                             agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().
@@ -949,6 +1056,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if(action.getName()==OfficeAction.Name.MEETING){
+                        agentMovement.setSimultaneousInteractionAllowed(true);
                         if (agentMovement.getRoutePlan().getMeetingEnd() <= currentTick) {
                             agentMovement.setNextState(agentMovement.getStateIndex());
                             agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -963,11 +1071,17 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.NEEDS_PRINT){
                     if(action.getName() == OfficeAction.Name.GO_TO_PRINTER){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalQueueingPatchField() == null) {
                             if(!agentMovement.chooseGoal(Printer.class)){
                                 isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
                             }else{
-                                agentMovement.getRoutePlan().setCanUrgent(2);
+                                agentMovement.getRoutePlan().resetCanUrgent();
                             }
                         }
                         if(isFull){
@@ -994,6 +1108,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if(action.getName()==OfficeAction.Name.PRINTING){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                         agentMovement.setDuration(agentMovement.getDuration() - 1);
 
@@ -1009,6 +1124,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.EATING_LUNCH) {
                     if (action.getName() == OfficeAction.Name.GO_TO_LUNCH) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             if(agentMovement.getRoutePlan().getLunchAmenity() == null){
                                 double CHANCE = Simulator.roll();
@@ -1062,10 +1178,32 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.getRoutePlan().setLunchAmenity(agentMovement.getGoalAmenity());
                                     agentMovement.getRoutePlan().setLunchAttractor(agentMovement.getGoalAttractor());
                                 }
+                            }else { // snap to goal patch
+                                if (agentMovement.getCurrentPath().getPath().size() <= 3) {
+                                    while (!agentMovement.getCurrentPath().getPath().isEmpty()) {
+                                        agentMovement.setPosition(agentMovement.getCurrentPath().getPath().peek().getPatchCenterCoordinates());
+                                        agentMovement.reachPatchInPath();
+                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            if(agentMovement.getRoutePlan().getLastDuration() == -1){
+                                                agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                            }else{
+                                                agentMovement.setDuration(agentMovement.getRoutePlan().getLastDuration());
+                                                agentMovement.getRoutePlan().setLastDuration(-1);
+                                            }
+                                            agentMovement.getRoutePlan().setCanUrgent(-1);
+                                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                            agentMovement.getRoutePlan().setLunchAmenity(agentMovement.getGoalAmenity());
+                                            agentMovement.getRoutePlan().setLunchAttractor(agentMovement.getGoalAttractor());
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.EAT_LUNCH) {
+                        agentMovement.setSimultaneousInteractionAllowed(true);
                         agentMovement.setDuration(agentMovement.getDuration() - 1);
 
                         if (agentMovement.getDuration() <= 0) {
@@ -1097,6 +1235,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if(state.getName() == OfficeState.Name.NEEDS_BATHROOM){
                     if (action.getName()== OfficeAction.Name.GO_TO_BATHROOM){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             if(!agentMovement.chooseGoal(Toilet.class)){
                                 isFull = true;
@@ -1105,6 +1244,11 @@ public class OfficeSimulator extends Simulator {
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
+                                if(agentMovement.getRoutePlan().isFromBathAM()){
+                                    agentMovement.getRoutePlan().setFromBathAM(false);
+                                }else if(agentMovement.getRoutePlan().isFromBathPM()){
+                                    agentMovement.getRoutePlan().setFromBathPM(false);
+                                }
                             }else{
                                 if(agentMovement.getRoutePlan().isFromBathAM()){
                                     agentMovement.getRoutePlan().setFromBathAM(false);
@@ -1116,7 +1260,7 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.getRoutePlan().setBATH_LUNCH(1);
                                 }
 
-                                agentMovement.getRoutePlan().setCanUrgent(2);
+                                agentMovement.getRoutePlan().resetCanUrgent();
                             }
                         }
                         if(isFull){
@@ -1137,8 +1281,9 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if(action.getName()==OfficeAction.Name.RELIEVE_IN_CUBICLE){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                        agentMovement.getCurrentAction().setDuration(agentMovement.getDuration() - 1);
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
                         if (agentMovement.getDuration() <= 0) {
                             agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -1148,6 +1293,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if(action.getName()==OfficeAction.Name.FIND_SINK){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             if(!agentMovement.chooseGoal(Sink.class)){
                                 isFull = true;
@@ -1176,8 +1322,9 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if(action.getName()==OfficeAction.Name.WASH_IN_SINK){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                        agentMovement.getCurrentAction().setDuration(agentMovement.getDuration() - 1);
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
                         if (agentMovement.getDuration() <= 0) {
                             agentMovement.setNextState(agentMovement.getStateIndex());
                             agentMovement.setActionIndex(0);
@@ -1190,6 +1337,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.NEEDS_FIX_PRINTER) {
                     if (action.getName() == OfficeAction.Name.TECHNICAL_GO_PRINTER) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             if(!agentMovement.chooseGoal(Printer.class)){
                                 isFull = true;
@@ -1200,8 +1348,8 @@ public class OfficeSimulator extends Simulator {
                                         get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
                             }else{
-                                agentMovement.getRoutePlan().setCanUrgent(2);
-                                agentMovement.getRoutePlan().setTECHNICAL_PRINTER_COUNT();
+                                agentMovement.getRoutePlan().resetCanUrgent();
+                                agentMovement.getRoutePlan().setTECHNICAL_PRINTER_COUNT(1);
                             }
                         }
                         if(isFull){
@@ -1223,8 +1371,9 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.FIX_PRINTER) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                        agentMovement.getCurrentAction().setDuration(agentMovement.getDuration() - 1);
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
                         if (agentMovement.getDuration() <= 0) {
                             agentMovement.setNextState(agentMovement.getStateIndex());
                             agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
@@ -1238,11 +1387,13 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.NEEDS_FIX_CUBICLE) {
                     if (action.getName()== OfficeAction.Name.FIX_CUBICLE){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
-                            agentMovement.getRoutePlan().setCanUrgent(2);
-                            agentMovement.getRoutePlan().setTECHNICAL_CUBICLE_COUNT();
+                            agentMovement.getGoalAttractor().setIsReserved(true);
+                            agentMovement.getRoutePlan().resetCanUrgent();
+                            agentMovement.getRoutePlan().setTECHNICAL_CUBICLE_COUNT(1);
                         }
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
@@ -1250,19 +1401,18 @@ public class OfficeSimulator extends Simulator {
                             if (agentMovement.hasReachedNextPatchInPath()) {
                                 agentMovement.reachPatchInPath();
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
                                 }
                             }
                         }
                         else{
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.getCurrentAction().setDuration(agentMovement.getDuration() - 1);
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setNextState(agentMovement.getStateIndex());
-                                agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
+                                agentMovement.getGoalAttractor().setIsReserved(false);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
                             }
@@ -1271,6 +1421,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.GOING_HOME) {
                     if (action.getName() == OfficeAction.Name.LEAVE_OFFICE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getOfficeGates().get(0));
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -1279,6 +1430,7 @@ public class OfficeSimulator extends Simulator {
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
+                            System.out.println(agent.getPersona().name() + " " + agentMovement.getCurrentPath().getPath());
                             if (agentMovement.hasReachedNextPatchInPath()) {
                                 agentMovement.reachPatchInPath();
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
@@ -1293,6 +1445,7 @@ public class OfficeSimulator extends Simulator {
             case SECRETARY:
                 if (state.getName() == OfficeState.Name.GOING_TO_SECURITY) {
                     if (action.getName() == OfficeAction.Name.GOING_TO_SECURITY_QUEUE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalQueueingPatchField() == null) {
                             agentMovement.setGoalQueueingPatchField(Main.officeSimulator.getOffice().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
                             agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getSecurities().get(0));
@@ -1312,6 +1465,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.GO_THROUGH_SCANNER) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
@@ -1335,6 +1489,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.SECRETARY) {
                     if (action.getName() == OfficeAction.Name.GO_TO_OFFICE_ROOM) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -1354,6 +1509,8 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.SECRETARY_STAY_PUT || action.getName() == OfficeAction.Name.SECRETARY_CHECK_CABINET) {
+
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             if (action.getName() == OfficeAction.Name.SECRETARY_STAY_PUT) {
                                 agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
@@ -1373,7 +1530,7 @@ public class OfficeSimulator extends Simulator {
                         }
                         else {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.getCurrentAction().setDuration(agentMovement.getDuration() - 1);
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 if(action.getName() == OfficeAction.Name.SECRETARY_STAY_PUT) {
                                     agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
@@ -1390,6 +1547,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.GOING_HOME) {
                     if (action.getName() == OfficeAction.Name.LEAVE_OFFICE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getOfficeGates().get(0));
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -1413,6 +1571,7 @@ public class OfficeSimulator extends Simulator {
             case CLIENT: case DRIVER:
                 if (state.getName() == OfficeState.Name.GOING_TO_SECURITY) {
                     if (action.getName() == OfficeAction.Name.GOING_TO_SECURITY_QUEUE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalQueueingPatchField() == null) {
                             agentMovement.setGoalQueueingPatchField(Main.officeSimulator.getOffice().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
                             agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getSecurities().get(0));
@@ -1432,6 +1591,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.GO_THROUGH_SCANNER) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
@@ -1456,6 +1616,7 @@ public class OfficeSimulator extends Simulator {
                 else if (state.getName() == OfficeState.Name.DRIVER) {
                     if (action.getName() == OfficeAction.Name.DRIVER_GO_RECEPTIONIST
                             || action.getName() == OfficeAction.Name.DRIVER_GO_COUCH) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             if (action.getName() == OfficeAction.Name.DRIVER_GO_RECEPTIONIST) {
                                 agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
@@ -1499,6 +1660,7 @@ public class OfficeSimulator extends Simulator {
                     if (action.getName() == OfficeAction.Name.CLIENT_GO_RECEPTIONIST
                             || action.getName() == OfficeAction.Name.CLIENT_GO_COUCH
                             || action.getName() == OfficeAction.Name.CLIENT_GO_OFFICE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             if (action.getName() == OfficeAction.Name.CLIENT_GO_RECEPTIONIST
                                     || action.getName() == OfficeAction.Name.CLIENT_GO_OFFICE) {
@@ -1521,7 +1683,7 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
-                                if (agentMovement.getActionIndex() >= agentMovement.getCurrentState().getActions().size()) {
+                                if (agentMovement.getActionIndex() >= agentMovement.getCurrentState().getActions().size() - 1) {
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.getGoalAttractor().setIsReserved(false);
@@ -1539,6 +1701,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.GO_TO_OFFICE_ROOM) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -1560,6 +1723,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.GOING_HOME) {
                     if (action.getName() == OfficeAction.Name.LEAVE_OFFICE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getOfficeGates().get(0));
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -1583,6 +1747,7 @@ public class OfficeSimulator extends Simulator {
             case VISITOR:
                 if (state.getName() == OfficeState.Name.GOING_TO_SECURITY) {
                     if (action.getName() == OfficeAction.Name.GOING_TO_SECURITY_QUEUE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalQueueingPatchField() == null) {
                             agentMovement.setGoalQueueingPatchField(Main.officeSimulator.getOffice().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
                             agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getSecurities().get(0));
@@ -1602,6 +1767,7 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.GO_THROUGH_SCANNER) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
@@ -1626,6 +1792,7 @@ public class OfficeSimulator extends Simulator {
                 else if (state.getName() == OfficeState.Name.VISITOR) {
                     if (action.getName() == OfficeAction.Name.VISITOR_GO_RECEPTIONIST
                             || action.getName() == OfficeAction.Name.VISITOR_GO_OFFICE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
@@ -1642,7 +1809,7 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
-                                if (agentMovement.getActionIndex() >= agentMovement.getCurrentState().getActions().size()) {
+                                if (agentMovement.getActionIndex() >= agentMovement.getCurrentState().getActions().size() - 1) {
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
@@ -1660,6 +1827,7 @@ public class OfficeSimulator extends Simulator {
                 }
                 else if (state.getName() == OfficeState.Name.GOING_HOME) {
                     if (action.getName() == OfficeAction.Name.LEAVE_OFFICE) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getOfficeGates().get(0));
                             agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
