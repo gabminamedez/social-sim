@@ -80,6 +80,7 @@ public class MallAgentMovement extends AgentMovement {
 
     // Interaction parameters
     private boolean isInteracting; // Denotes whether the agent is currently interacting with another agent
+    private boolean isStationInteracting;
     private boolean isSimultaneousInteractionAllowed; // Denotes whether an interaction is allowed while an action is being done simultaneously
     private int interactionDuration;
     private MallAgentMovement.InteractionType interactionType;
@@ -522,7 +523,7 @@ public class MallAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == MallGate.class) {
+                if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == MallGate.class || goalAmenity.getClass() == Table.class) {
                     path.push(goalPatch);
                 }
                 double length = 0.0;
@@ -1964,7 +1965,7 @@ public class MallAgentMovement extends AgentMovement {
             return true;
         }
         else if (patch.getAmenityBlock() != null && !patch.getAmenityBlock().getParent().equals(amenity)) {
-            if (patch.getAmenityBlock().getParent().getClass() == Security.class || patch.getAmenityBlock().getParent().getClass() == Table.class || patch.getAmenityBlock().getParent().getClass() == Toilet.class || patch.getAmenityBlock().getParent().getClass() == Bench.class || patch.getAmenityBlock().getParent().getClass() == StoreAisle.class /*|| patch.getAmenityBlock().getParent().getClass() == StoreCounter.class*/) {
+            if (patch.getAmenityBlock().getParent().getClass() == Security.class || patch.getAmenityBlock().getParent().getClass() == Table.class || patch.getAmenityBlock().getParent().getClass() == Toilet.class || patch.getAmenityBlock().getParent().getClass() == Bench.class || patch.getAmenityBlock().getParent().getClass() == StoreAisle.class) {
                 return false;
             }
             else {
@@ -2021,6 +2022,107 @@ public class MallAgentMovement extends AgentMovement {
         for (Patch patchToForget : patchesToForget) { // Remove all patches set to be forgotten
             this.recentPatches.remove(patchToForget);
         }
+    }
+
+    public void forceStationedInteraction(MallAgent.Persona agentPersona) {
+        MallSimulator.currentPatchCount[currentPatch.getMatrixPosition().getRow()][currentPatch.getMatrixPosition().getColumn()]++;
+        if (agentPersona == MallAgent.Persona.STAFF_STORE_CASHIER) {
+            if (goalAmenity == mall.getStoreCounters().get(0)) {
+                MallSimulator.currentPatchCount[10][19]++;
+            }
+            else if (goalAmenity == mall.getStoreCounters().get(1)) {
+                MallSimulator.currentPatchCount[5][41]++;
+            }
+            else if (goalAmenity == mall.getStoreCounters().get(2)) {
+                MallSimulator.currentPatchCount[49][19]++;
+            }
+            else if (goalAmenity == mall.getStoreCounters().get(3)) {
+                MallSimulator.currentPatchCount[54][41]++;
+            }
+            else if (goalAmenity == mall.getStoreCounters().get(4)) {
+                MallSimulator.currentPatchCount[0][55]++;
+            }
+            else if (goalAmenity == mall.getStoreCounters().get(5)) {
+                MallSimulator.currentPatchCount[0][66]++;
+            }
+            else if (goalAmenity == mall.getStoreCounters().get(6)) {
+                MallSimulator.currentPatchCount[0][84]++;
+            }
+            else if (goalAmenity == mall.getStoreCounters().get(7)) {
+                MallSimulator.currentPatchCount[0][102]++;
+            }
+            else if (goalAmenity == mall.getStoreCounters().get(8)) {
+                MallSimulator.currentPatchCount[0][113]++;
+            }
+            else if (goalAmenity == mall.getStoreCounters().get(9)) {
+                MallSimulator.currentPatchCount[59][100]++;
+            }
+            else if (goalAmenity == mall.getStoreCounters().get(10)) {
+                MallSimulator.currentPatchCount[59][112]++;
+            }
+            MallSimulator.currentPatronStaffStoreCount++;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == MallAgent.Persona.STAFF_KIOSK) {
+            if (goalAmenity == mall.getKiosks().get(0)) {
+                MallSimulator.currentPatchCount[22][53]++;
+            }
+            else if (goalAmenity == mall.getKiosks().get(1)) {
+                MallSimulator.currentPatchCount[22][70]++;
+            }
+            else if (goalAmenity == mall.getKiosks().get(2)) {
+                MallSimulator.currentPatchCount[22][87]++;
+            }
+            else if (goalAmenity == mall.getKiosks().get(3)) {
+                MallSimulator.currentPatchCount[33][53]++;
+            }
+            else if (goalAmenity == mall.getKiosks().get(4)) {
+                MallSimulator.currentPatchCount[33][70]++;
+            }
+            else if (goalAmenity == mall.getKiosks().get(5)) {
+                MallSimulator.currentPatchCount[33][87]++;
+            }
+            else if (goalAmenity == mall.getKiosks().get(6)) {
+                MallSimulator.currentPatchCount[27][97]++;
+            }
+            MallSimulator.currentPatronStaffKioskCount++;
+            this.heading = 90;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == MallAgent.Persona.GUARD) {
+            MallSimulator.currentPatchCount[33][2]++;
+            MallSimulator.currentPatronGuardCount++;
+            this.heading = 0;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == MallAgent.Persona.STAFF_RESTO) {
+            MallSimulator.currentPatchCount[goalAmenity.getAttractors().get(0).getPatch().getMatrixPosition().getRow() - 1][goalAmenity.getAttractors().get(0).getPatch().getMatrixPosition().getColumn()]++;
+            MallSimulator.currentPatronStaffRestoCount++;
+            this.interactionDuration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(25);
+        }
+        else if (agentPersona == MallAgent.Persona.STAFF_STORE_SALES) {
+            MallSimulator.currentPatronStaffStoreCount++;
+            this.interactionDuration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(7);
+        }
+
+        if (agentPersona != MallAgent.Persona.GUARD) {
+            MallSimulator.currentExchangeCount++;
+            MallSimulator.averageExchangeDuration = (MallSimulator.averageExchangeDuration * (MallSimulator.currentExchangeCount - 1) + this.interactionDuration) / MallSimulator.currentExchangeCount;
+        }
+        else {
+            int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            if (x < MallRoutePlan.CHANCE_GUARD_VERBAL) {
+                MallSimulator.currentExchangeCount++;
+                MallSimulator.averageExchangeDuration = (MallSimulator.averageExchangeDuration * (MallSimulator.currentExchangeCount - 1) + this.interactionDuration) / MallSimulator.currentExchangeCount;
+            }
+            else {
+                MallSimulator.currentNonverbalCount++;
+                MallSimulator.averageNonverbalDuration = (MallSimulator.averageNonverbalDuration * (MallSimulator.currentNonverbalCount - 1) + this.interactionDuration) / MallSimulator.currentNonverbalCount;
+            }
+        }
+
+        this.isStationInteracting = true;
+        this.interactionDuration = 0;
     }
 
     public void forceActionInteraction(MallAgent agent, MallAgentMovement.InteractionType interactionType, int duration, MallSimulator MallSimulator){
@@ -2091,8 +2193,8 @@ public class MallAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.COOPERATIVE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
+                interactionStdDeviation = 12;
+                interactionMean = 24;
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
                 MallSimulator.currentExchangeCount++;
@@ -2100,8 +2202,8 @@ public class MallAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.EXCHANGE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
+                interactionStdDeviation = 24;
+                interactionMean = 60;
             }
             else{
                 return;
@@ -2195,7 +2297,6 @@ public class MallAgentMovement extends AgentMovement {
         }
     }
 
-
     public void decrementDuration(){
         this.duration = getDuration() - 1;
     }
@@ -2206,6 +2307,14 @@ public class MallAgentMovement extends AgentMovement {
 
     public void setInteracting(boolean interacting) {
         isInteracting = interacting;
+    }
+
+    public boolean isStationInteracting() {
+        return isStationInteracting;
+    }
+
+    public void setStationInteracting(boolean interacting) {
+        isStationInteracting = interacting;
     }
 
     public boolean isSimultaneousInteractionAllowed() {

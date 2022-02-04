@@ -5,6 +5,7 @@ import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.university.graphics.UniversityGraphicsController;
 import com.socialsim.controller.university.graphics.amenity.mapper.*;
 import com.socialsim.model.core.agent.university.UniversityAgent;
+import com.socialsim.model.core.agent.university.UniversityAgentMovement;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.generic.Patch;
@@ -14,16 +15,23 @@ import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import javax.imageio.plugins.tiff.BaselineTIFFTagSet;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class UniversityScreenController extends ScreenController {
 
@@ -46,6 +54,21 @@ public class UniversityScreenController extends ScreenController {
     @FXML private ToggleButton playButton;
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
+    @FXML private Tab parameters;
+    @FXML private Button resetToDefaultButton;
+    @FXML private TextField nonverbalMean;
+    @FXML private TextField nonverbalStdDev;
+    @FXML private TextField cooperativeMean;
+    @FXML private TextField cooperativeStdDev;
+    @FXML private TextField exchangeMean;
+    @FXML private TextField exchangeStdDev;
+    @FXML private TextField maxStudents;
+    @FXML private TextField maxProfessors;
+    @FXML private TextField maxCurrentStudents;
+    @FXML private TextField maxCurrentProfessors;
+    @FXML private TextField fieldOfView;
+    @FXML private Button configureIOSButton;
+    @FXML private Button editInteractionButton;
 
     private final double CANVAS_SCALE = 0.7;
 
@@ -61,6 +84,19 @@ public class UniversityScreenController extends ScreenController {
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             SimulationTime.SLEEP_TIME_MILLISECONDS.set((int) (1.0 / newVal.intValue() * 1000));
         });
+        resetToDefault();
+        playButton.setDisable(true);
+
+        int width = 60; // Value may be from 25-100
+        int length = 120; // Value may be from 106-220
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
+        University university = University.UniversityFactory.create(rows, columns);
+        Main.universitySimulator.resetToDefaultConfiguration(university);
+        University.configureDefaultIOS();
+        university.copyDefaultToIOS();
+        University.configureDefaultInteractionTypeChances();
+        university.copyDefaultToInteractionTypeChances();
     }
 
     @FXML
@@ -69,18 +105,16 @@ public class UniversityScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
-
-        int width = 60; // Value may be from 25-100
-        int length = 120; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
-        University university = University.UniversityFactory.create(rows, columns);
+        University university = Main.universitySimulator.getUniversity();
+        this.configureParameters(university);
+        university.convertIOSToChances();
         initializeUniversity(university);
         setElements();
+        playButton.setDisable(false);
+        disableEdits();
     }
 
     public void initializeUniversity(University university) {
-        Main.universitySimulator.resetToDefaultConfiguration(university);
         UniversityGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.universitySimulator.getUniversity().getRows();
         mapUniversity();
         Main.universitySimulator.spawnInitialAgents(university);
@@ -561,6 +595,7 @@ public class UniversityScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
+        enableEdits();
     }
 
     public static void clearUniversity(University university) {
@@ -579,4 +614,105 @@ public class UniversityScreenController extends ScreenController {
     protected void closeAction() {
     }
 
+    public void disableEdits(){
+        nonverbalMean.setDisable(true);
+        nonverbalStdDev.setDisable(true);
+        cooperativeMean.setDisable(true);
+        cooperativeStdDev.setDisable(true);
+        exchangeMean.setDisable(true);
+        exchangeStdDev.setDisable(true);
+        fieldOfView.setDisable(true);
+        maxStudents.setDisable(true);
+        maxProfessors.setDisable(true);
+        maxCurrentStudents.setDisable(true);
+        maxCurrentProfessors.setDisable(true);
+
+        resetToDefaultButton.setDisable(true);
+        configureIOSButton.setDisable(true);
+        editInteractionButton.setDisable(true);
+    }
+    public void enableEdits(){
+        nonverbalMean.setDisable(false);
+        nonverbalStdDev.setDisable(false);
+        cooperativeMean.setDisable(false);
+        cooperativeStdDev.setDisable(false);
+        exchangeMean.setDisable(false);
+        exchangeStdDev.setDisable(false);
+        fieldOfView.setDisable(false);
+        maxStudents.setDisable(false);
+        maxProfessors.setDisable(false);
+        maxCurrentStudents.setDisable(false);
+        maxCurrentProfessors.setDisable(false);
+
+        resetToDefaultButton.setDisable(false);
+        configureIOSButton.setDisable(false);
+        editInteractionButton.setDisable(false);
+    }
+
+    public void resetToDefault(){
+        nonverbalMean.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalMean));
+        nonverbalStdDev.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalStdDev));
+        cooperativeMean.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeMean));
+        cooperativeStdDev.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeStdDev));
+        exchangeMean.setText(Integer.toString(UniversityAgentMovement.defaultExchangeMean));
+        exchangeStdDev.setText(Integer.toString(UniversityAgentMovement.defaultExchangeStdDev));
+        fieldOfView.setText(Integer.toString(UniversityAgentMovement.defaultFieldOfView));
+        maxStudents.setText(Integer.toString(UniversitySimulator.defaultMaxStudents));
+        maxProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxProfessors));
+        maxCurrentStudents.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentStudents));
+        maxCurrentProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentProfessors));
+    }
+
+    public void openIOSLevels(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/ConfigureIOS.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Configure IOS Levels");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void openEditInteractions(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/EditInteractions.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Edit Interaction Type Chances");
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void configureParameters(University university){
+        university.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
+        university.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
+        university.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
+        university.setCooperativeStdDev(Integer.parseInt(cooperativeStdDev.getText()));
+        university.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
+        university.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
+        university.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
+        UniversitySimulator.MAX_STUDENTS = Integer.parseInt(maxStudents.getText());
+        UniversitySimulator.MAX_PROFESSORS = Integer.parseInt(maxProfessors.getText());
+        UniversitySimulator.MAX_CURRENT_STUDENTS = Integer.parseInt(maxCurrentStudents.getText());
+        UniversitySimulator.MAX_CURRENT_PROFESSORS = Integer.parseInt(maxCurrentProfessors.getText());
+        System.out.println(university.getNonverbalMean());
+        System.out.println(university.getNonverbalStdDev());
+        System.out.println(university.getCooperativeMean());
+        System.out.println(university.getCooperativeStdDev());
+        System.out.println(university.getExchangeMean());
+        System.out.println(university.getExchangeStdDev());
+        System.out.println(university.getFieldOfView());
+        System.out.println(UniversitySimulator.MAX_STUDENTS);
+        System.out.println(UniversitySimulator.MAX_PROFESSORS);
+        System.out.println(UniversitySimulator.MAX_CURRENT_STUDENTS);
+        System.out.println(UniversitySimulator.MAX_CURRENT_PROFESSORS);
+    }
 }
