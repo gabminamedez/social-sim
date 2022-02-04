@@ -30,8 +30,8 @@ public class UniversityIOSController {
     private void initialize() {
         //TODO: Create columns of IOS levels
         University university = Main.universitySimulator.getUniversity();
-        for (int i = 0; i < UniversityAgent.Persona.values().length + 1; i++) {
-            for (int j = 0; j < UniversityAgent.Persona.values().length + 1; j++) {
+        for (int i = 0; i < UniversityAgent.Persona.values().length + 1; i++) { // column
+            for (int j = 0; j < UniversityAgent.Persona.values().length + 1; j++) { // row
                 if (i == 0 || j == 0){
                     if (i == 0 && j == 0)
                         gridPane.add(new Label(""), i, j);

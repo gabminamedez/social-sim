@@ -209,7 +209,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     public void spawnInitialAgents(Office office) {
-        office.createInitialAgentDemographics(MAX_CLIENTS, MAX_DRIVERS, MAX_VISITORS);
+        office.createInitialAgentDemographics(office.getMAX_CLIENTS(), getOffice().getMAX_DRIVERS(), getOffice().getMAX_VISITORS());
         OfficeAgent janitor = office.getAgents().get(0); // 0
         janitor.setAgentMovement(new OfficeAgentMovement(office.getPatch(6,23), janitor, 1.27, office.getPatch(6,23).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(janitor.getAgentMovement().getCurrentPatch());
@@ -2047,19 +2047,19 @@ public class OfficeSimulator extends Simulator {
             else {
                 if (office.getUnspawnedVisitingAgents().size() > 0){
                     agent = office.getUnspawnedVisitingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedVisitingAgents().size()));
-                    if (agent.getType() == OfficeAgent.Type.CLIENT && ((currentTick >= 720 && currentTick < 1800) ||  (currentTick >= 2880 && currentTick < 4320)) && OfficeAgent.clientCount < MAX_CLIENTS) {
+                    if (agent.getType() == OfficeAgent.Type.CLIENT && ((currentTick >= 720 && currentTick < 1800) ||  (currentTick >= 2880 && currentTick < 4320)) && OfficeAgent.clientCount < office.getMAX_CLIENTS()) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         OfficeAgent.clientCount++;
                         OfficeAgent.agentCount++;
                     }
-                    else if (agent.getType() == OfficeAgent.Type.DRIVER && OfficeAgent.driverCount < MAX_DRIVERS) {
+                    else if (agent.getType() == OfficeAgent.Type.DRIVER && OfficeAgent.driverCount < getOffice().getMAX_DRIVERS()) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         OfficeAgent.driverCount++;
                         OfficeAgent.agentCount++;
                     }
-                    else if (agent.getType() == OfficeAgent.Type.VISITOR && currentTick >= 3600 && currentTick < 5040 && OfficeAgent.visitorCount < MAX_VISITORS) {
+                    else if (agent.getType() == OfficeAgent.Type.VISITOR && currentTick >= 3600 && currentTick < 5040 && OfficeAgent.visitorCount < getOffice().getMAX_VISITORS()) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         OfficeAgent.visitorCount++;

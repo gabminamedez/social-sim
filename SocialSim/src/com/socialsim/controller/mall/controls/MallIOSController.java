@@ -1,8 +1,8 @@
 package com.socialsim.controller.mall.controls;
 
 import com.socialsim.controller.Main;
-import com.socialsim.model.core.agent.university.UniversityAgent;
-import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.agent.mall.MallAgent;
+import com.socialsim.model.core.environment.mall.Mall;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -29,21 +29,21 @@ public class MallIOSController {
     @FXML
     private void initialize() {
         //TODO: Create columns of IOS levels
-        University university = Main.universitySimulator.getUniversity();
-        for (int i = 0; i < UniversityAgent.Persona.values().length + 1; i++) {
-            for (int j = 0; j < UniversityAgent.Persona.values().length + 1; j++) {
+        Mall mall = Main.mallSimulator.getMall();
+        for (int i = 0; i < MallAgent.Persona.values().length + 1; i++) { // column
+            for (int j = 0; j < MallAgent.Persona.values().length + 1; j++) { // row
                 if (i == 0 || j == 0){
                     if (i == 0 && j == 0)
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0)
-                            gridPane.add(new Label(UniversityAgent.Persona.values()[j - 1].name()), i, j);
+                            gridPane.add(new Label(MallAgent.Persona.values()[j - 1].name()), i, j);
                         else
-                            gridPane.add(new Label(UniversityAgent.Persona.values()[i - 1].name()), i, j);
+                            gridPane.add(new Label(MallAgent.Persona.values()[i - 1].name()), i, j);
                     }
                 }
                 else{
-                    gridPane.add(new TextField(university.getIOSScales().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
+                    gridPane.add(new TextField(mall.getIOSScales().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
                 }
             }
         }
@@ -59,7 +59,7 @@ public class MallIOSController {
             if (node.getClass() == TextField.class){
                 int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                 if (row > 0 && column > 0)
-                    ((TextField) node).setText(University.defaultIOS.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
+                    ((TextField) node).setText(Mall.defaultIOS.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
             }
         }
     }
@@ -86,14 +86,14 @@ public class MallIOSController {
             }
         }
         else{
-            University university = Main.universitySimulator.getUniversity();
+            Mall mall = Main.mallSimulator.getMall();
             for (Node node: gridPane.getChildren()){
                 if (node.getClass() == TextField.class){
                     int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                     String s = ((TextField) node).getText();
                     Integer[] IOSArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
                     if (row > 0 && column > 0)
-                        university.getIOSScales().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(IOSArr)));
+                        mall.getIOSScales().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(IOSArr)));
                 }
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);

@@ -5,15 +5,14 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.office.graphics.OfficeGraphicsController;
 import com.socialsim.controller.office.graphics.amenity.mapper.*;
 import com.socialsim.model.core.agent.office.OfficeAgent;
-import com.socialsim.model.core.agent.university.UniversityAgentMovement;
+import com.socialsim.model.core.agent.office.OfficeAgentMovement;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchfield.*;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
-import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.simulator.SimulationTime;
-import com.socialsim.model.simulator.university.UniversitySimulator;
+import com.socialsim.model.simulator.office.OfficeSimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -59,10 +58,9 @@ public class OfficeScreenController extends ScreenController {
     @FXML private TextField cooperativeStdDev;
     @FXML private TextField exchangeMean;
     @FXML private TextField exchangeStdDev;
-    @FXML private TextField maxStudents;
-    @FXML private TextField maxProfessors;
-    @FXML private TextField maxCurrentStudents;
-    @FXML private TextField maxCurrentProfessors;
+    @FXML private TextField maxClients;
+    @FXML private TextField maxDrivers;
+    @FXML private TextField maxVisitors;
     @FXML private TextField fieldOfView;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
@@ -81,6 +79,20 @@ public class OfficeScreenController extends ScreenController {
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             SimulationTime.SLEEP_TIME_MILLISECONDS.set((int) (1.0 / newVal.intValue() * 1000));
         });
+        resetToDefault();
+        playButton.setDisable(true);
+
+        int width = 60; // Value may be from 25-100
+        int length = 100; // Value may be from 106-220
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
+        Office office = Office.OfficeFactory.create(rows, columns);
+        Main.officeSimulator.resetToDefaultConfiguration(office);
+//        Office.configureDefaultIOS();
+//        office.copyDefaultToIOS();
+//        Office.configureDefaultInteractionTypeChances();
+//        office.copyDefaultToInteractionTypeChances();
+
     }
 
     @FXML
@@ -89,18 +101,18 @@ public class OfficeScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
-
-        int width = 60; // Value may be from 25-100
-        int length = 100; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
-        Office office = Office.OfficeFactory.create(rows, columns);
-        initializeOffice(office);
-        setElements();
+        if (validateParameters()){
+            Office office = Main.officeSimulator.getOffice();
+            this.configureParameters(office);
+            office.convertIOSToChances();
+            initializeOffice(office);
+            setElements();
+            playButton.setDisable(false);
+            disableEdits();
+        }
     }
 
     public void initializeOffice(Office office) {
-        Main.officeSimulator.resetToDefaultConfiguration(office);
         OfficeGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.officeSimulator.getOffice().getRows();
         mapOffice();
         Main.officeSimulator.spawnInitialAgents(office);
@@ -548,6 +560,7 @@ public class OfficeScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
+        enableEdits();
     }
 
     public static void clearOffice(Office office) {
@@ -566,23 +579,55 @@ public class OfficeScreenController extends ScreenController {
     protected void closeAction() {
     }
 
+    public void disableEdits(){
+        nonverbalMean.setDisable(true);
+        nonverbalStdDev.setDisable(true);
+        cooperativeMean.setDisable(true);
+        cooperativeStdDev.setDisable(true);
+        exchangeMean.setDisable(true);
+        exchangeStdDev.setDisable(true);
+        fieldOfView.setDisable(true);
+        maxClients.setDisable(true);
+        maxDrivers.setDisable(true);
+        maxVisitors.setDisable(true);
+
+        resetToDefaultButton.setDisable(true);
+        configureIOSButton.setDisable(true);
+        editInteractionButton.setDisable(true);
+    }
+    public void enableEdits(){
+        nonverbalMean.setDisable(false);
+        nonverbalStdDev.setDisable(false);
+        cooperativeMean.setDisable(false);
+        cooperativeStdDev.setDisable(false);
+        exchangeMean.setDisable(false);
+        exchangeStdDev.setDisable(false);
+        fieldOfView.setDisable(false);
+        maxClients.setDisable(false);
+        maxDrivers.setDisable(false);
+        maxVisitors.setDisable(false);
+
+        resetToDefaultButton.setDisable(false);
+        configureIOSButton.setDisable(false);
+        editInteractionButton.setDisable(false);
+    }
+
     public void resetToDefault(){
-        nonverbalMean.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalMean));
-        nonverbalStdDev.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalStdDev));
-        cooperativeMean.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeMean));
-        cooperativeStdDev.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeStdDev));
-        exchangeMean.setText(Integer.toString(UniversityAgentMovement.defaultExchangeMean));
-        exchangeStdDev.setText(Integer.toString(UniversityAgentMovement.defaultExchangeStdDev));
-        fieldOfView.setText(Integer.toString(UniversityAgentMovement.defaultFieldOfView));
-        maxStudents.setText(Integer.toString(UniversitySimulator.defaultMaxStudents));
-        maxProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxProfessors));
-        maxCurrentStudents.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentStudents));
-        maxCurrentProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentProfessors));
+        nonverbalMean.setText(Integer.toString(OfficeAgentMovement.defaultNonverbalMean));
+        nonverbalStdDev.setText(Integer.toString(OfficeAgentMovement.defaultNonverbalStdDev));
+        cooperativeMean.setText(Integer.toString(OfficeAgentMovement.defaultCooperativeMean));
+        cooperativeStdDev.setText(Integer.toString(OfficeAgentMovement.defaultCooperativeStdDev));
+        exchangeMean.setText(Integer.toString(OfficeAgentMovement.defaultExchangeMean));
+        exchangeStdDev.setText(Integer.toString(OfficeAgentMovement.defaultExchangeStdDev));
+        fieldOfView.setText(Integer.toString(OfficeAgentMovement.defaultFieldOfView));
+        maxClients.setText(Integer.toString(OfficeSimulator.defaultMaxClients));
+        maxDrivers.setText(Integer.toString(OfficeSimulator.defaultMaxDrivers));
+        maxVisitors.setText(Integer.toString(OfficeSimulator.defaultMaxVisitors));
     }
 
     public void openIOSLevels(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityConfigureIOS.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/OfficeConfigureIOS.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -596,7 +641,7 @@ public class OfficeScreenController extends ScreenController {
     }
     public void openEditInteractions(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityEditInteractions.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/OfficeEditInteractions.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -608,18 +653,17 @@ public class OfficeScreenController extends ScreenController {
             e.printStackTrace();
         }
     }
-    public void configureParameters(University university){
-        university.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
-        university.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
-        university.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
-        university.setCooperativeStdDev(Integer.parseInt(cooperativeStdDev.getText()));
-        university.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
-        university.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
-        university.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
-        university.setMAX_STUDENTS(Integer.parseInt(maxStudents.getText()));
-        university.setMAX_PROFESSORS(Integer.parseInt(maxProfessors.getText()));
-        university.setMAX_CURRENT_STUDENTS(Integer.parseInt(maxCurrentStudents.getText()));
-        university.setMAX_CURRENT_PROFESSORS(Integer.parseInt(maxCurrentProfessors.getText()));
+    public void configureParameters(Office office){
+        office.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
+        office.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
+        office.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
+        office.setCooperativeStdDev(Integer.parseInt(cooperativeStdDev.getText()));
+        office.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
+        office.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
+        office.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
+        office.setMAX_CLIENTS(Integer.parseInt(maxClients.getText()));
+        office.setMAX_DRIVERS(Integer.parseInt(maxDrivers.getText()));
+        office.setMAX_VISITORS(Integer.parseInt(maxVisitors.getText()));
     }
 
     public boolean validateParameters(){
@@ -627,8 +671,8 @@ public class OfficeScreenController extends ScreenController {
                 && Integer.parseInt(cooperativeMean.getText()) >= 0 && Integer.parseInt(cooperativeStdDev.getText()) >= 0
                 && Integer.parseInt(exchangeMean.getText()) >= 0 && Integer.parseInt(exchangeStdDev.getText()) >= 0
                 && Integer.parseInt(fieldOfView.getText()) >= 0 && Integer.parseInt(fieldOfView.getText()) <= 360
-                && Integer.parseInt(maxStudents.getText()) >= 0 && Integer.parseInt(maxProfessors.getText()) >= 0
-                && Integer.parseInt(maxCurrentStudents.getText()) >= 0 && Integer.parseInt(maxCurrentProfessors.getText()) >= 0;
+                && Integer.parseInt(maxClients.getText()) >= 0 && Integer.parseInt(maxDrivers.getText()) >= 0
+                && Integer.parseInt(maxVisitors.getText()) >= 0;
         if (!validParameters){
             Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
             Label label = new Label("Failed to initialize. Please make sure all values are greater than 0, and field of view is not greater than 360 degrees");

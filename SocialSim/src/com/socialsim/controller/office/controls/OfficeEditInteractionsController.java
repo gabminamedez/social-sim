@@ -1,9 +1,9 @@
 package com.socialsim.controller.office.controls;
 
 import com.socialsim.controller.Main;
-import com.socialsim.model.core.agent.university.UniversityAction;
-import com.socialsim.model.core.agent.university.UniversityAgent;
-import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.agent.office.OfficeAction;
+import com.socialsim.model.core.agent.office.OfficeAgent;
+import com.socialsim.model.core.environment.office.Office;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -30,22 +30,22 @@ public class OfficeEditInteractionsController {
     @FXML
     private void initialize() {
         //TODO: Create columns of interaction types
-        University university = Main.universitySimulator.getUniversity();
+        Office office = Main.officeSimulator.getOffice();
 
-        for (int i = 0; i < UniversityAgent.PersonaActionGroup.values().length + 1; i++) {
-            for (int j = 0; j < UniversityAction.Name.values().length + 1; j++) {
+        for (int i = 0; i < OfficeAgent.PersonaActionGroup.values().length + 1; i++) {
+            for (int j = 0; j < OfficeAction.Name.values().length + 1; j++) {
                 if (i == 0 || j == 0){
                     if (i == 0 && j == 0)
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0)
-                            gridPane.add(new Label(UniversityAction.Name.values()[j - 1].name()), i, j);
+                            gridPane.add(new Label(OfficeAction.Name.values()[j - 1].name()), i, j);
                         else
-                            gridPane.add(new Label(UniversityAgent.PersonaActionGroup.values()[i - 1].name()), i, j);
+                            gridPane.add(new Label(OfficeAgent.PersonaActionGroup.values()[i - 1].name()), i, j);
                     }
                 }
                 else{
-                    gridPane.add(new TextField(university.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
+                    gridPane.add(new TextField(office.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
                 }
             }
         }
@@ -61,7 +61,7 @@ public class OfficeEditInteractionsController {
             if (node.getClass() == TextField.class){
                 int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                 if (row > 0 && column > 0)
-                    ((TextField) node).setText(University.defaultInteractionTypeChances.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
+                    ((TextField) node).setText(Office.defaultInteractionTypeChances.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
             }
         }
     }
@@ -89,14 +89,14 @@ public class OfficeEditInteractionsController {
             }
         }
         else{
-            University university = Main.universitySimulator.getUniversity();
+            Office office = Main.officeSimulator.getOffice();
             for (Node node: gridPane.getChildren()){
                 if (node.getClass() == TextField.class){
                     int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                     String s = ((TextField) node).getText();
                     Integer[] interactionArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
                     if (row > 0 && column > 0)
-                        university.getInteractionTypeChances().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(interactionArr)));
+                        office.getInteractionTypeChances().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(interactionArr)));
                 }
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);

@@ -5,15 +5,14 @@ import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.mall.graphics.MallGraphicsController;
 import com.socialsim.controller.mall.graphics.amenity.mapper.*;
 import com.socialsim.model.core.agent.mall.MallAgent;
-import com.socialsim.model.core.agent.university.UniversityAgentMovement;
+import com.socialsim.model.core.agent.mall.MallAgentMovement;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.mall.Mall;
 import com.socialsim.model.core.environment.mall.patchfield.*;
 import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
-import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.simulator.SimulationTime;
-import com.socialsim.model.simulator.university.UniversitySimulator;
+import com.socialsim.model.simulator.mall.MallSimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -60,10 +59,10 @@ public class MallScreenController extends ScreenController {
     @FXML private TextField cooperativeStdDev;
     @FXML private TextField exchangeMean;
     @FXML private TextField exchangeStdDev;
-    @FXML private TextField maxStudents;
-    @FXML private TextField maxProfessors;
-    @FXML private TextField maxCurrentStudents;
-    @FXML private TextField maxCurrentProfessors;
+    @FXML private TextField maxFamily;
+    @FXML private TextField maxFriend;
+    @FXML private TextField maxCouple;
+    @FXML private TextField maxAlone;
     @FXML private TextField fieldOfView;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
@@ -82,6 +81,19 @@ public class MallScreenController extends ScreenController {
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             SimulationTime.SLEEP_TIME_MILLISECONDS.set((int) (1.0 / newVal.intValue() * 1000));
         });
+        resetToDefault();
+        playButton.setDisable(true);
+
+        int width = 60; // Value may be from 25-100
+        int length = 120; // Value may be from 106-220
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
+        Mall mall = Mall.MallFactory.create(rows, columns);
+        Main.mallSimulator.resetToDefaultConfiguration(mall);
+//        Mall.configureDefaultIOS();
+//        mall.copyDefaultToIOS();
+//        Mall.configureDefaultInteractionTypeChances();
+//        mall.copyDefaultToInteractionTypeChances();
     }
 
     @FXML
@@ -90,18 +102,18 @@ public class MallScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
-
-        int width = 60; // Value may be from 25-100
-        int length = 120; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
-        Mall mall = Mall.MallFactory.create(rows, columns);
-        initializeMall(mall);
-        setElements();
+        if (validateParameters()){
+            Mall mall = Main.mallSimulator.getMall();
+            this.configureParameters(mall);
+            mall.convertIOSToChances();
+            initializeMall(mall);
+            setElements();
+            playButton.setDisable(false);
+            disableEdits();
+        }
     }
 
     public void initializeMall(Mall mall) {
-        Main.mallSimulator.resetToDefaultConfiguration(mall);
         MallGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.mallSimulator.getMall().getRows();
         mapMall();
         Main.mallSimulator.spawnInitialAgents(mall);
@@ -594,6 +606,42 @@ public class MallScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
+        enableEdits();
+    }
+
+    public void disableEdits(){
+        nonverbalMean.setDisable(true);
+        nonverbalStdDev.setDisable(true);
+        cooperativeMean.setDisable(true);
+        cooperativeStdDev.setDisable(true);
+        exchangeMean.setDisable(true);
+        exchangeStdDev.setDisable(true);
+        fieldOfView.setDisable(true);
+        maxFamily.setDisable(true);
+        maxFriend.setDisable(true);
+        maxCouple.setDisable(true);
+        maxAlone.setDisable(true);
+
+        resetToDefaultButton.setDisable(true);
+        configureIOSButton.setDisable(true);
+        editInteractionButton.setDisable(true);
+    }
+    public void enableEdits(){
+        nonverbalMean.setDisable(false);
+        nonverbalStdDev.setDisable(false);
+        cooperativeMean.setDisable(false);
+        cooperativeStdDev.setDisable(false);
+        exchangeMean.setDisable(false);
+        exchangeStdDev.setDisable(false);
+        fieldOfView.setDisable(false);
+        maxFamily.setDisable(false);
+        maxFriend.setDisable(false);
+        maxCouple.setDisable(false);
+        maxAlone.setDisable(false);
+
+        resetToDefaultButton.setDisable(false);
+        configureIOSButton.setDisable(false);
+        editInteractionButton.setDisable(false);
     }
 
     public static void clearMall(Mall mall) {
@@ -613,22 +661,22 @@ public class MallScreenController extends ScreenController {
     }
 
     public void resetToDefault(){
-        nonverbalMean.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalMean));
-        nonverbalStdDev.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalStdDev));
-        cooperativeMean.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeMean));
-        cooperativeStdDev.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeStdDev));
-        exchangeMean.setText(Integer.toString(UniversityAgentMovement.defaultExchangeMean));
-        exchangeStdDev.setText(Integer.toString(UniversityAgentMovement.defaultExchangeStdDev));
-        fieldOfView.setText(Integer.toString(UniversityAgentMovement.defaultFieldOfView));
-        maxStudents.setText(Integer.toString(UniversitySimulator.defaultMaxStudents));
-        maxProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxProfessors));
-        maxCurrentStudents.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentStudents));
-        maxCurrentProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentProfessors));
+        nonverbalMean.setText(Integer.toString(MallAgentMovement.defaultNonverbalMean));
+        nonverbalStdDev.setText(Integer.toString(MallAgentMovement.defaultNonverbalStdDev));
+        cooperativeMean.setText(Integer.toString(MallAgentMovement.defaultCooperativeMean));
+        cooperativeStdDev.setText(Integer.toString(MallAgentMovement.defaultCooperativeStdDev));
+        exchangeMean.setText(Integer.toString(MallAgentMovement.defaultExchangeMean));
+        exchangeStdDev.setText(Integer.toString(MallAgentMovement.defaultExchangeStdDev));
+        fieldOfView.setText(Integer.toString(MallAgentMovement.defaultFieldOfView));
+        maxFamily.setText(Integer.toString(MallSimulator.defaultMaxFamily));
+        maxFriend.setText(Integer.toString(MallSimulator.defaultMaxFriends));
+        maxCouple.setText(Integer.toString(MallSimulator.defaultMaxCouple));
+        maxAlone.setText(Integer.toString(MallSimulator.defaultMaxAlone));
     }
 
     public void openIOSLevels(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityConfigureIOS.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/MallConfigureIOS.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -642,7 +690,7 @@ public class MallScreenController extends ScreenController {
     }
     public void openEditInteractions(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityEditInteractions.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/MallEditInteractions.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -654,18 +702,18 @@ public class MallScreenController extends ScreenController {
             e.printStackTrace();
         }
     }
-    public void configureParameters(University university){
-        university.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
-        university.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
-        university.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
-        university.setCooperativeStdDev(Integer.parseInt(cooperativeStdDev.getText()));
-        university.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
-        university.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
-        university.setFieldOfView(Integer.parseInt(fieldOfView.getText()))
-        university.setMAX_STUDENTS(Integer.parseInt(maxStudents.getText()));
-        university.setMAX_PROFESSORS(Integer.parseInt(maxProfessors.getText()));
-        university.setMAX_CURRENT_STUDENTS(Integer.parseInt(maxCurrentStudents.getText()));
-        university.setMAX_CURRENT_PROFESSORS(Integer.parseInt(maxCurrentProfessors.getText()));
+    public void configureParameters(Mall mall){
+        mall.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
+        mall.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
+        mall.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
+        mall.setCooperativeStdDev(Integer.parseInt(cooperativeStdDev.getText()));
+        mall.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
+        mall.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
+        mall.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
+        mall.setMAX_FAMILY(Integer.parseInt(maxFamily.getText()));
+        mall.setMAX_FRIENDS(Integer.parseInt(maxFriend.getText()));
+        mall.setMAX_COUPLE(Integer.parseInt(maxCouple.getText()));
+        mall.setMAX_ALONE(Integer.parseInt(maxAlone.getText()));
     }
 
     public boolean validateParameters(){
@@ -673,8 +721,8 @@ public class MallScreenController extends ScreenController {
                 && Integer.parseInt(cooperativeMean.getText()) >= 0 && Integer.parseInt(cooperativeStdDev.getText()) >= 0
                 && Integer.parseInt(exchangeMean.getText()) >= 0 && Integer.parseInt(exchangeStdDev.getText()) >= 0
                 && Integer.parseInt(fieldOfView.getText()) >= 0 && Integer.parseInt(fieldOfView.getText()) <= 360
-                && Integer.parseInt(maxStudents.getText()) >= 0 && Integer.parseInt(maxProfessors.getText()) >= 0
-                && Integer.parseInt(maxCurrentStudents.getText()) >= 0 && Integer.parseInt(maxCurrentProfessors.getText()) >= 0;
+                && Integer.parseInt(maxFamily.getText()) >= 0 && Integer.parseInt(maxFriend.getText()) >= 0
+                && Integer.parseInt(maxCouple.getText()) >= 0 && Integer.parseInt(maxAlone.getText()) >= 0;
         if (!validParameters){
             Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
             Label label = new Label("Failed to initialize. Please make sure all values are greater than 0, and field of view is not greater than 360 degrees");

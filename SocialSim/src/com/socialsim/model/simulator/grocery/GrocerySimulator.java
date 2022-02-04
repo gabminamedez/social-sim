@@ -139,7 +139,7 @@ public class GrocerySimulator extends Simulator {
     }
 
     public void spawnInitialAgents(Grocery grocery) {
-        grocery.createInitialAgentDemographics(MAX_FAMILY, MAX_ALONE);
+        grocery.createInitialAgentDemographics(grocery.getMAX_FAMILY(), grocery.getMAX_ALONE());
         GroceryAgent guard1 = grocery.getAgents().get(0);
         guard1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(57,52), guard1, null, 1.27, grocery.getPatch(57,52).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(guard1.getAgentMovement().getCurrentPatch());
@@ -870,7 +870,7 @@ public class GrocerySimulator extends Simulator {
         boolean isFamily = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
 
         if (CHANCE > spawnChance) {
-            if (isFamily && totalAloneCustomerCount < MAX_FAMILY && currentFamilyCount < MAX_CURRENT_FAMILY) {
+            if (isFamily && totalAloneCustomerCount < grocery.getMAX_FAMILY() && currentFamilyCount < grocery.getMAX_CURRENT_FAMILY()) {
                 if (grocery.getUnspawnedFamilyAgents().size() > 0){
                     int randNum = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedFamilyAgents().size());
                     GroceryAgent leaderAgent = grocery.getUnspawnedFamilyAgents().get(randNum);
@@ -952,7 +952,7 @@ public class GrocerySimulator extends Simulator {
                     totalFamilyCount++;
                 }
             }
-            else if (!isFamily && totalAloneCustomerCount < MAX_ALONE && currentAloneCustomerCount < MAX_CURRENT_ALONE) {
+            else if (!isFamily && totalAloneCustomerCount < grocery.getMAX_ALONE() && currentAloneCustomerCount < grocery.getMAX_CURRENT_ALONE()) {
                 if (grocery.getUnspawnedAloneAgents().size() > 0){
                     GroceryAgent aloneAgent = grocery.getUnspawnedAloneAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedAloneAgents().size()));
                     aloneAgent.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), aloneAgent, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));

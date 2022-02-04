@@ -1,8 +1,8 @@
 package com.socialsim.controller.office.controls;
 
 import com.socialsim.controller.Main;
-import com.socialsim.model.core.agent.university.UniversityAgent;
-import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.agent.office.OfficeAgent;
+import com.socialsim.model.core.environment.office.Office;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -29,21 +29,21 @@ public class OfficeIOSController {
     @FXML
     private void initialize() {
         //TODO: Create columns of IOS levels
-        University university = Main.universitySimulator.getUniversity();
-        for (int i = 0; i < UniversityAgent.Persona.values().length + 1; i++) {
-            for (int j = 0; j < UniversityAgent.Persona.values().length + 1; j++) {
+        Office office = Main.officeSimulator.getOffice();
+        for (int i = 0; i < OfficeAgent.Persona.values().length + 1; i++) { // column
+            for (int j = 0; j < OfficeAgent.Persona.values().length + 1; j++) { // row
                 if (i == 0 || j == 0){
                     if (i == 0 && j == 0)
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0)
-                            gridPane.add(new Label(UniversityAgent.Persona.values()[j - 1].name()), i, j);
+                            gridPane.add(new Label(OfficeAgent.Persona.values()[j - 1].name()), i, j);
                         else
-                            gridPane.add(new Label(UniversityAgent.Persona.values()[i - 1].name()), i, j);
+                            gridPane.add(new Label(OfficeAgent.Persona.values()[i - 1].name()), i, j);
                     }
                 }
                 else{
-                    gridPane.add(new TextField(university.getIOSScales().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
+                    gridPane.add(new TextField(office.getIOSScales().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
                 }
             }
         }
@@ -59,7 +59,7 @@ public class OfficeIOSController {
             if (node.getClass() == TextField.class){
                 int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                 if (row > 0 && column > 0)
-                    ((TextField) node).setText(University.defaultIOS.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
+                    ((TextField) node).setText(Office.defaultIOS.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
             }
         }
     }
@@ -86,14 +86,14 @@ public class OfficeIOSController {
             }
         }
         else{
-            University university = Main.universitySimulator.getUniversity();
+            Office office = Main.officeSimulator.getOffice();
             for (Node node: gridPane.getChildren()){
                 if (node.getClass() == TextField.class){
                     int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                     String s = ((TextField) node).getText();
                     Integer[] IOSArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
                     if (row > 0 && column > 0)
-                        university.getIOSScales().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(IOSArr)));
+                        office.getIOSScales().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(IOSArr)));
                 }
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);

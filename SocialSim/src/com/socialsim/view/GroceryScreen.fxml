@@ -91,26 +91,26 @@
                                             </AnchorPane>
                                             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                 <children>
-                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Students Spawned" />
-                                                    <TextField fx:id="maxStudents" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Family Customers Spawned" />
+                                                    <TextField fx:id="maxFamily" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
                                                 </children>
                                             </AnchorPane>
                                             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                 <children>
-                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Professors Spawned" />
-                                                    <TextField fx:id="maxProfessors" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Solo Customers Spawned" />
+                                                    <TextField fx:id="maxAlone" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
                                                 </children>
                                             </AnchorPane>
                                             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                 <children>
-                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Students in Area" />
-                                                    <TextField fx:id="maxCurrentStudents" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Family Customers in Area" />
+                                                    <TextField fx:id="maxCurrentFamily" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
                                                 </children>
                                             </AnchorPane>
                                             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                 <children>
-                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Professors in Area" />
-                                                    <TextField fx:id="maxCurrentProfessors" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Solo Customers in Area" />
+                                                    <TextField fx:id="maxCurrentAlone" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
                                                 </children>
                                             </AnchorPane>
                                             <AnchorPane prefHeight="200.0" prefWidth="200.0">

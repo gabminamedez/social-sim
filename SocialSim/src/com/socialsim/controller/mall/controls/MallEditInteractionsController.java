@@ -1,9 +1,9 @@
 package com.socialsim.controller.mall.controls;
 
 import com.socialsim.controller.Main;
-import com.socialsim.model.core.agent.university.UniversityAction;
-import com.socialsim.model.core.agent.university.UniversityAgent;
-import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.agent.mall.MallAction;
+import com.socialsim.model.core.agent.mall.MallAgent;
+import com.socialsim.model.core.environment.mall.Mall;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -30,22 +30,22 @@ public class MallEditInteractionsController {
     @FXML
     private void initialize() {
         //TODO: Create columns of interaction types
-        University university = Main.universitySimulator.getUniversity();
+        Mall mall = Main.mallSimulator.getMall();
 
-        for (int i = 0; i < UniversityAgent.PersonaActionGroup.values().length + 1; i++) {
-            for (int j = 0; j < UniversityAction.Name.values().length + 1; j++) {
+        for (int i = 0; i < MallAgent.PersonaActionGroup.values().length + 1; i++) {
+            for (int j = 0; j < MallAction.Name.values().length + 1; j++) {
                 if (i == 0 || j == 0){
                     if (i == 0 && j == 0)
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0)
-                            gridPane.add(new Label(UniversityAction.Name.values()[j - 1].name()), i, j);
+                            gridPane.add(new Label(MallAction.Name.values()[j - 1].name()), i, j);
                         else
-                            gridPane.add(new Label(UniversityAgent.PersonaActionGroup.values()[i - 1].name()), i, j);
+                            gridPane.add(new Label(MallAgent.PersonaActionGroup.values()[i - 1].name()), i, j);
                     }
                 }
                 else{
-                    gridPane.add(new TextField(university.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
+                    gridPane.add(new TextField(mall.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
                 }
             }
         }
@@ -61,7 +61,7 @@ public class MallEditInteractionsController {
             if (node.getClass() == TextField.class){
                 int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                 if (row > 0 && column > 0)
-                    ((TextField) node).setText(University.defaultInteractionTypeChances.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
+                    ((TextField) node).setText(Mall.defaultInteractionTypeChances.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
             }
         }
     }
@@ -89,14 +89,14 @@ public class MallEditInteractionsController {
             }
         }
         else{
-            University university = Main.universitySimulator.getUniversity();
+            Mall mall = Main.mallSimulator.getMall();
             for (Node node: gridPane.getChildren()){
                 if (node.getClass() == TextField.class){
                     int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                     String s = ((TextField) node).getText();
                     Integer[] interactionArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
                     if (row > 0 && column > 0)
-                        university.getInteractionTypeChances().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(interactionArr)));
+                        mall.getInteractionTypeChances().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(interactionArr)));
                 }
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);

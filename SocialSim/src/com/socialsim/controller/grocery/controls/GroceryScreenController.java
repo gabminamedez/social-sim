@@ -5,14 +5,13 @@ import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.grocery.graphics.GroceryGraphicsController;
 import com.socialsim.controller.grocery.graphics.amenity.mapper.*;
 import com.socialsim.model.core.agent.grocery.GroceryAgent;
-import com.socialsim.model.core.agent.university.UniversityAgentMovement;
+import com.socialsim.model.core.agent.grocery.GroceryAgentMovement;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
-import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.simulator.SimulationTime;
-import com.socialsim.model.simulator.university.UniversitySimulator;
+import com.socialsim.model.simulator.grocery.GrocerySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -58,10 +57,10 @@ public class GroceryScreenController extends ScreenController {
     @FXML private TextField cooperativeStdDev;
     @FXML private TextField exchangeMean;
     @FXML private TextField exchangeStdDev;
-    @FXML private TextField maxStudents;
-    @FXML private TextField maxProfessors;
-    @FXML private TextField maxCurrentStudents;
-    @FXML private TextField maxCurrentProfessors;
+    @FXML private TextField maxFamily;
+    @FXML private TextField maxAlone;
+    @FXML private TextField maxCurrentFamily;
+    @FXML private TextField maxCurrentAlone;
     @FXML private TextField fieldOfView;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
@@ -80,6 +79,19 @@ public class GroceryScreenController extends ScreenController {
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             SimulationTime.SLEEP_TIME_MILLISECONDS.set((int) (1.0 / newVal.intValue() * 1000));
         });
+        resetToDefault();
+        playButton.setDisable(true);
+
+        int width = 60; // Value may be from 25-100
+        int length = 100; // Value may be from 106-220
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
+        Grocery grocery = Grocery.GroceryFactory.create(rows, columns);
+        Main.grocerySimulator.resetToDefaultConfiguration(grocery);
+        Grocery.configureDefaultIOS();
+        grocery.copyDefaultToIOS();
+//        Grocery.configureDefaultInteractionTypeChances();
+//        grocery.copyDefaultToInteractionTypeChances();
     }
 
     @FXML
@@ -88,18 +100,18 @@ public class GroceryScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
-
-        int width = 60; // Value may be from 25-100
-        int length = 100; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
-        Grocery grocery = Grocery.GroceryFactory.create(rows, columns);
-        initializeGrocery(grocery);
-        setElements();
+        if (!validateParameters()){
+            Grocery grocery = Main.grocerySimulator.getGrocery();
+            this.configureParameters(grocery);
+            grocery.convertIOSToChances();
+            initializeGrocery(grocery);
+            setElements();
+            playButton.setDisable(false);
+            disableEdits();
+        }
     }
 
     public void initializeGrocery(Grocery grocery) {
-        Main.grocerySimulator.resetToDefaultConfiguration(grocery);
         GroceryGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.grocerySimulator.getGrocery().getRows();
         mapGrocery();
         Main.grocerySimulator.spawnInitialAgents(grocery);
@@ -370,12 +382,13 @@ public class GroceryScreenController extends ScreenController {
         Main.grocerySimulator.reset();
         GroceryAgent.clearGroceryAgentCounts();
         clearGrocery(Main.grocerySimulator.getGrocery());
-        Main.universitySimulator.spawnInitialAgents(Main.universitySimulator.getUniversity());
+        Main.grocerySimulator.spawnInitialAgents(Main.grocerySimulator.getGrocery());
         drawGroceryViewForeground(Main.grocerySimulator.getGrocery(), false); // Redraw the canvas
         if (Main.grocerySimulator.isRunning()) { // If the simulator is running, stop it
             playAction();
             playButton.setSelected(false);
         }
+        enableEdits();
     }
 
     public static void clearGrocery(Grocery grocery) {
@@ -393,24 +406,58 @@ public class GroceryScreenController extends ScreenController {
     @Override
     protected void closeAction() {
     }
+    public void disableEdits(){
+        nonverbalMean.setDisable(true);
+        nonverbalStdDev.setDisable(true);
+        cooperativeMean.setDisable(true);
+        cooperativeStdDev.setDisable(true);
+        exchangeMean.setDisable(true);
+        exchangeStdDev.setDisable(true);
+        fieldOfView.setDisable(true);
+        maxFamily.setDisable(true);
+        maxAlone.setDisable(true);
+        maxCurrentFamily.setDisable(true);
+        maxCurrentAlone.setDisable(true);
+
+        resetToDefaultButton.setDisable(true);
+        configureIOSButton.setDisable(true);
+        editInteractionButton.setDisable(true);
+    }
+    public void enableEdits(){
+        nonverbalMean.setDisable(false);
+        nonverbalStdDev.setDisable(false);
+        cooperativeMean.setDisable(false);
+        cooperativeStdDev.setDisable(false);
+        exchangeMean.setDisable(false);
+        exchangeStdDev.setDisable(false);
+        fieldOfView.setDisable(false);
+        maxFamily.setDisable(false);
+        maxAlone.setDisable(false);
+        maxCurrentFamily.setDisable(false);
+        maxCurrentAlone.setDisable(false);
+
+        resetToDefaultButton.setDisable(false);
+        configureIOSButton.setDisable(false);
+        editInteractionButton.setDisable(false);
+    }
 
     public void resetToDefault(){
-        nonverbalMean.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalMean));
-        nonverbalStdDev.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalStdDev));
-        cooperativeMean.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeMean));
-        cooperativeStdDev.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeStdDev));
-        exchangeMean.setText(Integer.toString(UniversityAgentMovement.defaultExchangeMean));
-        exchangeStdDev.setText(Integer.toString(UniversityAgentMovement.defaultExchangeStdDev));
-        fieldOfView.setText(Integer.toString(UniversityAgentMovement.defaultFieldOfView));
-        maxStudents.setText(Integer.toString(UniversitySimulator.defaultMaxStudents));
-        maxProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxProfessors));
-        maxCurrentStudents.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentStudents));
-        maxCurrentProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentProfessors));
+        nonverbalMean.setText(Integer.toString(GroceryAgentMovement.defaultNonverbalMean));
+        nonverbalStdDev.setText(Integer.toString(GroceryAgentMovement.defaultNonverbalStdDev));
+        cooperativeMean.setText(Integer.toString(GroceryAgentMovement.defaultCooperativeMean));
+        cooperativeStdDev.setText(Integer.toString(GroceryAgentMovement.defaultCooperativeStdDev));
+        exchangeMean.setText(Integer.toString(GroceryAgentMovement.defaultExchangeMean));
+        exchangeStdDev.setText(Integer.toString(GroceryAgentMovement.defaultExchangeStdDev));
+        fieldOfView.setText(Integer.toString(GroceryAgentMovement.defaultFieldOfView));
+        maxFamily.setText(Integer.toString(GrocerySimulator.defaultMaxFamily));
+        maxAlone.setText(Integer.toString(GrocerySimulator.defaultMaxAlone));
+        maxCurrentFamily.setText(Integer.toString(GrocerySimulator.defaultMaxCurrentFamily));
+        maxCurrentAlone.setText(Integer.toString(GrocerySimulator.defaultMaxCurrentAlone));
     }
 
     public void openIOSLevels(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityConfigureIOS.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/GroceryConfigureIOS.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -424,7 +471,7 @@ public class GroceryScreenController extends ScreenController {
     }
     public void openEditInteractions(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityEditInteractions.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/GroceryEditInteractions.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -436,18 +483,18 @@ public class GroceryScreenController extends ScreenController {
             e.printStackTrace();
         }
     }
-    public void configureParameters(University university){
-        university.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
-        university.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
-        university.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
-        university.setCooperativeStdDev(Integer.parseInt(cooperativeStdDev.getText()));
-        university.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
-        university.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
-        university.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
-        university.setMAX_STUDENTS(Integer.parseInt(maxStudents.getText()));
-        university.setMAX_PROFESSORS(Integer.parseInt(maxProfessors.getText()));
-        university.setMAX_CURRENT_STUDENTS(Integer.parseInt(maxCurrentStudents.getText()));
-        university.setMAX_CURRENT_PROFESSORS(Integer.parseInt(maxCurrentProfessors.getText()));
+    public void configureParameters(Grocery grocery){
+        grocery.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
+        grocery.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
+        grocery.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
+        grocery.setCooperativeStdDev(Integer.parseInt(cooperativeStdDev.getText()));
+        grocery.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
+        grocery.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
+        grocery.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
+        grocery.setMAX_FAMILY(Integer.parseInt(maxFamily.getText()));
+        grocery.setMAX_ALONE(Integer.parseInt(maxAlone.getText()));
+        grocery.setMAX_CURRENT_FAMILY(Integer.parseInt(maxCurrentFamily.getText()));
+        grocery.setMAX_CURRENT_ALONE(Integer.parseInt(maxCurrentAlone.getText()));
     }
 
     public boolean validateParameters(){
@@ -455,8 +502,8 @@ public class GroceryScreenController extends ScreenController {
                 && Integer.parseInt(cooperativeMean.getText()) >= 0 && Integer.parseInt(cooperativeStdDev.getText()) >= 0
                 && Integer.parseInt(exchangeMean.getText()) >= 0 && Integer.parseInt(exchangeStdDev.getText()) >= 0
                 && Integer.parseInt(fieldOfView.getText()) >= 0 && Integer.parseInt(fieldOfView.getText()) <= 360
-                && Integer.parseInt(maxStudents.getText()) >= 0 && Integer.parseInt(maxProfessors.getText()) >= 0
-                && Integer.parseInt(maxCurrentStudents.getText()) >= 0 && Integer.parseInt(maxCurrentProfessors.getText()) >= 0;
+                && Integer.parseInt(maxFamily.getText()) >= 0 && Integer.parseInt(maxAlone.getText()) >= 0
+                && Integer.parseInt(maxCurrentFamily.getText()) >= 0 && Integer.parseInt(maxCurrentAlone.getText()) >= 0;
         if (!validParameters){
             Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
             Label label = new Label("Failed to initialize. Please make sure all values are greater than 0, and field of view is not greater than 360 degrees");

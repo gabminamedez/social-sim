@@ -108,7 +108,7 @@ public class MallSimulator extends Simulator {
     }
 
     public void spawnInitialAgents(Mall mall) {
-        mall.createInitialAgentDemographics(MAX_FAMILY, MAX_FRIENDS, MAX_COUPLE, MAX_ALONE);
+        mall.createInitialAgentDemographics(getMall().getMAX_FAMILY(), mall.getMAX_FRIENDS(), getMall().getMAX_COUPLE(), getMall().getMAX_ALONE());
 
         MallAgent guard = mall.getAgents().get(0);
         guard.setAgentMovement(new MallAgentMovement(mall.getPatch(33, 2), guard, null, 1.27, mall.getPatch(33, 2).getPatchCenterCoordinates(), -1, guard.getTeam()));
@@ -1046,7 +1046,7 @@ public class MallSimulator extends Simulator {
         int type = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5);
 
         if (CHANCE > spawnChance) {
-            if (type == 0 && totalFamilyCount < MAX_FAMILY) {
+            if (type == 0 && totalFamilyCount < getMall().getMAX_FAMILY()) {
                 if (mall.getUnspawnedFamilyAgents().size() > 0){
                     int randNum = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(mall.getUnspawnedFamilyAgents().size());
                     MallAgent leaderAgent = mall.getUnspawnedFamilyAgents().get(randNum);
@@ -1085,7 +1085,7 @@ public class MallSimulator extends Simulator {
                     totalFamilyCount++;
                 }
             }
-            else if (type == 1 && totalFriendsCount < MAX_FRIENDS) {
+            else if (type == 1 && totalFriendsCount < mall.getMAX_FRIENDS()) {
                 if (mall.getUnspawnedFriendsAgents().size() > 0){
                     int randNum = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(mall.getUnspawnedFriendsAgents().size());
                     MallAgent leaderAgent = mall.getUnspawnedFriendsAgents().get(randNum);
@@ -1118,7 +1118,7 @@ public class MallSimulator extends Simulator {
                 }
 
             }
-            else if (type == 2 && totalCoupleCount < MAX_COUPLE) {
+            else if (type == 2 && totalCoupleCount < getMall().getMAX_COUPLE()) {
                 if (mall.getUnspawnedCoupleAgents().size() > 0){
                     int randNum = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(mall.getUnspawnedCoupleAgents().size());
                     MallAgent leaderAgent = mall.getUnspawnedCoupleAgents().get(randNum);
@@ -1143,7 +1143,7 @@ public class MallSimulator extends Simulator {
                     totalCoupleCount++;
                 }
             }
-            else if (type == 3 && totalAloneCount < MAX_ALONE) {
+            else if (type == 3 && totalAloneCount < getMall().getMAX_ALONE()) {
                 if (mall.getUnspawnedAloneAgents().size() > 0){
                     MallAgent leaderAgent = mall.getUnspawnedAloneAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(mall.getUnspawnedAloneAgents().size()));
                     leaderAgent.setAgentMovement(new MallAgentMovement(spawner1.getPatch(), leaderAgent, null, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick, leaderAgent.getTeam()));

@@ -1,9 +1,11 @@
 package com.socialsim.controller.grocery.controls;
 
 import com.socialsim.controller.Main;
-import com.socialsim.model.core.agent.university.UniversityAgent;
-import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.agent.grocery.GroceryAgent;
+import com.socialsim.model.core.environment.grocery.Grocery;
+import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -29,21 +31,61 @@ public class GroceryIOSController {
     @FXML
     private void initialize() {
         //TODO: Create columns of IOS levels
-        University university = Main.universitySimulator.getUniversity();
-        for (int i = 0; i < UniversityAgent.Persona.values().length + 1; i++) {
-            for (int j = 0; j < UniversityAgent.Persona.values().length + 1; j++) {
+        Grocery grocery = Main.grocerySimulator.getGrocery();
+
+        System.out.println(Grocery.defaultIOS.equals(grocery.getIOSScales()));
+        int otherCtr = 0;
+        boolean other = false;
+        for (int i = 0; i < GroceryAgent.Persona.values().length + 1; i++) { // column
+            for (int j = 0; j < GroceryAgent.Persona.values().length + 1; j++) { // row
                 if (i == 0 || j == 0){
                     if (i == 0 && j == 0)
                         gridPane.add(new Label(""), i, j);
                     else{
-                        if (i == 0)
-                            gridPane.add(new Label(UniversityAgent.Persona.values()[j - 1].name()), i, j);
-                        else
-                            gridPane.add(new Label(UniversityAgent.Persona.values()[i - 1].name()), i, j);
+                        if (i == 0){
+                            gridPane.add(new Label(GroceryAgent.Persona.values()[j - 1].name()), i + otherCtr, j);
+                        }
+                        else{
+                            if (other){
+                                gridPane.add(new Label(GroceryAgent.Persona.values()[i - 1].name() + "_OTHER"), i + otherCtr, j);
+                            }
+                            else{
+                                gridPane.add(new Label(GroceryAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
+                            }
+
+                        }
                     }
                 }
                 else{
-                    gridPane.add(new TextField(university.getIOSScales().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
+                    if (other){
+                        if ((GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER)
+                                || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER)
+                                || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER)){
+                            gridPane.add(new TextField(grocery.getIOSScales().get(j - 1).get(i).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                        }
+                        else{
+//                            System.out.println(i + " " + j + " " + GroceryAgent.Persona.values()[i - 1] + " " + GroceryAgent.Persona.values()[j - 1]);
+                            TextField tf = new TextField("");
+                            tf.setDisable(true);
+                            gridPane.add(tf, otherCtr, j);
+                        }
+                    }
+                    else{
+                        System.out.println(grocery.getIOSScales().get(j - 1).get(i - 1).toString().replace("]", "").replace("[", ""));
+                        gridPane.add(new TextField(grocery.getIOSScales().get(j - 1).get(i - 1).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                    }
+                    if (j == GroceryAgent.Persona.values().length && other){
+                        other = false;
+                    }
+                    else if (j == GroceryAgent.Persona.values().length){
+                        if (GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER
+                                || GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER
+                                || GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER){
+                            other = true;
+                            i--;
+                            otherCtr++;
+                        }
+                    }
                 }
             }
         }
@@ -55,11 +97,61 @@ public class GroceryIOSController {
     }
 
     public void resetToDefault(){
-        for (Node node: gridPane.getChildren()){
-            if (node.getClass() == TextField.class){
-                int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
-                if (row > 0 && column > 0)
-                    ((TextField) node).setText(University.defaultIOS.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
+        Group g = (Group) gridPane.getChildren().get(0);
+        gridPane.getChildren().removeAll(gridPane.getChildren());
+        gridPane.getChildren().add(0, g);
+        int otherCtr = 0;
+        boolean other = false;
+        for (int i = 0; i < GroceryAgent.Persona.values().length + 1; i++) { // column
+            for (int j = 0; j < GroceryAgent.Persona.values().length + 1; j++) { // row
+                if (i == 0 || j == 0){
+                    if (i == 0 && j == 0)
+                        gridPane.add(new Label(""), i, j);
+                    else{
+                        if (i == 0){
+                            gridPane.add(new Label(GroceryAgent.Persona.values()[j - 1].name()), i + otherCtr, j);
+                        }
+                        else{
+                            if (other){
+                                gridPane.add(new Label(GroceryAgent.Persona.values()[i - 1].name() + "_OTHER"), i + otherCtr, j);
+                            }
+                            else{
+                                gridPane.add(new Label(GroceryAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
+                            }
+                        }
+                    }
+                }
+                else{
+
+                    if (other){
+                        if ((GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER)
+                                || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER)
+                                || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER)){
+                            gridPane.add(new TextField(Grocery.defaultIOS.get(j - 1).get(i).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                        }
+                        else{
+//                            System.out.println(i + " " + j + " " + GroceryAgent.Persona.values()[i - 1] + " " + GroceryAgent.Persona.values()[j - 1]);
+                            TextField tf = new TextField("");
+                            tf.setDisable(true);
+                            gridPane.add(tf, otherCtr, j);
+                        }
+                    }
+                    else{
+                        gridPane.add(new TextField(Grocery.defaultIOS.get(j - 1).get(i - 1).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                    }
+                    if (j == GroceryAgent.Persona.values().length && other){
+                        other = false;
+                    }
+                    else if (j == GroceryAgent.Persona.values().length){
+                        if (GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER
+                                || GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER
+                                || GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER){
+                            other = true;
+                            i--;
+                            otherCtr++;
+                        }
+                    }
+                }
             }
         }
     }
@@ -68,7 +160,7 @@ public class GroceryIOSController {
         boolean validIOS = false;
 
         for (Node node: gridPane.getChildren()){
-            if (node.getClass() == TextField.class){
+            if (node.getClass() == TextField.class && !node.isDisabled()){
                 validIOS = this.checkValidIOS(((TextField) node).getText());
                 if (!validIOS){
                     break;
@@ -86,16 +178,39 @@ public class GroceryIOSController {
             }
         }
         else{
-            University university = Main.universitySimulator.getUniversity();
-            for (Node node: gridPane.getChildren()){
-                if (node.getClass() == TextField.class){
-                    int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
-                    String s = ((TextField) node).getText();
-                    Integer[] IOSArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
-                    if (row > 0 && column > 0)
-                        university.getIOSScales().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(IOSArr)));
+            System.out.println(Arrays.toString(gridPane.getChildren().toArray()));
+            Grocery grocery = Main.grocerySimulator.getGrocery();
+//            for (Node node: gridPane.getChildren()){
+//                if (node.getClass() == TextField.class){
+//                    int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
+//                    String s = ((TextField) node).getText();
+//                    Integer[] IOSArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+//                    if (row > 0 && column > 0)
+//                        grocery.getIOSScales().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(IOSArr)));
+//                }
+//            }
+            CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> newIOS = new CopyOnWriteArrayList<>();
+            for (int i = 0; i < GroceryAgent.Persona.values().length + 1; i++) { // row
+                if (i > 0)
+                    newIOS.add(new CopyOnWriteArrayList<>());
+                for (int j = 0; j < GroceryAgent.Persona.values().length + 1 + 3; j++) { // column, +3 for 3 OTHER cases
+                    int index = 1 + j * (GroceryAgent.Persona.values().length + 1) + i;
+                    if (index > GroceryAgent.Persona.values().length + 1 && index % (GroceryAgent.Persona.values().length + 1) - 1 != 0){
+                        String s = ((TextField) gridPane.getChildren().get(index)).getText();
+                        if (!s.equals("")){
+                            System.out.println(s);
+                            Integer[] IOSArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+
+                            newIOS.get(i - 1).add(new CopyOnWriteArrayList<>(List.of(IOSArr)));
+                        }
+                    }
+                    else{
+                        System.out.println(index);
+                        System.out.println(gridPane.getChildren().get(index));
+                    }
                 }
             }
+            grocery.setIOSScales(newIOS);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             Label label = new Label("IOS Levels successfully parsed.");
             label.setWrapText(true);
@@ -119,5 +234,23 @@ public class GroceryIOSController {
         else{
             return false;
         }
+    }
+
+    private Label getLabelFromGridPane(GridPane gridPane, int col, int row) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return (Label) node;
+            }
+        }
+        return null;
+    }
+
+    private TextField getTextFieldFromGridPane(GridPane gridPane, int col, int row) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return (TextField) node;
+            }
+        }
+        return null;
     }
 }
