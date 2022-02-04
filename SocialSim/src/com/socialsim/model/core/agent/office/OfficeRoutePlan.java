@@ -192,6 +192,11 @@ public class OfficeRoutePlan {
             routePlan.add(new OfficeState(OfficeState.Name.GOING_TO_SECURITY, this, agent, actions));
 
             actions = new ArrayList<>();
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.
+                    getChairs().get(4).getAttractors().get(0).getPatch()));
+            routePlan.add(new OfficeState(OfficeState.Name.WORKING, this, agent, actions));
+
+            actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, office.
                     getChairs().get(4).getAttractors().get(0).getPatch()));
             actions.add(new OfficeAction(OfficeAction.Name.EAT_LUNCH, 180, 360));
