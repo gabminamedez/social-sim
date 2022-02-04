@@ -89,7 +89,7 @@ public class Grocery extends Environment {
         CopyOnWriteArrayList<GroceryAgent> unspawned = new CopyOnWriteArrayList<>();
         ArrayList<GroceryAgent.Persona> family = new ArrayList<>(Arrays.asList(GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, GroceryAgent.Persona.DUO_FAMILY_CUSTOMER));
         for (GroceryAgent agent: getAgents()){
-            if (agent.getAgentMovement() == null && family.contains(agent.getPersona()) && agent.isLeader())
+            if (agent.getAgentMovement() == null && family.contains(agent.getPersona()))
                 unspawned.add(agent);
         }
         return unspawned;
@@ -258,99 +258,99 @@ public class Grocery extends Environment {
 
     public void createInitialAgentDemographics(int MAX_FAMILY, int MAX_ALONE){
         //Guards
-        GroceryAgent guard1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, null, null, null, false, true);
+        GroceryAgent guard1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, GroceryAgent.Persona.GUARD_ENTRANCE, null, null, false, true);
         this.getAgents().add(guard1);
-        GroceryAgent guard2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, null, null, null, false, true);
+        GroceryAgent guard2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, GroceryAgent.Persona.GUARD_EXIT, null, null, false, true);
         this.getAgents().add(guard2);
 
         //Cashiers
-        GroceryAgent cashier1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, false, true);
+        GroceryAgent cashier1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier1);
-        GroceryAgent cashier2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, false, true);
+        GroceryAgent cashier2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier2);
-        GroceryAgent cashier3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, false, true);
+        GroceryAgent cashier3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier3);
-        GroceryAgent cashier4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, false, true);
+        GroceryAgent cashier4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier4);
-        GroceryAgent cashier5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, false, true);
+        GroceryAgent cashier5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier5);
-        GroceryAgent cashier6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, false, true);
+        GroceryAgent cashier6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier6);
-        GroceryAgent cashier7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, false, true);
+        GroceryAgent cashier7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier7);
-        GroceryAgent cashier8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, null, null, null, false, true);
+        GroceryAgent cashier8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier8);
 
         //Baggers
-        GroceryAgent bagger1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, false, true);
+        GroceryAgent bagger1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger1);
-        GroceryAgent bagger2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, false, true);
+        GroceryAgent bagger2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger2);
-        GroceryAgent bagger3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, false, true);
+        GroceryAgent bagger3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger3);
-        GroceryAgent bagger4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, false, true);
+        GroceryAgent bagger4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger4);
-        GroceryAgent bagger5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, false, true);
+        GroceryAgent bagger5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger5);
-        GroceryAgent bagger6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, false, true);
+        GroceryAgent bagger6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger6);
-        GroceryAgent bagger7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, false, true);
+        GroceryAgent bagger7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger7);
-        GroceryAgent bagger8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, null, null, null, false, true);
+        GroceryAgent bagger8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger8);
 
         //Service
-        GroceryAgent service1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, null, null, null, false, true);
+        GroceryAgent service1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, GroceryAgent.Persona.CUSTOMER_SERVICE, null, null, false, true);
         this.getAgents().add(service1);
-        GroceryAgent service2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, null, null, null, false, true);
+        GroceryAgent service2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, GroceryAgent.Persona.CUSTOMER_SERVICE, null, null, false, true);
         this.getAgents().add(service2);
-        GroceryAgent service3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, null, null, null, false, true);
+        GroceryAgent service3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, GroceryAgent.Persona.CUSTOMER_SERVICE, null, null, false, true);
         this.getAgents().add(service3);
 
         //Staff Food
-        GroceryAgent food1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, false, true);
+        GroceryAgent food1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food1);
-        GroceryAgent food2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, false, true);
+        GroceryAgent food2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food2);
-        GroceryAgent food3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, false, true);
+        GroceryAgent food3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food3);
-        GroceryAgent food4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, false, true);
+        GroceryAgent food4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food4);
-        GroceryAgent food5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, false, true);
+        GroceryAgent food5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food5);
-        GroceryAgent food6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, false, true);
+        GroceryAgent food6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food6);
-        GroceryAgent food7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, false, true);
+        GroceryAgent food7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food7);
-        GroceryAgent food8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, null, null, null, false, true);
+        GroceryAgent food8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food8);
 
         //Butcher
-        GroceryAgent butcher1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BUTCHER, null, null, null, false, true);
+        GroceryAgent butcher1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BUTCHER, GroceryAgent.Persona.BUTCHER, null, null, false, true);
         this.getAgents().add(butcher1);
-        GroceryAgent butcher2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BUTCHER, null, null, null, false, true);
+        GroceryAgent butcher2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BUTCHER, GroceryAgent.Persona.BUTCHER, null, null, false, true);
         this.getAgents().add(butcher2);
 
         //Staff Aisle
-        GroceryAgent aisle1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, false, true);
+        GroceryAgent aisle1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle1);
-        GroceryAgent aisle2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, false, true);
+        GroceryAgent aisle2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle2);
-        GroceryAgent aisle3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, false, true);
+        GroceryAgent aisle3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle3);
-        GroceryAgent aisle4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, false, true);
+        GroceryAgent aisle4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle4);
-        GroceryAgent aisle5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, false, true);
+        GroceryAgent aisle5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle5);
-        GroceryAgent aisle6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, false, true);
+        GroceryAgent aisle6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle6);
-        GroceryAgent aisle7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, false, true);
+        GroceryAgent aisle7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle7);
-        GroceryAgent aisle8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, false, true);
+        GroceryAgent aisle8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle8);
-        GroceryAgent aisle9 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, false, true);
+        GroceryAgent aisle9 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle9);
-        GroceryAgent aisle10 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, null, null, null, false, true);
+        GroceryAgent aisle10 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle10);
 
         //Family Customers

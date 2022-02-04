@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class MallAgent extends Agent {
 
-    private int idCtr = 0;
+    private static int idCtr = 0;
     public static int agentCount = 0;
     public static int patronCount = 0;
     public static int staffStoreSalesCount = 0;

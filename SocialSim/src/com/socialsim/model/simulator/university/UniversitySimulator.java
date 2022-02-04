@@ -25,6 +25,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UniversitySimulator extends Simulator {
 
+    public static int defaultMaxStudents = 500; //250
+    public static int defaultMaxProfessors = 6;
+    public static int defaultMaxCurrentStudents = 250; //250
+    public static int defaultMaxCurrentProfessors = 6;
+    public static int MAX_STUDENTS; //250
+    public static int MAX_PROFESSORS;
+    public static int MAX_CURRENT_STUDENTS; //250
+    public static int MAX_CURRENT_PROFESSORS;
+
     private University university;
 
     // Simulator variables
@@ -52,10 +61,6 @@ public class UniversitySimulator extends Simulator {
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
     public static int[][] currentPatchCount;
-    public static final int MAX_STUDENTS = 250; //250
-    public static final int MAX_PROFESSORS = 6;
-    public static final int MAX_CURRENT_STUDENTS = 250; //250
-    public static final int MAX_CURRENT_PROFESSORS = 6;
 
     public UniversitySimulator() {
         this.university = null;

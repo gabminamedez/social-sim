@@ -24,6 +24,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class UniversityAgentMovement extends AgentMovement {
 
+    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalStdDev = 1;
+    public static int defaultCooperativeMean = 24;
+    public static int defaultCooperativeStdDev = 12;
+    public static int defaultExchangeMean = 24;
+    public static int defaultExchangeStdDev = 12;
+    public static int defaultFieldOfView = 30;
+
     private final UniversityAgent parent;
     private final Coordinates position; // Denotes the position of the agent
     private final University university;
@@ -98,22 +106,25 @@ public class UniversityAgentMovement extends AgentMovement {
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
+        this.currentPatch = spawnPatch; // Add this agent to the spawn patch
+        this.currentPatch.getAgents().add(parent);
+        this.university = (University) currentPatch.getEnvironment();
+
         if (parent.getInOnStart()) { // All inOnStart agents will face the south by default
             this.proposedHeading = Math.toRadians(270.0);
             this.heading = Math.toRadians(270.0);
             this.previousHeading = Math.toRadians(270.0);
-            this.fieldOfViewAngle = Math.toRadians(30.0);
+            this.fieldOfViewAngle = this.university.getFieldOfView();
         }
         else { // All newly generated agents will face the north by default
             this.proposedHeading = Math.toRadians(90.0);
             this.heading = Math.toRadians(90.0);
             this.previousHeading = Math.toRadians(90.0);
-            this.fieldOfViewAngle = Math.toRadians(30.0);
+            System.out.println(getUniversity());
+            System.out.println(getUniversity().getFieldOfView());
+            this.fieldOfViewAngle = this.university.getFieldOfView();
         }
 
-        this.currentPatch = spawnPatch; // Add this agent to the spawn patch
-        this.currentPatch.getAgents().add(parent);
-        this.university = (University) currentPatch.getEnvironment();
         this.currentPatchField = null;
         this.tickEntered = (int) tickEntered;
         this.ticksUntilFullyAccelerated = 10; // Set the agent's time until it fully accelerates
@@ -1810,8 +1821,8 @@ public class UniversityAgentMovement extends AgentMovement {
     public void rollAgentInteraction(UniversityAgent agent){
         //TODO: Statistics in interaction
 
-        double IOS1 = university.getIOS().get(this.getParent().getId()).get(agent.getId());
-        double IOS2 = university.getIOS().get(agent.getId()).get(this.getParent().getId());
+        double IOS1 = university.getIOS().get(this.getParent().getPersona().ordinal()).get(agent.getPersona().ordinal());
+        double IOS2 = university.getIOS().get(agent.getPersona().ordinal()).get(this.getParent().getPersona().ordinal());
         // roll if possible interaction
         double CHANCE1 = Simulator.roll();
         double CHANCE2 = Simulator.roll();
@@ -1821,36 +1832,39 @@ public class UniversityAgentMovement extends AgentMovement {
             CHANCE1 = Simulator.roll() * IOS1;
             CHANCE2 = Simulator.roll() * IOS2;
             double CHANCE = (CHANCE1 + CHANCE2) / 2;
-            double CHANCE_NONVERBAL1 = UniversityAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
-                    CHANCE_COOPERATIVE1 = UniversityAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
-                    CHANCE_EXCHANGE1 = UniversityAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
-                    CHANCE_NONVERBAL2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
-                    CHANCE_COOPERATIVE2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
-                    CHANCE_EXCHANGE2 = UniversityAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
+            double CHANCE_NONVERBAL1 = ((double) university.getInteractionTypeChances().get(this.getParent().getPersonaActionGroup().getID()).get(this.getParent().getAgentMovement().getCurrentAction().getName().getID()).get(0)) / 100,
+                    CHANCE_COOPERATIVE1 = ((double) university.getInteractionTypeChances().get(this.getParent().getPersonaActionGroup().getID()).get(this.getParent().getAgentMovement().getCurrentAction().getName().getID()).get(1)) / 100,
+                    CHANCE_EXCHANGE1 = ((double) university.getInteractionTypeChances().get(this.getParent().getPersonaActionGroup().getID()).get(this.getParent().getAgentMovement().getCurrentAction().getName().getID()).get(2)) / 100,
+                    CHANCE_NONVERBAL2 = ((double) university.getInteractionTypeChances().get(agent.getPersonaActionGroup().getID()).get(agent.getAgentMovement().getCurrentAction().getName().getID()).get(0)) / 100,
+                    CHANCE_COOPERATIVE2 = ((double) university.getInteractionTypeChances().get(agent.getPersonaActionGroup().getID()).get(agent.getAgentMovement().getCurrentAction().getName().getID()).get(1)) / 100,
+                    CHANCE_EXCHANGE2 = ((double) university.getInteractionTypeChances().get(agent.getPersonaActionGroup().getID()).get(agent.getAgentMovement().getCurrentAction().getName().getID()).get(2)) / 100;
             if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
+//                System.out.println(CHANCE + " Nonverbal");
                 UniversitySimulator.currentNonverbalCount++;
                 this.getParent().getAgentMovement().setInteractionType(InteractionType.NON_VERBAL);
                 agent.getAgentMovement().setInteractionType(InteractionType.NON_VERBAL);
-                interactionStdDeviation = 1;
-                interactionMean = 2;
+                interactionMean = getUniversity().getNonverbalMean();
+                interactionStdDeviation = getUniversity().getNonverbalStdDev();
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
+//                System.out.println(CHANCE + " Cooperative");
                 UniversitySimulator.currentCooperativeCount++;
                 this.getParent().getAgentMovement().setInteractionType(InteractionType.COOPERATIVE);
                 agent.getAgentMovement().setInteractionType(InteractionType.COOPERATIVE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
+                interactionMean = getUniversity().getCooperativeMean();
+                interactionStdDeviation = getUniversity().getCooperativeStdDev();
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
+//                System.out.println(CHANCE + " Exchange");
                 UniversitySimulator.currentExchangeCount++;
                 this.getParent().getAgentMovement().setInteractionType(InteractionType.EXCHANGE);
                 agent.getAgentMovement().setInteractionType(InteractionType.EXCHANGE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
+                interactionMean = getUniversity().getExchangeMean();
+                interactionStdDeviation = getUniversity().getExchangeStdDev();
             }
             else{
                 return;
@@ -1909,6 +1923,7 @@ public class UniversityAgentMovement extends AgentMovement {
         if (this.interactionDuration == 0){
             this.isInteracting = false;
             this.interactionType = null;
+            System.out.println("Done Interacting");
         }
         // -- interaction
         else{

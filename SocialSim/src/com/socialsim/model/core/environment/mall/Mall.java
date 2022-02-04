@@ -54,6 +54,7 @@ public class Mall extends Environment {
         super(rows, columns);
 
         this.agents = new CopyOnWriteArrayList<>();
+        this.IOS = new CopyOnWriteArrayList<>();
 
         this.amenityPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
         this.agentPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
@@ -89,7 +90,7 @@ public class Mall extends Environment {
         CopyOnWriteArrayList<MallAgent> unspawned = new CopyOnWriteArrayList<>();
         ArrayList<MallAgent.Persona> family = new ArrayList<>(Arrays.asList(MallAgent.Persona.ERRAND_FAMILY, MallAgent.Persona.LOITER_FAMILY));
         for (MallAgent agent: getAgents()){
-            if (agent.getAgentMovement() == null && family.contains(agent.getPersona()) && agent.isLeader())
+            if (agent.getAgentMovement() == null && family.contains(agent.getPersona()))
                 unspawned.add(agent);
         }
         return unspawned;
@@ -99,7 +100,7 @@ public class Mall extends Environment {
         CopyOnWriteArrayList<MallAgent> unspawned = new CopyOnWriteArrayList<>();
         ArrayList<MallAgent.Persona> friends = new ArrayList<>(Arrays.asList(MallAgent.Persona.ERRAND_FRIENDS, MallAgent.Persona.LOITER_FRIENDS));
         for (MallAgent agent: getAgents()){
-            if (agent.getAgentMovement() == null && friends.contains(agent.getPersona()) && agent.isLeader())
+            if (agent.getAgentMovement() == null && friends.contains(agent.getPersona()))
                 unspawned.add(agent);
         }
         return unspawned;

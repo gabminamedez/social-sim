@@ -10,7 +10,6 @@ public class GroceryAction {
         GOING_TO_SECURITY_QUEUE(),
         GO_THROUGH_SCANNER(),
 
-        GO_TO_CART_AREA(),
         GO_TO_AISLE(),
         GO_TO_PRODUCT_WALL(),
         GO_TO_FROZEN(),
@@ -20,9 +19,8 @@ public class GroceryAction {
         GO_TO_CUSTOMER_SERVICE(),
         GO_TO_FOOD_STALL(),
 
-        GET_CART,
+        GET_CART(),
 
-        FIND_PRODUCTS(),
         CHECK_PRODUCTS(),
         FOLLOW_LEADER_SHOP(),
 
@@ -39,6 +37,7 @@ public class GroceryAction {
 
         QUEUE_FOOD(),
         BUY_FOOD(),
+        TALK_TO_STAFF_FOOD(),
         FOLLOW_LEADER_EAT(),
         FIND_SEAT_FOOD_COURT(),
         EATING_FOOD(),

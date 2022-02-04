@@ -1871,8 +1871,8 @@ public class OfficeAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.COOPERATIVE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
+                interactionStdDeviation = 12;
+                interactionMean = 36;
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
                 OfficeSimulator.currentExchangeCount++;
@@ -1880,8 +1880,8 @@ public class OfficeAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.EXCHANGE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
+                interactionStdDeviation = 12;
+                interactionMean = 30;
             }
             else{
                 return;
