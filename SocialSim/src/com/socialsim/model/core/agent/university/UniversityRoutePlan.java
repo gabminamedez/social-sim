@@ -16,9 +16,9 @@ public class UniversityRoutePlan {
     private ArrayList<UniversityState> routePlan;
     private boolean fromStudying, fromClass, fromLunch;
     private static final int MAX_CLASSES = 6;
-    private static final int MAX_CLASSROOMS = 5;
-    private static int[][] CLASSROOM_SIZES_STUDENT = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
-    private static int[][] CLASSROOM_SIZES_PROF = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
+    private static final int MAX_CLASSROOMS = 6;
+    private static int CLASSROOM_SIZES_STUDENT[][] = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
+    private static int CLASSROOM_SIZES_PROF[][] = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
     private double UrgentCtr = -2;
 
     //Chances of INT Y1-Y4
@@ -42,7 +42,7 @@ public class UniversityRoutePlan {
     public static final double PROF_CHANCE_WANDERING_AROUND = 0.80, PROF_CHANCE_GOING_TO_STUDY = 0.10,
             PROF_NEED_BATHROOM_NO_CLASSES = 0.10, PROF_NEEDS_DRINK_NO_CLASSES = 0,
             PROF_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, PROF_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
-  
+    public static final double THROW_CHANCE = 0.02;
     public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch, int tickEntered) {
         this.routePlan = new ArrayList<>();
         //List<UniversityState> routePlan = new ArrayList<>();
@@ -70,6 +70,8 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.GOING_TO_SECURITY_QUEUE));
             actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2));
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
+
+
 
 //            actions = new ArrayList<>();
 //            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_BATHROOM));
@@ -217,7 +219,7 @@ public class UniversityRoutePlan {
             if (agent.getPersona() == UniversityAgent.Persona.INT_Y1_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y2_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y3_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y4_STUDENT) {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
                         if (x < INT_CHANCE_WANDERING_AROUND) {
                             actions = new ArrayList<>();
@@ -251,9 +253,9 @@ public class UniversityRoutePlan {
 
                     actions = new ArrayList<>();
                     actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
-                    int classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                    int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     while (CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID] == 0) {
-                        classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     }
                     CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID]--;
                     int tickClassStart = switch (classes.get(i)) {
@@ -283,7 +285,7 @@ public class UniversityRoutePlan {
             else if (agent.getPersona() == UniversityAgent.Persona.INT_Y1_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y2_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y3_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y4_ORG_STUDENT) {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
                         if (x < INT_ORG_CHANCE_WANDERING_AROUND) {
                             actions = new ArrayList<>();
@@ -317,9 +319,9 @@ public class UniversityRoutePlan {
 
                     actions = new ArrayList<>();
                     actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
-                    int classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                    int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     while (CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID] == 0) {
-                        classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     }
                     CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID]--;
                     int tickClassStart = switch (classes.get(i)) {
@@ -349,7 +351,7 @@ public class UniversityRoutePlan {
             else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_STUDENT) {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
                         if (x < EXT_CHANCE_WANDERING_AROUND) {
                             actions = new ArrayList<>();
@@ -383,9 +385,9 @@ public class UniversityRoutePlan {
 
                     actions = new ArrayList<>();
                     actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
-                    int classroomID = 1 +Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                    int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     while (CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID] == 0) {
-                        classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     }
                     CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID]--;
                     int tickClassStart = switch (classes.get(i)) {
@@ -415,7 +417,7 @@ public class UniversityRoutePlan {
             else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_ORG_STUDENT) {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
                         if (x < EXT_ORG_CHANCE_WANDERING_AROUND) {
                             actions = new ArrayList<>();
@@ -449,9 +451,9 @@ public class UniversityRoutePlan {
 
                     actions = new ArrayList<>();
                     actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
-                    int classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                    int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     while (CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID] == 0) {
-                        classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                     }
                     CLASSROOM_SIZES_STUDENT[classes.get(i)][classroomID]--;
                     int tickClassStart = switch (classes.get(i)) {
@@ -481,7 +483,7 @@ public class UniversityRoutePlan {
             else {
                 Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
                         if (x < PROF_CHANCE_WANDERING_AROUND) {
                             actions = new ArrayList<>();
@@ -505,24 +507,32 @@ public class UniversityRoutePlan {
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         }
                     }
-
-                    actions = new ArrayList<>();
-                    actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
-                    int classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
-                    while (CLASSROOM_SIZES_PROF[classes.get(i)][classroomID] == 0) {
-                        classroomID = 1 + Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                    int availableClass = 6;
+                    for(int ctr = 0; ctr < MAX_CLASSES; ctr++)
+                    {
+                        if(CLASSROOM_SIZES_PROF[classes.get(i)][ctr] == 0){
+                            availableClass--;
+                        }
                     }
-                    CLASSROOM_SIZES_PROF[classes.get(i)][classroomID]--;
-                    int tickClassStart = switch (classes.get(i)) {
-                        case 0 -> 720; case 1 -> 1980; case 2 -> 3240; case 3 -> 4500; case 4 -> 5760; default -> 7020;
-                    };
-                    routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, tickClassStart, classroomID, actions));
-                    actions = new ArrayList<>();
-                    actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, 150));
-                    routePlan.add(new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent, actions));
-                    actions = new ArrayList<>();
-                    actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
-                    routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent, actions));
+                    if(availableClass>0){
+                        int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        while (CLASSROOM_SIZES_PROF[classes.get(i)][classroomID] == 0) {
+                            classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
+                        }
+                        CLASSROOM_SIZES_PROF[classes.get(i)][classroomID]--;
+                        int tickClassStart = switch (classes.get(i)) {
+                            case 0 -> 720; case 1 -> 1980; case 2 -> 3240; case 3 -> 4500; case 4 -> 5760; default -> 7020;
+                        };
+                        actions = new ArrayList<>();
+                        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CLASSROOM));
+                        routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_CLASS_PROFESSOR, this, agent, tickClassStart, classroomID, actions));
+                        actions = new ArrayList<>();
+                        actions.add(new UniversityAction(UniversityAction.Name.SIT_PROFESSOR_TABLE, 150));
+                        routePlan.add(new UniversityState(UniversityState.Name.WAIT_FOR_CLASS_PROFESSOR, this, agent, actions));
+                        actions = new ArrayList<>();
+                        actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
+                        routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent, actions));
+                    }
 
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
@@ -600,7 +610,12 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK,12));
             return new UniversityState(UniversityState.Name.NEEDS_BATHROOM,this,agent,actions);
         }
-        else //TODO: Fountain add urgent
+        else if(s.equals("TRASH")){
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_TRASH,3));
+            return new UniversityState(UniversityState.Name.THROW_TRASH, this, agent, actions);
+        }
+        else //DRINK
         {
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_DRINKING_FOUNTAIN));
