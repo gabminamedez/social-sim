@@ -5,6 +5,7 @@ import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.university.graphics.UniversityGraphicsController;
 import com.socialsim.controller.university.graphics.amenity.mapper.*;
 import com.socialsim.model.core.agent.university.UniversityAgent;
+import com.socialsim.model.core.agent.university.UniversityAgentMovement;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.core.environment.generic.Patch;
@@ -14,16 +15,23 @@ import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import javax.imageio.plugins.tiff.BaselineTIFFTagSet;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class UniversityScreenController extends ScreenController {
 
@@ -46,6 +54,21 @@ public class UniversityScreenController extends ScreenController {
     @FXML private ToggleButton playButton;
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
+    @FXML private Tab parameters;
+    @FXML private Button resetToDefaultButton;
+    @FXML private TextField nonverbalMean;
+    @FXML private TextField nonverbalStdDev;
+    @FXML private TextField cooperativeMean;
+    @FXML private TextField cooperativeStdDev;
+    @FXML private TextField exchangeMean;
+    @FXML private TextField exchangeStdDev;
+    @FXML private TextField maxStudents;
+    @FXML private TextField maxProfessors;
+    @FXML private TextField maxCurrentStudents;
+    @FXML private TextField maxCurrentProfessors;
+    @FXML private TextField fieldOfView;
+    @FXML private Button configureIOSButton;
+    @FXML private Button editInteractionButton;
 
     private final double CANVAS_SCALE = 0.7;
 
@@ -61,6 +84,19 @@ public class UniversityScreenController extends ScreenController {
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             SimulationTime.SLEEP_TIME_MILLISECONDS.set((int) (1.0 / newVal.intValue() * 1000));
         });
+        resetToDefault();
+        playButton.setDisable(true);
+
+        int width = 60; // Value may be from 25-100
+        int length = 120; // Value may be from 106-220
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
+        University university = University.UniversityFactory.create(rows, columns);
+        Main.universitySimulator.resetToDefaultConfiguration(university);
+        University.configureDefaultIOS();
+        university.copyDefaultToIOS();
+        University.configureDefaultInteractionTypeChances();
+        university.copyDefaultToInteractionTypeChances();
     }
 
     @FXML
@@ -69,18 +105,16 @@ public class UniversityScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
-
-        int width = 60; // Value may be from 25-100
-        int length = 130; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
-        University university = University.UniversityFactory.create(rows, columns);
+        University university = Main.universitySimulator.getUniversity();
+        this.configureParameters(university);
+        university.convertIOSToChances();
         initializeUniversity(university);
         setElements();
+        playButton.setDisable(false);
+        disableEdits();
     }
 
     public void initializeUniversity(University university) {
-        Main.universitySimulator.resetToDefaultConfiguration(university);
         UniversityGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.universitySimulator.getUniversity().getRows();
         mapUniversity();
         Main.universitySimulator.spawnInitialAgents(university);
@@ -99,7 +133,7 @@ public class UniversityScreenController extends ScreenController {
                     if (i < 24 && (j < 60 || j > 71)) {
                         wallPatches.add(university.getPatch(i, j));
                     }
-                    else if (i > 35 && (j >= 20 && j <= 119 )) {
+                    else if (i > 35 && (j >= 20/* && j <= 119 */)) {
                         wallPatches.add(university.getPatch(i, j));
                     }
                 }
@@ -127,7 +161,7 @@ public class UniversityScreenController extends ScreenController {
 
         List<Patch> cafeteriaPatches = new ArrayList<>();
         for (int i = 3; i < 24; i++) {
-            for (int j = 100; j < 130; j++) {
+            for (int j = 96; j < 120; j++) {
                 cafeteriaPatches.add(university.getPatch(i, j));
             }
         }
@@ -200,8 +234,8 @@ public class UniversityScreenController extends ScreenController {
 
         List<Patch> studyAreaPatches = new ArrayList<>();
         for (int i = 3; i < 24; i++) {
-            for (int j = 75; j < 95; j++) {
-                if (i != 23 || (j >= 83 && j <= 86)) {
+            for (int j = 74; j < 94; j++) {
+                if (i != 23 || (j >= 82 && j <= 85)) {
                     studyAreaPatches.add(university.getPatch(i, j));
                 }
             }
@@ -212,10 +246,6 @@ public class UniversityScreenController extends ScreenController {
         benchRightPatches.add(university.getPatch(43,0));
         benchRightPatches.add(university.getPatch(48,0));
         benchRightPatches.add(university.getPatch(53,0));
-        benchRightPatches.add(university.getPatch(38,120));
-        benchRightPatches.add(university.getPatch(43,120));
-        benchRightPatches.add(university.getPatch(48,120));
-        benchRightPatches.add(university.getPatch(53,120));
         BenchMapper.draw(benchRightPatches, "RIGHT");
 
         List<Patch> benchLeftPatches = new ArrayList<>();
@@ -223,10 +253,6 @@ public class UniversityScreenController extends ScreenController {
         benchLeftPatches.add(university.getPatch(43,19));
         benchLeftPatches.add(university.getPatch(48,19));
         benchLeftPatches.add(university.getPatch(53,19));
-        benchLeftPatches.add(university.getPatch(38,129));
-        benchLeftPatches.add(university.getPatch(43,129));
-        benchLeftPatches.add(university.getPatch(48,129));
-        benchLeftPatches.add(university.getPatch(53,129));
         BenchMapper.draw(benchLeftPatches, "LEFT");
 
         List<Patch> benchDownPatches = new ArrayList<>();
@@ -332,103 +358,6 @@ public class UniversityScreenController extends ScreenController {
                 }
             }
         }
-        //Study Room Chairs
-//        for (int i = 5; i < 18; i++) {
-//            if (i == 5 || i == 6 || i == 8 || i == 9 || i == 13 || i == 14 || i == 16 || i == 17) {
-//                for (int j = 77; j < 84; j++) {
-//                    if (j == 77 || j == 79 || j == 81 || j == 83) {
-//                        chairPatches.add(university.getPatch(i, j));
-//                    }
-//                }
-//            }
-//        }
-//        chairPatches.add(university.getPatch(5, 85));
-//        chairPatches.add(university.getPatch(5, 86));
-//        chairPatches.add(university.getPatch(8, 85));
-//        chairPatches.add(university.getPatch(8, 86));
-//        chairPatches.add(university.getPatch(12, 87));
-//        chairPatches.add(university.getPatch(15, 87));
-//        chairPatches.add(university.getPatch(12, 88));
-//        chairPatches.add(university.getPatch(15, 88));
-//        chairPatches.add(university.getPatch(17, 87));
-//        chairPatches.add(university.getPatch(20, 87));
-//        chairPatches.add(university.getPatch(17, 88));
-//        chairPatches.add(university.getPatch(20, 88));
-//        chairPatches.add(university.getPatch(12, 91));
-//        chairPatches.add(university.getPatch(15, 91));
-//        chairPatches.add(university.getPatch(12, 92));
-//        chairPatches.add(university.getPatch(15, 92));
-//        chairPatches.add(university.getPatch(17, 91));
-//        chairPatches.add(university.getPatch(20, 91));
-//        chairPatches.add(university.getPatch(17, 92));
-//        chairPatches.add(university.getPatch(20, 92));
-//        for (int i = 4; i < 11; i++) {
-//            if (i == 4 || i == 6 || i == 8 || i == 10) {
-//                for (int j = 88; j < 93; j++) {
-//                    if (j == 88 || j == 89 || j == 91 || j == 92) {
-//                        chairPatches.add(university.getPatch(i, j));
-//                    }
-//                }
-//            }
-//        }
-//
-//        for (int j = 77; j < 83; j++) {
-//            if (j == 77 || j == 78 || j == 81 || j == 82) {
-//                chairPatches.add(university.getPatch(19, j));
-//                chairPatches.add(university.getPatch(21, j));
-//            }
-//        }
-        //Cafeteria Chairs
-//        for (int i = 5; i < 24; i++) {
-//            if (i == 5 || i == 7 || i == 9 || i == 11 || i == 13 || i == 15 || i == 17 || i == 19|| i == 21 || i == 23) {
-//                for (int j = 102; j < 128; j++) {
-//                    if (j == 102 || j == 103 || j == 108 || j == 109 ||j == 114 || j == 115 ||j == 120 || j == 121 ||j == 126 || j == 127) {
-//                        chairPatches.add(university.getPatch(i, j));
-//                    }
-//                }
-//            }
-//        }
-        //Laboratory Chairs
-//        chairPatches.add(university.getPatch(38,102));
-//        chairPatches.add(university.getPatch(38,103));
-//        chairPatches.add(university.getPatch(38,104));
-//        chairPatches.add(university.getPatch(38,105));
-//        chairPatches.add(university.getPatch(38,112));
-//        chairPatches.add(university.getPatch(38,113));
-//        chairPatches.add(university.getPatch(38,114));
-//        chairPatches.add(university.getPatch(38,115));
-//        chairPatches.add(university.getPatch(41,102));
-//        chairPatches.add(university.getPatch(41,103));
-//        chairPatches.add(university.getPatch(41,104));
-//        chairPatches.add(university.getPatch(41,105));
-//        chairPatches.add(university.getPatch(41,112));
-//        chairPatches.add(university.getPatch(41,113));
-//        chairPatches.add(university.getPatch(41,114));
-//        chairPatches.add(university.getPatch(41,115));
-//        chairPatches.add(university.getPatch(44,102));
-//        chairPatches.add(university.getPatch(44,103));
-//        chairPatches.add(university.getPatch(44,104));
-//        chairPatches.add(university.getPatch(44,105));
-//        chairPatches.add(university.getPatch(44,112));
-//        chairPatches.add(university.getPatch(44,113));
-//        chairPatches.add(university.getPatch(44,114));
-//        chairPatches.add(university.getPatch(44,115));
-//        chairPatches.add(university.getPatch(47,102));
-//        chairPatches.add(university.getPatch(47,103));
-//        chairPatches.add(university.getPatch(47,104));
-//        chairPatches.add(university.getPatch(47,105));
-//        chairPatches.add(university.getPatch(47,112));
-//        chairPatches.add(university.getPatch(47,113));
-//        chairPatches.add(university.getPatch(47,114));
-//        chairPatches.add(university.getPatch(47,115));
-//        chairPatches.add(university.getPatch(50,102));
-//        chairPatches.add(university.getPatch(50,103));
-//        chairPatches.add(university.getPatch(50,104));
-//        chairPatches.add(university.getPatch(50,105));
-//        chairPatches.add(university.getPatch(50,112));
-//        chairPatches.add(university.getPatch(50,113));
-//        chairPatches.add(university.getPatch(50,114));
-//        chairPatches.add(university.getPatch(50,115));
         ChairMapper.draw(chairPatches);
 
         List<Patch> doorDownPatches = new ArrayList<>();
@@ -436,7 +365,7 @@ public class UniversityScreenController extends ScreenController {
         doorDownPatches.add(university.getPatch(23,17)); // Classroom 1
         doorDownPatches.add(university.getPatch(23,25)); // Classroom 2
         doorDownPatches.add(university.getPatch(23,41)); // Classroom 2
-        doorDownPatches.add(university.getPatch(23,83)); // Study Room
+        doorDownPatches.add(university.getPatch(23,82)); // Study Room
         DoorMapper.draw(doorDownPatches, "DOWN");
 
         List<Patch> doorUpPatches = new ArrayList<>();
@@ -459,8 +388,8 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> eatTablePatches = new ArrayList<>();
         for (int i = 6; i < 23; i++) {
             if (i == 6 || i == 10 || i == 14 || i == 18 || i == 22) {
-                for (int j = 102; j < 127; j++) {
-                    if (j == 102 || j == 108 || j == 114|| j == 120 || j == 126) {
+                for (int j = 97; j < 117; j++) {
+                    if (j == 97 || j == 103 || j == 109 || j == 115) {
                         eatTablePatches.add(university.getPatch(i, j));
                     }
                 }
@@ -524,8 +453,8 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> studyTablePatches = new ArrayList<>();
         for (int i = 5; i < 17; i++) {
             if (i == 5 || i == 8 || i == 13 || i == 16) {
-                for (int j = 78; j < 83; j++) {
-                    if (j == 78 || j == 82) {
+                for (int j = 77; j < 82; j++) {
+                    if (j == 77 || j == 81) {
                         studyTablePatches.add(university.getPatch(i, j));
                     }
                 }
@@ -533,18 +462,18 @@ public class UniversityScreenController extends ScreenController {
         }
         StudyTableMapper.draw(studyTablePatches, "LEFT");
         studyTablePatches = new ArrayList<>();
-        studyTablePatches.add(university.getPatch(12, 87));
-        studyTablePatches.add(university.getPatch(20, 87));
-        studyTablePatches.add(university.getPatch(12, 91));
-        studyTablePatches.add(university.getPatch(20, 91));
-        studyTablePatches.add(university.getPatch(4, 87));
-        studyTablePatches.add(university.getPatch(8, 87));
-        studyTablePatches.add(university.getPatch(4, 91));
-        studyTablePatches.add(university.getPatch(8, 91));
-        studyTablePatches.add(university.getPatch(16, 87));
-        studyTablePatches.add(university.getPatch(16, 91));
-        studyTablePatches.add(university.getPatch(20, 77));
-        studyTablePatches.add(university.getPatch(20, 81));
+        studyTablePatches.add(university.getPatch(12, 86));
+        studyTablePatches.add(university.getPatch(20, 86));
+        studyTablePatches.add(university.getPatch(12, 90));
+        studyTablePatches.add(university.getPatch(20, 90));
+        studyTablePatches.add(university.getPatch(4, 86));
+        studyTablePatches.add(university.getPatch(8, 86));
+        studyTablePatches.add(university.getPatch(4, 90));
+        studyTablePatches.add(university.getPatch(8, 90));
+        studyTablePatches.add(university.getPatch(16, 86));
+        studyTablePatches.add(university.getPatch(16, 90));
+        studyTablePatches.add(university.getPatch(20, 76));
+        studyTablePatches.add(university.getPatch(20, 80));
         StudyTableMapper.draw(studyTablePatches, "UP");
 
         List<Patch> trashPatches = new ArrayList<>();
@@ -575,11 +504,10 @@ public class UniversityScreenController extends ScreenController {
         SecurityMapper.draw(securityPatches);
 
         List<Patch> stallPatches = new ArrayList<>();
-        stallPatches.add(university.getPatch(3,102));
-        stallPatches.add(university.getPatch(3,108));
-        stallPatches.add(university.getPatch(3,114));
-        stallPatches.add(university.getPatch(3,120));
-        stallPatches.add(university.getPatch(3,126));
+        stallPatches.add(university.getPatch(3,97));
+        stallPatches.add(university.getPatch(3,103));
+        stallPatches.add(university.getPatch(3,109));
+        stallPatches.add(university.getPatch(3,115));
         StallMapper.draw(stallPatches);
     }
 
@@ -658,8 +586,8 @@ public class UniversityScreenController extends ScreenController {
 
     @FXML
     public void resetAction() {
-        initializeAction();
         Main.universitySimulator.reset();
+        UniversityAgent.clearUniversityAgentCounts();
         clearUniversity(Main.universitySimulator.getUniversity());
         Main.universitySimulator.spawnInitialAgents(Main.universitySimulator.getUniversity());
         drawUniversityViewForeground(Main.universitySimulator.getUniversity(), false); // Redraw the canvas
@@ -667,6 +595,7 @@ public class UniversityScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
+        enableEdits();
     }
 
     public static void clearUniversity(University university) {
@@ -685,4 +614,105 @@ public class UniversityScreenController extends ScreenController {
     protected void closeAction() {
     }
 
+    public void disableEdits(){
+        nonverbalMean.setDisable(true);
+        nonverbalStdDev.setDisable(true);
+        cooperativeMean.setDisable(true);
+        cooperativeStdDev.setDisable(true);
+        exchangeMean.setDisable(true);
+        exchangeStdDev.setDisable(true);
+        fieldOfView.setDisable(true);
+        maxStudents.setDisable(true);
+        maxProfessors.setDisable(true);
+        maxCurrentStudents.setDisable(true);
+        maxCurrentProfessors.setDisable(true);
+
+        resetToDefaultButton.setDisable(true);
+        configureIOSButton.setDisable(true);
+        editInteractionButton.setDisable(true);
+    }
+    public void enableEdits(){
+        nonverbalMean.setDisable(false);
+        nonverbalStdDev.setDisable(false);
+        cooperativeMean.setDisable(false);
+        cooperativeStdDev.setDisable(false);
+        exchangeMean.setDisable(false);
+        exchangeStdDev.setDisable(false);
+        fieldOfView.setDisable(false);
+        maxStudents.setDisable(false);
+        maxProfessors.setDisable(false);
+        maxCurrentStudents.setDisable(false);
+        maxCurrentProfessors.setDisable(false);
+
+        resetToDefaultButton.setDisable(false);
+        configureIOSButton.setDisable(false);
+        editInteractionButton.setDisable(false);
+    }
+
+    public void resetToDefault(){
+        nonverbalMean.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalMean));
+        nonverbalStdDev.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalStdDev));
+        cooperativeMean.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeMean));
+        cooperativeStdDev.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeStdDev));
+        exchangeMean.setText(Integer.toString(UniversityAgentMovement.defaultExchangeMean));
+        exchangeStdDev.setText(Integer.toString(UniversityAgentMovement.defaultExchangeStdDev));
+        fieldOfView.setText(Integer.toString(UniversityAgentMovement.defaultFieldOfView));
+        maxStudents.setText(Integer.toString(UniversitySimulator.defaultMaxStudents));
+        maxProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxProfessors));
+        maxCurrentStudents.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentStudents));
+        maxCurrentProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentProfessors));
+    }
+
+    public void openIOSLevels(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/ConfigureIOS.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Configure IOS Levels");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void openEditInteractions(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/EditInteractions.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Edit Interaction Type Chances");
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void configureParameters(University university){
+        university.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
+        university.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
+        university.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
+        university.setCooperativeStdDev(Integer.parseInt(cooperativeStdDev.getText()));
+        university.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
+        university.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
+        university.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
+        UniversitySimulator.MAX_STUDENTS = Integer.parseInt(maxStudents.getText());
+        UniversitySimulator.MAX_PROFESSORS = Integer.parseInt(maxProfessors.getText());
+        UniversitySimulator.MAX_CURRENT_STUDENTS = Integer.parseInt(maxCurrentStudents.getText());
+        UniversitySimulator.MAX_CURRENT_PROFESSORS = Integer.parseInt(maxCurrentProfessors.getText());
+        System.out.println(university.getNonverbalMean());
+        System.out.println(university.getNonverbalStdDev());
+        System.out.println(university.getCooperativeMean());
+        System.out.println(university.getCooperativeStdDev());
+        System.out.println(university.getExchangeMean());
+        System.out.println(university.getExchangeStdDev());
+        System.out.println(university.getFieldOfView());
+        System.out.println(UniversitySimulator.MAX_STUDENTS);
+        System.out.println(UniversitySimulator.MAX_PROFESSORS);
+        System.out.println(UniversitySimulator.MAX_CURRENT_STUDENTS);
+        System.out.println(UniversitySimulator.MAX_CURRENT_PROFESSORS);
+    }
 }

@@ -25,6 +25,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UniversitySimulator extends Simulator {
 
+    public static int defaultMaxStudents = 500; //250
+    public static int defaultMaxProfessors = 6;
+    public static int defaultMaxCurrentStudents = 250; //250
+    public static int defaultMaxCurrentProfessors = 6;
+    public static int MAX_STUDENTS; //250
+    public static int MAX_PROFESSORS;
+    public static int MAX_CURRENT_STUDENTS; //250
+    public static int MAX_CURRENT_PROFESSORS;
+
     private University university;
 
     // Simulator variables
@@ -52,7 +61,8 @@ public class UniversitySimulator extends Simulator {
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
     public static int[][] currentPatchCount;
-    public static final int MAX_STUDENTS = 250; //250
+
+  public static final int MAX_STUDENTS = 250; //250
     public static final int MAX_PROFESSORS = 20;
     public static final int MAX_CURRENT_STUDENTS = 250; //250
     public static final int MAX_CURRENT_PROFESSORS = 20;
@@ -98,8 +108,8 @@ public class UniversitySimulator extends Simulator {
         this.time.reset();
         this.running.set(false);
         currentPatchCount = new int[university.getRows()][university.getColumns()];
-        for (int j = 0; j < university.getRows(); j++)
-            Arrays.setAll(currentPatchCount[j], i -> Simulator.RANDOM_NUMBER_GENERATOR.nextInt(255));
+//        for (int j = 0; j < university.getRows(); j++)
+//            Arrays.setAll(currentPatchCount[j], i -> Simulator.RANDOM_NUMBER_GENERATOR.nextInt(255));
     }
 
     public void spawnInitialAgents(University university) {
@@ -213,7 +223,7 @@ public class UniversitySimulator extends Simulator {
                         agent.getAgentMovement().setActionIndex(0);
                         agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(0));
                         agent.getAgentMovement().resetGoal();
-                        System.out.println("SKIP ACTION: GOING TO CLASS NOW");
+                        // System.out.println("SKIP ACTION: GOING TO CLASS NOW");
                     }
                 }
 
@@ -235,7 +245,7 @@ public class UniversitySimulator extends Simulator {
                         agent.getAgentMovement().setActionIndex(0);
                         agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(0));
                         agent.getAgentMovement().resetGoal();
-                        System.out.println("SKIP ACTION: GOING TO CLASS NOW");
+                        // System.out.println("SKIP ACTION: GOING TO CLASS NOW");
                     }
                 }
 
@@ -257,7 +267,7 @@ public class UniversitySimulator extends Simulator {
                         agent.getAgentMovement().setActionIndex(0);
                         agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(0));
                         agent.getAgentMovement().resetGoal();
-                        System.out.println("SKIP ACTION: GOING TO CLASS NOW");
+                        // System.out.println("SKIP ACTION: GOING TO CLASS NOW");
                     }
                 }
 
@@ -279,7 +289,7 @@ public class UniversitySimulator extends Simulator {
                         agent.getAgentMovement().setActionIndex(0);
                         agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(0));
                         agent.getAgentMovement().resetGoal();
-                        System.out.println("SKIP ACTION: GOING TO CLASS NOW");
+                        // System.out.println("SKIP ACTION: GOING TO CLASS NOW");
                     }
                 }
 
@@ -301,7 +311,7 @@ public class UniversitySimulator extends Simulator {
                         agent.getAgentMovement().setActionIndex(0);
                         agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(0));
                         agent.getAgentMovement().resetGoal();
-                        System.out.println("SKIP ACTION: GOING TO CLASS NOW");
+                        // System.out.println("SKIP ACTION: GOING TO CLASS NOW");
                     }
                 }
 
@@ -762,7 +772,9 @@ public class UniversitySimulator extends Simulator {
                                 agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.getGoalAttractor().setIsReserved(false); //TODO: Why it nullpointer exception
+                                if (agentMovement.getGoalAttractor() != null) {
+                                    agentMovement.getGoalAttractor().setIsReserved(false); //TODO: Why it nullpointer exception
+                                }
                                 agentMovement.resetGoal();
                             } else {
                                 agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
@@ -799,7 +811,9 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    if (agentMovement.getGoalAttractor() != null) {
+                                        agentMovement.getGoalAttractor().setIsReserved(false);
+                                    }
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromStudying(true);
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
@@ -811,7 +825,9 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                    if (agentMovement.getGoalAttractor() != null) {
+                                        agentMovement.getGoalAttractor().setIsReserved(false);
+                                    }
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromStudying(true);
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
@@ -2042,7 +2058,7 @@ public class UniversitySimulator extends Simulator {
         for (int i = 0; i < 4; i++){ // 4 gates
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             double CHANCE = Simulator.roll();
-            if (CHANCE < spawnChance && university.getUnspawnedAgents().size()>0){
+            if (CHANCE < spawnChance && university.getUnspawnedAgents().size() > 0){
                 agent = university.getUnspawnedAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(university.getUnspawnedAgents().size()));
                 if (agent.getType() == UniversityAgent.Type.STUDENT && UniversityAgent.studentCount < MAX_STUDENTS && currentStudentCount < MAX_CURRENT_STUDENTS){
                     agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));

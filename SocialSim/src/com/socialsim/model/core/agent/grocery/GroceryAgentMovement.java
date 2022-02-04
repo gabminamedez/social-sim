@@ -3,6 +3,7 @@ package com.socialsim.model.core.agent.grocery;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentMovement;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
+import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
@@ -18,9 +19,9 @@ import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterFie
 import com.socialsim.model.core.environment.grocery.patchfield.StallField;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.EatTable;
 import com.socialsim.model.simulator.Simulator;
 import com.socialsim.model.simulator.grocery.GrocerySimulator;
+import com.socialsim.model.simulator.mall.MallSimulator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,12 +54,13 @@ public class GroceryAgentMovement extends AgentMovement {
     private CashierCounterField chosenCashierField = null;
     private ServiceCounterField chosenServiceField = null;
     private StallField chosenStallField = null;
-    private EatTable chosenEatTable = null;
+    private Table chosenEatTable = null;
 
     private GroceryRoutePlan routePlan;
     private AgentPath currentPath; // Denotes the current path followed by this agent, if any
     private int stateIndex;
     private int actionIndex;
+    private int returnIndex;
     private GroceryState currentState;
     private GroceryAction currentAction; // Low-level description of what the agent is doing
 
@@ -83,6 +85,7 @@ public class GroceryAgentMovement extends AgentMovement {
 
     // Interaction parameters
     private boolean isInteracting; // Denotes whether the agent is currently interacting with another agent
+    private boolean isStationInteracting;
     private boolean isSimultaneousInteractionAllowed; // Denotes whether an interaction is allowed while an action is being done simultaneously
     private int interactionDuration;
     private GroceryAgentMovement.InteractionType interactionType;
@@ -229,6 +232,14 @@ public class GroceryAgentMovement extends AgentMovement {
         this.currentPath = currentPath;
     }
 
+    public int getReturnIndex() {
+        return returnIndex;
+    }
+
+    public void setReturnIndex(int stateIndex) {
+        this.returnIndex = stateIndex;
+    }
+
     public int getStateIndex() {
         return stateIndex;
     }
@@ -249,12 +260,12 @@ public class GroceryAgentMovement extends AgentMovement {
         return currentState;
     }
 
-    public void setNextState() {
-        this.currentState = this.currentState.getRoutePlan().setNextState();
+    public void setNextState(int i) {
+        this.currentState = this.currentState.getRoutePlan().setNextState(i);
     }
 
-    public void setPreviousState() {
-        this.currentState = this.currentState.getRoutePlan().setPreviousState();
+    public void setPreviousState(int i) {
+        this.currentState = this.currentState.getRoutePlan().setPreviousState(i);
     }
 
     public GroceryAction getCurrentAction() {
@@ -297,7 +308,7 @@ public class GroceryAgentMovement extends AgentMovement {
         return chosenStallField;
     }
 
-    public EatTable getChosenEatTable() {
+    public Table getChosenEatTable() {
         return chosenEatTable;
     }
 
@@ -789,7 +800,7 @@ public class GroceryAgentMovement extends AgentMovement {
 
                 this.goalAmenity = chosenAmenity;
                 this.goalAttractor = chosenAttractor;
-                this.chosenEatTable = (EatTable) chosenAmenity;
+                this.chosenEatTable = (Table) chosenAmenity;
             }
             else {
                 if (leaderAgent.getAgentMovement().getChosenEatTable() != null) {
@@ -1288,6 +1299,21 @@ public class GroceryAgentMovement extends AgentMovement {
         return patchesToExplore;
     }
 
+    public List<Patch> get3x3Field(double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
+        Patch centerPatch = this.currentPatch;
+        List<Patch> patchesToExplore = new ArrayList<>();
+        boolean isCenterPatch;
+
+        for (Patch patch : centerPatch.get3x3Neighbors(includeCenterPatch)) {
+            // Make sure that the patch to be added is within the field of view of the agent which invoked this method
+            isCenterPatch = patch.equals(centerPatch);
+            if ((includeCenterPatch && isCenterPatch) || Coordinates.isWithinFieldOfView(centerPatch.getPatchCenterCoordinates(), patch.getPatchCenterCoordinates(), heading, fieldOfViewAngle)) {
+                patchesToExplore.add(patch);
+            }
+        }
+        return patchesToExplore;
+    }
+
     private Vector computeAttractiveForce(final Coordinates startingPosition, final double proposedHeading, final Coordinates proposedNewPosition, final double preferredWalkingDistance) {
         return new Vector(startingPosition, proposedHeading, proposedNewPosition, preferredWalkingDistance);
     }
@@ -1524,9 +1550,9 @@ public class GroceryAgentMovement extends AgentMovement {
         }
     }
 
-    public boolean hasReachedFinalGoal() { // Check if this agent has reached its final goal
-        return !this.routePlan.getCurrentRoutePlan().hasNext();
-    }
+//    public boolean hasReachedFinalGoal() { // Check if this agent has reached its final goal
+//        return !this.routePlan.getCurrentRoutePlan().hasNext();
+//    }
 
     public boolean hasAgentReachedFinalPatchInPath() { // Check if this agent has reached the final patch in its current path
         return this.currentPath.getPath().isEmpty();
@@ -1859,7 +1885,7 @@ public class GroceryAgentMovement extends AgentMovement {
         this.duration = getDuration() - 1;
     }
 
-    public void forceActionInteraction(GroceryAgent agent, GroceryAgentMovement.InteractionType interactionType, int duration, GrocerySimulator GrocerySimulator){
+    public void forceActionInteraction(GroceryAgent agent, GroceryAgentMovement.InteractionType interactionType, int duration) {
         //TODO: Statistics in interaction
 
         // set own agent interaction parameters
@@ -1894,6 +1920,158 @@ public class GroceryAgentMovement extends AgentMovement {
             this.interactionDuration = duration;
 
     }
+
+    public void forceStationedInteraction(GroceryAgent.Persona agentPersona) {
+        GrocerySimulator.currentPatchCount[currentPatch.getMatrixPosition().getRow()][currentPatch.getMatrixPosition().getColumn()]++;
+        if (agentPersona == GroceryAgent.Persona.CASHIER) {
+            if (goalAmenity == grocery.getCashierCounters().get(0)) {
+                GrocerySimulator.currentPatchCount[44][20]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(1)) {
+                GrocerySimulator.currentPatchCount[44][26]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(2)) {
+                GrocerySimulator.currentPatchCount[44][32]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(3)) {
+                GrocerySimulator.currentPatchCount[44][38]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(4)) {
+                GrocerySimulator.currentPatchCount[44][44]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(5)) {
+                GrocerySimulator.currentPatchCount[44][50]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(6)) {
+                GrocerySimulator.currentPatchCount[44][56]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(7)) {
+                GrocerySimulator.currentPatchCount[44][62]++;
+            }
+            GrocerySimulator.currentCustomerCashierCount++;
+            this.heading = 0;
+            this.interactionDuration = this.duration * 2 / 3;
+        }
+        else if (agentPersona == GroceryAgent.Persona.BAGGER) {
+            if (goalAmenity == grocery.getCashierCounters().get(0)) {
+                GrocerySimulator.currentPatchCount[45][20]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(1)) {
+                GrocerySimulator.currentPatchCount[45][26]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(2)) {
+                GrocerySimulator.currentPatchCount[45][32]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(3)) {
+                GrocerySimulator.currentPatchCount[45][38]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(4)) {
+                GrocerySimulator.currentPatchCount[45][44]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(5)) {
+                GrocerySimulator.currentPatchCount[45][50]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(6)) {
+                GrocerySimulator.currentPatchCount[45][56]++;
+            }
+            else if (goalAmenity == grocery.getCashierCounters().get(7)) {
+                GrocerySimulator.currentPatchCount[45][62]++;
+            }
+            GrocerySimulator.currentCustomerBaggerCount++;
+            this.heading = 0;
+            this.interactionDuration = this.duration / 3;
+        }
+        else if (agentPersona == GroceryAgent.Persona.CUSTOMER_SERVICE) {
+            if (goalAmenity == grocery.getServiceCounters().get(0)) {
+                GrocerySimulator.currentPatchCount[44][4]++;
+            }
+            else if (goalAmenity == grocery.getServiceCounters().get(1)) {
+                GrocerySimulator.currentPatchCount[44][8]++;
+            }
+            else if (goalAmenity == grocery.getServiceCounters().get(2)) {
+                GrocerySimulator.currentPatchCount[44][12]++;
+            }
+            GrocerySimulator.currentCustomerServiceCount++;
+            this.heading = 90;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == GroceryAgent.Persona.STAFF_FOOD) {
+            if (goalAmenity == grocery.getStalls().get(0)) {
+                GrocerySimulator.currentPatchCount[58][8]++;
+            }
+            else if (goalAmenity == grocery.getStalls().get(1)) {
+                GrocerySimulator.currentPatchCount[58][17]++;
+            }
+            else if (goalAmenity == grocery.getStalls().get(2)) {
+                GrocerySimulator.currentPatchCount[58][26]++;
+            }
+            else if (goalAmenity == grocery.getStalls().get(3)) {
+                GrocerySimulator.currentPatchCount[58][35]++;
+            }
+            else if (goalAmenity == grocery.getStalls().get(4)) {
+                GrocerySimulator.currentPatchCount[58][63]++;
+            }
+            else if (goalAmenity == grocery.getStalls().get(5)) {
+                GrocerySimulator.currentPatchCount[58][72]++;
+            }
+            else if (goalAmenity == grocery.getStalls().get(6)) {
+                GrocerySimulator.currentPatchCount[58][81]++;
+            }
+            else if (goalAmenity == grocery.getStalls().get(7)) {
+                GrocerySimulator.currentPatchCount[58][90]++;
+            }
+            GrocerySimulator.currentCustomerFoodCount++;
+            this.heading = 270;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == GroceryAgent.Persona.BUTCHER) {
+            if (goalAmenity == grocery.getMeatSections().get(0)) {
+                GrocerySimulator.currentPatchCount[29][1]++;
+            }
+            else if (goalAmenity == grocery.getMeatSections().get(1)) {
+                GrocerySimulator.currentPatchCount[37][1]++;
+            }
+            GrocerySimulator.currentCustomerButcherCount++;
+            this.heading = 180;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == GroceryAgent.Persona.GUARD_ENTRANCE) {
+            GrocerySimulator.currentPatchCount[57][52]++;
+            GrocerySimulator.currentCustomerGuardCount++;
+            this.heading = 0;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == GroceryAgent.Persona.GUARD_EXIT) {
+            GrocerySimulator.currentPatchCount[57][47]++;
+            GrocerySimulator.currentCustomerGuardCount++;
+            this.heading = 90;
+            this.interactionDuration = this.duration;
+        }
+        else if (agentPersona == GroceryAgent.Persona.STAFF_AISLE) {
+            GrocerySimulator.currentCustomerAisleCount++;
+            this.interactionDuration = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(7);
+        }
+
+        if (agentPersona != GroceryAgent.Persona.GUARD_ENTRANCE) {
+            GrocerySimulator.currentExchangeCount++;
+            GrocerySimulator.averageExchangeDuration = (GrocerySimulator.averageExchangeDuration * (GrocerySimulator.currentExchangeCount - 1) + this.interactionDuration) / GrocerySimulator.currentExchangeCount;
+        }
+        else {
+            int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            if (x < GroceryRoutePlan.CHANCE_GUARD_VERBAL) {
+                GrocerySimulator.currentExchangeCount++;
+                GrocerySimulator.averageExchangeDuration = (GrocerySimulator.averageExchangeDuration * (GrocerySimulator.currentExchangeCount - 1) + this.interactionDuration) / GrocerySimulator.currentExchangeCount;
+            }
+            else {
+                GrocerySimulator.currentNonverbalCount++;
+                GrocerySimulator.averageNonverbalDuration = (GrocerySimulator.averageNonverbalDuration * (GrocerySimulator.currentNonverbalCount - 1) + this.interactionDuration) / GrocerySimulator.currentNonverbalCount;
+            }
+        }
+
+        this.isStationInteracting = true;
+        this.interactionDuration = 0;
+    }
+
     public void rollAgentInteraction(GroceryAgent agent){
         //TODO: Statistics in interaction
 
@@ -1927,8 +2105,8 @@ public class GroceryAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.COOPERATIVE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
+                interactionStdDeviation = 12;
+                interactionMean = 24;
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
                 GrocerySimulator.currentExchangeCount++;
@@ -1936,8 +2114,8 @@ public class GroceryAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.EXCHANGE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 5;
-                interactionMean = 19;
+                interactionStdDeviation = 24;
+                interactionMean = 60;
             }
             else{
                 return;
@@ -1946,38 +2124,102 @@ public class GroceryAgentMovement extends AgentMovement {
             this.isInteracting = true;
             // set other agent interaction parameters
             agent.getAgentMovement().setInteracting(true);
-
-//            if (this.parent.getType() == GroceryAgent.Type.STUDENT){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentStudentCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentStudentProfCount++;
-//                    case GUARD -> GrocerySimulator.currentStudentGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentStudentJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.PROFESSOR){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentProfCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfProfCount++;
-//                    case GUARD -> GrocerySimulator.currentProfGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentProfJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.GUARD){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentGuardCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfGuardCount++;
-//                    case JANITOR -> GrocerySimulator.currentGuardJanitorCount++;
-//                }
-//            }
-//            else if (this.parent.getType() == GroceryAgent.Type.JANITOR){
-//                switch (agent.getType()){
-//                    case STUDENT -> GrocerySimulator.currentStudentJanitorCount++;
-//                    case PROFESSOR -> GrocerySimulator.currentProfJanitorCount++;
-//                    case GUARD -> GrocerySimulator.currentGuardJanitorCount++;
-//                    case JANITOR -> GrocerySimulator.currentJanitorJanitorCount++;
-//                }
-//            }
+            if (this.parent.getType() == GroceryAgent.Type.CUSTOMER){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerCustomerCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentCustomerAisleCount++;
+                    case CASHIER -> GrocerySimulator.currentCustomerCashierCount++;
+                    case BAGGER -> GrocerySimulator.currentCustomerBaggerCount++;
+                    case GUARD -> GrocerySimulator.currentCustomerGuardCount++;
+                    case BUTCHER -> GrocerySimulator.currentCustomerButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentCustomerServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentCustomerFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.STAFF_AISLE){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerAisleCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleAisleCount++;
+                    case CASHIER -> GrocerySimulator.currentAisleCashierCount++;
+                    case BAGGER -> GrocerySimulator.currentAisleBaggerCount++;
+                    case GUARD -> GrocerySimulator.currentAisleGuardCount++;
+                    case BUTCHER -> GrocerySimulator.currentAisleButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentAisleServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentAisleFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.CASHIER){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerCashierCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleCashierCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierCashierCount++;
+                    case BAGGER -> GrocerySimulator.currentCashierBaggerCount++;
+                    case GUARD -> GrocerySimulator.currentCashierGuardCount++;
+                    case BUTCHER -> GrocerySimulator.currentCashierButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentCashierServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentCashierFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.BAGGER){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerBaggerCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleBaggerCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierBaggerCount++;
+                    case BAGGER -> GrocerySimulator.currentBaggerBaggerCount++;
+                    case GUARD -> GrocerySimulator.currentBaggerGuardCount++;
+                    case BUTCHER -> GrocerySimulator.currentBaggerButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentBaggerServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentBaggerFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.GUARD){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerGuardCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleGuardCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierGuardCount++;
+                    case BAGGER -> GrocerySimulator.currentBaggerGuardCount++;
+                    case GUARD -> GrocerySimulator.currentGuardGuardCount++;
+                    case BUTCHER -> GrocerySimulator.currentGuardButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentGuardServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentGuardFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.BUTCHER){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerButcherCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleButcherCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierButcherCount++;
+                    case BAGGER -> GrocerySimulator.currentBaggerButcherCount++;
+                    case GUARD -> GrocerySimulator.currentGuardButcherCount++;
+                    case BUTCHER -> GrocerySimulator.currentButcherButcherCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentButcherServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentButcherFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.CUSTOMER_SERVICE){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerServiceCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleServiceCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierServiceCount++;
+                    case BAGGER -> GrocerySimulator.currentBaggerServiceCount++;
+                    case GUARD -> GrocerySimulator.currentGuardServiceCount++;
+                    case BUTCHER -> GrocerySimulator.currentButcherServiceCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentServiceServiceCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentServiceFoodCount++;
+                }
+            }
+            else if (this.parent.getType() == GroceryAgent.Type.STAFF_FOOD){
+                switch (agent.getType()){
+                    case CUSTOMER -> GrocerySimulator.currentCustomerFoodCount++;
+                    case STAFF_AISLE -> GrocerySimulator.currentAisleFoodCount++;
+                    case CASHIER -> GrocerySimulator.currentCashierFoodCount++;
+                    case BAGGER -> GrocerySimulator.currentBaggerFoodCount++;
+                    case GUARD -> GrocerySimulator.currentGuardFoodCount++;
+                    case BUTCHER -> GrocerySimulator.currentButcherFoodCount++;
+                    case CUSTOMER_SERVICE -> GrocerySimulator.currentServiceFoodCount++;
+                    case STAFF_FOOD -> GrocerySimulator.currentFoodFoodCount++;
+                }
+            }
             // roll duration (NOTE GAUSSIAN)
             this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
             if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.NON_VERBAL)
@@ -2008,6 +2250,14 @@ public class GroceryAgentMovement extends AgentMovement {
 
     public void setInteracting(boolean interacting) {
         isInteracting = interacting;
+    }
+
+    public boolean isStationInteracting() {
+        return isStationInteracting;
+    }
+
+    public void setStationInteracting(boolean interacting) {
+        isStationInteracting = interacting;
     }
 
     public boolean isSimultaneousInteractionAllowed() {

@@ -67,7 +67,8 @@ public class OfficeAction {
 
         GO_MEETING(),
         WAIT_MEETING(),
-        MEETING();
+        MEETING(),
+        LEAVE_MEETING();
 
         final int ID;
         Name(int ID){
@@ -79,7 +80,6 @@ public class OfficeAction {
         public int getID() {
             return ID;
         }
-
     }
 
     private Name name;

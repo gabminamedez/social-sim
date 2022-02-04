@@ -9,10 +9,10 @@ import java.util.List;
 
 public class UniversityAgentGraphic extends Graphic {
 
-    public static final String AGENTS_URL_1 = "com/socialsim/view/image/University/male_students2.png";
-    public static final String AGENTS_URL_2 = "com/socialsim/view/image/University/female_students2.png";
-    public static final String AGENTS_URL_3 = "com/socialsim/view/image/University/professors2.png";
-    public static final String AGENTS_URL_4 = "com/socialsim/view/image/University/guard_janitor_officer2.png";
+    public static final String AGENTS_URL_1 = "com/socialsim/view/image/University/male_students.png";
+    public static final String AGENTS_URL_2 = "com/socialsim/view/image/University/female_students.png";
+    public static final String AGENTS_URL_3 = "com/socialsim/view/image/University/professors.png";
+    public static final String AGENTS_URL_4 = "com/socialsim/view/image/University/guard_janitor_officer.png";
 
     public static final List<AgentGraphicLocation> intY1MaleStudents;
     public static final List<AgentGraphicLocation> extY1MaleStudents;
@@ -291,26 +291,34 @@ public class UniversityAgentGraphic extends Graphic {
         if (agentHeadingDegrees >= 315 && agentHeadingDegrees < 360 || agentHeadingDegrees >= 0 && agentHeadingDegrees < 45) {
             if (this.agent.getAgentMovement().isInteracting())
                 this.graphicIndex = 5;
-            else
+            else{
+                System.out.println(this.graphicIndex);
                 this.graphicIndex = 1;
+            }
         }
         else if (agentHeadingDegrees >= 45 && agentHeadingDegrees < 135) {
             if (this.agent.getAgentMovement().isInteracting())
                 this.graphicIndex = 4;
-            else
+            else{
+                System.out.println(this.graphicIndex);
                 this.graphicIndex = 0;
+            }
         }
         else if (agentHeadingDegrees >= 135 && agentHeadingDegrees < 225) {
             if (this.agent.getAgentMovement().isInteracting())
                 this.graphicIndex = 7;
-            else
+            else{
+                System.out.println(this.graphicIndex);
                 this.graphicIndex = 3;
+            }
         }
         else if (agentHeadingDegrees >= 225 && agentHeadingDegrees < 315) {
             if (this.agent.getAgentMovement().isInteracting())
                 this.graphicIndex = 6;
-            else
+            else{
+                System.out.println(this.graphicIndex);
                 this.graphicIndex = 2;
+            }
         }
     }
 

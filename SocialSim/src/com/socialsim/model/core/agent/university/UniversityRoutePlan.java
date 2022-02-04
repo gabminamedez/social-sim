@@ -17,10 +17,10 @@ public class UniversityRoutePlan {
     private boolean fromStudying, fromClass, fromLunch;
     private static final int MAX_CLASSES = 6;
     private static final int MAX_CLASSROOMS = 6;
-    private static final int MAX_JANITOR_ROUNDS = 6;
     private static int CLASSROOM_SIZES_STUDENT[][] = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
     private static int CLASSROOM_SIZES_PROF[][] = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
     private double UrgentCtr = -2;
+
     //Chances of INT Y1-Y4
     public static final double INT_CHANCE_WANDERING_AROUND = 0.22, INT_CHANCE_GOING_TO_STUDY = 0.58,
             INT_NEED_BATHROOM_NO_CLASSES = 0.10, INT_NEEDS_DRINK_NO_CLASSES = 0.10,
@@ -518,7 +518,6 @@ public class UniversityRoutePlan {
                         int classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
                         while (CLASSROOM_SIZES_PROF[classes.get(i)][classroomID] == 0) {
                             classroomID = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_CLASSROOMS);
-
                         }
                         CLASSROOM_SIZES_PROF[classes.get(i)][classroomID]--;
                         int tickClassStart = switch (classes.get(i)) {
@@ -534,8 +533,6 @@ public class UniversityRoutePlan {
                         actions.add(new UniversityAction(UniversityAction.Name.CLASSROOM_STAY_PUT, 1080));
                         routePlan.add(new UniversityState(UniversityState.Name.IN_CLASS_PROFESSOR, this, agent, actions));
                     }
-
-
 
                     if (i == LUNCH_TIME) {
                         actions = new ArrayList<>();
@@ -558,7 +555,7 @@ public class UniversityRoutePlan {
         setNextState(-1);
     }
 
-    public void resetClassroomSizes() {
+    public static void resetClassroomSizes() {
         CLASSROOM_SIZES_STUDENT = new int[][]{{40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}};
         CLASSROOM_SIZES_PROF = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
     }

@@ -9,6 +9,7 @@ import java.util.Objects;
 
 public class GroceryAgent extends Agent {
 
+    private static int idCtr = 0;
     public static int agentCount = 0;
     public static int customerCount = 0;
     public static int staffAisleCount = 0;
@@ -125,7 +126,7 @@ public class GroceryAgent extends Agent {
     }
 
     private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, boolean leader, boolean inOnStart) {
-        this.id = agentCount;
+        this.id = idCtr++;
         this.type = type;
         this.leader = leader;
         this.inOnStart = inOnStart;
