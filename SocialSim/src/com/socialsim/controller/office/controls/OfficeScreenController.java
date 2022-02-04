@@ -129,7 +129,7 @@ public class OfficeScreenController extends ScreenController {
         Main.officeSimulator.getOffice().getBreakrooms().add(Breakroom.breakroomFactory.create(breakroomPatches, 1));
 
         List<Patch> meetingRoom1Patches = new ArrayList<>();
-        for (int i = 6; i < 18; i++) {
+        for (int i = 4; i < 20; i++) {
             for (int j = 80; j < 100; j++) {
                 meetingRoom1Patches.add(office.getPatch(i, j));
             }
@@ -137,7 +137,7 @@ public class OfficeScreenController extends ScreenController {
         Main.officeSimulator.getOffice().getMeetingRooms().add(MeetingRoom.meetingRoomFactory.create(meetingRoom1Patches, 1));
 
         List<Patch> meetingRoom2Patches = new ArrayList<>();
-        for (int i = 24; i < 36; i++) {
+        for (int i = 22; i < 38; i++) {
             for (int j = 80; j < 100; j++) {
                 meetingRoom2Patches.add(office.getPatch(i, j));
             }
@@ -145,7 +145,7 @@ public class OfficeScreenController extends ScreenController {
         Main.officeSimulator.getOffice().getMeetingRooms().add(MeetingRoom.meetingRoomFactory.create(meetingRoom2Patches, 2));
 
         List<Patch> meetingRoom3Patches = new ArrayList<>();
-        for (int i = 42; i < 54; i++) {
+        for (int i = 40; i < 56; i++) {
             for (int j = 80; j < 100; j++) {
                 meetingRoom3Patches.add(office.getPatch(i, j));
             }
@@ -179,7 +179,7 @@ public class OfficeScreenController extends ScreenController {
                 wall2Patches.add(office.getPatch(45, j));
             }
         }
-        for (int i = 6; i < 55; i++) {
+        for (int i = 4; i < 57; i++) {
             if (i != 11 && i != 12 && i != 29 && i != 30 && i != 47 && i != 48) {
                 wall2Patches.add(office.getPatch(i, 80));
             }
@@ -237,19 +237,19 @@ public class OfficeScreenController extends ScreenController {
         chairPatches.add(office.getPatch(48,96));
         // collaboration desk chairs
         for (int i = 64; i < 70; i++) {
-            chairPatches.add(office.getPatch(7, i)); // 66, 76, 86, 96, 106, 116
-            chairPatches.add(office.getPatch(10, i)); // 67, 77, 87, 97, 107, 117
-            chairPatches.add(office.getPatch(14, i)); // 68
-            chairPatches.add(office.getPatch(17, i)); // 69
-            chairPatches.add(office.getPatch(21, i)); // 70
-            chairPatches.add(office.getPatch(24, i)); // 71
-            chairPatches.add(office.getPatch(28, i)); // 72
-            chairPatches.add(office.getPatch(31, i)); // 73
-            chairPatches.add(office.getPatch(35, i)); // 74
-            chairPatches.add(office.getPatch(38, i)); // 75, 85, 95, 105, 115, 125
+            chairPatches.add(office.getPatch(7, i)); // 6, 16, 26, 36, 46, 56
+            chairPatches.add(office.getPatch(10, i)); // 7
+            chairPatches.add(office.getPatch(14, i)); // 8
+            chairPatches.add(office.getPatch(17, i)); // 9
+            chairPatches.add(office.getPatch(21, i)); // 10
+            chairPatches.add(office.getPatch(24, i)); // 11
+            chairPatches.add(office.getPatch(28, i)); // 12
+            chairPatches.add(office.getPatch(31, i)); // 13
+            chairPatches.add(office.getPatch(35, i)); // 14
+            chairPatches.add(office.getPatch(38, i)); // 15
         }
         // Break room chairs
-        chairPatches.add(office.getPatch(32,1)); chairPatches.add(office.getPatch(32,3));
+        /*chairPatches.add(office.getPatch(32,1)); chairPatches.add(office.getPatch(32,3));
         chairPatches.add(office.getPatch(33,1)); chairPatches.add(office.getPatch(33,3));
         chairPatches.add(office.getPatch(32,5)); chairPatches.add(office.getPatch(32,7));
         chairPatches.add(office.getPatch(33,5)); chairPatches.add(office.getPatch(33,7));
@@ -264,7 +264,7 @@ public class OfficeScreenController extends ScreenController {
         chairPatches.add(office.getPatch(36,9)); chairPatches.add(office.getPatch(36,11));
         chairPatches.add(office.getPatch(37,9)); chairPatches.add(office.getPatch(37,11));
         chairPatches.add(office.getPatch(36,13)); chairPatches.add(office.getPatch(36,15));
-        chairPatches.add(office.getPatch(37,13)); chairPatches.add(office.getPatch(37,15));
+        chairPatches.add(office.getPatch(37,13)); chairPatches.add(office.getPatch(37,15));*/
         ChairMapper.draw(chairPatches);
 
         List<Patch> collabDeskPatches = new ArrayList<>();
@@ -357,9 +357,9 @@ public class OfficeScreenController extends ScreenController {
         DoorMapper.draw(doorRightPatches, "RIGHT");
 
         List<Patch> doorLeftPatches = new ArrayList<>();
-        doorLeftPatches.add(office.getPatch(11,80)); // 2
-        doorLeftPatches.add(office.getPatch(29,80)); // 3
-        doorLeftPatches.add(office.getPatch(47,80)); // 4
+        doorLeftPatches.add(office.getPatch(10,80)); // 2
+        doorLeftPatches.add(office.getPatch(28,80)); // 3
+        doorLeftPatches.add(office.getPatch(46,80)); // 4
         DoorMapper.draw(doorLeftPatches, "LEFT");
 
         List<Patch> doorUpPatches = new ArrayList<>();
@@ -408,14 +408,14 @@ public class OfficeScreenController extends ScreenController {
         ReceptionTableMapper.draw(receptionTablePatches);
 
         List<Patch> tableUpPatches = new ArrayList<>();
-        tableUpPatches.add(office.getPatch(21,9));
-        tableUpPatches.add(office.getPatch(22,9));
+        //tableUpPatches.add(office.getPatch(21,9));
         tableUpPatches.add(office.getPatch(23,9));
-        tableUpPatches.add(office.getPatch(24,9));
-        tableUpPatches.add(office.getPatch(21,11));
-        tableUpPatches.add(office.getPatch(22,11));
-        tableUpPatches.add(office.getPatch(23,11));
-        tableUpPatches.add(office.getPatch(24,11));
+        //tableUpPatches.add(office.getPatch(23,9));
+        tableUpPatches.add(office.getPatch(23,13));
+        //tableUpPatches.add(office.getPatch(21,11));
+        tableUpPatches.add(office.getPatch(26,9));
+        //tableUpPatches.add(office.getPatch(23,11));
+        tableUpPatches.add(office.getPatch(26,13)); // couch tables
         tableUpPatches.add(office.getPatch(51,9));
         tableUpPatches.add(office.getPatch(52,9));
         tableUpPatches.add(office.getPatch(53,9));

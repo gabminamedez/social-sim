@@ -19,7 +19,7 @@ import com.socialsim.model.core.environment.office.patchfield.MeetingRoom;
 import com.socialsim.model.core.environment.office.patchfield.OfficeRoom;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.*;
-import com.socialsim.model.core.environment.university.patchfield.Bathroom;
+import com.socialsim.model.core.environment.office.patchfield.Bathroom;
 import com.socialsim.model.simulator.Simulator;
 import com.socialsim.model.simulator.office.OfficeSimulator;
 
@@ -489,6 +489,7 @@ public class OfficeAgentMovement extends AgentMovement {
                 if(goalAmenity.getClass() == Chair.class ||
                         goalAmenity.getClass() == Door.class || goalAmenity.getClass() == Toilet.class ||
                         goalAmenity.getClass() == Couch.class || goalAmenity.getClass() == OfficeGate.class
+                        || goalAmenity.getClass() == Table.class || goalAmenity.getClass() == MeetingDesk.class
                         || (goalAmenity.getClass() == Cubicle.class && (this.parent.getPersona() !=
                         OfficeAgent.Persona.EXT_TECHNICAL || this.parent.getPersona() !=
                         OfficeAgent.Persona.INT_TECHNICAL))) {
@@ -582,13 +583,11 @@ public class OfficeAgentMovement extends AgentMovement {
 
     public boolean chooseBreakroomSeat() { // Set the nearest goal to this agent
         if (this.goalAmenity == null) { //Only set the goal if one hasn't been set yet
-            List<? extends Amenity> chairs = this.office.getAmenityList(Chair.class);
+            List<? extends Amenity> tables = this.office.getAmenityList(Table.class);
             List<? extends Amenity> couches = this.office.getAmenityList(Couch.class);
-            List<? extends Amenity> amenityListInFloor = Stream.concat(chairs.stream(), couches.stream()).
+            List<? extends Amenity> amenityListInFloor = Stream.concat(tables.stream(), couches.stream()).
                     collect(Collectors.toList());
 
-            Amenity chosenAmenity = null;
-            Amenity.AmenityBlock chosenAttractor = null;
             HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
 
             for (Amenity amenity : amenityListInFloor) {
@@ -750,6 +749,19 @@ public class OfficeAgentMovement extends AgentMovement {
 
             HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
 
+//            List<Amenity> temp = new ArrayList<>();
+//
+//            if(room == 1){
+//                temp.add(this.office.getMeetingDesks().get(0));
+//                temp.add(this.office.getMeetingDesks().get(1));
+//            }else if(room == 2){
+//                temp.add(this.office.getMeetingDesks().get(2));
+//                temp.add(this.office.getMeetingDesks().get(3));
+//            }else if(room == 3){
+//                temp.add(this.office.getMeetingDesks().get(4));
+//                temp.add(this.office.getMeetingDesks().get(5));
+//            }
+
             int start1, start2;
             start1 = start2 = 0;
             List<Amenity> temp = new ArrayList<>();
@@ -781,6 +793,7 @@ public class OfficeAgentMovement extends AgentMovement {
             for(int i = start2; i < start2 + 43; i += 6){
                 temp.add(this.office.getChairs().get(i));
             }
+
 
             for (Amenity amenity : temp) {
                 for (Amenity.AmenityBlock attractor : amenity.getAttractors()) {
@@ -1701,7 +1714,10 @@ public class OfficeAgentMovement extends AgentMovement {
                     patch.getAmenityBlock().getParent().getClass() == Chair.class ||
                     patch.getAmenityBlock().getParent().getClass() == Toilet.class ||
                     patch.getAmenityBlock().getParent().getClass() == Couch.class ||
-                    patch.getAmenityBlock().getParent().getClass() == Printer.class) {
+                    patch.getAmenityBlock().getParent().getClass() == Printer.class ||
+                    patch.getAmenityBlock().getParent().getClass() == Table.class ||
+                    patch.getAmenityBlock().getParent().getClass() == MeetingDesk.class
+            ) {
                 return false;
             }
             else {
