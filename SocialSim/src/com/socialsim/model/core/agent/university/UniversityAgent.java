@@ -17,22 +17,12 @@ public class UniversityAgent extends Agent {
     public static int janitorCount = 0;
     public static int professorCount = 0;
     public static int studentCount = 0;
-    public static final double[][][] chancePerActionInteractionType = new double[][][]
-    {
-        {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 1.00}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
-        {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 1.00, 0}, {0, 1.00, 0}, {0, 1.00, 0}, {0, 1.00, 0}},
-        {{0.90, 0, 0.10}, {0.20, 0, 0.80}, {0, 0, 0}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.05, 0.20, 0.75}, {0.15, 0.30, 0.55}, {0.15, 0.30, 0.55}, {0.20, 0, 0.80}, {0.05, 0.20, 0.75}, {0.20, 0, 0.80}, {0.15, 0.30, 0.55}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.60, 0, 0.40}, {0, 0, 0}, {0.50, 0, 0.50}, {0.20, 0, 0.80}, {0, 0, 0}, {0.60, 0, 0.40}, {0.20, 0, 0.80}, {0, 0, 0}, {0, 0.30, 0.70}, {0, 0.30, 0.70}, {0, 0, 0}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0, 0.20, 0.80}, {0.20, 0, 0.80}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
-        {{0.85, 0, 0.15}, {0.20, 0, 0.80}, {0, 0, 0}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.05, 0.20, 0.75}, {0.15, 0.30, 0.55}, {0.15, 0.30, 0.55}, {0.20, 0, 0.80}, {0.05, 0.20, 0.75}, {0.20, 0, 0.80}, {0.15, 0.30, 0.55}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.60, 0, 0.40}, {0, 0, 0}, {0.50, 0, 0.50}, {0.20, 0, 0.80}, {0, 0, 0}, {0.60, 0, 0.40}, {0.20, 0, 0.80}, {0, 0, 0}, {0, 0.30, 0.70}, {0, 0.30, 0.70}, {0, 0, 0}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0.20, 0, 0.80}, {0, 0.20, 0.80}, {0.20, 0, 0.80}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
-        {{0.80, 0, 0.20}, {0.10, 0, 0.90}, {0, 0, 0}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.05, 0.20, 0.75}, {0.10, 0.30, 0.60}, {0.10, 0.30, 0.60}, {0.10, 0, 0.90}, {0, 0.20, 0.80}, {0.10, 0, 0.90}, {0.10, 0.30, 0.60}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.60, 0, 0.40}, {0, 0, 0}, {0.50, 0, 0.50}, {0.10, 0, 0.90}, {0, 0, 0}, {0.60, 0, 0.40}, {0.10, 0, 0.90}, {0, 0, 0}, {0, 0.30, 0.70}, {0, 0.30, 0.70}, {0, 0, 0}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0, 0.20, 0.80}, {0.10, 0, 0.90}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
-        {{0.80, 0, 0.20}, {0.10, 0, 0.90}, {0, 0, 0}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.05, 0.20, 0.75}, {0.10, 0.30, 0.60}, {0.10, 0.30, 0.60}, {0.10, 0, 0.90}, {0, 0.20, 0.80}, {0.10, 0, 0.90}, {0.10, 0.30, 0.60}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.60, 0, 0.40}, {0, 0, 0}, {0.50, 0, 0.50}, {0.10, 0, 0.90}, {0, 0, 0}, {0.60, 0, 0.40}, {0.10, 0, 0.90}, {0, 0, 0}, {0, 0.30, 0.70}, {0, 0.30, 0.70}, {0, 0, 0}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0.10, 0, 0.90}, {0, 0.20, 0.80}, {0.10, 0, 0.90}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
-        {{0.90, 0, 0.10}, {0.75, 0, 0.25}, {0, 0, 0}, {0.75, 0, 0.25}, {0.75, 0, 0.25}, {0.75, 0, 0.25}, {0.75, 0, 0.25}, {0.75, 0, 0.25}, {0, 0, 0}, {0, 0, 0}, {0.15, 0.30, 0.55}, {0.75, 0, 0.25}, {0.05, 0.20, 0.75}, {0.75, 0, 0.25}, {0.15, 0.30, 0.55}, {0.75, 0, 0.25}, {0.75, 0, 0.25}, {0.60, 0, 0.40}, {0, 0, 0}, {0.50, 0, 0.50}, {0.75, 0, 0.25}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0.40, 0.60}, {0, 0.50, 0.50}, {0, 0, 0}, {0, 0.40, 0.60}, {0.75, 0, 0.25}, {0.75, 0, 0.25}, {0.75, 0, 0.25}, {0.75, 0, 0.25}, {0.75, 0, 0.25}, {0.75, 0, 0.25}, {0, 0.20, 0.80}, {0.75, 0, 0.25}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
-        {{0.80, 0, 0.20}, {0.65, 0, 0.35}, {0, 0, 0}, {0.65, 0, 0.35}, {0.65, 0, 0.35}, {0.65, 0, 0.35}, {0.65, 0, 0.35}, {0.65, 0, 0.35}, {0, 0, 0}, {0, 0, 0}, {0.10, 0.30, 0.60}, {0.65, 0, 0.35}, {0, 0.20, 0.80}, {0.65, 0, 0.35}, {0.10, 0.30, 0.60}, {0.65, 0, 0.35}, {0.65, 0, 0.35}, {0.60, 0, 0.40}, {0, 0, 0}, {0.50, 0, 0.50}, {0.65, 0, 0.35}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0.40, 0.60}, {0, 0.50, 0.50}, {0, 0, 0}, {0, 0.40, 0.60}, {0.65, 0, 0.35}, {0.65, 0, 0.35}, {0.65, 0, 0.35}, {0.65, 0, 0.35}, {0.65, 0, 0.35}, {0.65, 0, 0.35}, {0, 0.20, 0.80}, {0.65, 0, 0.35}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
-    };
     private final int id;
     private final UniversityAgent.Type type;
     private final UniversityAgent.Gender gender;
     private UniversityAgent.AgeGroup ageGroup = null;
     private UniversityAgent.Persona persona = null;
+    private PersonaActionGroup personaActionGroup = null;
     private final boolean inOnStart;
 
     private final UniversityAgentGraphic agentGraphic;
@@ -160,10 +150,12 @@ public class UniversityAgent extends Agent {
         if (this.type == Type.GUARD) {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
             this.persona = Persona.GUARD;
+            this.personaActionGroup = PersonaActionGroup.GUARD;
         }
         else if(this.type == Type.JANITOR) {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
             this.persona = Persona.JANITOR;
+            this.personaActionGroup = PersonaActionGroup.JANITOR;
         }
         else if (this.type == Type.PROFESSOR) {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
@@ -171,9 +163,11 @@ public class UniversityAgent extends Agent {
             boolean isStrict = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
             if (isStrict) {
                 this.persona = Persona.STRICT_PROFESSOR;
+                this.personaActionGroup = PersonaActionGroup.STRICT_PROFESSOR;
             }
             else {
                 this.persona = Persona.APPROACHABLE_PROFESSOR;
+                this.personaActionGroup = PersonaActionGroup.APPROACHABLE_PROFESSOR;
             }
         }
         else if (this.type == Type.STUDENT) {
@@ -185,51 +179,67 @@ public class UniversityAgent extends Agent {
 
             if (isIntrovert && yearLevel == 1 && !isOrg) {
                 this.persona = Persona.INT_Y1_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.INT_STUDENT;
             }
             else if (isIntrovert && yearLevel == 2 && !isOrg) {
                 this.persona = Persona.INT_Y2_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.INT_STUDENT;
             }
             else if (isIntrovert && yearLevel == 3 && !isOrg) {
                 this.persona = Persona.INT_Y3_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.INT_STUDENT;
             }
             else if (isIntrovert && yearLevel == 4 && !isOrg) {
                 this.persona = Persona.INT_Y4_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.INT_STUDENT;
             }
             else if (!isIntrovert && yearLevel == 1 && !isOrg) {
                 this.persona = Persona.EXT_Y1_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.EXT_STUDENT;
             }
             else if (!isIntrovert && yearLevel == 2 && !isOrg) {
                 this.persona = Persona.EXT_Y2_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.EXT_STUDENT;
             }
             else if (!isIntrovert && yearLevel == 3 && !isOrg) {
                 this.persona = Persona.EXT_Y3_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.EXT_STUDENT;
             }
             else if (!isIntrovert && yearLevel == 4 && !isOrg) {
                 this.persona = Persona.EXT_Y4_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.EXT_STUDENT;
             }
             else if (isIntrovert && yearLevel == 1 && isOrg) {
                 this.persona = Persona.INT_Y1_ORG_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.INT_ORG_STUDENT;
             }
             else if (isIntrovert && yearLevel == 2 && isOrg) {
                 this.persona = Persona.INT_Y2_ORG_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.INT_ORG_STUDENT;
             }
             else if (isIntrovert && yearLevel == 3 && isOrg) {
                 this.persona = Persona.INT_Y3_ORG_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.INT_ORG_STUDENT;
             }
             else if (isIntrovert && yearLevel == 4 && isOrg) {
                 this.persona = Persona.INT_Y4_ORG_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.INT_ORG_STUDENT;
             }
             else if (!isIntrovert && yearLevel == 1 && isOrg) {
                 this.persona = Persona.EXT_Y1_ORG_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.EXT_ORG_STUDENT;
             }
             else if (!isIntrovert && yearLevel == 2 && isOrg) {
                 this.persona = Persona.EXT_Y2_ORG_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.EXT_ORG_STUDENT;
             }
             else if (!isIntrovert && yearLevel == 3 && isOrg) {
                 this.persona = Persona.EXT_Y3_ORG_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.EXT_ORG_STUDENT;
             }
             else if (!isIntrovert && yearLevel == 4 && isOrg) {
                 this.persona = Persona.EXT_Y4_ORG_STUDENT;
+                this.personaActionGroup = PersonaActionGroup.EXT_ORG_STUDENT;
             }
         }
         this.agentGraphic = new UniversityAgentGraphic(this);
@@ -254,6 +264,10 @@ public class UniversityAgent extends Agent {
 
     public UniversityAgent.Persona getPersona() {
         return persona;
+    }
+
+    public UniversityAgent.PersonaActionGroup getPersonaActionGroup() {
+        return personaActionGroup;
     }
 
     public boolean getInOnStart() {
@@ -332,6 +346,25 @@ public class UniversityAgent extends Agent {
         final int ID;
         Persona(int ID){
             this.ID = ID;
+        }
+        public int getID() {
+            return ID;
+        }
+    }
+
+    public enum PersonaActionGroup {
+        GUARD(),
+        JANITOR(),
+        INT_STUDENT(),
+        INT_ORG_STUDENT(),
+        EXT_STUDENT(),
+        EXT_ORG_STUDENT(),
+        STRICT_PROFESSOR(),
+        APPROACHABLE_PROFESSOR();
+
+        final int ID;
+        PersonaActionGroup(){
+            this.ID = this.ordinal();
         }
         public int getID() {
             return ID;

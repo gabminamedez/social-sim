@@ -95,6 +95,8 @@ public class UniversityScreenController extends ScreenController {
         Main.universitySimulator.resetToDefaultConfiguration(university);
         University.configureDefaultIOS();
         university.copyDefaultToIOS();
+        University.configureDefaultInteractionTypeChances();
+        university.copyDefaultToInteractionTypeChances();
     }
 
     @FXML
@@ -104,8 +106,9 @@ public class UniversityScreenController extends ScreenController {
             playButton.setSelected(false);
         }
         University university = Main.universitySimulator.getUniversity();
-        initializeUniversity(university);
+        this.configureParameters(university);
         university.convertIOSToChances();
+        initializeUniversity(university);
         setElements();
         playButton.setDisable(false);
         disableEdits();
@@ -687,5 +690,29 @@ public class UniversityScreenController extends ScreenController {
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+    public void configureParameters(University university){
+        university.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
+        university.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
+        university.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
+        university.setCooperativeStdDev(Integer.parseInt(cooperativeStdDev.getText()));
+        university.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
+        university.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
+        university.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
+        UniversitySimulator.MAX_STUDENTS = Integer.parseInt(maxStudents.getText());
+        UniversitySimulator.MAX_PROFESSORS = Integer.parseInt(maxProfessors.getText());
+        UniversitySimulator.MAX_CURRENT_STUDENTS = Integer.parseInt(maxCurrentStudents.getText());
+        UniversitySimulator.MAX_CURRENT_PROFESSORS = Integer.parseInt(maxCurrentProfessors.getText());
+        System.out.println(university.getNonverbalMean());
+        System.out.println(university.getNonverbalStdDev());
+        System.out.println(university.getCooperativeMean());
+        System.out.println(university.getCooperativeStdDev());
+        System.out.println(university.getExchangeMean());
+        System.out.println(university.getExchangeStdDev());
+        System.out.println(university.getFieldOfView());
+        System.out.println(UniversitySimulator.MAX_STUDENTS);
+        System.out.println(UniversitySimulator.MAX_PROFESSORS);
+        System.out.println(UniversitySimulator.MAX_CURRENT_STUDENTS);
+        System.out.println(UniversitySimulator.MAX_CURRENT_PROFESSORS);
     }
 }
