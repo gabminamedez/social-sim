@@ -62,11 +62,6 @@ public class UniversitySimulator extends Simulator {
     public static int currentJanitorJanitorCount = 0;
     public static int[][] currentPatchCount;
 
-  public static final int MAX_STUDENTS = 250; //250
-    public static final int MAX_PROFESSORS = 20;
-    public static final int MAX_CURRENT_STUDENTS = 250; //250
-    public static final int MAX_CURRENT_PROFESSORS = 20;
-
     public UniversitySimulator() {
         this.university = null;
         this.running = new AtomicBoolean(false);
