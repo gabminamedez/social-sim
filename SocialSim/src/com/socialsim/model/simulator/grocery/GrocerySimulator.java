@@ -22,6 +22,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GrocerySimulator extends Simulator {
 
+    public static int defaultMaxFamily = 20; //250
+    public static int defaultMaxAlone = 20;
+    public static int defaultMaxCurrentFamily = 20; //250
+    public static int defaultMaxCurrentAlone = 20;
+
     private Grocery grocery;
 
     // Simulator variables
@@ -29,10 +34,6 @@ public class GrocerySimulator extends Simulator {
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
 
-    public static final int MAX_FAMILY = 20; //250
-    public static final int MAX_ALONE = 20;
-    public static final int MAX_CURRENT_FAMILY = 20; //250
-    public static final int MAX_CURRENT_ALONE = 20;
 
     public static int currentFamilyCount = 0;
     public static int currentAloneCustomerCount = 0;

@@ -30,6 +30,14 @@ import java.util.stream.Stream;
 
 public class OfficeAgentMovement extends AgentMovement {
 
+    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalStdDev = 1;
+    public static int defaultCooperativeMean = 24;
+    public static int defaultCooperativeStdDev = 12;
+    public static int defaultExchangeMean = 24;
+    public static int defaultExchangeStdDev = 12;
+    public static int defaultFieldOfView = 30;
+
     private final OfficeAgent parent;
     private final Coordinates position; // Denotes the position of the agent
     private final Office office;
@@ -110,22 +118,23 @@ public class OfficeAgentMovement extends AgentMovement {
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
+        this.currentPatch = spawnPatch; // Add this agent to the spawn patch
+        this.currentPatch.getAgents().add(parent);
+        this.office = (Office) currentPatch.getEnvironment();
+
         if (parent.getInOnStart()) { // All inOnStart agents will face the south by default
             this.proposedHeading = Math.toRadians(270.0);
             this.heading = Math.toRadians(270.0);
             this.previousHeading = Math.toRadians(270.0);
-            this.fieldOfViewAngle = Math.toRadians(30.0);
+            this.fieldOfViewAngle = this.office.getFieldOfView();
         }
         else { // All newly generated agents will face the north by default
             this.proposedHeading = Math.toRadians(90.0);
             this.heading = Math.toRadians(90.0);
             this.previousHeading = Math.toRadians(90.0);
-            this.fieldOfViewAngle = Math.toRadians(30.0);
+            this.fieldOfViewAngle = this.office.getFieldOfView();
         }
 
-        this.currentPatch = spawnPatch; // Add this agent to the spawn patch
-        this.currentPatch.getAgents().add(parent);
-        this.office = (Office) currentPatch.getEnvironment();
         this.currentPatchField = null;
         this.tickEntered = (int) tickEntered;
         this.ticksUntilFullyAccelerated = 10; // Set the agent's time until it fully accelerates
@@ -1825,8 +1834,8 @@ public class OfficeAgentMovement extends AgentMovement {
     public void rollAgentInteraction(OfficeAgent agent){
         //TODO: Statistics in interaction
 
-        double IOS1 = office.getIOS().get(this.getParent().getId()).get(agent.getId());
-        double IOS2 = office.getIOS().get(agent.getId()).get(this.getParent().getId());
+        double IOS1 = office.getIOS().get(this.getParent().getPersona().ordinal()).get(agent.getPersona().ordinal());
+        double IOS2 = office.getIOS().get(agent.getPersona().ordinal()).get(this.getParent().getPersona().ordinal());
         // roll if possible interaction
         double CHANCE1 = Simulator.roll();
         double CHANCE2 = Simulator.roll();
@@ -1846,8 +1855,8 @@ public class OfficeAgentMovement extends AgentMovement {
                 OfficeSimulator.currentNonverbalCount++;
                 this.getParent().getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.NON_VERBAL);
                 agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.NON_VERBAL);
-                interactionStdDeviation = 1;
-                interactionMean = 2;
+                interactionMean = getOffice().getNonverbalMean();
+                interactionStdDeviation = getOffice().getNonverbalStdDev();
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
                 OfficeSimulator.currentCooperativeCount++;
@@ -1855,8 +1864,8 @@ public class OfficeAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.COOPERATIVE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 12;
-                interactionMean = 36;
+                interactionMean = getOffice().getCooperativeMean();
+                interactionStdDeviation = getOffice().getCooperativeStdDev();
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
                 OfficeSimulator.currentExchangeCount++;
@@ -1864,8 +1873,8 @@ public class OfficeAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(OfficeAgentMovement.InteractionType.EXCHANGE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 12;
-                interactionMean = 30;
+                interactionMean = getOffice().getExchangeMean();
+                interactionStdDeviation = getOffice().getExchangeStdDev();
             }
             else{
                 return;

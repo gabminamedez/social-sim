@@ -20,6 +20,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MallSimulator extends Simulator {
 
+    public static int defaultMaxFamily = 10;
+    public static int defaultMaxFriends = 10;
+    public static int defaultMaxCouple = 10;
+    public static int defaultMaxAlone = 10;
+
     private Mall mall;
 
     // Simulator variables
@@ -58,10 +63,6 @@ public class MallSimulator extends Simulator {
     public static int currentStaffKioskGuardCount = 0;
     public static int[][] currentPatchCount;
 
-    public static final int MAX_FAMILY = 10;
-    public static final int MAX_FRIENDS = 10;
-    public static final int MAX_COUPLE = 10;
-    public static final int MAX_ALONE = 10;
 
     public MallSimulator() {
         this.mall = null;

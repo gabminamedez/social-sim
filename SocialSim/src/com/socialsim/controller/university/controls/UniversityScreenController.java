@@ -17,17 +17,18 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.imageio.plugins.tiff.BaselineTIFFTagSet;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -105,13 +106,15 @@ public class UniversityScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
-        University university = Main.universitySimulator.getUniversity();
-        this.configureParameters(university);
-        university.convertIOSToChances();
-        initializeUniversity(university);
-        setElements();
-        playButton.setDisable(false);
-        disableEdits();
+        if (validateParameters()){
+            University university = Main.universitySimulator.getUniversity();
+            this.configureParameters(university);
+            university.convertIOSToChances();
+            initializeUniversity(university);
+            setElements();
+            playButton.setDisable(false);
+            disableEdits();
+        }
     }
 
     public void initializeUniversity(University university) {
@@ -665,7 +668,7 @@ public class UniversityScreenController extends ScreenController {
 
     public void openIOSLevels(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/ConfigureIOS.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityConfigureIOS.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -679,7 +682,7 @@ public class UniversityScreenController extends ScreenController {
     }
     public void openEditInteractions(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/EditInteractions.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityEditInteractions.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -699,20 +702,29 @@ public class UniversityScreenController extends ScreenController {
         university.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
         university.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
         university.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
-        UniversitySimulator.MAX_STUDENTS = Integer.parseInt(maxStudents.getText());
-        UniversitySimulator.MAX_PROFESSORS = Integer.parseInt(maxProfessors.getText());
-        UniversitySimulator.MAX_CURRENT_STUDENTS = Integer.parseInt(maxCurrentStudents.getText());
-        UniversitySimulator.MAX_CURRENT_PROFESSORS = Integer.parseInt(maxCurrentProfessors.getText());
-        System.out.println(university.getNonverbalMean());
-        System.out.println(university.getNonverbalStdDev());
-        System.out.println(university.getCooperativeMean());
-        System.out.println(university.getCooperativeStdDev());
-        System.out.println(university.getExchangeMean());
-        System.out.println(university.getExchangeStdDev());
-        System.out.println(university.getFieldOfView());
-        System.out.println(UniversitySimulator.MAX_STUDENTS);
-        System.out.println(UniversitySimulator.MAX_PROFESSORS);
-        System.out.println(UniversitySimulator.MAX_CURRENT_STUDENTS);
-        System.out.println(UniversitySimulator.MAX_CURRENT_PROFESSORS);
+        university.setMAX_STUDENTS(Integer.parseInt(maxStudents.getText()));
+        university.setMAX_PROFESSORS(Integer.parseInt(maxProfessors.getText()));
+        university.setMAX_CURRENT_STUDENTS(Integer.parseInt(maxCurrentStudents.getText()));
+        university.setMAX_CURRENT_PROFESSORS(Integer.parseInt(maxCurrentProfessors.getText()));
+    }
+
+    public boolean validateParameters(){
+        boolean validParameters = Integer.parseInt(nonverbalMean.getText()) >= 0 && Integer.parseInt(nonverbalMean.getText()) >= 0
+                && Integer.parseInt(cooperativeMean.getText()) >= 0 && Integer.parseInt(cooperativeStdDev.getText()) >= 0
+                && Integer.parseInt(exchangeMean.getText()) >= 0 && Integer.parseInt(exchangeStdDev.getText()) >= 0
+                && Integer.parseInt(fieldOfView.getText()) >= 0 && Integer.parseInt(fieldOfView.getText()) <= 360
+                && Integer.parseInt(maxStudents.getText()) >= 0 && Integer.parseInt(maxProfessors.getText()) >= 0
+                && Integer.parseInt(maxCurrentStudents.getText()) >= 0 && Integer.parseInt(maxCurrentProfessors.getText()) >= 0;
+        if (!validParameters){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
+            Label label = new Label("Failed to initialize. Please make sure all values are greater than 0, and field of view is not greater than 360 degrees");
+            label.setWrapText(true);
+            alert.getDialogPane().setContent(label);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+        return validParameters;
     }
 }

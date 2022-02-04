@@ -22,6 +22,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class OfficeSimulator extends Simulator {
 
+    public static int defaultMaxClients = 6;
+    public static int defaultMaxDrivers = 3;
+    public static int defaultMaxVisitors = 1;
+
     private static Office office;
 
     // Simulator variables
@@ -48,9 +52,6 @@ public class OfficeSimulator extends Simulator {
     public static List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
 
     private final int MAX_SECRETARIES = 1;
-    private final int MAX_CLIENTS = 6;
-    private final int MAX_DRIVERS = 3;
-    private final int MAX_VISITORS = 1;
 
     public static int currentManagerCount = 0;
     public static int currentBusinessCount = 0;

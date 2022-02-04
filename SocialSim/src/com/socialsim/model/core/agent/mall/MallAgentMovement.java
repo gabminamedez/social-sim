@@ -25,6 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MallAgentMovement extends AgentMovement {
 
+    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalStdDev = 1;
+    public static int defaultCooperativeMean = 24;
+    public static int defaultCooperativeStdDev = 12;
+    public static int defaultExchangeMean = 24;
+    public static int defaultExchangeStdDev = 12;
+    public static int defaultFieldOfView = 30;
+
     private final MallAgent parent;
     private final Coordinates position; // Denotes the position of the agent
     private MallAgent leaderAgent;
@@ -109,36 +117,37 @@ public class MallAgentMovement extends AgentMovement {
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
+        this.currentPatch = spawnPatch; // Add this agent to the spawn patch
+        this.currentPatch.getAgents().add(parent);
+        this.mall = (Mall) currentPatch.getEnvironment();
+
         if (parent.getInOnStart() && parent.getType() != MallAgent.Type.STAFF_STORE_CASHIER) { // All inOnStart agents will face the south by default
             this.proposedHeading = Math.toRadians(270.0);
             this.heading = Math.toRadians(270.0);
             this.previousHeading = Math.toRadians(270.0);
-            this.fieldOfViewAngle = Math.toRadians(30.0);
+            this.fieldOfViewAngle = this.mall.getFieldOfView();
         }
         else if (parent.getInOnStart() && parent.getType() == MallAgent.Type.STAFF_STORE_CASHIER) {
             if (team == 3 || team == 4 || team == 10 || team == 11) {
                 this.proposedHeading = Math.toRadians(90.0);
                 this.heading = Math.toRadians(90.0);
                 this.previousHeading = Math.toRadians(90.0);
-                this.fieldOfViewAngle = Math.toRadians(30.0);
+                this.fieldOfViewAngle = this.mall.getFieldOfView();
             }
             else {
                 this.proposedHeading = Math.toRadians(270.0);
                 this.heading = Math.toRadians(270.0);
                 this.previousHeading = Math.toRadians(270.0);
-                this.fieldOfViewAngle = Math.toRadians(30.0);
+                this.fieldOfViewAngle = this.mall.getFieldOfView();
             }
         }
         else { // All newly generated agents will face the east by default
             this.proposedHeading = Math.toRadians(0);
             this.heading = Math.toRadians(0);
             this.previousHeading = Math.toRadians(0);
-            this.fieldOfViewAngle = Math.toRadians(30.0);
+            this.fieldOfViewAngle = this.mall.getFieldOfView();
         }
 
-        this.currentPatch = spawnPatch; // Add this agent to the spawn patch
-        this.currentPatch.getAgents().add(parent);
-        this.mall = (Mall) currentPatch.getEnvironment();
         this.currentPatchField = null;
         this.tickEntered = (int) tickEntered;
         this.ticksUntilFullyAccelerated = 10; // Set the agent's time until it fully accelerates
@@ -2163,8 +2172,8 @@ public class MallAgentMovement extends AgentMovement {
     public void rollAgentInteraction(MallAgent agent){
         //TODO: Statistics in interaction
 
-        double IOS1 = mall.getIOS().get(this.getParent().getId()).get(agent.getId());
-        double IOS2 = mall.getIOS().get(agent.getId()).get(this.getParent().getId());
+        double IOS1 = mall.getIOS().get(this.getParent().getPersona().ordinal()).get(agent.getPersona().ordinal());
+        double IOS2 = mall.getIOS().get(agent.getPersona().ordinal()).get(this.getParent().getPersona().ordinal());
         // roll if possible interaction
         double CHANCE1 = Simulator.roll();
         double CHANCE2 = Simulator.roll();
@@ -2184,8 +2193,8 @@ public class MallAgentMovement extends AgentMovement {
                 MallSimulator.currentNonverbalCount++;
                 this.getParent().getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.NON_VERBAL);
                 agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.NON_VERBAL);
-                interactionStdDeviation = 1;
-                interactionMean = 2;
+                interactionMean = getMall().getNonverbalMean();
+                interactionStdDeviation = getMall().getNonverbalStdDev();
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
                 MallSimulator.currentCooperativeCount++;
@@ -2193,8 +2202,8 @@ public class MallAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.COOPERATIVE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 12;
-                interactionMean = 24;
+                interactionMean = getMall().getCooperativeMean();
+                interactionStdDeviation = getMall().getCooperativeStdDev();
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
                 MallSimulator.currentExchangeCount++;
@@ -2202,8 +2211,8 @@ public class MallAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.EXCHANGE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 24;
-                interactionMean = 60;
+                interactionMean = getMall().getExchangeMean();
+                interactionStdDeviation = getMall().getExchangeStdDev();
             }
             else{
                 return;

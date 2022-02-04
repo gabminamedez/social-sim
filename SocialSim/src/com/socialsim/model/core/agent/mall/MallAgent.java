@@ -35,6 +35,7 @@ public class MallAgent extends Agent {
     private MallAgent.Gender gender;
     private MallAgent.AgeGroup ageGroup = null;
     private MallAgent.Persona persona = null;
+    private MallAgent.PersonaActionGroup personaActionGroup = null;
     private boolean leader;
     private int team;
     private final boolean inOnStart;
@@ -46,64 +47,6 @@ public class MallAgent extends Agent {
 
     static {
         agentFactory = new MallAgent.MallAgentFactory();
-    }
-
-    private MallAgent(MallAgent.Type type, MallAgent.Persona persona, MallAgent.Gender gender, MallAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, MallAgent leaderAgent, int currentTick, int team) {
-        this.id = agentCount;
-        this.type = type;
-        this.team = team;
-        this.inOnStart = inOnStart;
-
-        if (type == Type.PATRON) {
-            MallAgent.patronCount++;
-        }
-        else if (type == Type.STAFF_STORE_SALES) {
-            MallAgent.staffStoreSalesCount++;
-        }
-        else if (type == Type.STAFF_STORE_CASHIER) {
-            MallAgent.staffStoreCashierCount++;
-        }
-        else if (type == Type.STAFF_RESTO) {
-            MallAgent.staffRestoCount++;
-        }
-        else if (type == Type.STAFF_KIOSK) {
-            MallAgent.staffKioskCount++;
-        }
-        else if (type == MallAgent.Type.GUARD) {
-            MallAgent.guardCount++;
-        }
-        MallAgent.agentCount++;
-
-        this.gender = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? MallAgent.Gender.FEMALE : MallAgent.Gender.MALE;
-
-        if (type == Type.GUARD) {
-            this.persona = Persona.GUARD;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
-        }
-        else if (type == Type.STAFF_STORE_SALES) {
-            this.persona = Persona.STAFF_STORE_SALES;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-        }
-        else if (type == Type.STAFF_STORE_CASHIER) {
-            this.persona = Persona.STAFF_STORE_CASHIER;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-        }
-        else if (type == Type.STAFF_RESTO) {
-            this.persona = Persona.STAFF_RESTO;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-        }
-        else if (type == Type.STAFF_KIOSK) {
-            this.persona = Persona.STAFF_KIOSK;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-        }
-        else if (type == Type.PATRON) {
-            this.persona = persona;
-            this.gender = gender;
-            this.ageGroup = ageGroup;
-        }
-
-        this.agentGraphic = new MallAgentGraphic(this);
-        this.agentMovement = new MallAgentMovement(spawnPatch, this, leaderAgent, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick, team);
     }
 
     private MallAgent(MallAgent.Type type, MallAgent.Persona persona, MallAgent.Gender gender, MallAgent.AgeGroup ageGroup, boolean leader, boolean inOnStart, int team) {
@@ -118,27 +61,40 @@ public class MallAgent extends Agent {
         if (type == Type.GUARD) {
             this.persona = Persona.GUARD;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+            this.personaActionGroup = PersonaActionGroup.GUARD;
         }
         else if (type == Type.STAFF_STORE_SALES) {
             this.persona = Persona.STAFF_STORE_SALES;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.STAFF_STORE_SALES;
         }
         else if (type == Type.STAFF_STORE_CASHIER) {
             this.persona = Persona.STAFF_STORE_CASHIER;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.STAFF_STORE_CASHIER;
         }
         else if (type == Type.STAFF_RESTO) {
             this.persona = Persona.STAFF_RESTO;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.STAFF_RESTO;
         }
         else if (type == Type.STAFF_KIOSK) {
             this.persona = Persona.STAFF_KIOSK;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.STAFF_KIOSK;
         }
         else if (type == Type.PATRON) {
             this.persona = persona;
             this.gender = gender;
             this.ageGroup = ageGroup;
+            if (this.persona.ID == PersonaActionGroup.FAMILY.ID)
+                this.personaActionGroup = PersonaActionGroup.FAMILY;
+            else if (this.persona.ID == PersonaActionGroup.FRIENDS.ID)
+                this.personaActionGroup = PersonaActionGroup.FRIENDS;
+            else if (this.persona.ID == PersonaActionGroup.ALONE.ID)
+                this.personaActionGroup = PersonaActionGroup.ALONE;
+            else if (this.persona.ID == PersonaActionGroup.COUPLE.ID)
+                this.personaActionGroup = PersonaActionGroup.COUPLE;
         }
 
         this.agentGraphic = new MallAgentGraphic(this);
@@ -171,6 +127,10 @@ public class MallAgent extends Agent {
 
     public MallAgent.Persona getPersona() {
         return persona;
+    }
+
+    public MallAgent.PersonaActionGroup getPersonaActionGroup() {
+        return personaActionGroup;
     }
 
     public MallAgentGraphic getAgentGraphic() {
@@ -240,7 +200,7 @@ public class MallAgent extends Agent {
     }
 
     public enum Persona {
-        STAFF_STORE_SALES(0), STAFF_STORE_CASHIER(1), STAFF_RESTO(2), STAFF_KIOSK(3), GUARD(4),
+        STAFF_STORE_SALES(0), STAFF_STORE_CASHIER(1), STAFF_RESTO(2), GUARD(3), STAFF_KIOSK(4),
         ERRAND_FAMILY(5), LOITER_FAMILY(5),
         ERRAND_FRIENDS(6), LOITER_FRIENDS(6),
         ERRAND_ALONE(7), LOITER_ALONE(7),
@@ -252,6 +212,26 @@ public class MallAgent extends Agent {
             this.ID = ID;
         }
 
+        public int getID() {
+            return ID;
+        }
+    }
+
+    public enum PersonaActionGroup {
+        STAFF_STORE_SALES(),
+        STAFF_STORE_CASHIER(),
+        STAFF_RESTO(),
+        GUARD(),
+        STAFF_KIOSK(),
+        FAMILY(),
+        FRIENDS(),
+        ALONE(),
+        COUPLE();
+
+        final int ID;
+        PersonaActionGroup(){
+            this.ID = this.ordinal();
+        }
         public int getID() {
             return ID;
         }

@@ -30,6 +30,14 @@ import java.util.stream.Stream;
 
 public class GroceryAgentMovement extends AgentMovement {
 
+    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalStdDev = 1;
+    public static int defaultCooperativeMean = 24;
+    public static int defaultCooperativeStdDev = 12;
+    public static int defaultExchangeMean = 24;
+    public static int defaultExchangeStdDev = 12;
+    public static int defaultFieldOfView = 30;
+
     private final GroceryAgent parent;
     private final Coordinates position; // Denotes the position of the agent
     private GroceryAgent leaderAgent;
@@ -113,22 +121,23 @@ public class GroceryAgentMovement extends AgentMovement {
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
+        this.currentPatch = spawnPatch; // Add this agent to the spawn patch
+        this.currentPatch.getAgents().add(parent);
+        this.grocery = (Grocery) currentPatch.getEnvironment();
+
         if (parent.getInOnStart()) { // All inOnStart agents will face the south by default
             this.proposedHeading = Math.toRadians(270.0);
             this.heading = Math.toRadians(270.0);
             this.previousHeading = Math.toRadians(270.0);
-            this.fieldOfViewAngle = Math.toRadians(270.0);
+            this.fieldOfViewAngle = this.grocery.getFieldOfView();
         }
         else { // All newly generated agents will face the north by default
             this.proposedHeading = Math.toRadians(90.0);
             this.heading = Math.toRadians(90.0);
             this.previousHeading = Math.toRadians(90.0);
-            this.fieldOfViewAngle = Math.toRadians(90.0);
+            this.fieldOfViewAngle = this.grocery.getFieldOfView();
         }
 
-        this.currentPatch = spawnPatch; // Add this agent to the spawn patch
-        this.currentPatch.getAgents().add(parent);
-        this.grocery = (Grocery) currentPatch.getEnvironment();
         this.currentPatchField = null;
         this.tickEntered = (int) tickEntered;
         this.ticksUntilFullyAccelerated = 10; // Set the agent's time until it fully accelerates
@@ -2075,8 +2084,8 @@ public class GroceryAgentMovement extends AgentMovement {
     public void rollAgentInteraction(GroceryAgent agent){
         //TODO: Statistics in interaction
 
-        double IOS1 = grocery.getIOS().get(this.getParent().getId()).get(agent.getId());
-        double IOS2 = grocery.getIOS().get(agent.getId()).get(this.getParent().getId());
+        double IOS1 = grocery.getIOS().get(this.getParent().getPersona().ordinal()).get(agent.getPersona().ordinal());
+        double IOS2 = grocery.getIOS().get(agent.getPersona().ordinal()).get(this.getParent().getPersona().ordinal());
         // roll if possible interaction
         double CHANCE1 = Simulator.roll();
         double CHANCE2 = Simulator.roll();
@@ -2096,8 +2105,8 @@ public class GroceryAgentMovement extends AgentMovement {
                 GrocerySimulator.currentNonverbalCount++;
                 this.getParent().getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.NON_VERBAL);
                 agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.NON_VERBAL);
-                interactionStdDeviation = 1;
-                interactionMean = 2;
+                interactionMean = getGrocery().getNonverbalMean();
+                interactionStdDeviation = getGrocery().getNonverbalStdDev();
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
                 GrocerySimulator.currentCooperativeCount++;
@@ -2105,8 +2114,8 @@ public class GroceryAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.COOPERATIVE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 12;
-                interactionMean = 24;
+                interactionMean = getGrocery().getCooperativeMean();
+                interactionStdDeviation = getGrocery().getCooperativeStdDev();
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
                 GrocerySimulator.currentExchangeCount++;
@@ -2114,8 +2123,8 @@ public class GroceryAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(GroceryAgentMovement.InteractionType.EXCHANGE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 24;
-                interactionMean = 60;
+                interactionMean = getGrocery().getExchangeMean();
+                interactionStdDeviation = getGrocery().getExchangeStdDev();
             }
             else{
                 return;
