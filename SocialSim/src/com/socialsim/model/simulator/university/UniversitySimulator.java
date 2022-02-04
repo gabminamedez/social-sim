@@ -3,10 +3,8 @@ package com.socialsim.model.simulator.university;
 import com.socialsim.controller.Main;
 import com.socialsim.controller.university.controls.UniversityScreenController;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.agent.university.*;
 import com.socialsim.model.core.environment.generic.Patch;
-import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.university.University;
@@ -100,6 +98,8 @@ public class UniversitySimulator extends Simulator {
 
     public void resetToDefaultConfiguration(University university) {
         this.university = university;
+        replenishStaticVars();
+        UniversityAgent.clearUniversityAgentCounts();
         this.time.reset();
         this.running.set(false);
         currentPatchCount = new int[university.getRows()][university.getColumns()];
@@ -418,6 +418,26 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.reachPatchInPath();
                                 }
                             } else {
+                                if (!agentMovement.isStationInteracting()) {
+                                    int CHANCE_GUARD_INTERACT = 0;
+                                    if (persona == UniversityAgent.Persona.INT_Y1_STUDENT || persona == UniversityAgent.Persona.INT_Y2_STUDENT || persona == UniversityAgent.Persona.INT_Y3_STUDENT || persona == UniversityAgent.Persona.INT_Y4_STUDENT) {
+                                        CHANCE_GUARD_INTERACT = UniversityRoutePlan.CHANCE_INT_GUARD_INTERACT;
+                                    }
+                                    else if (persona == UniversityAgent.Persona.EXT_Y1_STUDENT || persona == UniversityAgent.Persona.EXT_Y2_STUDENT || persona == UniversityAgent.Persona.EXT_Y3_STUDENT || persona == UniversityAgent.Persona.EXT_Y4_STUDENT) {
+                                        CHANCE_GUARD_INTERACT = UniversityRoutePlan.CHANCE_EXT_GUARD_INTERACT;
+                                    }
+                                    else if (persona == UniversityAgent.Persona.INT_Y1_ORG_STUDENT || persona == UniversityAgent.Persona.INT_Y2_ORG_STUDENT || persona == UniversityAgent.Persona.INT_Y3_ORG_STUDENT || persona == UniversityAgent.Persona.INT_Y4_ORG_STUDENT) {
+                                        CHANCE_GUARD_INTERACT = UniversityRoutePlan.CHANCE_INTORG_GUARD_INTERACT;
+                                    }
+                                    else {
+                                        CHANCE_GUARD_INTERACT = UniversityRoutePlan.CHANCE_EXTORG_GUARD_INTERACT;
+                                    }
+                                    int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                                    if (x < CHANCE_GUARD_INTERACT) {
+                                        agentMovement.forceStationedInteraction(UniversityAgent.Type.GUARD);
+                                    }
+                                }
+
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
@@ -427,6 +447,7 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
+                                    agentMovement.setStationInteracting(false);
                                 }
                             }
                         }
@@ -877,6 +898,7 @@ public class UniversitySimulator extends Simulator {
                             }
                         }
                     } else if (state.getName() == UniversityState.Name.WAIT_FOR_CLASS_STUDENT) {
+                        agentMovement.getRoutePlan().MAX_CLASS_ASKS = 2;
                         if (action.getName() == UniversityAction.Name.CLASSROOM_STAY_PUT) {
                             agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
@@ -963,6 +985,29 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.resetGoal();
                                     agentMovement.getRoutePlan().setFromClass(true);
                                     agentMovement.getRoutePlan().setUrgentCtr(agentMovement.getRoutePlan().getUrgentCtr() - 3);
+                                }
+                                else {
+                                    int CHANCE_ASKS = 0;
+                                    int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+
+                                    if (persona == UniversityAgent.Persona.INT_Y1_STUDENT || persona == UniversityAgent.Persona.INT_Y2_STUDENT || persona == UniversityAgent.Persona.INT_Y3_STUDENT || persona == UniversityAgent.Persona.INT_Y4_STUDENT) {
+                                        CHANCE_ASKS = UniversityRoutePlan.CHANCE_INT_ASK;
+                                    }
+                                    else if (persona == UniversityAgent.Persona.EXT_Y1_STUDENT || persona == UniversityAgent.Persona.EXT_Y2_STUDENT || persona == UniversityAgent.Persona.EXT_Y3_STUDENT || persona == UniversityAgent.Persona.EXT_Y4_STUDENT) {
+                                        CHANCE_ASKS = UniversityRoutePlan.CHANCE_EXT_ASK;
+                                    }
+                                    else if (persona == UniversityAgent.Persona.INT_Y1_ORG_STUDENT || persona == UniversityAgent.Persona.INT_Y2_ORG_STUDENT || persona == UniversityAgent.Persona.INT_Y3_ORG_STUDENT || persona == UniversityAgent.Persona.INT_Y4_ORG_STUDENT) {
+                                        CHANCE_ASKS = UniversityRoutePlan.CHANCE_INTORG_ASK;
+                                    }
+                                    else {
+                                        CHANCE_ASKS = UniversityRoutePlan.CHANCE_EXTORG_ASK;
+                                    }
+
+                                    if (x < CHANCE_ASKS && agentMovement.getRoutePlan().MAX_CLASS_ASKS > 0) {
+                                        agentMovement.forceStationedInteraction(UniversityAgent.Type.PROFESSOR);
+                                        agentMovement.setStationInteracting(false);
+                                        agentMovement.getRoutePlan().MAX_CLASS_ASKS--;
+                                    }
                                 }
                             }
                         }
@@ -1107,18 +1152,28 @@ public class UniversitySimulator extends Simulator {
                         if (action.getName() == UniversityAction.Name.FIND_SEAT_CAFETERIA) {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.chooseGoal(EatTable.class);
+                                if (!agentMovement.chooseGoal(EatTable.class)) {
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
                             }
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                                        //System.out.println("Find seat to Eating");
+                            else {
+                                if (agentMovement.chooseNextPatchInPath()) {
+                                    agentMovement.faceNextPosition();
+                                    agentMovement.moveSocialForce();
+                                    if (agentMovement.hasReachedNextPatchInPath()) {
+                                        agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                            //System.out.println("Find seat to Eating");
+                                        }
                                     }
                                 }
                             }
@@ -1248,6 +1303,20 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.reachPatchInPath();
                                 }
                             } else {
+                                if (!agentMovement.isStationInteracting()) {
+                                    int CHANCE_GUARD_INTERACT = 0;
+                                    if (persona == UniversityAgent.Persona.STRICT_PROFESSOR) {
+                                        CHANCE_GUARD_INTERACT = UniversityRoutePlan.CHANCE_SPROF_GUARD_INTERACT;
+                                    }
+                                    else {
+                                        CHANCE_GUARD_INTERACT = UniversityRoutePlan.CHANCE_APROF_GUARD_INTERACT;
+                                    }
+                                    int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                                    if (x < CHANCE_GUARD_INTERACT) {
+                                        agentMovement.forceStationedInteraction(UniversityAgent.Type.GUARD);
+                                    }
+                                }
+
                                 agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
@@ -1257,6 +1326,7 @@ public class UniversitySimulator extends Simulator {
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
+                                    agentMovement.setStationInteracting(false);
                                 }
                             }
                         }
@@ -1802,18 +1872,28 @@ public class UniversitySimulator extends Simulator {
                         if (action.getName() == UniversityAction.Name.FIND_SEAT_CAFETERIA) {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.chooseGoal(EatTable.class);
+                                if (!agentMovement.chooseGoal(EatTable.class)) {
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
                             }
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                                        //System.out.println("Find seat to Eating");
+                            else {
+                                if (agentMovement.chooseNextPatchInPath()) {
+                                    agentMovement.faceNextPosition();
+                                    agentMovement.moveSocialForce();
+                                    if (agentMovement.hasReachedNextPatchInPath()) {
+                                        agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                            //System.out.println("Find seat to Eating");
+                                        }
                                     }
                                 }
                             }
@@ -1995,6 +2075,7 @@ public class UniversitySimulator extends Simulator {
             // termination of interaction
             if (agentMovement.getDuration() <= 0) {
                 agentMovement.setInteracting(false);
+                // agent.getAgentGraphic().change();
                 agentMovement.setInteractionType(null);
             }
             else {
@@ -2050,7 +2131,7 @@ public class UniversitySimulator extends Simulator {
         double spawnChance = gate.getChancePerTick();
         UniversityAgent agent = null;
 
-        for (int i = 0; i < 4; i++){ // 4 gates
+        for (int i = 0; i < 2; i++){ // 4 gates
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             double CHANCE = Simulator.roll();
             if (CHANCE < spawnChance && university.getUnspawnedAgents().size() > 0){
@@ -2073,6 +2154,26 @@ public class UniversitySimulator extends Simulator {
                 }
             }
         }
+    }
+
+    public void replenishStaticVars() {
+        currentProfessorCount = 0;
+        currentStudentCount = 0;
+        currentNonverbalCount = 0;
+        currentCooperativeCount = 0;
+        currentExchangeCount = 0;
+        averageNonverbalDuration = 0;
+        averageCooperativeDuration = 0;
+        averageExchangeDuration = 0;
+        currentStudentStudentCount = 0;
+        currentStudentProfCount = 0;
+        currentStudentGuardCount = 0;
+        currentStudentJanitorCount = 0;
+        currentProfProfCount = 0;
+        currentProfGuardCount = 0;
+        currentProfJanitorCount = 0;
+        currentGuardJanitorCount = 0;
+        currentJanitorJanitorCount = 0;
     }
 
 }
