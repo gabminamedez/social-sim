@@ -544,19 +544,9 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.setDuration(agent.getAgentMovement().getDuration());
                                 agentMovement.getGoalAttractor().setIsReserved(false);
                                 agentMovement.resetGoal();
-                            }
-                        } else if (action.getName() == UniversityAction.Name.RELIEVE_IN_CUBICLE) {
-                            agentMovement.setSimultaneousInteractionAllowed(false);
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.setDuration(agent.getAgentMovement().getDuration());
-                                agentMovement.resetGoal();
-                                //System.out.println("Transition to Wash  in sink");
                             }
                         } else if (action.getName() == UniversityAction.Name.WASH_IN_SINK) {
                             agentMovement.setSimultaneousInteractionAllowed(true);
@@ -1378,17 +1368,8 @@ public class UniversitySimulator extends Simulator {
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.getGoalAttractor().setIsReserved(false);
-                                agentMovement.resetGoal();
-                            }
-                        } else if (action.getName() == UniversityAction.Name.RELIEVE_IN_CUBICLE) {
-                            agentMovement.setSimultaneousInteractionAllowed(false);
-                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                            agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
-                            if (agentMovement.getDuration() <= 0) {
-                                agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                                agentMovement.getGoalAttractor().setIsReserved(false);
                                 agentMovement.resetGoal();
                             }
                         } else if (action.getName() == UniversityAction.Name.WASH_IN_SINK) {
