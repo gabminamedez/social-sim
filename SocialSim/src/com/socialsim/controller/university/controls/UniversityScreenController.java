@@ -572,8 +572,8 @@ public class UniversityScreenController extends ScreenController {
         int maxPatchCount = Arrays.stream(currentPatchCount).flatMapToInt(Arrays::stream).max().getAsInt();
         for(int i = 0; i < currentPatchCount.length; i++){
             for (int j = 0; j < currentPatchCount[0].length; j++){
-                System.out.println(currentPatchCount.length);
-                System.out.println(currentPatchCount[0].length);
+//                System.out.println(currentPatchCount.length);
+//                System.out.println(currentPatchCount[0].length);
                 int patchRGBCount = 255 - currentPatchCount[i][j] * 255 / maxPatchCount;
                 foregroundCanvas.getGraphicsContext2D().setFill(Color.rgb(255, patchRGBCount, patchRGBCount));
                 foregroundCanvas.getGraphicsContext2D().fillRect(j * UniversityGraphicsController.tileSize, i * UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize);
@@ -745,16 +745,16 @@ public class UniversityScreenController extends ScreenController {
         UniversitySimulator.MAX_PROFESSORS = Integer.parseInt(maxProfessors.getText());
         UniversitySimulator.MAX_CURRENT_STUDENTS = Integer.parseInt(maxCurrentStudents.getText());
         UniversitySimulator.MAX_CURRENT_PROFESSORS = Integer.parseInt(maxCurrentProfessors.getText());
-        System.out.println(university.getNonverbalMean());
-        System.out.println(university.getNonverbalStdDev());
-        System.out.println(university.getCooperativeMean());
-        System.out.println(university.getCooperativeStdDev());
-        System.out.println(university.getExchangeMean());
-        System.out.println(university.getExchangeStdDev());
-        System.out.println(university.getFieldOfView());
-        System.out.println(UniversitySimulator.MAX_STUDENTS);
-        System.out.println(UniversitySimulator.MAX_PROFESSORS);
-        System.out.println(UniversitySimulator.MAX_CURRENT_STUDENTS);
-        System.out.println(UniversitySimulator.MAX_CURRENT_PROFESSORS);
+//        System.out.println(university.getNonverbalMean());
+//        System.out.println(university.getNonverbalStdDev());
+//        System.out.println(university.getCooperativeMean());
+//        System.out.println(university.getCooperativeStdDev());
+//        System.out.println(university.getExchangeMean());
+//        System.out.println(university.getExchangeStdDev());
+//        System.out.println(university.getFieldOfView());
+//        System.out.println(UniversitySimulator.MAX_STUDENTS);
+//        System.out.println(UniversitySimulator.MAX_PROFESSORS);
+//        System.out.println(UniversitySimulator.MAX_CURRENT_STUDENTS);
+//        System.out.println(UniversitySimulator.MAX_CURRENT_PROFESSORS);
     }
 }
