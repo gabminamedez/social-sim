@@ -33,9 +33,9 @@ public class GroceryIOSController {
         //TODO: Create columns of IOS levels
         Grocery grocery = Main.grocerySimulator.getGrocery();
 
-        System.out.println(Grocery.defaultIOS.equals(grocery.getIOSScales()));
         int otherCtr = 0;
         boolean other = false;
+        int[] otherArr = new int[GroceryAgent.Persona.values().length];
         for (int i = 0; i < GroceryAgent.Persona.values().length + 1; i++) { // column
             for (int j = 0; j < GroceryAgent.Persona.values().length + 1; j++) { // row
                 if (i == 0 || j == 0){
@@ -61,7 +61,8 @@ public class GroceryIOSController {
                         if ((GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER)
                                 || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER)
                                 || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER)){
-                            gridPane.add(new TextField(grocery.getIOSScales().get(j - 1).get(i).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                            otherArr[j - 1]++;
+                            gridPane.add(new TextField(grocery.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
                         }
                         else{
 //                            System.out.println(i + " " + j + " " + GroceryAgent.Persona.values()[i - 1] + " " + GroceryAgent.Persona.values()[j - 1]);
@@ -71,8 +72,7 @@ public class GroceryIOSController {
                         }
                     }
                     else{
-                        System.out.println(grocery.getIOSScales().get(j - 1).get(i - 1).toString().replace("]", "").replace("[", ""));
-                        gridPane.add(new TextField(grocery.getIOSScales().get(j - 1).get(i - 1).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                        gridPane.add(new TextField(grocery.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
                     }
                     if (j == GroceryAgent.Persona.values().length && other){
                         other = false;
@@ -102,6 +102,7 @@ public class GroceryIOSController {
         gridPane.getChildren().add(0, g);
         int otherCtr = 0;
         boolean other = false;
+        int[] otherArr = new int[GroceryAgent.Persona.values().length];
         for (int i = 0; i < GroceryAgent.Persona.values().length + 1; i++) { // column
             for (int j = 0; j < GroceryAgent.Persona.values().length + 1; j++) { // row
                 if (i == 0 || j == 0){
@@ -118,16 +119,17 @@ public class GroceryIOSController {
                             else{
                                 gridPane.add(new Label(GroceryAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
                             }
+
                         }
                     }
                 }
                 else{
-
                     if (other){
                         if ((GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER)
                                 || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER)
                                 || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER)){
-                            gridPane.add(new TextField(Grocery.defaultIOS.get(j - 1).get(i).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                            otherArr[j - 1]++;
+                            gridPane.add(new TextField(Grocery.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
                         }
                         else{
 //                            System.out.println(i + " " + j + " " + GroceryAgent.Persona.values()[i - 1] + " " + GroceryAgent.Persona.values()[j - 1]);
@@ -137,7 +139,7 @@ public class GroceryIOSController {
                         }
                     }
                     else{
-                        gridPane.add(new TextField(Grocery.defaultIOS.get(j - 1).get(i - 1).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                        gridPane.add(new TextField(Grocery.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
                     }
                     if (j == GroceryAgent.Persona.values().length && other){
                         other = false;
@@ -178,7 +180,6 @@ public class GroceryIOSController {
             }
         }
         else{
-            System.out.println(Arrays.toString(gridPane.getChildren().toArray()));
             Grocery grocery = Main.grocerySimulator.getGrocery();
 //            for (Node node: gridPane.getChildren()){
 //                if (node.getClass() == TextField.class){
@@ -198,15 +199,13 @@ public class GroceryIOSController {
                     if (index > GroceryAgent.Persona.values().length + 1 && index % (GroceryAgent.Persona.values().length + 1) - 1 != 0){
                         String s = ((TextField) gridPane.getChildren().get(index)).getText();
                         if (!s.equals("")){
-                            System.out.println(s);
                             Integer[] IOSArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
 
                             newIOS.get(i - 1).add(new CopyOnWriteArrayList<>(List.of(IOSArr)));
                         }
                     }
-                    else{
-                        System.out.println(index);
-                        System.out.println(gridPane.getChildren().get(index));
+                    else{ // invalid
+//                        System.out.println(gridPane.getChildren().get(index));
                     }
                 }
             }
