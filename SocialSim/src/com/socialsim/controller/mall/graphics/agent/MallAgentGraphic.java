@@ -161,12 +161,6 @@ public class MallAgentGraphic extends Graphic {
         else if (agent.getPersona() == MallAgent.Persona.LOITER_ALONE && agent.getGender() == MallAgent.Gender.FEMALE) {
             agentGraphics = femaleLoiterAlone;
         }
-        else if (agent.getPersona() == MallAgent.Persona.ERRAND_COUPLE && agent.getGender() == MallAgent.Gender.MALE) {
-            agentGraphics = maleErrandCouple;
-        }
-        else if (agent.getPersona() == MallAgent.Persona.ERRAND_COUPLE && agent.getGender() == MallAgent.Gender.FEMALE) {
-            agentGraphics = femaleErrandCouple;
-        }
         else if (agent.getPersona() == MallAgent.Persona.LOITER_COUPLE && agent.getGender() == MallAgent.Gender.MALE) {
             agentGraphics = maleLoiterCouple;
         }

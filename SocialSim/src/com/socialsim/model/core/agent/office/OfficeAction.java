@@ -28,16 +28,17 @@ public class OfficeAction {
 
         VISITOR_GO_RECEPTIONIST(),
         VISITOR_GO_OFFICE(),
+
         RECEPTIONIST_STAY_PUT(),
 
         SECRETARY_STAY_PUT(),
         SECRETARY_CHECK_CABINET(),
+        SECRETARY_GO_BOSS(),
 
         GO_TO_STATION(),
         GO_TO_OFFICE_ROOM(),
         GO_BOSS(),
         ASK_BOSS(),
-        SECRETARY_GO_BOSS(),
 
         GO_WORKER(),
         GO_MANAGER(),
@@ -67,8 +68,7 @@ public class OfficeAction {
 
         GO_MEETING(),
         WAIT_MEETING(),
-        MEETING(),
-        LEAVE_MEETING();
+        MEETING();
 
         final int ID;
         Name(int ID){

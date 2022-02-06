@@ -38,6 +38,7 @@ public class GroceryAgent extends Agent {
     private GroceryAgent.Gender gender;
     private GroceryAgent.AgeGroup ageGroup = null;
     private GroceryAgent.Persona persona = null;
+    private PersonaActionGroup personaActionGroup = null;
     private boolean leader;
     private final boolean inOnStart;
 
@@ -48,81 +49,6 @@ public class GroceryAgent extends Agent {
 
     static {
         agentFactory = new GroceryAgent.GroceryAgentFactory();
-    }
-
-    private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean leader, boolean inOnStart, GroceryAgent leaderAgent, long currentTick) {
-        this.id = agentCount;
-        this.type = type;
-        this.leader = leader;
-        this.inOnStart = inOnStart;
-
-        if (type == Type.CUSTOMER) {
-            GroceryAgent.customerCount++;
-        }
-        else if (type == Type.STAFF_AISLE) {
-            GroceryAgent.staffAisleCount++;
-        }
-        else if (type == Type.CASHIER) {
-            GroceryAgent.cashierCount++;
-        }
-        else if (type == Type.BAGGER) {
-            GroceryAgent.baggerCount++;
-        }
-        else if (type == GroceryAgent.Type.GUARD) {
-            GroceryAgent.guardCount++;
-        }
-        else if (type == Type.BUTCHER) {
-            GroceryAgent.butcherCount++;
-        }
-        else if (type == Type.CUSTOMER_SERVICE) {
-            GroceryAgent.customerServiceCount++;
-        }
-        else if (type == Type.STAFF_FOOD) {
-            GroceryAgent.staffFoodCount++;
-        }
-        GroceryAgent.agentCount++;
-
-        this.gender = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.FEMALE : GroceryAgent.Gender.MALE;
-
-        if (type == Type.STAFF_AISLE) {
-            this.persona = Persona.STAFF_AISLE;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-        }
-        else if (type == Type.CASHIER) {
-            this.persona = Persona.CASHIER;
-            this.gender = Gender.FEMALE;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-        }
-        else if (type == Type.BAGGER) {
-            this.persona = Persona.BAGGER;
-            this.gender = Gender.MALE;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-        }
-        else if (type == Type.BUTCHER) {
-            this.persona = Persona.BUTCHER;
-            this.gender = Gender.MALE;
-            this.ageGroup = AgeGroup.FROM_25_TO_54;
-        }
-        else if (type == Type.CUSTOMER_SERVICE) {
-            this.persona = Persona.CUSTOMER_SERVICE;
-            this.ageGroup = AgeGroup.FROM_25_TO_54;
-        }
-        else if (type == Type.STAFF_FOOD) {
-            this.persona = Persona.STAFF_FOOD;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-        }
-        else if (type == GroceryAgent.Type.GUARD) {
-            this.persona = persona;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
-        }
-        else if (type == Type.CUSTOMER) {
-            this.persona = persona;
-            this.gender = gender;
-            this.ageGroup = ageGroup;
-        }
-
-        this.agentGraphic = new GroceryAgentGraphic(this);
-        this.agentMovement = new GroceryAgentMovement(spawnPatch, this, leaderAgent, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick);
     }
 
     private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, boolean leader, boolean inOnStart) {
@@ -162,38 +88,52 @@ public class GroceryAgent extends Agent {
         if (type == Type.STAFF_AISLE) {
             this.persona = Persona.STAFF_AISLE;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.STAFF_AISLE;
         }
         else if (type == Type.CASHIER) {
             this.persona = Persona.CASHIER;
             this.gender = Gender.FEMALE;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.CASHIER;
         }
         else if (type == Type.BAGGER) {
             this.persona = Persona.BAGGER;
             this.gender = Gender.MALE;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.BAGGER;
         }
         else if (type == Type.BUTCHER) {
             this.persona = Persona.BUTCHER;
             this.gender = Gender.MALE;
             this.ageGroup = AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.BUTCHER;
         }
         else if (type == Type.CUSTOMER_SERVICE) {
             this.persona = Persona.CUSTOMER_SERVICE;
             this.ageGroup = AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.CUSTOMER_SERVICE;
         }
         else if (type == Type.STAFF_FOOD) {
             this.persona = Persona.STAFF_FOOD;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.STAFF_FOOD;
         }
         else if (type == GroceryAgent.Type.GUARD) {
             this.persona = persona;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+            if (persona == Persona.GUARD_ENTRANCE)
+                this.personaActionGroup = PersonaActionGroup.GUARD_ENTRANCE;
+            else
+                this.personaActionGroup = PersonaActionGroup.GUARD_EXIT;
         }
         else if (type == Type.CUSTOMER) {
             this.persona = persona;
             this.gender = gender;
             this.ageGroup = ageGroup;
+            if (persona.ID == PersonaActionGroup.ALONE.ID)
+                this.personaActionGroup = PersonaActionGroup.ALONE;
+            else
+                this.personaActionGroup = PersonaActionGroup.FAMILY;
         }
 
         this.agentGraphic = new GroceryAgentGraphic(this);
@@ -226,6 +166,10 @@ public class GroceryAgent extends Agent {
 
     public GroceryAgent.Persona getPersona() {
         return persona;
+    }
+
+    public GroceryAgent.PersonaActionGroup getPersonaActionGroup() {
+        return personaActionGroup;
     }
 
     public GroceryAgentGraphic getAgentGraphic() {
@@ -303,6 +247,27 @@ public class GroceryAgent extends Agent {
             this.ID = ID;
         }
 
+        public int getID() {
+            return ID;
+        }
+    }
+
+    public enum PersonaActionGroup {
+        GUARD_ENTRANCE(),
+        GUARD_EXIT(),
+        STAFF_AISLE(),
+        BUTCHER(),
+        CASHIER(),
+        BAGGER(),
+        CUSTOMER_SERVICE(),
+        STAFF_FOOD(),
+        ALONE(),
+        FAMILY();
+
+        final int ID;
+        PersonaActionGroup(){
+            this.ID = this.ordinal();
+        }
         public int getID() {
             return ID;
         }

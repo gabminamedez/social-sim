@@ -22,6 +22,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GrocerySimulator extends Simulator {
 
+    public static int defaultMaxFamily = 20; //250
+    public static int defaultMaxAlone = 20;
+    public static int defaultMaxCurrentFamily = 20; //250
+    public static int defaultMaxCurrentAlone = 20;
+
     private Grocery grocery;
 
     // Simulator variables
@@ -29,10 +34,6 @@ public class GrocerySimulator extends Simulator {
     private final SimulationTime time; // Denotes the current time in the simulation
     private final Semaphore playSemaphore;
 
-    public static final int MAX_FAMILY = 20; //250
-    public static final int MAX_ALONE = 20;
-    public static final int MAX_CURRENT_FAMILY = 20; //250
-    public static final int MAX_CURRENT_ALONE = 20;
 
     public static int currentFamilyCount = 0;
     public static int currentAloneCustomerCount = 0;
@@ -42,9 +43,9 @@ public class GrocerySimulator extends Simulator {
     public static int currentCooperativeCount = 0;
     public static int currentExchangeCount = 0;
 
-    public static int averageNonverbalDuration = 0;
-    public static int averageCooperativeDuration = 0;
-    public static int averageExchangeDuration = 0;
+    public static float averageNonverbalDuration = 0;
+    public static float averageCooperativeDuration = 0;
+    public static float averageExchangeDuration = 0;
 
     //TODO: monitors for type-type interactions
     public static int currentFamilyToFamilyCount = 0;
@@ -138,7 +139,7 @@ public class GrocerySimulator extends Simulator {
     }
 
     public void spawnInitialAgents(Grocery grocery) {
-        grocery.createInitialAgentDemographics(MAX_FAMILY, MAX_ALONE);
+        grocery.createInitialAgentDemographics(grocery.getMAX_FAMILY(), grocery.getMAX_ALONE());
         GroceryAgent guard1 = grocery.getAgents().get(0);
         guard1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(57,52), guard1, null, 1.27, grocery.getPatch(57,52).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(guard1.getAgentMovement().getCurrentPatch());
@@ -869,7 +870,7 @@ public class GrocerySimulator extends Simulator {
         boolean isFamily = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
 
         if (CHANCE > spawnChance) {
-            if (isFamily && totalAloneCustomerCount < MAX_FAMILY && currentFamilyCount < MAX_CURRENT_FAMILY) {
+            if (isFamily && totalAloneCustomerCount < grocery.getMAX_FAMILY() && currentFamilyCount < grocery.getMAX_CURRENT_FAMILY()) {
                 if (grocery.getUnspawnedFamilyAgents().size() > 0){
                     int randNum = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedFamilyAgents().size());
                     GroceryAgent leaderAgent = grocery.getUnspawnedFamilyAgents().get(randNum);
@@ -951,7 +952,7 @@ public class GrocerySimulator extends Simulator {
                     totalFamilyCount++;
                 }
             }
-            else if (!isFamily && totalAloneCustomerCount < MAX_ALONE && currentAloneCustomerCount < MAX_CURRENT_ALONE) {
+            else if (!isFamily && totalAloneCustomerCount < grocery.getMAX_ALONE() && currentAloneCustomerCount < grocery.getMAX_CURRENT_ALONE()) {
                 if (grocery.getUnspawnedAloneAgents().size() > 0){
                     GroceryAgent aloneAgent = grocery.getUnspawnedAloneAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedAloneAgents().size()));
                     aloneAgent.setAgentMovement(new GroceryAgentMovement(spawner2.getPatch(), aloneAgent, null, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick));

@@ -5,19 +5,26 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.office.graphics.OfficeGraphicsController;
 import com.socialsim.controller.office.graphics.amenity.mapper.*;
 import com.socialsim.model.core.agent.office.OfficeAgent;
+import com.socialsim.model.core.agent.office.OfficeAgentMovement;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchfield.*;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
 import com.socialsim.model.simulator.SimulationTime;
+import com.socialsim.model.simulator.office.OfficeSimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -43,6 +50,133 @@ public class OfficeScreenController extends ScreenController {
     @FXML private ToggleButton playButton;
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
+    @FXML private Tab parameters;
+    @FXML private Button resetToDefaultButton;
+    @FXML private TextField nonverbalMean;
+    @FXML private TextField nonverbalStdDev;
+    @FXML private TextField cooperativeMean;
+    @FXML private TextField cooperativeStdDev;
+    @FXML private TextField exchangeMean;
+    @FXML private TextField exchangeStdDev;
+    @FXML private TextField maxClients;
+    @FXML private TextField maxDrivers;
+    @FXML private TextField maxVisitors;
+    @FXML private TextField maxCurrentClients;
+    @FXML private TextField maxCurrentDrivers;
+    @FXML private TextField maxCurrentVisitors;
+    @FXML private TextField fieldOfView;
+    @FXML private Button configureIOSButton;
+    @FXML private Button editInteractionButton;
+
+    @FXML private Label currentManagerCount;
+    @FXML private Label currentBusinessCount;
+    @FXML private Label currentResearchCount;
+    @FXML private Label currentTechnicalCount;
+    @FXML private Label currentSecretaryCount;
+    @FXML private Label currentClientCount;
+    @FXML private Label currentDriverCount;
+    @FXML private Label currentVisitorCount;
+    @FXML private Label currentNonverbalCount;
+    @FXML private Label currentCooperativeCount;
+    @FXML private Label currentExchangeCount;
+
+    @FXML private Label averageNonverbalDuration;
+    @FXML private Label averageCooperativeDuration;
+    @FXML private Label averageExchangeDuration;
+
+    @FXML private Label currentTeam1Count;
+    @FXML private Label currentTeam2Count;
+    @FXML private Label currentTeam3Count;
+    @FXML private Label currentTeam4Count;
+
+    @FXML private Label currentBossManagerCount;
+    @FXML private Label currentBossBusinessCount;
+    @FXML private Label currentBossResearcherCount;
+    @FXML private Label currentBossTechnicalCount;
+    @FXML private Label currentBossJanitorCount;
+    @FXML private Label currentBossClientCount;
+    @FXML private Label currentBossDriverCount;
+    @FXML private Label currentBossVisitorCount;
+    @FXML private Label currentBossGuardCount;
+    @FXML private Label currentBossReceptionistCount;
+    @FXML private Label currentBossSecretaryCount;
+
+    @FXML private Label currentManagerManagerCount;
+    @FXML private Label currentManagerBusinessCount;
+    @FXML private Label currentManagerResearcherCount;
+    @FXML private Label currentManagerTechnicalCount;
+    @FXML private Label currentManagerJanitorCount;
+    @FXML private Label currentManagerClientCount;
+    @FXML private Label currentManagerDriverCount;
+    @FXML private Label currentManagerVisitorCount;
+    @FXML private Label currentManagerGuardCount;
+    @FXML private Label currentManagerReceptionistCount;
+    @FXML private Label currentManagerSecretaryCount;
+
+    @FXML private Label currentBusinessBusinessCount;
+    @FXML private Label currentBusinessResearcherCount;
+    @FXML private Label currentBusinessTechnicalCount;
+    @FXML private Label currentBusinessJanitorCount;
+    @FXML private Label currentBusinessClientCount;
+    @FXML private Label currentBusinessDriverCount;
+    @FXML private Label currentBusinessVisitorCount;
+    @FXML private Label currentBusinessGuardCount;
+    @FXML private Label currentBusinessReceptionistCount;
+    @FXML private Label currentBusinessSecretaryCount;
+
+    @FXML private Label currentResearcherResearcherCount;
+    @FXML private Label currentResearcherTechnicalCount;
+    @FXML private Label currentResearcherJanitorCount;
+    @FXML private Label currentResearcherClientCount;
+    @FXML private Label currentResearcherDriverCount;
+    @FXML private Label currentResearcherVisitorCount;
+    @FXML private Label currentResearcherGuardCount;
+    @FXML private Label currentResearcherReceptionistCount;
+    @FXML private Label currentResearcherSecretaryCount;
+
+    @FXML private Label currentTechnicalTechnicalCount;
+    @FXML private Label currentTechnicalJanitorCount;
+    @FXML private Label currentTechnicalClientCount;
+    @FXML private Label currentTechnicalDriverCount;
+    @FXML private Label currentTechnicalVisitorCount;
+    @FXML private Label currentTechnicalGuardCount;
+    @FXML private Label currentTechnicalReceptionistCount;
+    @FXML private Label currentTechnicalSecretaryCount;
+
+    @FXML private Label currentJanitorJanitorCount;
+    @FXML private Label currentJanitorClientCount;
+    @FXML private Label currentJanitorDriverCount;
+    @FXML private Label currentJanitorVisitorCount;
+    @FXML private Label currentJanitorGuardCount;
+    @FXML private Label currentJanitorReceptionistCount;
+    @FXML private Label currentJanitorSecretaryCount;
+
+    @FXML private Label currentClientClientCount;
+    @FXML private Label currentClientDriverCount;
+    @FXML private Label currentClientVisitorCount;
+    @FXML private Label currentClientGuardCount;
+    @FXML private Label currentClientReceptionistCount;
+    @FXML private Label currentClientSecretaryCount;
+
+    @FXML private Label currentDriverDriverCount;
+    @FXML private Label currentDriverVisitorCount;
+    @FXML private Label currentDriverGuardCount;
+    @FXML private Label currentDriverReceptionistCount;
+    @FXML private Label currentDriverSecretaryCount;
+
+    @FXML private Label currentVisitorVisitorCount;
+    @FXML private Label currentVisitorGuardCount;
+    @FXML private Label currentVisitorReceptionistCount;
+    @FXML private Label currentVisitorSecretaryCount;
+
+    @FXML private Label currentGuardGuardCount;
+    @FXML private Label currentGuardReceptionistCount;
+    @FXML private Label currentGuardSecretaryCount;
+
+    @FXML private Label currentReceptionistReceptionistCount;
+    @FXML private Label currentReceptionistSecretaryCount;
+
+    @FXML private Label currentSecretarySecretaryCount;
 
     private final double CANVAS_SCALE = 0.5;
 
@@ -58,6 +192,20 @@ public class OfficeScreenController extends ScreenController {
         speedSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             SimulationTime.SLEEP_TIME_MILLISECONDS.set((int) (1.0 / newVal.intValue() * 1000));
         });
+        resetToDefault();
+        playButton.setDisable(true);
+
+        int width = 60; // Value may be from 25-100
+        int length = 100; // Value may be from 106-220
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
+        Office office = Office.OfficeFactory.create(rows, columns);
+        Main.officeSimulator.resetToDefaultConfiguration(office);
+        Office.configureDefaultIOS();
+        office.copyDefaultToIOS();
+        Office.configureDefaultInteractionTypeChances();
+        office.copyDefaultToInteractionTypeChances();
+
     }
 
     @FXML
@@ -66,18 +214,18 @@ public class OfficeScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
-
-        int width = 60; // Value may be from 25-100
-        int length = 100; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
-        Office office = Office.OfficeFactory.create(rows, columns);
-        initializeOffice(office);
-        setElements();
+        if (validateParameters()){
+            Office office = Main.officeSimulator.getOffice();
+            this.configureParameters(office);
+            office.convertIOSToChances();
+            initializeOffice(office);
+            setElements();
+            playButton.setDisable(false);
+            disableEdits();
+        }
     }
 
     public void initializeOffice(Office office) {
-        Main.officeSimulator.resetToDefaultConfiguration(office);
         OfficeGraphicsController.tileSize = backgroundCanvas.getHeight() / Main.officeSimulator.getOffice().getRows();
         mapOffice();
         Main.officeSimulator.spawnInitialAgents(office);
@@ -470,6 +618,7 @@ public class OfficeScreenController extends ScreenController {
 
     private void requestUpdateInterfaceSimulationElements() { // Update the interface elements pertinent to the simulation
         Platform.runLater(this::updateSimulationTime); // Update the simulation time
+        Platform.runLater(this::updateStatistics); //Updates the statistics
     }
 
     public void updateSimulationTime() {
@@ -478,6 +627,117 @@ public class OfficeScreenController extends ScreenController {
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
         elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
+    }
+    public void updateStatistics(){
+        currentManagerCount.setText(String.valueOf(OfficeSimulator.currentManagerCount));
+        currentBusinessCount.setText(String.valueOf(OfficeSimulator.currentBusinessCount));
+        currentResearchCount.setText(String.valueOf(OfficeSimulator.currentResearchCount));
+        currentTechnicalCount.setText(String.valueOf(OfficeSimulator.currentTechnicalCount));
+        currentSecretaryCount.setText(String.valueOf(OfficeSimulator.currentSecretaryCount));
+        currentClientCount.setText(String.valueOf(OfficeSimulator.currentClientCount));
+        currentDriverCount.setText(String.valueOf(OfficeSimulator.currentDriverCount));
+        currentVisitorCount.setText(String.valueOf(OfficeSimulator.currentVisitorCount));
+        currentNonverbalCount.setText(String.valueOf(OfficeSimulator.currentNonverbalCount));
+        currentCooperativeCount.setText(String.valueOf(OfficeSimulator.currentCooperativeCount));
+        currentExchangeCount.setText(String.valueOf(OfficeSimulator.currentExchangeCount));
+
+        averageNonverbalDuration.setText(String.valueOf(OfficeSimulator.averageNonverbalDuration));
+        averageCooperativeDuration.setText(String.valueOf(OfficeSimulator.averageCooperativeDuration));
+        averageExchangeDuration.setText(String.valueOf(OfficeSimulator.averageExchangeDuration));
+
+        currentTeam1Count.setText(String.valueOf(OfficeSimulator.currentTeam1Count));
+        currentTeam2Count.setText(String.valueOf(OfficeSimulator.currentTeam2Count));
+        currentTeam3Count.setText(String.valueOf(OfficeSimulator.currentTeam3Count));
+        currentTeam4Count.setText(String.valueOf(OfficeSimulator.currentTeam4Count));
+
+        currentBossManagerCount.setText(String.valueOf(OfficeSimulator.currentBossManagerCount));
+        currentBossBusinessCount.setText(String.valueOf(OfficeSimulator.currentBossBusinessCount));
+        currentBossResearcherCount.setText(String.valueOf(OfficeSimulator.currentBossResearcherCount));
+        currentBossTechnicalCount.setText(String.valueOf(OfficeSimulator.currentBossTechnicalCount));
+        currentBossJanitorCount.setText(String.valueOf(OfficeSimulator.currentBossJanitorCount));
+        currentBossClientCount.setText(String.valueOf(OfficeSimulator.currentBossClientCount));
+        currentBossDriverCount.setText(String.valueOf(OfficeSimulator.currentBossDriverCount));
+        currentBossVisitorCount.setText(String.valueOf(OfficeSimulator.currentBossVisitorCount));
+        currentBossGuardCount.setText(String.valueOf(OfficeSimulator.currentBossGuardCount));
+        currentBossReceptionistCount.setText(String.valueOf(OfficeSimulator.currentBossReceptionistCount));
+        currentBossSecretaryCount.setText(String.valueOf(OfficeSimulator.currentBossSecretaryCount));
+
+        currentManagerManagerCount.setText(String.valueOf(OfficeSimulator.currentManagerManagerCount));
+        currentManagerBusinessCount.setText(String.valueOf(OfficeSimulator.currentManagerBusinessCount));
+        currentManagerResearcherCount.setText(String.valueOf(OfficeSimulator.currentManagerResearcherCount));
+        currentManagerTechnicalCount.setText(String.valueOf(OfficeSimulator.currentManagerTechnicalCount));
+        currentManagerJanitorCount.setText(String.valueOf(OfficeSimulator.currentManagerJanitorCount));
+        currentManagerClientCount.setText(String.valueOf(OfficeSimulator.currentManagerClientCount));
+        currentManagerDriverCount.setText(String.valueOf(OfficeSimulator.currentManagerDriverCount));
+        currentManagerVisitorCount.setText(String.valueOf(OfficeSimulator.currentManagerVisitorCount));
+        currentManagerGuardCount.setText(String.valueOf(OfficeSimulator.currentManagerGuardCount));
+        currentManagerReceptionistCount.setText(String.valueOf(OfficeSimulator.currentManagerReceptionistCount));
+        currentManagerSecretaryCount.setText(String.valueOf(OfficeSimulator.currentManagerSecretaryCount));
+
+        currentBusinessBusinessCount.setText(String.valueOf(OfficeSimulator.currentBusinessBusinessCount));
+        currentBusinessResearcherCount.setText(String.valueOf(OfficeSimulator.currentBusinessResearcherCount));
+        currentBusinessTechnicalCount.setText(String.valueOf(OfficeSimulator.currentBusinessTechnicalCount));
+        currentBusinessJanitorCount.setText(String.valueOf(OfficeSimulator.currentBusinessJanitorCount));
+        currentBusinessClientCount.setText(String.valueOf(OfficeSimulator.currentBusinessClientCount));
+        currentBusinessDriverCount.setText(String.valueOf(OfficeSimulator.currentBusinessDriverCount));
+        currentBusinessVisitorCount.setText(String.valueOf(OfficeSimulator.currentBusinessVisitorCount));
+        currentBusinessGuardCount.setText(String.valueOf(OfficeSimulator.currentBusinessGuardCount));
+        currentBusinessReceptionistCount.setText(String.valueOf(OfficeSimulator.currentBusinessReceptionistCount));
+        currentBusinessSecretaryCount.setText(String.valueOf(OfficeSimulator.currentBusinessSecretaryCount));
+
+        currentResearcherResearcherCount.setText(String.valueOf(OfficeSimulator.currentResearcherResearcherCount));
+        currentResearcherTechnicalCount.setText(String.valueOf(OfficeSimulator.currentResearcherTechnicalCount));
+        currentResearcherJanitorCount.setText(String.valueOf(OfficeSimulator.currentResearcherJanitorCount));
+        currentResearcherClientCount.setText(String.valueOf(OfficeSimulator.currentResearcherClientCount));
+        currentResearcherDriverCount.setText(String.valueOf(OfficeSimulator.currentResearcherDriverCount));
+        currentResearcherVisitorCount.setText(String.valueOf(OfficeSimulator.currentResearcherVisitorCount));
+        currentResearcherGuardCount.setText(String.valueOf(OfficeSimulator.currentResearcherGuardCount));
+        currentResearcherReceptionistCount.setText(String.valueOf(OfficeSimulator.currentResearcherReceptionistCount));
+        currentResearcherSecretaryCount.setText(String.valueOf(OfficeSimulator.currentResearcherSecretaryCount));
+
+        currentTechnicalTechnicalCount.setText(String.valueOf(OfficeSimulator.currentTechnicalTechnicalCount));
+        currentTechnicalJanitorCount.setText(String.valueOf(OfficeSimulator.currentTechnicalJanitorCount));
+        currentTechnicalClientCount.setText(String.valueOf(OfficeSimulator.currentTechnicalClientCount));
+        currentTechnicalDriverCount.setText(String.valueOf(OfficeSimulator.currentTechnicalDriverCount));
+        currentTechnicalVisitorCount.setText(String.valueOf(OfficeSimulator.currentTechnicalVisitorCount));
+        currentTechnicalGuardCount.setText(String.valueOf(OfficeSimulator.currentTechnicalGuardCount));
+        currentTechnicalReceptionistCount.setText(String.valueOf(OfficeSimulator.currentTechnicalReceptionistCount));
+        currentTechnicalSecretaryCount.setText(String.valueOf(OfficeSimulator.currentTechnicalSecretaryCount));
+
+        currentJanitorJanitorCount.setText(String.valueOf(OfficeSimulator.currentJanitorJanitorCount));
+        currentJanitorClientCount.setText(String.valueOf(OfficeSimulator.currentJanitorClientCount));
+        currentJanitorDriverCount.setText(String.valueOf(OfficeSimulator.currentJanitorDriverCount));
+        currentJanitorVisitorCount.setText(String.valueOf(OfficeSimulator.currentJanitorVisitorCount));
+        currentJanitorGuardCount.setText(String.valueOf(OfficeSimulator.currentJanitorGuardCount));
+        currentJanitorReceptionistCount.setText(String.valueOf(OfficeSimulator.currentJanitorReceptionistCount));
+        currentJanitorSecretaryCount.setText(String.valueOf(OfficeSimulator.currentJanitorSecretaryCount));
+
+        currentClientClientCount.setText(String.valueOf(OfficeSimulator.currentClientClientCount));
+        currentClientDriverCount.setText(String.valueOf(OfficeSimulator.currentClientDriverCount));
+        currentClientVisitorCount.setText(String.valueOf(OfficeSimulator.currentClientVisitorCount));
+        currentClientGuardCount.setText(String.valueOf(OfficeSimulator.currentClientGuardCount));
+        currentClientReceptionistCount.setText(String.valueOf(OfficeSimulator.currentClientReceptionistCount));
+        currentClientSecretaryCount.setText(String.valueOf(OfficeSimulator.currentClientSecretaryCount));
+
+        currentDriverDriverCount.setText(String.valueOf(OfficeSimulator.currentDriverDriverCount));
+        currentDriverVisitorCount.setText(String.valueOf(OfficeSimulator.currentDriverVisitorCount));
+        currentDriverGuardCount.setText(String.valueOf(OfficeSimulator.currentDriverGuardCount));
+        currentDriverReceptionistCount.setText(String.valueOf(OfficeSimulator.currentDriverReceptionistCount));
+        currentDriverSecretaryCount.setText(String.valueOf(OfficeSimulator.currentDriverSecretaryCount));
+
+        currentVisitorVisitorCount.setText(String.valueOf(OfficeSimulator.currentVisitorVisitorCount));
+        currentVisitorGuardCount.setText(String.valueOf(OfficeSimulator.currentVisitorGuardCount));
+        currentVisitorReceptionistCount.setText(String.valueOf(OfficeSimulator.currentVisitorReceptionistCount));
+        currentVisitorSecretaryCount.setText(String.valueOf(OfficeSimulator.currentVisitorSecretaryCount));
+
+        currentGuardGuardCount.setText(String.valueOf(OfficeSimulator.currentGuardGuardCount));
+        currentGuardReceptionistCount.setText(String.valueOf(OfficeSimulator.currentGuardReceptionistCount));
+        currentGuardSecretaryCount.setText(String.valueOf(OfficeSimulator.currentGuardSecretaryCount));
+
+        currentReceptionistReceptionistCount.setText(String.valueOf(OfficeSimulator.currentReceptionistReceptionistCount));
+        currentReceptionistSecretaryCount.setText(String.valueOf(OfficeSimulator.currentReceptionistSecretaryCount));
+
+        currentSecretarySecretaryCount.setText(String.valueOf(OfficeSimulator.currentSecretarySecretaryCount));
     }
 
     public void setElements() {
@@ -525,6 +785,7 @@ public class OfficeScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
+        enableEdits();
     }
 
     public static void clearOffice(Office office) {
@@ -543,4 +804,235 @@ public class OfficeScreenController extends ScreenController {
     protected void closeAction() {
     }
 
+    public void disableEdits(){
+        nonverbalMean.setDisable(true);
+        nonverbalStdDev.setDisable(true);
+        cooperativeMean.setDisable(true);
+        cooperativeStdDev.setDisable(true);
+        exchangeMean.setDisable(true);
+        exchangeStdDev.setDisable(true);
+        fieldOfView.setDisable(true);
+        maxClients.setDisable(true);
+        maxCurrentClients.setDisable(true);
+        maxDrivers.setDisable(true);
+        maxCurrentDrivers.setDisable(true);
+        maxVisitors.setDisable(true);
+        maxCurrentVisitors.setDisable(true);
+
+        resetToDefaultButton.setDisable(true);
+        configureIOSButton.setDisable(true);
+        editInteractionButton.setDisable(true);
+    }
+    public void enableEdits(){
+        nonverbalMean.setDisable(false);
+        nonverbalStdDev.setDisable(false);
+        cooperativeMean.setDisable(false);
+        cooperativeStdDev.setDisable(false);
+        exchangeMean.setDisable(false);
+        exchangeStdDev.setDisable(false);
+        fieldOfView.setDisable(false);
+        maxClients.setDisable(false);
+        maxCurrentClients.setDisable(false);
+        maxDrivers.setDisable(false);
+        maxCurrentDrivers.setDisable(false);
+        maxVisitors.setDisable(false);
+        maxCurrentVisitors.setDisable(false);
+
+        resetToDefaultButton.setDisable(false);
+        configureIOSButton.setDisable(false);
+        editInteractionButton.setDisable(false);
+    }
+
+    public void resetToDefault(){
+        nonverbalMean.setText(Integer.toString(OfficeAgentMovement.defaultNonverbalMean));
+        nonverbalStdDev.setText(Integer.toString(OfficeAgentMovement.defaultNonverbalStdDev));
+        cooperativeMean.setText(Integer.toString(OfficeAgentMovement.defaultCooperativeMean));
+        cooperativeStdDev.setText(Integer.toString(OfficeAgentMovement.defaultCooperativeStdDev));
+        exchangeMean.setText(Integer.toString(OfficeAgentMovement.defaultExchangeMean));
+        exchangeStdDev.setText(Integer.toString(OfficeAgentMovement.defaultExchangeStdDev));
+        fieldOfView.setText(Integer.toString(OfficeAgentMovement.defaultFieldOfView));
+        maxClients.setText(Integer.toString(OfficeSimulator.defaultMaxClients));
+        maxDrivers.setText(Integer.toString(OfficeSimulator.defaultMaxDrivers));
+        maxVisitors.setText(Integer.toString(OfficeSimulator.defaultMaxVisitors));
+        maxCurrentClients.setText(Integer.toString(OfficeSimulator.defaultMaxCurrentClients));
+        maxCurrentDrivers.setText(Integer.toString(OfficeSimulator.defaultMaxCurrentDrivers));
+        maxCurrentVisitors.setText(Integer.toString(OfficeSimulator.defaultMaxCurrentVisitors));
+    }
+
+    public void openIOSLevels(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/OfficeConfigureIOS.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Configure IOS Levels");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void openEditInteractions(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/OfficeEditInteractions.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Edit Interaction Type Chances");
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void configureParameters(Office office){
+        office.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
+        office.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
+        office.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
+        office.setCooperativeStdDev(Integer.parseInt(cooperativeStdDev.getText()));
+        office.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
+        office.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
+        office.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
+        office.setMAX_CLIENTS(Integer.parseInt(maxClients.getText()));
+        office.setMAX_CURRENT_CLIENTS(Integer.parseInt(maxCurrentClients.getText()));
+        office.setMAX_DRIVERS(Integer.parseInt(maxDrivers.getText()));
+        office.setMAX_CURRENT_DRIVERS(Integer.parseInt(maxCurrentDrivers.getText()));
+        office.setMAX_VISITORS(Integer.parseInt(maxVisitors.getText()));
+        office.setMAX_CURRENT_VISITORS(Integer.parseInt(maxCurrentVisitors.getText()));
+
+        currentManagerCount.setText(String.valueOf(OfficeSimulator.currentManagerCount));
+        currentBusinessCount.setText(String.valueOf(OfficeSimulator.currentBusinessCount));
+        currentResearchCount.setText(String.valueOf(OfficeSimulator.currentResearchCount));
+        currentTechnicalCount.setText(String.valueOf(OfficeSimulator.currentTechnicalCount));
+        currentSecretaryCount.setText(String.valueOf(OfficeSimulator.currentSecretaryCount));
+        currentClientCount.setText(String.valueOf(OfficeSimulator.currentClientCount));
+        currentDriverCount.setText(String.valueOf(OfficeSimulator.currentDriverCount));
+        currentVisitorCount.setText(String.valueOf(OfficeSimulator.currentVisitorCount));
+        currentNonverbalCount.setText(String.valueOf(OfficeSimulator.currentNonverbalCount));
+        currentCooperativeCount.setText(String.valueOf(OfficeSimulator.currentCooperativeCount));
+        currentExchangeCount.setText(String.valueOf(OfficeSimulator.currentExchangeCount));
+
+        averageNonverbalDuration.setText(String.valueOf(OfficeSimulator.averageNonverbalDuration));
+        averageCooperativeDuration.setText(String.valueOf(OfficeSimulator.averageCooperativeDuration));
+        averageExchangeDuration.setText(String.valueOf(OfficeSimulator.averageExchangeDuration));
+
+        currentTeam1Count.setText(String.valueOf(OfficeSimulator.currentTeam1Count));
+        currentTeam2Count.setText(String.valueOf(OfficeSimulator.currentTeam2Count));
+        currentTeam3Count.setText(String.valueOf(OfficeSimulator.currentTeam3Count));
+        currentTeam4Count.setText(String.valueOf(OfficeSimulator.currentTeam4Count));
+
+        currentBossManagerCount.setText(String.valueOf(OfficeSimulator.currentBossManagerCount));
+        currentBossBusinessCount.setText(String.valueOf(OfficeSimulator.currentBossBusinessCount));
+        currentBossResearcherCount.setText(String.valueOf(OfficeSimulator.currentBossResearcherCount));
+        currentBossTechnicalCount.setText(String.valueOf(OfficeSimulator.currentBossTechnicalCount));
+        currentBossJanitorCount.setText(String.valueOf(OfficeSimulator.currentBossJanitorCount));
+        currentBossClientCount.setText(String.valueOf(OfficeSimulator.currentBossClientCount));
+        currentBossDriverCount.setText(String.valueOf(OfficeSimulator.currentBossDriverCount));
+        currentBossVisitorCount.setText(String.valueOf(OfficeSimulator.currentBossVisitorCount));
+        currentBossGuardCount.setText(String.valueOf(OfficeSimulator.currentBossGuardCount));
+        currentBossReceptionistCount.setText(String.valueOf(OfficeSimulator.currentBossReceptionistCount));
+        currentBossSecretaryCount.setText(String.valueOf(OfficeSimulator.currentBossSecretaryCount));
+
+        currentManagerManagerCount.setText(String.valueOf(OfficeSimulator.currentManagerManagerCount));
+        currentManagerBusinessCount.setText(String.valueOf(OfficeSimulator.currentManagerBusinessCount));
+        currentManagerResearcherCount.setText(String.valueOf(OfficeSimulator.currentManagerResearcherCount));
+        currentManagerTechnicalCount.setText(String.valueOf(OfficeSimulator.currentManagerTechnicalCount));
+        currentManagerJanitorCount.setText(String.valueOf(OfficeSimulator.currentManagerJanitorCount));
+        currentManagerClientCount.setText(String.valueOf(OfficeSimulator.currentManagerClientCount));
+        currentManagerDriverCount.setText(String.valueOf(OfficeSimulator.currentManagerDriverCount));
+        currentManagerVisitorCount.setText(String.valueOf(OfficeSimulator.currentManagerVisitorCount));
+        currentManagerGuardCount.setText(String.valueOf(OfficeSimulator.currentManagerGuardCount));
+        currentManagerReceptionistCount.setText(String.valueOf(OfficeSimulator.currentManagerReceptionistCount));
+        currentManagerSecretaryCount.setText(String.valueOf(OfficeSimulator.currentManagerSecretaryCount));
+
+        currentBusinessBusinessCount.setText(String.valueOf(OfficeSimulator.currentBusinessBusinessCount));
+        currentBusinessResearcherCount.setText(String.valueOf(OfficeSimulator.currentBusinessResearcherCount));
+        currentBusinessTechnicalCount.setText(String.valueOf(OfficeSimulator.currentBusinessTechnicalCount));
+        currentBusinessJanitorCount.setText(String.valueOf(OfficeSimulator.currentBusinessJanitorCount));
+        currentBusinessClientCount.setText(String.valueOf(OfficeSimulator.currentBusinessClientCount));
+        currentBusinessDriverCount.setText(String.valueOf(OfficeSimulator.currentBusinessDriverCount));
+        currentBusinessVisitorCount.setText(String.valueOf(OfficeSimulator.currentBusinessVisitorCount));
+        currentBusinessGuardCount.setText(String.valueOf(OfficeSimulator.currentBusinessGuardCount));
+        currentBusinessReceptionistCount.setText(String.valueOf(OfficeSimulator.currentBusinessReceptionistCount));
+        currentBusinessSecretaryCount.setText(String.valueOf(OfficeSimulator.currentBusinessSecretaryCount));
+
+        currentResearcherResearcherCount.setText(String.valueOf(OfficeSimulator.currentResearcherResearcherCount));
+        currentResearcherTechnicalCount.setText(String.valueOf(OfficeSimulator.currentResearcherTechnicalCount));
+        currentResearcherJanitorCount.setText(String.valueOf(OfficeSimulator.currentResearcherJanitorCount));
+        currentResearcherClientCount.setText(String.valueOf(OfficeSimulator.currentResearcherClientCount));
+        currentResearcherDriverCount.setText(String.valueOf(OfficeSimulator.currentResearcherDriverCount));
+        currentResearcherVisitorCount.setText(String.valueOf(OfficeSimulator.currentResearcherVisitorCount));
+        currentResearcherGuardCount.setText(String.valueOf(OfficeSimulator.currentResearcherGuardCount));
+        currentResearcherReceptionistCount.setText(String.valueOf(OfficeSimulator.currentResearcherReceptionistCount));
+        currentResearcherSecretaryCount.setText(String.valueOf(OfficeSimulator.currentResearcherSecretaryCount));
+
+        currentTechnicalTechnicalCount.setText(String.valueOf(OfficeSimulator.currentTechnicalTechnicalCount));
+        currentTechnicalJanitorCount.setText(String.valueOf(OfficeSimulator.currentTechnicalJanitorCount));
+        currentTechnicalClientCount.setText(String.valueOf(OfficeSimulator.currentTechnicalClientCount));
+        currentTechnicalDriverCount.setText(String.valueOf(OfficeSimulator.currentTechnicalDriverCount));
+        currentTechnicalVisitorCount.setText(String.valueOf(OfficeSimulator.currentTechnicalVisitorCount));
+        currentTechnicalGuardCount.setText(String.valueOf(OfficeSimulator.currentTechnicalGuardCount));
+        currentTechnicalReceptionistCount.setText(String.valueOf(OfficeSimulator.currentTechnicalReceptionistCount));
+        currentTechnicalSecretaryCount.setText(String.valueOf(OfficeSimulator.currentTechnicalSecretaryCount));
+
+        currentJanitorJanitorCount.setText(String.valueOf(OfficeSimulator.currentJanitorJanitorCount));
+        currentJanitorClientCount.setText(String.valueOf(OfficeSimulator.currentJanitorClientCount));
+        currentJanitorDriverCount.setText(String.valueOf(OfficeSimulator.currentJanitorDriverCount));
+        currentJanitorVisitorCount.setText(String.valueOf(OfficeSimulator.currentJanitorVisitorCount));
+        currentJanitorGuardCount.setText(String.valueOf(OfficeSimulator.currentJanitorGuardCount));
+        currentJanitorReceptionistCount.setText(String.valueOf(OfficeSimulator.currentJanitorReceptionistCount));
+        currentJanitorSecretaryCount.setText(String.valueOf(OfficeSimulator.currentJanitorSecretaryCount));
+
+        currentClientClientCount.setText(String.valueOf(OfficeSimulator.currentClientClientCount));
+        currentClientDriverCount.setText(String.valueOf(OfficeSimulator.currentClientDriverCount));
+        currentClientVisitorCount.setText(String.valueOf(OfficeSimulator.currentClientVisitorCount));
+        currentClientGuardCount.setText(String.valueOf(OfficeSimulator.currentClientGuardCount));
+        currentClientReceptionistCount.setText(String.valueOf(OfficeSimulator.currentClientReceptionistCount));
+        currentClientSecretaryCount.setText(String.valueOf(OfficeSimulator.currentClientSecretaryCount));
+
+        currentDriverDriverCount.setText(String.valueOf(OfficeSimulator.currentDriverDriverCount));
+        currentDriverVisitorCount.setText(String.valueOf(OfficeSimulator.currentDriverVisitorCount));
+        currentDriverGuardCount.setText(String.valueOf(OfficeSimulator.currentDriverGuardCount));
+        currentDriverReceptionistCount.setText(String.valueOf(OfficeSimulator.currentDriverReceptionistCount));
+        currentDriverSecretaryCount.setText(String.valueOf(OfficeSimulator.currentDriverSecretaryCount));
+
+        currentVisitorVisitorCount.setText(String.valueOf(OfficeSimulator.currentVisitorVisitorCount));
+        currentVisitorGuardCount.setText(String.valueOf(OfficeSimulator.currentVisitorGuardCount));
+        currentVisitorReceptionistCount.setText(String.valueOf(OfficeSimulator.currentVisitorReceptionistCount));
+        currentVisitorSecretaryCount.setText(String.valueOf(OfficeSimulator.currentVisitorSecretaryCount));
+
+        currentGuardGuardCount.setText(String.valueOf(OfficeSimulator.currentGuardGuardCount));
+        currentGuardReceptionistCount.setText(String.valueOf(OfficeSimulator.currentGuardReceptionistCount));
+        currentGuardSecretaryCount.setText(String.valueOf(OfficeSimulator.currentGuardSecretaryCount));
+
+        currentReceptionistReceptionistCount.setText(String.valueOf(OfficeSimulator.currentReceptionistReceptionistCount));
+        currentReceptionistSecretaryCount.setText(String.valueOf(OfficeSimulator.currentReceptionistSecretaryCount));
+
+        currentSecretarySecretaryCount.setText(String.valueOf(OfficeSimulator.currentSecretarySecretaryCount));
+    }
+
+    public boolean validateParameters(){
+        boolean validParameters = Integer.parseInt(nonverbalMean.getText()) >= 0 && Integer.parseInt(nonverbalMean.getText()) >= 0
+                && Integer.parseInt(cooperativeMean.getText()) >= 0 && Integer.parseInt(cooperativeStdDev.getText()) >= 0
+                && Integer.parseInt(exchangeMean.getText()) >= 0 && Integer.parseInt(exchangeStdDev.getText()) >= 0
+                && Integer.parseInt(fieldOfView.getText()) >= 0 && Integer.parseInt(fieldOfView.getText()) <= 360
+                && Integer.parseInt(maxClients.getText()) >= 0 && Integer.parseInt(maxDrivers.getText()) >= 0
+                && Integer.parseInt(maxVisitors.getText()) >= 0;
+        if (!validParameters){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
+            Label label = new Label("Failed to initialize. Please make sure all values are greater than 0, and field of view is not greater than 360 degrees");
+            label.setWrapText(true);
+            alert.getDialogPane().setContent(label);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+        return validParameters;
+    }
+    public void generateHeatMap(){
+
+    }
 }

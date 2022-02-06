@@ -1,6 +1,7 @@
 package com.socialsim.model.core.environment.office;
 
 import com.socialsim.model.core.agent.office.OfficeAgent;
+import com.socialsim.model.core.agent.office.OfficeAction;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
@@ -20,10 +21,29 @@ import static com.socialsim.model.core.agent.office.OfficeAgent.*;
 
 public class Office extends Environment {
 
+    public static CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> defaultIOS;
+    public static CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> defaultInteractionTypeChances;
+
     private final CopyOnWriteArrayList<OfficeAgent> agents;
     private final SortedSet<Patch> amenityPatchSet;
     private final SortedSet<Patch> agentPatchSet;
-    private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOS;
+
+    private int nonverbalMean;
+    private int nonverbalStdDev;
+    private int cooperativeMean;
+    private int cooperativeStdDev;
+    private int exchangeMean;
+    private int exchangeStdDev;
+    private int fieldOfView;
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales;
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOSInteractionChances;
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> interactionTypeChances;
+    private int MAX_CLIENTS;
+    private int MAX_DRIVERS;
+    private int MAX_VISITORS;
+    private int MAX_CURRENT_CLIENTS;
+    private int MAX_CURRENT_DRIVERS;
+    private int MAX_CURRENT_VISITORS;
 
     private final List<OfficeGate> officeGates;
     private final List<Cabinet> cabinets;
@@ -60,7 +80,7 @@ public class Office extends Environment {
         super(rows, columns);
 
         this.agents = new CopyOnWriteArrayList<>();
-        this.IOS = new CopyOnWriteArrayList<>();
+        this.IOSInteractionChances = new CopyOnWriteArrayList<>();
 
         this.amenityPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
         this.agentPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
@@ -105,7 +125,7 @@ public class Office extends Environment {
     }
 
     public CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> getIOS() {
-        return IOS;
+        return this.IOSInteractionChances;
     }
 
     public CopyOnWriteArrayList<OfficeAgent> getUnspawnedWorkingAgents() {
@@ -238,6 +258,110 @@ public class Office extends Environment {
 
     public List<SecurityField> getSecurityFields() {
         return securityFields;
+    }
+
+    public int getNonverbalMean() {
+        return nonverbalMean;
+    }
+
+    public void setNonverbalMean(int nonverbalMean) {
+        this.nonverbalMean = nonverbalMean;
+    }
+
+    public int getNonverbalStdDev() {
+        return nonverbalStdDev;
+    }
+
+    public void setNonverbalStdDev(int nonverbalStdDev) {
+        this.nonverbalStdDev = nonverbalStdDev;
+    }
+
+    public int getCooperativeMean() {
+        return cooperativeMean;
+    }
+
+    public void setCooperativeMean(int cooperativeMean) {
+        this.cooperativeMean = cooperativeMean;
+    }
+
+    public int getCooperativeStdDev() {
+        return cooperativeStdDev;
+    }
+
+    public void setCooperativeStdDev(int cooperativeStdDev) {
+        this.cooperativeStdDev = cooperativeStdDev;
+    }
+
+    public int getExchangeMean() {
+        return exchangeMean;
+    }
+
+    public void setExchangeMean(int exchangeMean) {
+        this.exchangeMean = exchangeMean;
+    }
+
+    public int getExchangeStdDev() {
+        return exchangeStdDev;
+    }
+
+    public void setExchangeStdDev(int exchangeStdDev) {
+        this.exchangeStdDev = exchangeStdDev;
+    }
+
+    public int getFieldOfView() {
+        return fieldOfView;
+    }
+
+    public void setFieldOfView(int fieldOfView) {
+        this.fieldOfView = fieldOfView;
+    }
+
+    public int getMAX_CLIENTS() {
+        return MAX_CLIENTS;
+    }
+
+    public void setMAX_CLIENTS(int MAX_CLIENTS) {
+        this.MAX_CLIENTS = MAX_CLIENTS;
+    }
+
+    public int getMAX_DRIVERS() {
+        return MAX_DRIVERS;
+    }
+
+    public void setMAX_DRIVERS(int MAX_DRIVERS) {
+        this.MAX_DRIVERS = MAX_DRIVERS;
+    }
+
+    public int getMAX_VISITORS() {
+        return MAX_VISITORS;
+    }
+
+    public void setMAX_VISITORS(int MAX_VISITORS) {
+        this.MAX_VISITORS = MAX_VISITORS;
+    }
+
+    public int getMAX_CURRENT_CLIENTS() {
+        return MAX_CLIENTS;
+    }
+
+    public void setMAX_CURRENT_CLIENTS(int MAX_CURRENT_CLIENTS) {
+        this.MAX_CURRENT_CLIENTS = MAX_CURRENT_CLIENTS;
+    }
+
+    public int getMAX_CURRENT_DRIVERS() {
+        return MAX_CURRENT_DRIVERS;
+    }
+
+    public void setMAX_CURRENT_DRIVERS(int MAX_CURRENT_DRIVERS) {
+        this.MAX_CURRENT_DRIVERS = MAX_CURRENT_DRIVERS;
+    }
+
+    public int getMAX_CURRENT_VISITORS() {
+        return MAX_CURRENT_VISITORS;
+    }
+
+    public void setMAX_CURRENT_VISITORS(int MAX_CURRENT_VISITORS) {
+        this.MAX_CURRENT_VISITORS = MAX_CURRENT_VISITORS;
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {
@@ -403,715 +527,1294 @@ public class Office extends Environment {
             ctr++;
             this.getAgents().add(newAgent);
         }
-//        ctr = 0;
-//        while (ctr < OfficeSimulator.MAX_SECRETARIES){
-//            OfficeAgent newAgent = OfficeAgent.OfficeAgentFactory.create(Type.SECRETARY, true, 0);
-//            ctr++;
-//            this.getAgents().add(newAgent);
-//        }
+    }
 
+    public double convertToChanceInteraction(int x){// Convert IOS to chance based only on threshold, not 0 to said scale
+        double CHANCE = ((double) x - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7;
+        return CHANCE;
+    }
 
-        for (int i = 0; i < this.getAgents().size(); i++){
-            Persona agent1 = agents.get(i).getPersona();
-            ArrayList<Integer> IOSScales = new ArrayList<>();
-            for (int j = 0 ; j < this.getAgents().size(); j++){
-                if (i == j){
-                    IOSScales.add(0);
-                }
-                else {
-                    Persona agent2 = agents.get(j).getPersona();
-                    if (agent1 == Persona.PROFESSIONAL_BOSS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+    public void convertIOSToChances(){
+        IOSInteractionChances = new CopyOnWriteArrayList<>();
+        IOSScales.toString();
+        for(int i = 0; i < IOSScales.size(); i++){
+            IOSInteractionChances.add(new CopyOnWriteArrayList<>());
+            for(int j = 0; j < IOSScales.get(i).size(); j++){
+                int IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                IOSInteractionChances.get(i).add(this.convertToChanceInteraction(IOS));
+            }
+        }
+    }
+
+    public static void configureDefaultIOS(){
+        defaultIOS = new CopyOnWriteArrayList<>();
+        for (int i = 0; i < OfficeAgent.Persona.values().length; i++){
+            CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>> personaIOS = new CopyOnWriteArrayList<>();
+            for (int j = 0; j < OfficeAgent.Persona.values().length; j++){
+                OfficeAgent.Persona persona1 = OfficeAgent.Persona.values()[i];
+                OfficeAgent.Persona persona2 = OfficeAgent.Persona.values()[j];
+                switch (persona1){
+                    case PROFESSIONAL_BOSS -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case MANAGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case INT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case INT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case EXT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(4, 5, 6)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
                         }
                     }
-                    else if (agent1 == Persona.APPROACHABLE_BOSS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 2);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
+                    case APPROACHABLE_BOSS -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case MANAGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case INT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case EXT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case INT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case EXT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case INT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4, 5)));
+                            case EXT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(4, 5, 6)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
                         }
                     }
-                    else if (agent1 == Persona.MANAGER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
+                    case MANAGER -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(4, 5, 6)));
                             case MANAGER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
                             }
                             case INT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                         }
                     }
-                    else if (agent1 == Persona.INT_BUSINESS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                    case INT_BUSINESS -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
                             case MANAGER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    int[] listIOS = new int[]{1, 2, 5, 6};
-                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case INT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    int[] listIOS = new int[]{1, 2, 5, 6};
-                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case EXT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    int[] listIOS = new int[]{1, 2, 5, 6};
-                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case INT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case EXT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case INT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case EXT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                         }
                     }
-                    else if (agent1 == Persona.EXT_BUSINESS){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                    case EXT_BUSINESS -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
                             case MANAGER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                         }
                     }
-                    else if (agent1 == Persona.INT_RESEARCHER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                    case INT_RESEARCHER -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
                             case MANAGER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    int[] listIOS = new int[]{1, 2, 5, 6};
-                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case INT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case EXT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case INT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    int[] listIOS = new int[]{1, 2, 5, 6};
-                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case EXT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    int[] listIOS = new int[]{1, 2, 5, 6};
-                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case INT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case EXT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                         }
                     }
-                    else if (agent1 == Persona.EXT_RESEARCHER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                    case EXT_RESEARCHER -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
                             case MANAGER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                         }
                     }
-                    else if (agent1 == Persona.INT_TECHNICAL){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
+                    case INT_TECHNICAL -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
                             case MANAGER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    int[] listIOS = new int[]{1, 2, 5, 6};
-                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case INT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case EXT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case INT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case EXT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case INT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    int[] listIOS = new int[]{1, 2, 5, 6};
-                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
                             case EXT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent){
-                                    int[] listIOS = new int[]{1, 2, 5, 6};
-                                    IOSScales.add(listIOS[Simulator.RANDOM_NUMBER_GENERATOR.nextInt(listIOS.length)]);
-                                }
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                         }
                     }
-                    else if (agent1 == Persona.EXT_TECHNICAL){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 1);
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 1);
+                    case EXT_TECHNICAL -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4, 5)));
                             case MANAGER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_BUSINESS -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_RESEARCHER -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 2);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(2, 3, 4)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case INT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 3);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
                             case EXT_TECHNICAL -> {
-                                int agent = agents.get(i).getTeam(), otherAgent = agents.get(j).getTeam();
-                                if (agent == otherAgent)
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 4);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(4, 5, 6)));
+                                personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             }
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                         }
                     }
-                    else if (agent1 == Persona.JANITOR){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                    case JANITOR -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case MANAGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         }
                     }
-                    else if (agent1 == Persona.CLIENT){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                    case CLIENT -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case MANAGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         }
                     }
-                    else if (agent1 == Persona.DRIVER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                    case DRIVER -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case MANAGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         }
                     }
-                    else if (agent1 == Persona.VISITOR){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                    case VISITOR -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6, 7)));
+                            case MANAGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         }
                     }
-                    else if (agent1 == Persona.GUARD){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                    case GUARD -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case MANAGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         }
                     }
-                    else if (agent1 == Persona.RECEPTIONIST){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                    case RECEPTIONIST -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case MANAGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case INT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case EXT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         }
                     }
-                    else if (agent1 == Persona.SECRETARY){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case PROFESSIONAL_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case APPROACHABLE_BOSS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 3);
-                            case MANAGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_BUSINESS -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_RESEARCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case INT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case EXT_TECHNICAL -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case JANITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CLIENT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DRIVER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case VISITOR -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case RECEPTIONIST -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case SECRETARY -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                    case SECRETARY -> {
+                        switch (persona2){
+                            case PROFESSIONAL_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case APPROACHABLE_BOSS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5, 6)));
+                            case MANAGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_BUSINESS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_RESEARCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case INT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case EXT_TECHNICAL -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case CLIENT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case DRIVER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case VISITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case RECEPTIONIST -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                            case SECRETARY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         }
                     }
                 }
             }
-            IOS.add(convertToChanceInteraction(IOSScales));
+            defaultIOS.add(personaIOS);
         }
     }
 
-    public CopyOnWriteArrayList<Double> convertToChanceInteraction(ArrayList<Integer> IOSScales){// Convert IOS to chance based only on threshold, not 0 to said scale
-        CopyOnWriteArrayList<Double> listIOS = new CopyOnWriteArrayList<>();
-        for (int iosScale : IOSScales) {
-            if (iosScale <= 0)
-                listIOS.add((double) 0);
-            else
-                listIOS.add((iosScale - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7);
-//            listIOS.add(Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * iosScale / 7);
+    public static void configureDefaultInteractionTypeChances(){
+        defaultInteractionTypeChances = new CopyOnWriteArrayList<>();
+        for (int i = 0; i < OfficeAgent.PersonaActionGroup.values().length; i++){
+            CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>> interactionChances = new CopyOnWriteArrayList<>();
+            for (int j = 0; j < OfficeAction.Name.values().length; j++){
+                OfficeAgent.PersonaActionGroup personaGroup = OfficeAgent.PersonaActionGroup.values()[i];
+                OfficeAction.Name action = OfficeAction.Name.values()[j];
+                switch (personaGroup){
+                    case PROFESSIONAL_BOSS -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 0, 40)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 0, 40)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                        }
+                    }
+                    case APPROACHABLE_BOSS -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                        }
+                    }
+                    case MANAGER -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 40, 60)));
+
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 30, 70)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 75, 25)));
+
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                        }
+                    }
+                    case INT_WORKER -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 80, 20)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 70, 30)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 75, 25)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 75, 25)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 0, 40)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 0, 40)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                        }
+                    }
+                    case EXT_WORKER -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 80, 20)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 70, 30)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 75, 25)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 75, 25)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                        }
+                    }
+                    case INT_TECHNICAL -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 90, 10)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 70, 30)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 75, 25)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 75, 25)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 0, 40)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 0, 40)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 60, 40)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 60, 40)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                        }
+                    }
+                    case EXT_TECHNICAL -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 90, 10)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 70, 30)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 75, 25)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 75, 25)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 60, 40)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 60, 40)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                        }
+                    }
+                    case JANITOR -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 90, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 90, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case CLIENT -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 0, 20)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 0, 20)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 100)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 100)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 100)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 100)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 100)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case DRIVER -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 0, 20)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 0, 20)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 100)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case VISITOR -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 0, 20)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 0, 20)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 100)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case GUARD -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 100, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case RECEPTIONIST -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case SECRETARY -> {
+                        switch(action){
+                            case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GO_TO_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case EAT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case EXIT_LUNCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 0, 20)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 0, 20)));
+                            case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_CLEAN_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case JANITOR_WATER_PLANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CLIENT_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DRIVER_GO_COUCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_RECEPTIONIST -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VISITOR_GO_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RECEPTIONIST_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SECRETARY_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case SECRETARY_CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case SECRETARY_GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case GO_TO_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GO_TO_OFFICE_ROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GO_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case ASK_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GO_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case ASK_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_BOSS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_MANAGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ANSWER_WORKER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 0, 40)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 0, 40)));
+                            case GO_TO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case PRINTING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_COLLAB -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case COLLABORATE  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TECHNICAL_GO_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_PRINTER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIX_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                }
+            }
+            defaultInteractionTypeChances.add(interactionChances);
         }
-        return listIOS;
+    }
+
+    public CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> getIOSScales(){
+        return this.IOSScales;
+    }
+    public void setIOSScales(CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales){
+        this.IOSScales = IOSScales;
+    }
+    public CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> getInteractionTypeChances(){
+        return this.interactionTypeChances;
+    }
+
+    public void copyDefaultToIOS(){
+        this.IOSScales = new CopyOnWriteArrayList<>();
+        for(int i = 0; i < defaultIOS.size(); i++){
+            this.IOSScales.add(new CopyOnWriteArrayList<>());
+            for(int j = 0; j < defaultIOS.get(i).size(); j++){
+                this.IOSScales.get(i).add(new CopyOnWriteArrayList<>());
+                for (int k = 0; k < defaultIOS.get(i).get(j).size(); k++){
+                    this.IOSScales.get(i).get(j).add(defaultIOS.get(i).get(j).get(k));
+                }
+            }
+        }
+    }
+
+    public void copyDefaultToInteractionTypeChances(){
+        this.interactionTypeChances = new CopyOnWriteArrayList<>();
+        for(int i = 0; i < defaultInteractionTypeChances.size(); i++){
+            this.interactionTypeChances.add(new CopyOnWriteArrayList<>());
+            for(int j = 0; j < defaultInteractionTypeChances.get(i).size(); j++){
+                this.interactionTypeChances.get(i).add(new CopyOnWriteArrayList<>());
+                for (int k = 0; k < defaultInteractionTypeChances.get(i).get(j).size(); k++){
+                    this.interactionTypeChances.get(i).get(j).add(defaultInteractionTypeChances.get(i).get(j).get(k));
+                }
+            }
+        }
     }
 
     public static class OfficeFactory extends BaseObject.ObjectFactory {

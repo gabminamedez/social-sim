@@ -1,9 +1,9 @@
-package com.socialsim.controller.university.controls;
+package com.socialsim.controller.grocery.controls;
 
 import com.socialsim.controller.Main;
-import com.socialsim.model.core.agent.university.UniversityAction;
-import com.socialsim.model.core.agent.university.UniversityAgent;
-import com.socialsim.model.core.environment.university.University;
+import com.socialsim.model.core.agent.grocery.GroceryAction;
+import com.socialsim.model.core.agent.grocery.GroceryAgent;
+import com.socialsim.model.core.environment.grocery.Grocery;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -12,12 +12,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.IntStream;
 
-public class EditInteractionsController {
+public class GroceryEditInteractionsController {
 
     @FXML VBox container;
     @FXML GridPane gridPane;
@@ -25,28 +24,28 @@ public class EditInteractionsController {
     @FXML Button btnResetToDefault;
     @FXML Button btnSave;
 
-    public EditInteractionsController() {
+    public GroceryEditInteractionsController() {
     }
 
     @FXML
     private void initialize() {
         //TODO: Create columns of interaction types
-        University university = Main.universitySimulator.getUniversity();
+        Grocery grocery = Main.grocerySimulator.getGrocery();
 
-        for (int i = 0; i < UniversityAgent.PersonaActionGroup.values().length + 1; i++) {
-            for (int j = 0; j < UniversityAction.Name.values().length + 1; j++) {
+        for (int i = 0; i < GroceryAgent.PersonaActionGroup.values().length + 1; i++) {
+            for (int j = 0; j < GroceryAction.Name.values().length + 1; j++) {
                 if (i == 0 || j == 0){
                     if (i == 0 && j == 0)
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0)
-                            gridPane.add(new Label(UniversityAction.Name.values()[j - 1].name()), i, j);
+                            gridPane.add(new Label(GroceryAction.Name.values()[j - 1].name()), i, j);
                         else
-                            gridPane.add(new Label(UniversityAgent.PersonaActionGroup.values()[i - 1].name()), i, j);
+                            gridPane.add(new Label(GroceryAgent.PersonaActionGroup.values()[i - 1].name()), i, j);
                     }
                 }
                 else{
-                    gridPane.add(new TextField(university.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
+                    gridPane.add(new TextField(grocery.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
                 }
             }
         }
@@ -62,7 +61,7 @@ public class EditInteractionsController {
             if (node.getClass() == TextField.class){
                 int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                 if (row > 0 && column > 0)
-                    ((TextField) node).setText(University.defaultInteractionTypeChances.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
+                    ((TextField) node).setText(Grocery.defaultInteractionTypeChances.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
             }
         }
     }
@@ -90,14 +89,14 @@ public class EditInteractionsController {
             }
         }
         else{
-            University university = Main.universitySimulator.getUniversity();
+            Grocery grocery = Main.grocerySimulator.getGrocery();
             for (Node node: gridPane.getChildren()){
                 if (node.getClass() == TextField.class){
                     int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                     String s = ((TextField) node).getText();
                     Integer[] interactionArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
                     if (row > 0 && column > 0)
-                        university.getInteractionTypeChances().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(interactionArr)));
+                        grocery.getInteractionTypeChances().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(interactionArr)));
                 }
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);

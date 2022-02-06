@@ -50,7 +50,7 @@ public class UniversityAction {
         QUEUE_VENDOR(),
         CHECKOUT(),
         FIND_SEAT_CAFETERIA(),
-        GO_TO_TRASH,
+        GO_TO_TRASH(),
 
         GREET_PERSON(),
         GUARD_STAY_PUT(),

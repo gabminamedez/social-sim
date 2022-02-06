@@ -37,6 +37,10 @@ public class University extends Environment {
     private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales;
     private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOSInteractionChances;
     private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> interactionTypeChances;
+    private int MAX_STUDENTS;
+    private int MAX_PROFESSORS;
+    private int MAX_CURRENT_STUDENTS;
+    private int MAX_CURRENT_PROFESSORS;
 
     private final List<UniversityGate> universityGates;
     private final List<Bench> benches;
@@ -305,6 +309,38 @@ public class University extends Environment {
 
     public void setFieldOfView(int fieldOfView) {
         this.fieldOfView = fieldOfView;
+    }
+
+    public int getMAX_STUDENTS() {
+        return MAX_STUDENTS;
+    }
+
+    public void setMAX_STUDENTS(int MAX_STUDENTS) {
+        this.MAX_STUDENTS = MAX_STUDENTS;
+    }
+
+    public int getMAX_PROFESSORS() {
+        return MAX_PROFESSORS;
+    }
+
+    public void setMAX_PROFESSORS(int MAX_PROFESSORS) {
+        this.MAX_PROFESSORS = MAX_PROFESSORS;
+    }
+
+    public int getMAX_CURRENT_STUDENTS() {
+        return MAX_CURRENT_STUDENTS;
+    }
+
+    public void setMAX_CURRENT_STUDENTS(int MAX_CURRENT_STUDENTS) {
+        this.MAX_CURRENT_STUDENTS = MAX_CURRENT_STUDENTS;
+    }
+
+    public int getMAX_CURRENT_PROFESSORS() {
+        return MAX_CURRENT_PROFESSORS;
+    }
+
+    public void setMAX_CURRENT_PROFESSORS(int MAX_CURRENT_PROFESSORS) {
+        this.MAX_CURRENT_PROFESSORS = MAX_CURRENT_PROFESSORS;
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {
@@ -948,6 +984,7 @@ public class University extends Environment {
                             case QUEUE_VENDOR -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case FIND_SEAT_CAFETERIA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_TRASH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                             case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case JANITOR_GO_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -994,6 +1031,7 @@ public class University extends Environment {
                             case QUEUE_VENDOR -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case FIND_SEAT_CAFETERIA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_TRASH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case JANITOR_GO_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 100, 0)));
@@ -1040,6 +1078,7 @@ public class University extends Environment {
                             case QUEUE_VENDOR -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                             case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case FIND_SEAT_CAFETERIA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case GO_TO_TRASH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case JANITOR_GO_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -1086,6 +1125,7 @@ public class University extends Environment {
                             case QUEUE_VENDOR -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                             case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case FIND_SEAT_CAFETERIA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case GO_TO_TRASH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case JANITOR_GO_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -1132,6 +1172,7 @@ public class University extends Environment {
                             case QUEUE_VENDOR -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                             case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case FIND_SEAT_CAFETERIA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case GO_TO_TRASH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case JANITOR_GO_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -1178,6 +1219,7 @@ public class University extends Environment {
                             case QUEUE_VENDOR -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                             case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case FIND_SEAT_CAFETERIA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case GO_TO_TRASH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case JANITOR_GO_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -1224,6 +1266,7 @@ public class University extends Environment {
                             case QUEUE_VENDOR -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(75, 0, 25)));
                             case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case FIND_SEAT_CAFETERIA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(75, 0, 25)));
+                            case GO_TO_TRASH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(75, 0, 25)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case JANITOR_GO_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -1270,6 +1313,7 @@ public class University extends Environment {
                             case QUEUE_VENDOR -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(65, 0, 35)));
                             case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case FIND_SEAT_CAFETERIA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(65, 0, 35)));
+                            case GO_TO_TRASH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(65, 0, 35)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case JANITOR_GO_TOILET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -1287,6 +1331,11 @@ public class University extends Environment {
     public CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> getIOSScales(){
         return this.IOSScales;
     }
+
+    public void setIOSScales(CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales){
+        this.IOSScales = IOSScales;
+    }
+
     public CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> getInteractionTypeChances(){
         return this.interactionTypeChances;
     }
