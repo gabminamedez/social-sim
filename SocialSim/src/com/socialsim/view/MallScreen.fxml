@@ -186,118 +186,122 @@
                             </VBox>
                         </VBox>
                     </TitledPane>
-                    <TitledPane animated="false" prefHeight="70.0" prefWidth="100.0" text="Statistics">
-                        <VBox alignment="CENTER" prefHeight="70.0" prefWidth="100.0" spacing="10.0">
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Current Patrons" />
-                                    <Label fx:id="currentPatronCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Total Friend Patrons" />
-                                    <Label fx:id="totalFriendsCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Total Family Patrons" />
-                                    <Label fx:id="totalFamilyCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Total Alone Patrons" />
-                                    <Label fx:id="totalAloneCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Total Couple Patrons" />
-                                    <Label fx:id="totalCoupleCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Current Nonverbal Interactions" />
-                                    <Label fx:id="currentNonverbalCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Current Cooperative Interactions" />
-                                    <Label fx:id="currentCooperativeCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Current Exchange Interactions" />
-                                    <Label fx:id="currentExchangeCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Average Nonverbal Duration" />
-                                    <Label fx:id="averageNonverbalDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Average Cooperative Duration" />
-                                    <Label fx:id="averageCooperativeDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Average Exchange Duration" />
-                                    <Label fx:id="averageExchangeDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Resto Staff to Resto Staff Interactions" />
-                                    <Label fx:id="currentStaffRestoStaffRestoCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Store Staff to Store Staff Interactions" />
-                                    <Label fx:id="currentStaffStoreStaffStoreCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Guard Interactions" />
-                                    <Label fx:id="currentPatronGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Kiosk Staff Interactions" />
-                                    <Label fx:id="currentPatronStaffKioskCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Resto Staff Interactions" />
-                                    <Label fx:id="currentPatronStaffRestoCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Store Staff Interactions" />
-                                    <Label fx:id="currentPatronStaffStoreCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                <children>
-                                    <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Patron Interactions" />
-                                    <Label fx:id="currentPatronPatronCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
-                                </children>
-                            </AnchorPane>
-                        </VBox>
-                    </TitledPane>
+
+                    <Label prefHeight="34.0" prefWidth="150.0" text="Statistics" />
+                    <ScrollPane prefHeight="400.0" prefWidth="100.0" >
+                        <content>
+                            <VBox alignment="CENTER" prefHeight="70.0" prefWidth="100.0" spacing="10.0">
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Patrons" />
+                                        <Label fx:id="currentPatronCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Total Family Patrons" />
+                                        <Label fx:id="totalFamilyCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Total Friend Patrons" />
+                                        <Label fx:id="totalFriendsCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Total Couple Patrons" />
+                                        <Label fx:id="totalCoupleCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Total Alone Patrons" />
+                                        <Label fx:id="totalAloneCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Nonverbal Interactions" />
+                                        <Label fx:id="currentNonverbalCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Cooperative Interactions" />
+                                        <Label fx:id="currentCooperativeCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Exchange Interactions" />
+                                        <Label fx:id="currentExchangeCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Average Nonverbal Duration" />
+                                        <Label fx:id="averageNonverbalDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Average Cooperative Duration" />
+                                        <Label fx:id="averageCooperativeDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Average Exchange Duration" />
+                                        <Label fx:id="averageExchangeDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Guard Interactions" />
+                                        <Label fx:id="currentPatronGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Kiosk Staff Interactions" />
+                                        <Label fx:id="currentPatronStaffKioskCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Resto Staff Interactions" />
+                                        <Label fx:id="currentPatronStaffRestoCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Store Staff Interactions" />
+                                        <Label fx:id="currentPatronStaffStoreCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Patron Interactions" />
+                                        <Label fx:id="currentPatronPatronCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Resto Staff to Resto Staff Interactions" />
+                                        <Label fx:id="currentStaffRestoStaffRestoCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Store Staff to Store Staff Interactions" />
+                                        <Label fx:id="currentStaffStoreStaffStoreCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
                 </VBox>
             </Tab>
         </TabPane>

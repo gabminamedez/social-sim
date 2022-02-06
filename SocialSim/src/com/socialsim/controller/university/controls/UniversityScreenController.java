@@ -84,7 +84,6 @@ public class UniversityScreenController extends ScreenController {
     @FXML private Label currentProfProfCount;
     @FXML private Label currentProfGuardCount;
     @FXML private Label currentProfJanitorCount;
-    @FXML private Label currentGuardJanitorCount;
     @FXML private Label currentJanitorJanitorCount;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
@@ -591,7 +590,6 @@ public class UniversityScreenController extends ScreenController {
         currentProfProfCount.setText(String.valueOf(UniversitySimulator.currentProfProfCount));
         currentProfGuardCount.setText(String.valueOf(UniversitySimulator.currentProfGuardCount));
         currentProfJanitorCount.setText(String.valueOf(UniversitySimulator.currentProfJanitorCount));
-        currentGuardJanitorCount.setText(String.valueOf(UniversitySimulator.currentGuardJanitorCount));
         currentJanitorJanitorCount.setText(String.valueOf(UniversitySimulator.currentJanitorJanitorCount));
     }
 
@@ -749,7 +747,7 @@ public class UniversityScreenController extends ScreenController {
         university.setMAX_CURRENT_PROFESSORS(Integer.parseInt(maxCurrentProfessors.getText()));
 
 
-        currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount)); //TODO: Add more Initialize parameters
+        currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount));
         currentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentCount));
         currentNonverbalCount.setText(String.valueOf(UniversitySimulator.currentNonverbalCount));
         currentCooperativeCount.setText(String.valueOf(UniversitySimulator.currentCooperativeCount));
@@ -764,7 +762,6 @@ public class UniversityScreenController extends ScreenController {
         currentProfProfCount.setText(String.valueOf(UniversitySimulator.currentProfProfCount));
         currentProfGuardCount.setText(String.valueOf(UniversitySimulator.currentProfGuardCount));
         currentProfJanitorCount.setText(String.valueOf(UniversitySimulator.currentProfJanitorCount));
-        currentGuardJanitorCount.setText(String.valueOf(UniversitySimulator.currentGuardJanitorCount));
         currentJanitorJanitorCount.setText(String.valueOf(UniversitySimulator.currentJanitorJanitorCount));
     }
 
