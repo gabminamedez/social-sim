@@ -68,8 +68,10 @@ public class UniversityScreenController extends ScreenController {
     @FXML private TextField maxCurrentStudents;
     @FXML private TextField maxCurrentProfessors;
     @FXML private TextField fieldOfView;
+    @FXML private Label currentProfessorCount; //TODO: Add more labels
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
+
 
     private final double CANVAS_SCALE = 0.7;
 
@@ -544,6 +546,7 @@ public class UniversityScreenController extends ScreenController {
 
     private void requestUpdateInterfaceSimulationElements() { // Update the interface elements pertinent to the simulation
         Platform.runLater(this::updateSimulationTime); // Update the simulation time
+        Platform.runLater(this::updateStatistics); //TODO: Update Statistics
     }
 
     public void updateSimulationTime() {
@@ -552,6 +555,10 @@ public class UniversityScreenController extends ScreenController {
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
         elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
+    }
+    public void updateStatistics(){
+        //TODO: Statistics
+        currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount));
     }
 
     public void setElements() {
@@ -706,6 +713,9 @@ public class UniversityScreenController extends ScreenController {
         university.setMAX_PROFESSORS(Integer.parseInt(maxProfessors.getText()));
         university.setMAX_CURRENT_STUDENTS(Integer.parseInt(maxCurrentStudents.getText()));
         university.setMAX_CURRENT_PROFESSORS(Integer.parseInt(maxCurrentProfessors.getText()));
+
+
+        currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount)); //TODO: Add more Initialize parameters
     }
 
     public boolean validateParameters(){

@@ -186,6 +186,21 @@
                             </VBox>
                         </VBox>
                     </TitledPane>
+                    <TitledPane animated="false" prefHeight="70.0" prefWidth="100.0" text="Statistics">
+                        <content>
+                            <VBox alignment="CENTER" prefHeight="70.0" prefWidth="100.0" spacing="10.0">
+                                <children>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+<!--                                        TODO Sample Statistics-->
+                                        <children>
+                                            <Label prefHeight="26.0" prefWidth="150.0" text="Current Professor Count" />
+                                            <Label fx:id="currentProfessorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                        </children>
+                                    </AnchorPane>
+                                </children>
+                            </VBox>
+                        </content>
+                    </TitledPane>
                 </VBox>
             </Tab>
         </TabPane>
