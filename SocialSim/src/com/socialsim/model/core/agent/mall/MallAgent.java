@@ -204,7 +204,7 @@ public class MallAgent extends Agent {
         ERRAND_FAMILY(5), LOITER_FAMILY(5),
         ERRAND_FRIENDS(6), LOITER_FRIENDS(6),
         ERRAND_ALONE(7), LOITER_ALONE(7),
-        ERRAND_COUPLE(8), LOITER_COUPLE(8);
+        LOITER_COUPLE(8);
 
         private final int ID;
 

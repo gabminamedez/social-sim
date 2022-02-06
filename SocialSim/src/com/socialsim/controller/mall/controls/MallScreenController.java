@@ -90,10 +90,10 @@ public class MallScreenController extends ScreenController {
         int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
         Mall mall = Mall.MallFactory.create(rows, columns);
         Main.mallSimulator.resetToDefaultConfiguration(mall);
-//        Mall.configureDefaultIOS();
-//        mall.copyDefaultToIOS();
-//        Mall.configureDefaultInteractionTypeChances();
-//        mall.copyDefaultToInteractionTypeChances();
+        Mall.configureDefaultIOS();
+        mall.copyDefaultToIOS();
+        Mall.configureDefaultInteractionTypeChances();
+        mall.copyDefaultToInteractionTypeChances();
     }
 
     @FXML

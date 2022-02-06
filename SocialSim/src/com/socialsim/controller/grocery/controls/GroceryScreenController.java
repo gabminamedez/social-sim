@@ -90,8 +90,8 @@ public class GroceryScreenController extends ScreenController {
         Main.grocerySimulator.resetToDefaultConfiguration(grocery);
         Grocery.configureDefaultIOS();
         grocery.copyDefaultToIOS();
-//        Grocery.configureDefaultInteractionTypeChances();
-//        grocery.copyDefaultToInteractionTypeChances();
+        Grocery.configureDefaultInteractionTypeChances();
+        grocery.copyDefaultToInteractionTypeChances();
     }
 
     @FXML

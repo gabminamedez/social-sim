@@ -61,6 +61,9 @@ public class OfficeScreenController extends ScreenController {
     @FXML private TextField maxClients;
     @FXML private TextField maxDrivers;
     @FXML private TextField maxVisitors;
+    @FXML private TextField maxCurrentClients;
+    @FXML private TextField maxCurrentDrivers;
+    @FXML private TextField maxCurrentVisitors;
     @FXML private TextField fieldOfView;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
@@ -88,10 +91,10 @@ public class OfficeScreenController extends ScreenController {
         int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
         Office office = Office.OfficeFactory.create(rows, columns);
         Main.officeSimulator.resetToDefaultConfiguration(office);
-//        Office.configureDefaultIOS();
-//        office.copyDefaultToIOS();
-//        Office.configureDefaultInteractionTypeChances();
-//        office.copyDefaultToInteractionTypeChances();
+        Office.configureDefaultIOS();
+        office.copyDefaultToIOS();
+        Office.configureDefaultInteractionTypeChances();
+        office.copyDefaultToInteractionTypeChances();
 
     }
 
@@ -662,8 +665,11 @@ public class OfficeScreenController extends ScreenController {
         office.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
         office.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
         office.setMAX_CLIENTS(Integer.parseInt(maxClients.getText()));
+        office.setMAX_CURRENT_CLIENTS(Integer.parseInt(maxCurrentClients.getText()));
         office.setMAX_DRIVERS(Integer.parseInt(maxDrivers.getText()));
+        office.setMAX_CURRENT_DRIVERS(Integer.parseInt(maxCurrentDrivers.getText()));
         office.setMAX_VISITORS(Integer.parseInt(maxVisitors.getText()));
+        office.setMAX_CURRENT_VISITORS(Integer.parseInt(maxCurrentVisitors.getText()));
     }
 
     public boolean validateParameters(){

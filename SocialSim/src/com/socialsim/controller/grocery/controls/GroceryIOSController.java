@@ -132,7 +132,6 @@ public class GroceryIOSController {
                             gridPane.add(new TextField(Grocery.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
                         }
                         else{
-//                            System.out.println(i + " " + j + " " + GroceryAgent.Persona.values()[i - 1] + " " + GroceryAgent.Persona.values()[j - 1]);
                             TextField tf = new TextField("");
                             tf.setDisable(true);
                             gridPane.add(tf, otherCtr, j);
@@ -181,15 +180,6 @@ public class GroceryIOSController {
         }
         else{
             Grocery grocery = Main.grocerySimulator.getGrocery();
-//            for (Node node: gridPane.getChildren()){
-//                if (node.getClass() == TextField.class){
-//                    int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
-//                    String s = ((TextField) node).getText();
-//                    Integer[] IOSArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
-//                    if (row > 0 && column > 0)
-//                        grocery.getIOSScales().get(column - 1).set(row - 1, new CopyOnWriteArrayList<>(List.of(IOSArr)));
-//                }
-//            }
             CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> newIOS = new CopyOnWriteArrayList<>();
             for (int i = 0; i < GroceryAgent.Persona.values().length + 1; i++) { // row
                 if (i > 0)
@@ -233,23 +223,5 @@ public class GroceryIOSController {
         else{
             return false;
         }
-    }
-
-    private Label getLabelFromGridPane(GridPane gridPane, int col, int row) {
-        for (Node node : gridPane.getChildren()) {
-            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-                return (Label) node;
-            }
-        }
-        return null;
-    }
-
-    private TextField getTextFieldFromGridPane(GridPane gridPane, int col, int row) {
-        for (Node node : gridPane.getChildren()) {
-            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-                return (TextField) node;
-            }
-        }
-        return null;
     }
 }

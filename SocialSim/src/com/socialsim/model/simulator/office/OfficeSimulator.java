@@ -34,6 +34,7 @@ public class OfficeSimulator extends Simulator {
     private final Semaphore playSemaphore;
 
     private final int MAX_BOSSES = 1;
+    private final int MAX_SECRETARIES = 1;
     public static List<Integer> MANAGERS_1 = new LinkedList<Integer>(List.of(11));
     public static List<Integer> MANAGERS_2 = new LinkedList<Integer>(List.of(19));
     public static List<Integer> MANAGERS_3 = new LinkedList<Integer>(List.of(27));
@@ -51,7 +52,6 @@ public class OfficeSimulator extends Simulator {
     public static List<Integer> TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
     public static List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
 
-    private final int MAX_SECRETARIES = 1;
 
     public static int currentManagerCount = 0;
     public static int currentBusinessCount = 0;
