@@ -69,6 +69,22 @@ public class UniversityScreenController extends ScreenController {
     @FXML private TextField maxCurrentProfessors;
     @FXML private TextField fieldOfView;
     @FXML private Label currentProfessorCount; //TODO: Add more labels
+    @FXML private Label currentStudentCount;
+    @FXML private Label currentNonverbalCount;
+    @FXML private Label currentCooperativeCount;
+    @FXML private Label currentExchangeCount;
+    @FXML private Label averageNonverbalDuration;
+    @FXML private Label averageCooperativeDuration;
+    @FXML private Label averageExchangeDuration;
+    @FXML private Label currentStudentStudentCount;
+    @FXML private Label currentStudentProfCount;
+    @FXML private Label currentStudentGuardCount;
+    @FXML private Label currentStudentJanitorCount;
+    @FXML private Label currentProfProfCount;
+    @FXML private Label currentProfGuardCount;
+    @FXML private Label currentProfJanitorCount;
+    @FXML private Label currentGuardJanitorCount;
+    @FXML private Label currentJanitorJanitorCount;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
 
@@ -559,6 +575,22 @@ public class UniversityScreenController extends ScreenController {
     public void updateStatistics(){
         //TODO: Statistics
         currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount));
+        currentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentCount));
+        currentNonverbalCount.setText(String.valueOf(UniversitySimulator.currentNonverbalCount));
+        currentCooperativeCount.setText(String.valueOf(UniversitySimulator.currentCooperativeCount));
+        currentExchangeCount.setText(String.valueOf(UniversitySimulator.currentExchangeCount));
+        averageNonverbalDuration.setText(String.valueOf(UniversitySimulator.averageNonverbalDuration));
+        averageCooperativeDuration.setText(String.valueOf(UniversitySimulator.averageCooperativeDuration));
+        averageExchangeDuration.setText(String.valueOf(UniversitySimulator.averageExchangeDuration));
+        currentStudentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentStudentCount));
+        currentStudentProfCount.setText(String.valueOf(UniversitySimulator.currentStudentProfCount));
+        currentStudentGuardCount.setText(String.valueOf(UniversitySimulator.currentStudentGuardCount));
+        currentStudentJanitorCount.setText(String.valueOf(UniversitySimulator.currentStudentJanitorCount));
+        currentProfProfCount.setText(String.valueOf(UniversitySimulator.currentProfProfCount));
+        currentProfGuardCount.setText(String.valueOf(UniversitySimulator.currentProfGuardCount));
+        currentProfJanitorCount.setText(String.valueOf(UniversitySimulator.currentProfJanitorCount));
+        currentGuardJanitorCount.setText(String.valueOf(UniversitySimulator.currentGuardJanitorCount));
+        currentJanitorJanitorCount.setText(String.valueOf(UniversitySimulator.currentJanitorJanitorCount));
     }
 
     public void setElements() {
@@ -716,6 +748,22 @@ public class UniversityScreenController extends ScreenController {
 
 
         currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount)); //TODO: Add more Initialize parameters
+        currentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentCount));
+        currentNonverbalCount.setText(String.valueOf(UniversitySimulator.currentNonverbalCount));
+        currentCooperativeCount.setText(String.valueOf(UniversitySimulator.currentCooperativeCount));
+        currentExchangeCount.setText(String.valueOf(UniversitySimulator.currentExchangeCount));
+        averageNonverbalDuration.setText(String.valueOf(UniversitySimulator.averageNonverbalDuration));
+        averageCooperativeDuration.setText(String.valueOf(UniversitySimulator.averageCooperativeDuration));
+        averageExchangeDuration.setText(String.valueOf(UniversitySimulator.averageExchangeDuration));
+        currentStudentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentStudentCount));
+        currentStudentProfCount.setText(String.valueOf(UniversitySimulator.currentStudentProfCount));
+        currentStudentGuardCount.setText(String.valueOf(UniversitySimulator.currentStudentGuardCount));
+        currentStudentJanitorCount.setText(String.valueOf(UniversitySimulator.currentStudentJanitorCount));
+        currentProfProfCount.setText(String.valueOf(UniversitySimulator.currentProfProfCount));
+        currentProfGuardCount.setText(String.valueOf(UniversitySimulator.currentProfGuardCount));
+        currentProfJanitorCount.setText(String.valueOf(UniversitySimulator.currentProfJanitorCount));
+        currentGuardJanitorCount.setText(String.valueOf(UniversitySimulator.currentGuardJanitorCount));
+        currentJanitorJanitorCount.setText(String.valueOf(UniversitySimulator.currentJanitorJanitorCount));
     }
 
     public boolean validateParameters(){
