@@ -1571,6 +1571,24 @@ public class OfficeAgentMovement extends AgentMovement {
             if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
                 currentPatchSet.remove(this.currentPatch);
             }
+
+            switch (this.getParent().getType()) {
+                case MANAGER -> OfficeSimulator.currentManagerCount--;
+                case BUSINESS -> OfficeSimulator.currentBusinessCount--;
+                case RESEARCHER -> OfficeSimulator.currentResearchCount--;
+                case TECHNICAL -> OfficeSimulator.currentTechnicalCount--;
+                case SECRETARY -> OfficeSimulator.currentSecretaryCount--;
+                case DRIVER -> OfficeSimulator.currentDriverCount--;
+                case VISITOR -> OfficeSimulator.currentVisitorCount--;
+                case CLIENT -> OfficeSimulator.currentClientCount--;
+            }
+
+            switch (this.getParent().getTeam()) {
+                case 1 -> OfficeSimulator.currentTeam1Count--;
+                case 2 -> OfficeSimulator.currentTeam2Count--;
+                case 3 -> OfficeSimulator.currentTeam3Count--;
+                case 4 -> OfficeSimulator.currentTeam4Count--;
+            }
         }
     }
 
