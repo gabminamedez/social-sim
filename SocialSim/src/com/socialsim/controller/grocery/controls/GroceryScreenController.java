@@ -125,8 +125,8 @@ public class GroceryScreenController extends ScreenController {
         if (validateParameters()){
             Grocery grocery = Main.grocerySimulator.getGrocery();
             this.configureParameters(grocery);
-            grocery.convertIOSToChances();
             initializeGrocery(grocery);
+            grocery.convertIOSToChances();
             setElements();
             playButton.setDisable(false);
             disableEdits();

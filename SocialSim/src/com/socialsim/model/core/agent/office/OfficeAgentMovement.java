@@ -1868,8 +1868,8 @@ public class OfficeAgentMovement extends AgentMovement {
     public void rollAgentInteraction(OfficeAgent agent){
         //TODO: Statistics in interaction
 
-        double IOS1 = office.getIOS().get(this.getParent().getPersona().ordinal()).get(agent.getPersona().ordinal());
-        double IOS2 = office.getIOS().get(agent.getPersona().ordinal()).get(this.getParent().getPersona().ordinal());
+        double IOS1 = office.getIOS().get(this.getParent().getId()).get(agent.getId());
+        double IOS2 = office.getIOS().get(agent.getId()).get(this.getParent().getId());
         // roll if possible interaction
         double CHANCE1 = Simulator.roll();
         double CHANCE2 = Simulator.roll();

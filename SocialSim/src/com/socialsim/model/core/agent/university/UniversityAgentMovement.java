@@ -1821,8 +1821,8 @@ public class UniversityAgentMovement extends AgentMovement {
     public void rollAgentInteraction(UniversityAgent agent){
         //TODO: Statistics in interaction
 
-        double IOS1 = university.getIOS().get(this.getParent().getPersona().ordinal()).get(agent.getPersona().ordinal());
-        double IOS2 = university.getIOS().get(agent.getPersona().ordinal()).get(this.getParent().getPersona().ordinal());
+        double IOS1 = university.getIOS().get(this.getParent().getId()).get(agent.getId());
+        double IOS2 = university.getIOS().get(agent.getId()).get(this.getParent().getId());
         // roll if possible interaction
         double CHANCE1 = Simulator.roll();
         double CHANCE2 = Simulator.roll();

@@ -124,8 +124,8 @@ public class MallScreenController extends ScreenController {
         if (validateParameters()){
             Mall mall = Main.mallSimulator.getMall();
             this.configureParameters(mall);
-            mall.convertIOSToChances();
             initializeMall(mall);
+            mall.convertIOSToChances();
             setElements();
             playButton.setDisable(false);
             disableEdits();

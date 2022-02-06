@@ -2172,8 +2172,8 @@ public class MallAgentMovement extends AgentMovement {
     public void rollAgentInteraction(MallAgent agent){
         //TODO: Statistics in interaction
 
-        double IOS1 = mall.getIOS().get(this.getParent().getPersona().ordinal()).get(agent.getPersona().ordinal());
-        double IOS2 = mall.getIOS().get(agent.getPersona().ordinal()).get(this.getParent().getPersona().ordinal());
+        double IOS1 = mall.getIOS().get(this.getParent().getId()).get(agent.getId());
+        double IOS2 = mall.getIOS().get(agent.getId()).get(this.getParent().getId());
         // roll if possible interaction
         double CHANCE1 = Simulator.roll();
         double CHANCE2 = Simulator.roll();

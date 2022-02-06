@@ -537,11 +537,16 @@ public class Office extends Environment {
     public void convertIOSToChances(){
         IOSInteractionChances = new CopyOnWriteArrayList<>();
         IOSScales.toString();
-        for(int i = 0; i < IOSScales.size(); i++){
+        for(int i = 0; i < agents.size(); i++){
             IOSInteractionChances.add(new CopyOnWriteArrayList<>());
-            for(int j = 0; j < IOSScales.get(i).size(); j++){
-                int IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
-                IOSInteractionChances.get(i).add(this.convertToChanceInteraction(IOS));
+            for(int j = 0; j < agents.size(); j++){
+                if (i == j){
+                    IOSInteractionChances.get(i).add((double) 0);
+                }
+                else{
+                    int IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                    IOSInteractionChances.get(i).add(this.convertToChanceInteraction(IOS));
+                }
             }
         }
     }

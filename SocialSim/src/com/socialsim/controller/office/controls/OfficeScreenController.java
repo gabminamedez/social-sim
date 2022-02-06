@@ -198,8 +198,8 @@ public class OfficeScreenController extends ScreenController {
         if (validateParameters()){
             Office office = Main.officeSimulator.getOffice();
             this.configureParameters(office);
-            office.convertIOSToChances();
             initializeOffice(office);
+            office.convertIOSToChances();
             setElements();
             playButton.setDisable(false);
             disableEdits();
