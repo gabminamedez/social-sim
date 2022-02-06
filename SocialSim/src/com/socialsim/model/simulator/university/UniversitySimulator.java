@@ -43,9 +43,9 @@ public class UniversitySimulator extends Simulator {
     public static int currentCooperativeCount = 0;
     public static int currentExchangeCount = 0;
 
-    public static int averageNonverbalDuration = 0;
-    public static int averageCooperativeDuration = 0;
-    public static int averageExchangeDuration = 0;
+    public static float averageNonverbalDuration = 0;
+    public static float averageCooperativeDuration = 0;
+    public static float averageExchangeDuration = 0;
 
     public static int currentStudentStudentCount = 0;
     public static int currentStudentProfCount = 0;

@@ -12,6 +12,7 @@ import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.simulator.SimulationTime;
+import com.socialsim.model.simulator.grocery.GrocerySimulator;
 import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -572,6 +573,7 @@ public class UniversityScreenController extends ScreenController {
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
         elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
     }
+
     public void updateStatistics(){
         //TODO: Statistics
         currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount));
@@ -579,9 +581,9 @@ public class UniversityScreenController extends ScreenController {
         currentNonverbalCount.setText(String.valueOf(UniversitySimulator.currentNonverbalCount));
         currentCooperativeCount.setText(String.valueOf(UniversitySimulator.currentCooperativeCount));
         currentExchangeCount.setText(String.valueOf(UniversitySimulator.currentExchangeCount));
-        averageNonverbalDuration.setText(String.valueOf(UniversitySimulator.averageNonverbalDuration));
-        averageCooperativeDuration.setText(String.valueOf(UniversitySimulator.averageCooperativeDuration));
-        averageExchangeDuration.setText(String.valueOf(UniversitySimulator.averageExchangeDuration));
+        averageNonverbalDuration.setText(String.format("%.02f", UniversitySimulator.averageNonverbalDuration));
+        averageCooperativeDuration.setText(String.format("%.02f", UniversitySimulator.averageCooperativeDuration));
+        averageExchangeDuration.setText(String.format("%.02f", UniversitySimulator.averageExchangeDuration));
         currentStudentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentStudentCount));
         currentStudentProfCount.setText(String.valueOf(UniversitySimulator.currentStudentProfCount));
         currentStudentGuardCount.setText(String.valueOf(UniversitySimulator.currentStudentGuardCount));

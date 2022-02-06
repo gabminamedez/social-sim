@@ -67,6 +67,25 @@ public class MallScreenController extends ScreenController {
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
 
+    @FXML private Label currentPatronCount;
+    @FXML private Label currentNonverbalCount;
+    @FXML private Label currentCooperativeCount;
+    @FXML private Label currentExchangeCount;
+    @FXML private Label totalFamilyCount;
+    @FXML private Label totalFriendsCount;
+    @FXML private Label totalAloneCount;
+    @FXML private Label totalCoupleCount;
+    @FXML private Label averageNonverbalDuration;
+    @FXML private Label averageCooperativeDuration;
+    @FXML private Label averageExchangeDuration;
+    @FXML private Label currentPatronPatronCount;
+    @FXML private Label currentPatronStaffStoreCount;
+    @FXML private Label currentPatronStaffRestoCount;
+    @FXML private Label currentPatronStaffKioskCount;
+    @FXML private Label currentPatronGuardCount;
+    @FXML private Label currentStaffStoreStaffStoreCount;
+    @FXML private Label currentStaffRestoStaffRestoCount;
+
     private final double CANVAS_SCALE = 0.7;
 
     public MallScreenController() {
@@ -552,6 +571,7 @@ public class MallScreenController extends ScreenController {
 
     private void requestUpdateInterfaceSimulationElements() { // Update the interface elements pertinent to the simulation
         Platform.runLater(this::updateSimulationTime); // Update the simulation time
+        Platform.runLater(this::updateStatistics);
     }
 
     public void updateSimulationTime() {
@@ -560,6 +580,27 @@ public class MallScreenController extends ScreenController {
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
         elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
+    }
+
+    public void updateStatistics() {
+        currentPatronCount.setText(String.valueOf(MallSimulator.currentPatronCount));
+        currentNonverbalCount.setText(String.valueOf(MallSimulator.currentNonverbalCount));
+        currentCooperativeCount.setText(String.valueOf(MallSimulator.currentCooperativeCount));
+        currentExchangeCount.setText(String.valueOf(MallSimulator.currentExchangeCount));
+        totalFamilyCount.setText(String.valueOf(MallSimulator.totalFamilyCount));
+        totalFriendsCount.setText(String.valueOf(MallSimulator.totalFriendsCount));
+        totalAloneCount.setText(String.valueOf(MallSimulator.totalAloneCount));
+        totalCoupleCount.setText(String.valueOf(MallSimulator.totalCoupleCount));
+        averageNonverbalDuration.setText(String.format("%.02f", MallSimulator.averageNonverbalDuration));
+        averageCooperativeDuration.setText(String.format("%.02f", MallSimulator.averageCooperativeDuration));
+        averageExchangeDuration.setText(String.format("%.02f", MallSimulator.averageExchangeDuration));
+        currentPatronPatronCount.setText(String.valueOf(MallSimulator.currentPatronPatronCount));
+        currentPatronStaffStoreCount.setText(String.valueOf(MallSimulator.currentPatronStaffStoreCount));
+        currentPatronStaffRestoCount.setText(String.valueOf(MallSimulator.currentPatronStaffRestoCount));
+        currentPatronStaffKioskCount.setText(String.valueOf(MallSimulator.currentPatronStaffKioskCount));
+        currentPatronGuardCount.setText(String.valueOf(MallSimulator.currentPatronGuardCount));
+        currentStaffStoreStaffStoreCount.setText(String.valueOf(MallSimulator.currentStaffStoreStaffStoreCount));
+        currentStaffRestoStaffRestoCount.setText(String.valueOf(MallSimulator.currentStaffRestoStaffRestoCount));
     }
 
     public void setElements() {

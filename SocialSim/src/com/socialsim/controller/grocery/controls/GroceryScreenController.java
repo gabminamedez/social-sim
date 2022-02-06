@@ -65,6 +65,28 @@ public class GroceryScreenController extends ScreenController {
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
 
+    @FXML private Label currentFamilyCount;
+    @FXML private Label currentAloneCustomerCount;
+    @FXML private Label totalFamilyCount;
+    @FXML private Label totalAloneCustomerCount;
+    @FXML private Label currentNonverbalCount;
+    @FXML private Label currentCooperativeCount;
+    @FXML private Label currentExchangeCount;
+    @FXML private Label averageNonverbalDuration;
+    @FXML private Label averageCooperativeDuration;
+    @FXML private Label averageExchangeDuration;
+    @FXML private Label currentFamilyToFamilyCount;
+    @FXML private Label currentCustomerCustomerCount;
+    @FXML private Label currentCustomerAisleCount;
+    @FXML private Label currentCustomerCashierCount;
+    @FXML private Label currentCustomerBaggerCount;
+    @FXML private Label currentCustomerGuardCount;
+    @FXML private Label currentCustomerButcherCount;
+    @FXML private Label currentCustomerServiceCount;
+    @FXML private Label currentCustomerFoodCount;
+    @FXML private Label currentAisleAisleCount;
+    @FXML private Label currentCashierBaggerCount;
+
     private final double CANVAS_SCALE = 0.5;
 
     public GroceryScreenController() {
@@ -100,7 +122,7 @@ public class GroceryScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
-        if (!validateParameters()){
+        if (validateParameters()){
             Grocery grocery = Main.grocerySimulator.getGrocery();
             this.configureParameters(grocery);
             grocery.convertIOSToChances();
@@ -334,6 +356,7 @@ public class GroceryScreenController extends ScreenController {
 
     private void requestUpdateInterfaceSimulationElements() { // Update the interface elements pertinent to the simulation
         Platform.runLater(this::updateSimulationTime); // Update the simulation time
+        Platform.runLater(this::updateStatistics);
     }
 
     public void updateSimulationTime() {
@@ -342,6 +365,30 @@ public class GroceryScreenController extends ScreenController {
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
         elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
+    }
+
+    public void updateStatistics() {
+        currentFamilyCount.setText(String.valueOf(GrocerySimulator.currentFamilyCount));
+        currentAloneCustomerCount.setText(String.valueOf(GrocerySimulator.currentAloneCustomerCount));
+        totalFamilyCount.setText(String.valueOf(GrocerySimulator.totalFamilyCount));
+        totalAloneCustomerCount.setText(String.valueOf(GrocerySimulator.totalAloneCustomerCount));
+        currentNonverbalCount.setText(String.valueOf(GrocerySimulator.currentNonverbalCount));
+        currentCooperativeCount.setText(String.valueOf(GrocerySimulator.currentCooperativeCount));
+        currentExchangeCount.setText(String.valueOf(GrocerySimulator.currentExchangeCount));
+        averageNonverbalDuration.setText(String.format("%.02f", GrocerySimulator.averageNonverbalDuration));
+        averageCooperativeDuration.setText(String.format("%.02f", GrocerySimulator.averageCooperativeDuration));
+        averageExchangeDuration.setText(String.format("%.02f", GrocerySimulator.averageExchangeDuration));
+        currentFamilyToFamilyCount.setText(String.valueOf(GrocerySimulator.currentFamilyToFamilyCount));
+        currentCustomerCustomerCount.setText(String.valueOf(GrocerySimulator.currentCustomerCustomerCount));
+        currentCustomerAisleCount.setText(String.valueOf(GrocerySimulator.currentCustomerAisleCount));
+        currentCustomerCashierCount.setText(String.valueOf(GrocerySimulator.currentCustomerCashierCount));
+        currentCustomerBaggerCount.setText(String.valueOf(GrocerySimulator.currentCustomerBaggerCount));
+        currentCustomerGuardCount.setText(String.valueOf(GrocerySimulator.currentCustomerGuardCount));
+        currentCustomerButcherCount.setText(String.valueOf(GrocerySimulator.currentCustomerButcherCount));
+        currentCustomerServiceCount.setText(String.valueOf(GrocerySimulator.currentCustomerServiceCount));
+        currentCustomerFoodCount.setText(String.valueOf(GrocerySimulator.currentCustomerFoodCount));
+        currentAisleAisleCount.setText(String.valueOf(GrocerySimulator.currentAisleAisleCount));
+        currentCashierBaggerCount.setText(String.valueOf(GrocerySimulator.currentCashierBaggerCount));
     }
 
     public void setElements() {

@@ -186,6 +186,136 @@
                             </VBox>
                         </VBox>
                     </TitledPane>
+                    <TitledPane animated="false" prefHeight="70.0" prefWidth="100.0" text="Statistics">
+                        <VBox alignment="CENTER" prefHeight="70.0" prefWidth="100.0" spacing="10.0">
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Current Family Customers" />
+                                    <Label fx:id="currentFamilyCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Current Alone Customers" />
+                                    <Label fx:id="currentAloneCustomerCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Total Family Customers" />
+                                    <Label fx:id="totalFamilyCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Total Alone Customers" />
+                                    <Label fx:id="totalAloneCustomerCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Current Nonverbal Interactions" />
+                                    <Label fx:id="currentNonverbalCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Current Cooperative Interactions" />
+                                    <Label fx:id="currentCooperativeCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Current Exchange Interactions" />
+                                    <Label fx:id="currentExchangeCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Average Nonverbal Duration" />
+                                    <Label fx:id="averageNonverbalDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Average Cooperative Duration" />
+                                    <Label fx:id="averageCooperativeDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Average Exchange Duration" />
+                                    <Label fx:id="averageExchangeDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Family Member to Member Interactions" />
+                                    <Label fx:id="currentFamilyToFamilyCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Customer to Customer Interactions" />
+                                    <Label fx:id="currentCustomerCustomerCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Customer to Aisle Staff Interactions" />
+                                    <Label fx:id="currentCustomerAisleCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Customer to Cashier Interactions" />
+                                    <Label fx:id="currentCustomerCashierCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Customer to Bagger Interactions" />
+                                    <Label fx:id="currentCustomerBaggerCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Customer to Guard Interactions" />
+                                    <Label fx:id="currentCustomerGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Customer to Butcher Interactions" />
+                                    <Label fx:id="currentCustomerButcherCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Customer to Service Staff Interactions" />
+                                    <Label fx:id="currentCustomerServiceCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Customer to Stall Staff Interactions" />
+                                    <Label fx:id="currentCustomerFoodCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Aisle Staff to Aisle Staff Interactions" />
+                                    <Label fx:id="currentAisleAisleCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label prefHeight="26.0" prefWidth="150.0" text="Cashier to Bagger Interactions" />
+                                    <Label fx:id="currentCashierBaggerCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                </children>
+                            </AnchorPane>
+                        </VBox>
+                    </TitledPane>
                 </VBox>
             </Tab>
         </TabPane>
