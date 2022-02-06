@@ -34,10 +34,10 @@ public class Mall extends Environment {
     private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales;
     private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOSInteractionChances;
     private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> interactionTypeChances;
-    private int MAX_FAMILY = 10;
-    private int MAX_FRIENDS = 10;
-    private int MAX_COUPLE = 10;
-    private int MAX_ALONE = 10;
+    private int MAX_FAMILY;
+    private int MAX_FRIENDS;
+    private int MAX_COUPLE;
+    private int MAX_ALONE;
 
     private final List<MallGate> mallGates;
     private final List<Bench> benches;

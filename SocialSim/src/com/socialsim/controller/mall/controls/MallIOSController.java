@@ -51,7 +51,6 @@ public class MallIOSController {
                             else{
                                 gridPane.add(new Label(MallAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
                             }
-
                         }
                     }
                 }
@@ -199,7 +198,7 @@ public class MallIOSController {
             for (int i = 0; i < MallAgent.Persona.values().length + 1; i++) { // row
                 if (i > 0)
                     newIOS.add(new CopyOnWriteArrayList<>());
-                for (int j = 0; j < MallAgent.Persona.values().length + 1 + 3; j++) { // column, +3 for 3 OTHER cases
+                for (int j = 0; j < MallAgent.Persona.values().length + 1 + 7; j++) { // column, +7 for 7 OTHER cases
                     int index = 1 + j * (MallAgent.Persona.values().length + 1) + i;
                     if (index > MallAgent.Persona.values().length + 1 && index % (MallAgent.Persona.values().length + 1) - 1 != 0){
                         String s = ((TextField) gridPane.getChildren().get(index)).getText();

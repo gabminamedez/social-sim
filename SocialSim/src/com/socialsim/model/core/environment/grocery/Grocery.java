@@ -34,10 +34,10 @@ public class Grocery extends Environment {
     private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales;
     private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOSInteractionChances;
     private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> interactionTypeChances;
-    private int MAX_FAMILY = 20; //250
-    private int MAX_ALONE = 20;
-    private int MAX_CURRENT_FAMILY = 20; //250
-    private int MAX_CURRENT_ALONE = 20;
+    private int MAX_FAMILY;
+    private int MAX_ALONE;
+    private int MAX_CURRENT_FAMILY;
+    private int MAX_CURRENT_ALONE;
 
     private final List<GroceryGate> groceryGates;
     private final List<CartRepo> cartRepos;

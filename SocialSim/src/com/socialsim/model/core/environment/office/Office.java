@@ -38,12 +38,12 @@ public class Office extends Environment {
     private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales;
     private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOSInteractionChances;
     private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> interactionTypeChances;
-    private int MAX_CLIENTS = 6;
-    private int MAX_DRIVERS = 3;
-    private int MAX_VISITORS = 1;
-    private int MAX_CURRENT_CLIENTS = 2;
-    private int MAX_CURRENT_DRIVERS = 1;
-    private int MAX_CURRENT_VISITORS = 1;
+    private int MAX_CLIENTS;
+    private int MAX_DRIVERS;
+    private int MAX_VISITORS;
+    private int MAX_CURRENT_CLIENTS;
+    private int MAX_CURRENT_DRIVERS;
+    private int MAX_CURRENT_VISITORS;
 
     private final List<OfficeGate> officeGates;
     private final List<Cabinet> cabinets;

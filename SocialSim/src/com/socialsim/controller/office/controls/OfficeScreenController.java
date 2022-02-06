@@ -591,8 +591,11 @@ public class OfficeScreenController extends ScreenController {
         exchangeStdDev.setDisable(true);
         fieldOfView.setDisable(true);
         maxClients.setDisable(true);
+        maxCurrentClients.setDisable(true);
         maxDrivers.setDisable(true);
+        maxCurrentDrivers.setDisable(true);
         maxVisitors.setDisable(true);
+        maxCurrentVisitors.setDisable(true);
 
         resetToDefaultButton.setDisable(true);
         configureIOSButton.setDisable(true);
@@ -607,8 +610,11 @@ public class OfficeScreenController extends ScreenController {
         exchangeStdDev.setDisable(false);
         fieldOfView.setDisable(false);
         maxClients.setDisable(false);
+        maxCurrentClients.setDisable(false);
         maxDrivers.setDisable(false);
+        maxCurrentDrivers.setDisable(false);
         maxVisitors.setDisable(false);
+        maxCurrentVisitors.setDisable(false);
 
         resetToDefaultButton.setDisable(false);
         configureIOSButton.setDisable(false);
@@ -626,6 +632,9 @@ public class OfficeScreenController extends ScreenController {
         maxClients.setText(Integer.toString(OfficeSimulator.defaultMaxClients));
         maxDrivers.setText(Integer.toString(OfficeSimulator.defaultMaxDrivers));
         maxVisitors.setText(Integer.toString(OfficeSimulator.defaultMaxVisitors));
+        maxCurrentClients.setText(Integer.toString(OfficeSimulator.defaultMaxCurrentClients));
+        maxCurrentDrivers.setText(Integer.toString(OfficeSimulator.defaultMaxCurrentDrivers));
+        maxCurrentVisitors.setText(Integer.toString(OfficeSimulator.defaultMaxCurrentVisitors));
     }
 
     public void openIOSLevels(){

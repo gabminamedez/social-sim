@@ -25,6 +25,9 @@ public class OfficeSimulator extends Simulator {
     public static int defaultMaxClients = 6;
     public static int defaultMaxDrivers = 3;
     public static int defaultMaxVisitors = 1;
+    public static int defaultMaxCurrentClients = 2;
+    public static int defaultMaxCurrentDrivers = 1;
+    public static int defaultMaxCurrentVisitors = 1;
 
     private static Office office;
 
