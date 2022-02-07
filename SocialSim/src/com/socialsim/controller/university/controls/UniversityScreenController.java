@@ -127,8 +127,8 @@ public class UniversityScreenController extends ScreenController {
         if (validateParameters()){
             University university = Main.universitySimulator.getUniversity();
             this.configureParameters(university);
-            university.convertIOSToChances();
             initializeUniversity(university);
+            university.convertIOSToChances();
             setElements();
             playButton.setDisable(false);
             disableEdits();
