@@ -22,6 +22,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class OfficeSimulator extends Simulator {
 
+    public static int defaultMaxClients = 6;
+    public static int defaultMaxDrivers = 3;
+    public static int defaultMaxVisitors = 1;
+    public static int defaultMaxCurrentClients = 2;
+    public static int defaultMaxCurrentDrivers = 1;
+    public static int defaultMaxCurrentVisitors = 1;
+
     private static Office office;
 
     // Simulator variables
@@ -30,6 +37,7 @@ public class OfficeSimulator extends Simulator {
     private final Semaphore playSemaphore;
 
     private final int MAX_BOSSES = 1;
+    private final int MAX_SECRETARIES = 1;
     public static List<Integer> MANAGERS_1 = new LinkedList<Integer>(List.of(11));
     public static List<Integer> MANAGERS_2 = new LinkedList<Integer>(List.of(19));
     public static List<Integer> MANAGERS_3 = new LinkedList<Integer>(List.of(27));
@@ -47,10 +55,6 @@ public class OfficeSimulator extends Simulator {
     public static List<Integer> TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
     public static List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
 
-    private final int MAX_SECRETARIES = 1;
-    private final int MAX_CLIENTS = 6;
-    private final int MAX_DRIVERS = 3;
-    private final int MAX_VISITORS = 1;
 
     public static int currentManagerCount = 0;
     public static int currentBusinessCount = 0;
@@ -64,9 +68,9 @@ public class OfficeSimulator extends Simulator {
     public static int currentCooperativeCount = 0;
     public static int currentExchangeCount = 0;
 
-    public static int averageNonverbalDuration = 0;
-    public static int averageCooperativeDuration = 0;
-    public static int averageExchangeDuration = 0;
+    public static float averageNonverbalDuration = 0;
+    public static float averageCooperativeDuration = 0;
+    public static float averageExchangeDuration = 0;
 
     public static int currentTeam1Count = 0;
     public static int currentTeam2Count = 0;
@@ -210,7 +214,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     public void spawnInitialAgents(Office office) {
-        office.createInitialAgentDemographics(MAX_CLIENTS, MAX_DRIVERS, MAX_VISITORS);
+        office.createInitialAgentDemographics(office.getMAX_CLIENTS(), getOffice().getMAX_DRIVERS(), getOffice().getMAX_VISITORS());
         OfficeAgent janitor = office.getAgents().get(0); // 0
         janitor.setAgentMovement(new OfficeAgentMovement(office.getPatch(6,23), janitor, 1.27, office.getPatch(6,23).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(janitor.getAgentMovement().getCurrentPatch());
@@ -1908,7 +1912,7 @@ public class OfficeSimulator extends Simulator {
         OfficeGate gate = office.getOfficeGates().get(1);
         OfficeAgent agent = null;
 
-        for (int i = 0; i < 4; i++) { // 4 gates
+        for (int i = 0; i < 2; i++) { // 4 gates
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             int spawnChance = (int) gate.getChancePerTick();
             int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
@@ -1928,6 +1932,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_1.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         MANAGERS_1.remove(0);
+                        currentManagerCount++;
+                        currentTeam1Count++;
                         OfficeAgent.managerCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -1935,6 +1941,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_1.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         BUSINESS_1.remove(0);
+                        currentBusinessCount++;
+                        currentTeam1Count++;
                         OfficeAgent.businessCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -1942,6 +1950,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_1.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         RESEARCH_1.remove(0);
+                        currentResearchCount++;
+                        currentTeam1Count++;
                         OfficeAgent.researcherCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -1949,6 +1959,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_1.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         TECHNICAL_1.remove(0);
+                        currentTechnicalCount++;
+                        currentTeam1Count++;
                         OfficeAgent.technicalCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -1956,6 +1968,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_2.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         MANAGERS_2.remove(0);
+                        currentManagerCount++;
+                        currentTeam2Count++;
                         OfficeAgent.managerCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -1963,6 +1977,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_2.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         BUSINESS_2.remove(0);
+                        currentBusinessCount++;
+                        currentTeam2Count++;
                         OfficeAgent.businessCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -1970,6 +1986,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_2.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         RESEARCH_2.remove(0);
+                        currentResearchCount++;
+                        currentTeam2Count++;
                         OfficeAgent.researcherCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -1977,6 +1995,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_2.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         TECHNICAL_2.remove(0);
+                        currentTechnicalCount++;
+                        currentTeam2Count++;
                         OfficeAgent.technicalCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -1984,6 +2004,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_3.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         MANAGERS_3.remove(0);
+                        currentManagerCount++;
+                        currentTeam3Count++;
                         OfficeAgent.managerCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -1991,6 +2013,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_3.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         BUSINESS_3.remove(0);
+                        currentBusinessCount++;
+                        currentTeam3Count++;
                         OfficeAgent.businessCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -1998,6 +2022,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_3.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         RESEARCH_3.remove(0);
+                        currentResearchCount++;
+                        currentTeam3Count++;
                         OfficeAgent.researcherCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -2005,6 +2031,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_3.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         TECHNICAL_3.remove(0);
+                        currentTechnicalCount++;
+                        currentTeam3Count++;
                         OfficeAgent.technicalCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -2012,6 +2040,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_4.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         MANAGERS_4.remove(0);
+                        currentManagerCount++;
+                        currentTeam4Count++;
                         OfficeAgent.managerCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -2019,6 +2049,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_4.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         BUSINESS_4.remove(0);
+                        currentBusinessCount++;
+                        currentTeam4Count++;
                         OfficeAgent.businessCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -2026,6 +2058,8 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(RESEARCH_4.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         RESEARCH_4.remove(0);
+                        currentResearchCount++;
+                        currentTeam4Count++;
                         OfficeAgent.researcherCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -2033,12 +2067,15 @@ public class OfficeSimulator extends Simulator {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(TECHNICAL_4.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         TECHNICAL_4.remove(0);
+                        currentTechnicalCount++;
+                        currentTeam4Count++;
                         OfficeAgent.technicalCount++;
                         OfficeAgent.agentCount++;
                     }
                     else if (agent.getType() == OfficeAgent.Type.SECRETARY && OfficeAgent.secretaryCount != MAX_SECRETARIES) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                        currentSecretaryCount++;
                         OfficeAgent.secretaryCount++;
                         OfficeAgent.agentCount++;
                     }
@@ -2048,21 +2085,24 @@ public class OfficeSimulator extends Simulator {
             else {
                 if (office.getUnspawnedVisitingAgents().size() > 0){
                     agent = office.getUnspawnedVisitingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedVisitingAgents().size()));
-                    if (agent.getType() == OfficeAgent.Type.CLIENT && ((currentTick >= 720 && currentTick < 1800) ||  (currentTick >= 2880 && currentTick < 4320)) && OfficeAgent.clientCount < MAX_CLIENTS) {
+                    if (agent.getType() == OfficeAgent.Type.CLIENT && ((currentTick >= 720 && currentTick < 1800) ||  (currentTick >= 2880 && currentTick < 4320)) && OfficeAgent.clientCount < office.getMAX_CLIENTS()) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                        currentClientCount++;
                         OfficeAgent.clientCount++;
                         OfficeAgent.agentCount++;
                     }
-                    else if (agent.getType() == OfficeAgent.Type.DRIVER && OfficeAgent.driverCount < MAX_DRIVERS) {
+                    else if (agent.getType() == OfficeAgent.Type.DRIVER && OfficeAgent.driverCount < getOffice().getMAX_DRIVERS()) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                        currentDriverCount++;
                         OfficeAgent.driverCount++;
                         OfficeAgent.agentCount++;
                     }
-                    else if (agent.getType() == OfficeAgent.Type.VISITOR && currentTick >= 3600 && currentTick < 5040 && OfficeAgent.visitorCount < MAX_VISITORS) {
+                    else if (agent.getType() == OfficeAgent.Type.VISITOR && currentTick >= 3600 && currentTick < 5040 && OfficeAgent.visitorCount < getOffice().getMAX_VISITORS()) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                        currentVisitorCount++;
                         OfficeAgent.visitorCount++;
                         OfficeAgent.agentCount++;
                     }

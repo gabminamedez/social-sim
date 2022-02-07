@@ -49,6 +49,7 @@ public class OfficeAgent extends Agent {
     private int team;
     private OfficeAgent.AgeGroup ageGroup = null;
     private OfficeAgent.Persona persona = null;
+    private PersonaActionGroup personaActionGroup = null;
     private boolean inOnStart;
 
     private final OfficeAgentGraphic agentGraphic;
@@ -58,138 +59,6 @@ public class OfficeAgent extends Agent {
 
     static {
         agentFactory = new OfficeAgent.OfficeAgentFactory();
-    }
-
-    private OfficeAgent(OfficeAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick, int team, Cubicle assignedCubicle) {
-        this.id = agentCount;
-        this.type = type;
-        this.inOnStart = inOnStart;
-
-        if (type == Type.BOSS) {
-            OfficeAgent.bossCount++;
-        }
-        else if (type == Type.MANAGER) {
-            OfficeAgent.managerCount++;
-        }
-        else if (type == Type.BUSINESS) {
-            OfficeAgent.businessCount++;
-        }
-        else if (type == Type.RESEARCHER) {
-            OfficeAgent.researcherCount++;
-        }
-        else if (type == Type.JANITOR) {
-            OfficeAgent.janitorCount++;
-        }
-        else if (type == Type.CLIENT) {
-            OfficeAgent.clientCount++;
-        }
-        else if (type == Type.DRIVER) {
-            OfficeAgent.driverCount++;
-        }
-        else if (type == Type.TECHNICAL) {
-            OfficeAgent.technicalCount++;
-        }
-        else if (type == Type.VISITOR) {
-            OfficeAgent.visitorCount++;
-        }
-        else if (type == Type.GUARD) {
-            OfficeAgent.guardCount++;
-        }
-        else if (type == Type.RECEPTIONIST) {
-            OfficeAgent.receptionistCount++;
-        }
-        else if (type == Type.SECRETARY) {
-            OfficeAgent.secretaryCount++;
-        }
-        OfficeAgent.agentCount++;
-
-        this.gender = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? OfficeAgent.Gender.FEMALE : OfficeAgent.Gender.MALE;
-
-        if (this.type == OfficeAgent.Type.GUARD) {
-            this.gender = Gender.MALE;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? OfficeAgent.AgeGroup.FROM_25_TO_54 : OfficeAgent.AgeGroup.FROM_55_TO_64;
-            this.persona = OfficeAgent.Persona.GUARD;
-        }
-        else if(this.type == OfficeAgent.Type.JANITOR) {
-            this.gender = Gender.MALE;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? OfficeAgent.AgeGroup.FROM_25_TO_54 : OfficeAgent.AgeGroup.FROM_55_TO_64;
-            this.persona = OfficeAgent.Persona.JANITOR;
-        }
-        else if(this.type == OfficeAgent.Type.VISITOR) {
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.YOUNGER_THAN_OR_14 : AgeGroup.FROM_15_TO_24;
-            this.persona = Persona.VISITOR;
-        }
-        else if(this.type == OfficeAgent.Type.DRIVER) {
-            this.gender = Gender.MALE;
-            this.ageGroup = OfficeAgent.AgeGroup.FROM_25_TO_54;
-            this.persona = OfficeAgent.Persona.DRIVER;
-        }
-        else if(this.type == OfficeAgent.Type.CLIENT) {
-            this.ageGroup = OfficeAgent.AgeGroup.FROM_55_TO_64;
-            this.persona = Persona.CLIENT;
-        }
-        else if(this.type == Type.RECEPTIONIST) {
-            this.gender = Gender.FEMALE;
-            this.ageGroup = AgeGroup.FROM_25_TO_54;
-            this.persona = Persona.RECEPTIONIST;
-        }
-        else if(this.type == Type.SECRETARY) {
-            this.gender = Gender.FEMALE;
-            this.ageGroup = AgeGroup.FROM_25_TO_54;
-            this.persona = Persona.SECRETARY;
-        }
-        else if(this.type == Type.MANAGER) {
-            this.ageGroup = AgeGroup.FROM_25_TO_54;
-            this.persona = Persona.MANAGER;
-        }
-        else if (this.type == Type.BOSS) {
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? OfficeAgent.AgeGroup.FROM_25_TO_54 : OfficeAgent.AgeGroup.FROM_55_TO_64;
-
-            boolean isStrict = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-            if (isStrict) {
-                this.persona = Persona.PROFESSIONAL_BOSS;
-            }
-            else {
-                this.persona = Persona.APPROACHABLE_BOSS;
-            }
-        }
-        else if (this.type == Type.BUSINESS) {
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-
-            boolean isIntrovert = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-            if (isIntrovert) {
-                this.persona = Persona.INT_BUSINESS;
-            }
-            else {
-                this.persona = Persona.EXT_BUSINESS;
-            }
-        }
-        else if (this.type == Type.RESEARCHER) {
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-
-            boolean isIntrovert = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-            if (isIntrovert) {
-                this.persona = Persona.INT_RESEARCHER;
-            }
-            else {
-                this.persona = Persona.EXT_RESEARCHER;
-            }
-        }
-        else if (this.type == Type.TECHNICAL) {
-            this.gender = Gender.MALE;
-            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
-
-            boolean isIntrovert = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-            if (isIntrovert) {
-                this.persona = Persona.INT_TECHNICAL;
-            }
-            else {
-                this.persona = Persona.EXT_TECHNICAL;
-            }
-        }
-
-        this.agentGraphic = new OfficeAgentGraphic(this);
-        this.agentMovement = new OfficeAgentMovement(spawnPatch, this, 1.27, spawnPatch.getPatchCenterCoordinates(), currentTick, team, assignedCubicle);
     }
 
     private OfficeAgent(OfficeAgent.Type type, boolean inOnStart, int team) {
@@ -242,38 +111,46 @@ public class OfficeAgent extends Agent {
             this.gender = Gender.MALE;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? OfficeAgent.AgeGroup.FROM_25_TO_54 : OfficeAgent.AgeGroup.FROM_55_TO_64;
             this.persona = OfficeAgent.Persona.GUARD;
+            this.personaActionGroup = PersonaActionGroup.GUARD;
         }
         else if(this.type == OfficeAgent.Type.JANITOR) {
             this.gender = Gender.MALE;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? OfficeAgent.AgeGroup.FROM_25_TO_54 : OfficeAgent.AgeGroup.FROM_55_TO_64;
             this.persona = OfficeAgent.Persona.JANITOR;
+            this.personaActionGroup = PersonaActionGroup.JANITOR;
         }
         else if(this.type == OfficeAgent.Type.VISITOR) {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.YOUNGER_THAN_OR_14 : AgeGroup.FROM_15_TO_24;
             this.persona = Persona.VISITOR;
+            this.personaActionGroup = PersonaActionGroup.VISITOR;
         }
         else if(this.type == OfficeAgent.Type.DRIVER) {
             this.gender = Gender.MALE;
             this.ageGroup = OfficeAgent.AgeGroup.FROM_25_TO_54;
             this.persona = OfficeAgent.Persona.DRIVER;
+            this.personaActionGroup = PersonaActionGroup.DRIVER;
         }
         else if(this.type == OfficeAgent.Type.CLIENT) {
             this.ageGroup = OfficeAgent.AgeGroup.FROM_55_TO_64;
             this.persona = Persona.CLIENT;
+            this.personaActionGroup = PersonaActionGroup.CLIENT;
         }
         else if(this.type == Type.RECEPTIONIST) {
             this.gender = Gender.FEMALE;
             this.ageGroup = AgeGroup.FROM_25_TO_54;
             this.persona = Persona.RECEPTIONIST;
+            this.personaActionGroup = PersonaActionGroup.RECEPTIONIST;
         }
         else if(this.type == Type.SECRETARY) {
             this.gender = Gender.FEMALE;
             this.ageGroup = AgeGroup.FROM_25_TO_54;
             this.persona = Persona.SECRETARY;
+            this.personaActionGroup = PersonaActionGroup.SECRETARY;
         }
         else if(this.type == Type.MANAGER) {
             this.ageGroup = AgeGroup.FROM_25_TO_54;
             this.persona = Persona.MANAGER;
+            this.personaActionGroup = PersonaActionGroup.MANAGER;
         }
         else if (this.type == Type.BOSS) {
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? OfficeAgent.AgeGroup.FROM_25_TO_54 : OfficeAgent.AgeGroup.FROM_55_TO_64;
@@ -281,9 +158,11 @@ public class OfficeAgent extends Agent {
             boolean isStrict = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
             if (isStrict) {
                 this.persona = Persona.PROFESSIONAL_BOSS;
+                this.personaActionGroup = PersonaActionGroup.PROFESSIONAL_BOSS;
             }
             else {
                 this.persona = Persona.APPROACHABLE_BOSS;
+                this.personaActionGroup = PersonaActionGroup.APPROACHABLE_BOSS;
             }
         }
         else if (this.type == Type.BUSINESS) {
@@ -292,9 +171,11 @@ public class OfficeAgent extends Agent {
             boolean isIntrovert = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
             if (isIntrovert) {
                 this.persona = Persona.INT_BUSINESS;
+                this.personaActionGroup = PersonaActionGroup.INT_WORKER;
             }
             else {
                 this.persona = Persona.EXT_BUSINESS;
+                this.personaActionGroup = PersonaActionGroup.EXT_WORKER;
             }
         }
         else if (this.type == Type.RESEARCHER) {
@@ -303,9 +184,11 @@ public class OfficeAgent extends Agent {
             boolean isIntrovert = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
             if (isIntrovert) {
                 this.persona = Persona.INT_RESEARCHER;
+                this.personaActionGroup = PersonaActionGroup.INT_WORKER;
             }
             else {
                 this.persona = Persona.EXT_RESEARCHER;
+                this.personaActionGroup = PersonaActionGroup.EXT_WORKER;
             }
         }
         else if (this.type == Type.TECHNICAL) {
@@ -315,9 +198,11 @@ public class OfficeAgent extends Agent {
             boolean isIntrovert = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
             if (isIntrovert) {
                 this.persona = Persona.INT_TECHNICAL;
+                this.personaActionGroup = PersonaActionGroup.INT_TECHNICAL;
             }
             else {
                 this.persona = Persona.EXT_TECHNICAL;
+                this.personaActionGroup = PersonaActionGroup.EXT_TECHNICAL;
             }
         }
 
@@ -343,6 +228,10 @@ public class OfficeAgent extends Agent {
 
     public OfficeAgent.Persona getPersona() {
         return persona;
+    }
+
+    public OfficeAgent.PersonaActionGroup getPersonaActionGroup() {
+        return personaActionGroup;
     }
 
     public boolean getInOnStart() {
@@ -436,6 +325,31 @@ public class OfficeAgent extends Agent {
             this.ID = ID;
         }
 
+        public int getID() {
+            return ID;
+        }
+    }
+
+    public enum PersonaActionGroup {
+        PROFESSIONAL_BOSS(),
+        APPROACHABLE_BOSS(),
+        MANAGER(),
+        INT_WORKER(),
+        EXT_WORKER(),
+        INT_TECHNICAL(),
+        EXT_TECHNICAL(),
+        JANITOR(),
+        CLIENT(),
+        DRIVER(),
+        VISITOR(),
+        GUARD(),
+        RECEPTIONIST(),
+        SECRETARY();
+
+        final int ID;
+        PersonaActionGroup(){
+            this.ID = this.ordinal();
+        }
         public int getID() {
             return ID;
         }

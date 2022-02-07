@@ -42,58 +42,58 @@ public class OfficeAgentGraphic extends Graphic {
 
     static {
         maleGuardGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleGuardGraphics.add(new AgentGraphicLocation(0, i)); }
+        for (int i = 0; i < 4; i++) { maleGuardGraphics.add(new AgentGraphicLocation(0, i)); maleGuardGraphics.add(new AgentGraphicLocation(7, i)); }
         receptionistGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { receptionistGraphics.add(new AgentGraphicLocation(1, i)); }
+        for (int i = 0; i < 4; i++) { receptionistGraphics.add(new AgentGraphicLocation(1, i)); receptionistGraphics.add(new AgentGraphicLocation(8, i)); }
         maleJanitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleJanitorGraphics.add(new AgentGraphicLocation(2, i)); }
+        for (int i = 0; i < 4; i++) { maleJanitorGraphics.add(new AgentGraphicLocation(2, i)); maleJanitorGraphics.add(new AgentGraphicLocation(9, i)); }
         maleVisitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleVisitorGraphics.add(new AgentGraphicLocation(3, i)); }
+        for (int i = 0; i < 4; i++) { maleVisitorGraphics.add(new AgentGraphicLocation(3, i)); maleVisitorGraphics.add(new AgentGraphicLocation(10, i)); }
         femaleVisitorGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleVisitorGraphics.add(new AgentGraphicLocation(4, i)); }
+        for (int i = 0; i < 4; i++) { femaleVisitorGraphics.add(new AgentGraphicLocation(4, i)); femaleVisitorGraphics.add(new AgentGraphicLocation(11, i)); }
         femaleSecretaryGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleSecretaryGraphics.add(new AgentGraphicLocation(5, i)); }
+        for (int i = 0; i < 4; i++) { femaleSecretaryGraphics.add(new AgentGraphicLocation(5, i)); femaleSecretaryGraphics.add(new AgentGraphicLocation(12, i)); }
         driverGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { driverGraphics.add(new AgentGraphicLocation(6, i)); }
+        for (int i = 0; i < 4; i++) { driverGraphics.add(new AgentGraphicLocation(6, i)); driverGraphics.add(new AgentGraphicLocation(13, i)); }
 
         maleIntBusinessGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleIntBusinessGraphics.add(new AgentGraphicLocation(0, i)); }
+        for (int i = 0; i < 4; i++) { maleIntBusinessGraphics.add(new AgentGraphicLocation(0, i)); maleIntBusinessGraphics.add(new AgentGraphicLocation(8, i)); }
         femaleIntBusinessGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleIntBusinessGraphics.add(new AgentGraphicLocation(1, i)); }
+        for (int i = 0; i < 4; i++) { femaleIntBusinessGraphics.add(new AgentGraphicLocation(1, i)); femaleIntBusinessGraphics.add(new AgentGraphicLocation(9, i)); }
         maleExtBusinessGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleExtBusinessGraphics.add(new AgentGraphicLocation(2, i)); }
+        for (int i = 0; i < 4; i++) { maleExtBusinessGraphics.add(new AgentGraphicLocation(2, i)); maleExtBusinessGraphics.add(new AgentGraphicLocation(10, i)); }
         femaleExtBusinessGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleExtBusinessGraphics.add(new AgentGraphicLocation(3, i)); }
+        for (int i = 0; i < 4; i++) { femaleExtBusinessGraphics.add(new AgentGraphicLocation(3, i)); femaleExtBusinessGraphics.add(new AgentGraphicLocation(11, i)); }
         maleIntResearcherGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleIntResearcherGraphics.add(new AgentGraphicLocation(4, i)); }
+        for (int i = 0; i < 4; i++) { maleIntResearcherGraphics.add(new AgentGraphicLocation(4, i)); maleIntResearcherGraphics.add(new AgentGraphicLocation(12, i)); }
         femaleIntResearcherGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleIntResearcherGraphics.add(new AgentGraphicLocation(5, i)); }
+        for (int i = 0; i < 4; i++) { femaleIntResearcherGraphics.add(new AgentGraphicLocation(5, i)); femaleIntResearcherGraphics.add(new AgentGraphicLocation(13, i)); }
         maleExtResearcherGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleExtResearcherGraphics.add(new AgentGraphicLocation(6, i)); }
+        for (int i = 0; i < 4; i++) { maleExtResearcherGraphics.add(new AgentGraphicLocation(6, i)); maleExtResearcherGraphics.add(new AgentGraphicLocation(14, i)); }
         femaleExtResearcherGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleExtResearcherGraphics.add(new AgentGraphicLocation(7, i)); }
+        for (int i = 0; i < 4; i++) { femaleExtResearcherGraphics.add(new AgentGraphicLocation(7, i)); femaleExtResearcherGraphics.add(new AgentGraphicLocation(15, i)); }
 
         maleIntTechnicalGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleIntTechnicalGraphics.add(new AgentGraphicLocation(0, i)); }
+        for (int i = 0; i < 4; i++) { maleIntTechnicalGraphics.add(new AgentGraphicLocation(0, i)); maleIntTechnicalGraphics.add(new AgentGraphicLocation(8, i)); }
         maleExtTechnicalGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleExtTechnicalGraphics.add(new AgentGraphicLocation(1, i)); }
+        for (int i = 0; i < 4; i++) { maleExtTechnicalGraphics.add(new AgentGraphicLocation(1, i)); maleExtTechnicalGraphics.add(new AgentGraphicLocation(9, i)); }
         maleProBossGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleProBossGraphics.add(new AgentGraphicLocation(2, i)); }
+        for (int i = 0; i < 4; i++) { maleProBossGraphics.add(new AgentGraphicLocation(2, i)); maleProBossGraphics.add(new AgentGraphicLocation(10, i)); }
         femaleProBossGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleProBossGraphics.add(new AgentGraphicLocation(3, i)); }
+        for (int i = 0; i < 4; i++) { femaleProBossGraphics.add(new AgentGraphicLocation(3, i)); femaleProBossGraphics.add(new AgentGraphicLocation(11, i)); }
         maleAppBossGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleAppBossGraphics.add(new AgentGraphicLocation(4, i)); }
+        for (int i = 0; i < 4; i++) { maleAppBossGraphics.add(new AgentGraphicLocation(4, i)); maleAppBossGraphics.add(new AgentGraphicLocation(12, i)); }
         femaleAppBossGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleAppBossGraphics.add(new AgentGraphicLocation(5, i)); }
+        for (int i = 0; i < 4; i++) { femaleAppBossGraphics.add(new AgentGraphicLocation(5, i)); femaleAppBossGraphics.add(new AgentGraphicLocation(13, i)); }
         maleManagerGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleManagerGraphics.add(new AgentGraphicLocation(6, i)); }
+        for (int i = 0; i < 4; i++) { maleManagerGraphics.add(new AgentGraphicLocation(6, i)); maleManagerGraphics.add(new AgentGraphicLocation(14, i)); }
         femaleManagerGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleManagerGraphics.add(new AgentGraphicLocation(7, i)); }
+        for (int i = 0; i < 4; i++) { femaleManagerGraphics.add(new AgentGraphicLocation(7, i)); femaleManagerGraphics.add(new AgentGraphicLocation(15, i)); }
 
         maleClientGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { maleClientGraphics.add(new AgentGraphicLocation(0, i)); }
+        for (int i = 0; i < 4; i++) { maleClientGraphics.add(new AgentGraphicLocation(0, i)); maleClientGraphics.add(new AgentGraphicLocation(2, i)); }
         femaleClientGraphics = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { femaleClientGraphics.add(new AgentGraphicLocation(1, i)); }
+        for (int i = 0; i < 4; i++) { femaleClientGraphics.add(new AgentGraphicLocation(1, i)); femaleClientGraphics.add(new AgentGraphicLocation(3, i)); }
     }
 
     private final OfficeAgent agent;
@@ -208,16 +208,36 @@ public class OfficeAgentGraphic extends Graphic {
         double agentHeadingDegrees = Math.toDegrees(agentHeading);
 
         if (agentHeadingDegrees >= 315 && agentHeadingDegrees < 360 || agentHeadingDegrees >= 0 && agentHeadingDegrees < 45) {
-            this.graphicIndex = 1;
+            if (this.agent.getAgentMovement().isInteracting())
+                this.graphicIndex = 5;
+            else{
+                System.out.println(this.graphicIndex);
+                this.graphicIndex = 1;
+            }
         }
         else if (agentHeadingDegrees >= 45 && agentHeadingDegrees < 135) {
-            this.graphicIndex = 0;
+            if (this.agent.getAgentMovement().isInteracting())
+                this.graphicIndex = 4;
+            else{
+                System.out.println(this.graphicIndex);
+                this.graphicIndex = 0;
+            }
         }
         else if (agentHeadingDegrees >= 135 && agentHeadingDegrees < 225) {
-            this.graphicIndex = 3;
+            if (this.agent.getAgentMovement().isInteracting())
+                this.graphicIndex = 7;
+            else{
+                System.out.println(this.graphicIndex);
+                this.graphicIndex = 3;
+            }
         }
         else if (agentHeadingDegrees >= 225 && agentHeadingDegrees < 315) {
-            this.graphicIndex = 2;
+            if (this.agent.getAgentMovement().isInteracting())
+                this.graphicIndex = 6;
+            else{
+                System.out.println(this.graphicIndex);
+                this.graphicIndex = 2;
+            }
         }
     }
 

@@ -23,7 +23,7 @@ public class MallRoutePlan {
     public static final int LFAMILY_RESTO_CHANCE = 100, LFAMILY_WANDERING_CHANCE = 100;
     public static final int EFRIENDS_RESTO_CHANCE = 50, EFRIENDS_WANDERING_CHANCE = 80;
     public static final int LFRIENDS_RESTO_CHANCE = 80, LFRIENDS_WANDERING_CHANCE = 100;
-    public static final int ECOUPLE_RESTO_CHANCE = 100, ECOUPLE_WANDERING_CHANCE = 100;
+//    public static final int ECOUPLE_RESTO_CHANCE = 100, ECOUPLE_WANDERING_CHANCE = 100;
     public static final int LCOUPLE_RESTO_CHANCE = 100, LCOUPLE_WANDERING_CHANCE = 100;
     public static final int EALONE_RESTO_CHANCE = 30, EALONE_WANDERING_CHANCE = 15;
     public static final int LALONE_RESTO_CHANCE = 80, LALONE_WANDERING_CHANCE = 100;
@@ -161,14 +161,6 @@ public class MallRoutePlan {
             else if (agent.getPersona() == MallAgent.Persona.LOITER_FRIENDS) {
                 if (leaderAgent == null) {
                     routePlan = createLoiterRoute(agent, mall, LFRIENDS_RESTO_CHANCE, LFRIENDS_WANDERING_CHANCE);
-                }
-                else {
-                    routePlan = createFollowingRoute(agent, leaderAgent);
-                }
-            }
-            else if (agent.getPersona() == MallAgent.Persona.ERRAND_COUPLE) {
-                if (leaderAgent == null) {
-                    routePlan = createErrandRoute(agent, mall, ECOUPLE_RESTO_CHANCE, ECOUPLE_WANDERING_CHANCE);
                 }
                 else {
                     routePlan = createFollowingRoute(agent, leaderAgent);

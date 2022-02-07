@@ -5,27 +5,32 @@ import com.socialsim.model.core.agent.university.UniversityAction;
 import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.university.University;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.IntStream;
 
-public class EditInteractionsController {
+public class UniversityEditInteractionsController {
 
     @FXML VBox container;
     @FXML GridPane gridPane;
+    @FXML Button btnHelp;
     @FXML Button btnCancel;
     @FXML Button btnResetToDefault;
     @FXML Button btnSave;
 
-    public EditInteractionsController() {
+    public UniversityEditInteractionsController() {
     }
 
     @FXML
@@ -39,14 +44,25 @@ public class EditInteractionsController {
                     if (i == 0 && j == 0)
                         gridPane.add(new Label(""), i, j);
                     else{
-                        if (i == 0)
-                            gridPane.add(new Label(UniversityAction.Name.values()[j - 1].name()), i, j);
-                        else
-                            gridPane.add(new Label(UniversityAgent.PersonaActionGroup.values()[i - 1].name()), i, j);
+                        if (i == 0){
+                            Label l = new Label(UniversityAction.Name.values()[j - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
+                        }
+                        else{
+                            Label l = new Label(UniversityAgent.PersonaActionGroup.values()[i - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
+                        }
                     }
                 }
                 else{
+                    TextField tf = new TextField(university.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", ""));
+                    tf.setAlignment(Pos.CENTER);
                     gridPane.add(new TextField(university.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
+                    GridPane.setHalignment(tf, HPos.CENTER);
                 }
             }
         }
@@ -126,6 +142,17 @@ public class EditInteractionsController {
         }
         else{
             return false;
+        }
+    }
+    public void openHelp(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+        ImageView img = new ImageView();
+        img.setImage(new Image(getClass().getResource("../../../view/image/IOS_help.png").toExternalForm()));
+        alert.initStyle(StageStyle.TRANSPARENT);
+        alert.getDialogPane().setContent(img);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+            alert.close();
         }
     }
 }

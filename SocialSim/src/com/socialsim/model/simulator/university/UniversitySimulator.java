@@ -27,10 +27,6 @@ public class UniversitySimulator extends Simulator {
     public static int defaultMaxProfessors = 6;
     public static int defaultMaxCurrentStudents = 250; //250
     public static int defaultMaxCurrentProfessors = 6;
-    public static int MAX_STUDENTS; //250
-    public static int MAX_PROFESSORS;
-    public static int MAX_CURRENT_STUDENTS; //250
-    public static int MAX_CURRENT_PROFESSORS;
 
     private University university;
 
@@ -45,9 +41,9 @@ public class UniversitySimulator extends Simulator {
     public static int currentCooperativeCount = 0;
     public static int currentExchangeCount = 0;
 
-    public static int averageNonverbalDuration = 0;
-    public static int averageCooperativeDuration = 0;
-    public static int averageExchangeDuration = 0;
+    public static float averageNonverbalDuration = 0;
+    public static float averageCooperativeDuration = 0;
+    public static float averageExchangeDuration = 0;
 
     public static int currentStudentStudentCount = 0;
     public static int currentStudentProfCount = 0;
@@ -108,7 +104,7 @@ public class UniversitySimulator extends Simulator {
     }
 
     public void spawnInitialAgents(University university) {
-        university.createInitialAgentDemographics(MAX_STUDENTS, MAX_PROFESSORS);
+        university.createInitialAgentDemographics(university.getMAX_STUDENTS(), university.getMAX_PROFESSORS());
         UniversityAgent guard = university.getAgents().get(0); // 0
         guard.setAgentMovement(new UniversityAgentMovement(university.getPatch(57,12), guard, 1.27, university.getPatch(57,12).getPatchCenterCoordinates(), -1));
 //        university.getAgents().add(guard);
@@ -2135,22 +2131,24 @@ public class UniversitySimulator extends Simulator {
             Gate.GateBlock spawner = gate.getSpawners().get(i);
             double CHANCE = Simulator.roll();
             if (CHANCE < spawnChance && university.getUnspawnedAgents().size() > 0){
-                agent = university.getUnspawnedAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(university.getUnspawnedAgents().size()));
-                if (agent.getType() == UniversityAgent.Type.STUDENT && UniversityAgent.studentCount < MAX_STUDENTS && currentStudentCount < MAX_CURRENT_STUDENTS){
-                    agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
+                if (university.getUnspawnedAgents().size() > 0){
+                    agent = university.getUnspawnedAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(university.getUnspawnedAgents().size()));
+                    if (agent.getType() == UniversityAgent.Type.STUDENT && UniversityAgent.studentCount < university.getMAX_STUDENTS() && currentStudentCount < university.getMAX_CURRENT_STUDENTS()){
+                        agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
 //                    university.getAgents().add(agent);
-                    university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-                    currentStudentCount++;
-                    UniversityAgent.studentCount++;
-                    UniversityAgent.agentCount++;
-                }
-                else if (agent.getType() == UniversityAgent.Type.PROFESSOR && UniversityAgent.professorCount < MAX_PROFESSORS && currentProfessorCount < MAX_CURRENT_PROFESSORS){
-                    agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
+                        university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                        currentStudentCount++;
+                        UniversityAgent.studentCount++;
+                        UniversityAgent.agentCount++;
+                    }
+                    else if (agent.getType() == UniversityAgent.Type.PROFESSOR && UniversityAgent.professorCount < university.getMAX_PROFESSORS() && currentProfessorCount < university.getMAX_CURRENT_PROFESSORS()){
+                        agent.setAgentMovement(new UniversityAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick));
 //                    university.getAgents().add(agent);
-                    university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
-                    currentProfessorCount++;
-                    UniversityAgent.professorCount++;
-                    UniversityAgent.agentCount++;
+                        university.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
+                        currentProfessorCount++;
+                        UniversityAgent.professorCount++;
+                        UniversityAgent.agentCount++;
+                    }
                 }
             }
         }

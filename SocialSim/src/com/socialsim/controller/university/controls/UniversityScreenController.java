@@ -12,22 +12,24 @@ import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.simulator.SimulationTime;
+import com.socialsim.model.simulator.grocery.GrocerySimulator;
 import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.imageio.plugins.tiff.BaselineTIFFTagSet;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -67,8 +69,25 @@ public class UniversityScreenController extends ScreenController {
     @FXML private TextField maxCurrentStudents;
     @FXML private TextField maxCurrentProfessors;
     @FXML private TextField fieldOfView;
+    @FXML private Label currentProfessorCount; //TODO: Add more labels
+    @FXML private Label currentStudentCount;
+    @FXML private Label currentNonverbalCount;
+    @FXML private Label currentCooperativeCount;
+    @FXML private Label currentExchangeCount;
+    @FXML private Label averageNonverbalDuration;
+    @FXML private Label averageCooperativeDuration;
+    @FXML private Label averageExchangeDuration;
+    @FXML private Label currentStudentStudentCount;
+    @FXML private Label currentStudentProfCount;
+    @FXML private Label currentStudentGuardCount;
+    @FXML private Label currentStudentJanitorCount;
+    @FXML private Label currentProfProfCount;
+    @FXML private Label currentProfGuardCount;
+    @FXML private Label currentProfJanitorCount;
+    @FXML private Label currentJanitorJanitorCount;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
+
 
     private final double CANVAS_SCALE = 0.7;
 
@@ -105,13 +124,15 @@ public class UniversityScreenController extends ScreenController {
             playAction();
             playButton.setSelected(false);
         }
-        University university = Main.universitySimulator.getUniversity();
-        this.configureParameters(university);
-        university.convertIOSToChances();
-        initializeUniversity(university);
-        setElements();
-        playButton.setDisable(false);
-        disableEdits();
+        if (validateParameters()){
+            University university = Main.universitySimulator.getUniversity();
+            this.configureParameters(university);
+            university.convertIOSToChances();
+            initializeUniversity(university);
+            setElements();
+            playButton.setDisable(false);
+            disableEdits();
+        }
     }
 
     public void initializeUniversity(University university) {
@@ -583,6 +604,7 @@ public class UniversityScreenController extends ScreenController {
 
     private void requestUpdateInterfaceSimulationElements() { // Update the interface elements pertinent to the simulation
         Platform.runLater(this::updateSimulationTime); // Update the simulation time
+        Platform.runLater(this::updateStatistics); //TODO: Update Statistics
     }
 
     public void updateSimulationTime() {
@@ -591,6 +613,26 @@ public class UniversityScreenController extends ScreenController {
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
         elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
+    }
+
+    public void updateStatistics(){
+        //TODO: Statistics
+        currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount));
+        currentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentCount));
+        currentNonverbalCount.setText(String.valueOf(UniversitySimulator.currentNonverbalCount));
+        currentCooperativeCount.setText(String.valueOf(UniversitySimulator.currentCooperativeCount));
+        currentExchangeCount.setText(String.valueOf(UniversitySimulator.currentExchangeCount));
+        averageNonverbalDuration.setText(String.format("%.02f", UniversitySimulator.averageNonverbalDuration));
+        averageCooperativeDuration.setText(String.format("%.02f", UniversitySimulator.averageCooperativeDuration));
+        averageExchangeDuration.setText(String.format("%.02f", UniversitySimulator.averageExchangeDuration));
+        currentStudentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentStudentCount));
+        currentStudentProfCount.setText(String.valueOf(UniversitySimulator.currentStudentProfCount));
+        currentStudentGuardCount.setText(String.valueOf(UniversitySimulator.currentStudentGuardCount));
+        currentStudentJanitorCount.setText(String.valueOf(UniversitySimulator.currentStudentJanitorCount));
+        currentProfProfCount.setText(String.valueOf(UniversitySimulator.currentProfProfCount));
+        currentProfGuardCount.setText(String.valueOf(UniversitySimulator.currentProfGuardCount));
+        currentProfJanitorCount.setText(String.valueOf(UniversitySimulator.currentProfJanitorCount));
+        currentJanitorJanitorCount.setText(String.valueOf(UniversitySimulator.currentJanitorJanitorCount));
     }
 
     public void setElements() {
@@ -707,7 +749,7 @@ public class UniversityScreenController extends ScreenController {
 
     public void openIOSLevels(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/ConfigureIOS.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityConfigureIOS.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -721,7 +763,7 @@ public class UniversityScreenController extends ScreenController {
     }
     public void openEditInteractions(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/EditInteractions.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityEditInteractions.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -741,20 +783,47 @@ public class UniversityScreenController extends ScreenController {
         university.setExchangeMean(Integer.parseInt(exchangeMean.getText()));
         university.setExchangeStdDev(Integer.parseInt(exchangeStdDev.getText()));
         university.setFieldOfView(Integer.parseInt(fieldOfView.getText()));
-        UniversitySimulator.MAX_STUDENTS = Integer.parseInt(maxStudents.getText());
-        UniversitySimulator.MAX_PROFESSORS = Integer.parseInt(maxProfessors.getText());
-        UniversitySimulator.MAX_CURRENT_STUDENTS = Integer.parseInt(maxCurrentStudents.getText());
-        UniversitySimulator.MAX_CURRENT_PROFESSORS = Integer.parseInt(maxCurrentProfessors.getText());
-//        System.out.println(university.getNonverbalMean());
-//        System.out.println(university.getNonverbalStdDev());
-//        System.out.println(university.getCooperativeMean());
-//        System.out.println(university.getCooperativeStdDev());
-//        System.out.println(university.getExchangeMean());
-//        System.out.println(university.getExchangeStdDev());
-//        System.out.println(university.getFieldOfView());
-//        System.out.println(UniversitySimulator.MAX_STUDENTS);
-//        System.out.println(UniversitySimulator.MAX_PROFESSORS);
-//        System.out.println(UniversitySimulator.MAX_CURRENT_STUDENTS);
-//        System.out.println(UniversitySimulator.MAX_CURRENT_PROFESSORS);
+        university.setMAX_STUDENTS(Integer.parseInt(maxStudents.getText()));
+        university.setMAX_PROFESSORS(Integer.parseInt(maxProfessors.getText()));
+        university.setMAX_CURRENT_STUDENTS(Integer.parseInt(maxCurrentStudents.getText()));
+        university.setMAX_CURRENT_PROFESSORS(Integer.parseInt(maxCurrentProfessors.getText()));
+
+
+        currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount));
+        currentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentCount));
+        currentNonverbalCount.setText(String.valueOf(UniversitySimulator.currentNonverbalCount));
+        currentCooperativeCount.setText(String.valueOf(UniversitySimulator.currentCooperativeCount));
+        currentExchangeCount.setText(String.valueOf(UniversitySimulator.currentExchangeCount));
+        averageNonverbalDuration.setText(String.valueOf(UniversitySimulator.averageNonverbalDuration));
+        averageCooperativeDuration.setText(String.valueOf(UniversitySimulator.averageCooperativeDuration));
+        averageExchangeDuration.setText(String.valueOf(UniversitySimulator.averageExchangeDuration));
+        currentStudentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentStudentCount));
+        currentStudentProfCount.setText(String.valueOf(UniversitySimulator.currentStudentProfCount));
+        currentStudentGuardCount.setText(String.valueOf(UniversitySimulator.currentStudentGuardCount));
+        currentStudentJanitorCount.setText(String.valueOf(UniversitySimulator.currentStudentJanitorCount));
+        currentProfProfCount.setText(String.valueOf(UniversitySimulator.currentProfProfCount));
+        currentProfGuardCount.setText(String.valueOf(UniversitySimulator.currentProfGuardCount));
+        currentProfJanitorCount.setText(String.valueOf(UniversitySimulator.currentProfJanitorCount));
+        currentJanitorJanitorCount.setText(String.valueOf(UniversitySimulator.currentJanitorJanitorCount));
+    }
+
+    public boolean validateParameters(){
+        boolean validParameters = Integer.parseInt(nonverbalMean.getText()) >= 0 && Integer.parseInt(nonverbalMean.getText()) >= 0
+                && Integer.parseInt(cooperativeMean.getText()) >= 0 && Integer.parseInt(cooperativeStdDev.getText()) >= 0
+                && Integer.parseInt(exchangeMean.getText()) >= 0 && Integer.parseInt(exchangeStdDev.getText()) >= 0
+                && Integer.parseInt(fieldOfView.getText()) >= 0 && Integer.parseInt(fieldOfView.getText()) <= 360
+                && Integer.parseInt(maxStudents.getText()) >= 0 && Integer.parseInt(maxProfessors.getText()) >= 0
+                && Integer.parseInt(maxCurrentStudents.getText()) >= 0 && Integer.parseInt(maxCurrentProfessors.getText()) >= 0;
+        if (!validParameters){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
+            Label label = new Label("Failed to initialize. Please make sure all values are greater than 0, and field of view is not greater than 360 degrees");
+            label.setWrapText(true);
+            alert.getDialogPane().setContent(label);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+        return validParameters;
     }
 }

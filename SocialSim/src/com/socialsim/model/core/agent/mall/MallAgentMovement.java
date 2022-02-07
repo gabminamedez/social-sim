@@ -25,6 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MallAgentMovement extends AgentMovement {
 
+    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalStdDev = 1;
+    public static int defaultCooperativeMean = 24;
+    public static int defaultCooperativeStdDev = 12;
+    public static int defaultExchangeMean = 24;
+    public static int defaultExchangeStdDev = 12;
+    public static int defaultFieldOfView = 30;
+
     private final MallAgent parent;
     private final Coordinates position; // Denotes the position of the agent
     private MallAgent leaderAgent;
@@ -109,36 +117,37 @@ public class MallAgentMovement extends AgentMovement {
         this.preferredWalkingDistance = this.baseWalkingDistance;
         this.currentWalkingDistance = preferredWalkingDistance;
 
+        this.currentPatch = spawnPatch; // Add this agent to the spawn patch
+        this.currentPatch.getAgents().add(parent);
+        this.mall = (Mall) currentPatch.getEnvironment();
+
         if (parent.getInOnStart() && parent.getType() != MallAgent.Type.STAFF_STORE_CASHIER) { // All inOnStart agents will face the south by default
             this.proposedHeading = Math.toRadians(270.0);
             this.heading = Math.toRadians(270.0);
             this.previousHeading = Math.toRadians(270.0);
-            this.fieldOfViewAngle = Math.toRadians(30.0);
+            this.fieldOfViewAngle = this.mall.getFieldOfView();
         }
         else if (parent.getInOnStart() && parent.getType() == MallAgent.Type.STAFF_STORE_CASHIER) {
             if (team == 3 || team == 4 || team == 10 || team == 11) {
                 this.proposedHeading = Math.toRadians(90.0);
                 this.heading = Math.toRadians(90.0);
                 this.previousHeading = Math.toRadians(90.0);
-                this.fieldOfViewAngle = Math.toRadians(30.0);
+                this.fieldOfViewAngle = this.mall.getFieldOfView();
             }
             else {
                 this.proposedHeading = Math.toRadians(270.0);
                 this.heading = Math.toRadians(270.0);
                 this.previousHeading = Math.toRadians(270.0);
-                this.fieldOfViewAngle = Math.toRadians(30.0);
+                this.fieldOfViewAngle = this.mall.getFieldOfView();
             }
         }
         else { // All newly generated agents will face the east by default
             this.proposedHeading = Math.toRadians(0);
             this.heading = Math.toRadians(0);
             this.previousHeading = Math.toRadians(0);
-            this.fieldOfViewAngle = Math.toRadians(30.0);
+            this.fieldOfViewAngle = this.mall.getFieldOfView();
         }
 
-        this.currentPatch = spawnPatch; // Add this agent to the spawn patch
-        this.currentPatch.getAgents().add(parent);
-        this.mall = (Mall) currentPatch.getEnvironment();
         this.currentPatchField = null;
         this.tickEntered = (int) tickEntered;
         this.ticksUntilFullyAccelerated = 10; // Set the agent's time until it fully accelerates
@@ -2174,18 +2183,18 @@ public class MallAgentMovement extends AgentMovement {
             CHANCE1 = Simulator.roll() * IOS1;
             CHANCE2 = Simulator.roll() * IOS2;
             double CHANCE = (CHANCE1 + CHANCE2) / 2;
-            double CHANCE_NONVERBAL1 = MallAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][0],
-                    CHANCE_COOPERATIVE1 = MallAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][1],
-                    CHANCE_EXCHANGE1 = MallAgent.chancePerActionInteractionType[this.getParent().getPersona().getID()][this.getParent().getAgentMovement().getCurrentAction().getName().getID()][2],
-                    CHANCE_NONVERBAL2 = MallAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][0],
-                    CHANCE_COOPERATIVE2 = MallAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][1],
-                    CHANCE_EXCHANGE2 = MallAgent.chancePerActionInteractionType[agent.getPersona().getID()][agent.getAgentMovement().getCurrentAction().getName().getID()][2];
+            double CHANCE_NONVERBAL1 = ((double) mall.getInteractionTypeChances().get(this.getParent().getPersonaActionGroup().getID()).get(this.getParent().getAgentMovement().getCurrentAction().getName().getID()).get(0)) / 100,
+                    CHANCE_COOPERATIVE1 = ((double) mall.getInteractionTypeChances().get(this.getParent().getPersonaActionGroup().getID()).get(this.getParent().getAgentMovement().getCurrentAction().getName().getID()).get(1)) / 100,
+                    CHANCE_EXCHANGE1 = ((double) mall.getInteractionTypeChances().get(this.getParent().getPersonaActionGroup().getID()).get(this.getParent().getAgentMovement().getCurrentAction().getName().getID()).get(2)) / 100,
+                    CHANCE_NONVERBAL2 = ((double) mall.getInteractionTypeChances().get(agent.getPersonaActionGroup().getID()).get(agent.getAgentMovement().getCurrentAction().getName().getID()).get(0)) / 100,
+                    CHANCE_COOPERATIVE2 = ((double) mall.getInteractionTypeChances().get(agent.getPersonaActionGroup().getID()).get(agent.getAgentMovement().getCurrentAction().getName().getID()).get(1)) / 100,
+                    CHANCE_EXCHANGE2 = ((double) mall.getInteractionTypeChances().get(agent.getPersonaActionGroup().getID()).get(agent.getAgentMovement().getCurrentAction().getName().getID()).get(2)) / 100;
             if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
                 MallSimulator.currentNonverbalCount++;
                 this.getParent().getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.NON_VERBAL);
                 agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.NON_VERBAL);
-                interactionStdDeviation = 1;
-                interactionMean = 2;
+                interactionMean = getMall().getNonverbalMean();
+                interactionStdDeviation = getMall().getNonverbalStdDev();
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2) / 2){
                 MallSimulator.currentCooperativeCount++;
@@ -2193,8 +2202,8 @@ public class MallAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.COOPERATIVE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 12;
-                interactionMean = 24;
+                interactionMean = getMall().getCooperativeMean();
+                interactionStdDeviation = getMall().getCooperativeStdDev();
             }
             else if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2 + CHANCE_COOPERATIVE1 + CHANCE_COOPERATIVE2 + CHANCE_EXCHANGE1 + CHANCE_EXCHANGE2) / 2){
                 MallSimulator.currentExchangeCount++;
@@ -2202,8 +2211,8 @@ public class MallAgentMovement extends AgentMovement {
                 agent.getAgentMovement().setInteractionType(MallAgentMovement.InteractionType.EXCHANGE);
                 CHANCE1 = Simulator.roll() * IOS1;
                 CHANCE2 = Simulator.roll() * IOS2;
-                interactionStdDeviation = 24;
-                interactionMean = 60;
+                interactionMean = getMall().getExchangeMean();
+                interactionStdDeviation = getMall().getExchangeStdDev();
             }
             else{
                 return;

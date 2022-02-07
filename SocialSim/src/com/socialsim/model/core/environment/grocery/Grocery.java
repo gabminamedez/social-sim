@@ -1,5 +1,6 @@
 package com.socialsim.model.core.environment.grocery;
 
+import com.socialsim.model.core.agent.grocery.GroceryAction;
 import com.socialsim.model.core.agent.grocery.GroceryAgent;
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.generic.BaseObject;
@@ -16,10 +17,27 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Grocery extends Environment {
 
+    public static CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> defaultIOS;
+    public static CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> defaultInteractionTypeChances;
+
     private final CopyOnWriteArrayList<GroceryAgent> agents;
     private final SortedSet<Patch> amenityPatchSet;
     private final SortedSet<Patch> agentPatchSet;
-    private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOS;
+
+    private int nonverbalMean;
+    private int nonverbalStdDev;
+    private int cooperativeMean;
+    private int cooperativeStdDev;
+    private int exchangeMean;
+    private int exchangeStdDev;
+    private int fieldOfView;
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales;
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> IOSInteractionChances;
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> interactionTypeChances;
+    private int MAX_FAMILY;
+    private int MAX_ALONE;
+    private int MAX_CURRENT_FAMILY;
+    private int MAX_CURRENT_ALONE;
 
     private final List<GroceryGate> groceryGates;
     private final List<CartRepo> cartRepos;
@@ -53,7 +71,7 @@ public class Grocery extends Environment {
         super(rows, columns);
 
         this.agents = new CopyOnWriteArrayList<>();
-        this.IOS = new CopyOnWriteArrayList<>();
+        this.IOSInteractionChances = new CopyOnWriteArrayList<>();
 
         this.amenityPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
         this.agentPatchSet = Collections.synchronizedSortedSet(new TreeSet<>());
@@ -115,7 +133,7 @@ public class Grocery extends Environment {
     }
 
     public CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> getIOS() {
-        return IOS;
+        return IOSInteractionChances;
     }
 
     @Override
@@ -206,6 +224,94 @@ public class Grocery extends Environment {
 
     public List<StallField> getStallFields() {
         return stallFields;
+    }
+
+    public int getNonverbalMean() {
+        return nonverbalMean;
+    }
+
+    public void setNonverbalMean(int nonverbalMean) {
+        this.nonverbalMean = nonverbalMean;
+    }
+
+    public int getNonverbalStdDev() {
+        return nonverbalStdDev;
+    }
+
+    public void setNonverbalStdDev(int nonverbalStdDev) {
+        this.nonverbalStdDev = nonverbalStdDev;
+    }
+
+    public int getCooperativeMean() {
+        return cooperativeMean;
+    }
+
+    public void setCooperativeMean(int cooperativeMean) {
+        this.cooperativeMean = cooperativeMean;
+    }
+
+    public int getCooperativeStdDev() {
+        return cooperativeStdDev;
+    }
+
+    public void setCooperativeStdDev(int cooperativeStdDev) {
+        this.cooperativeStdDev = cooperativeStdDev;
+    }
+
+    public int getExchangeMean() {
+        return exchangeMean;
+    }
+
+    public void setExchangeMean(int exchangeMean) {
+        this.exchangeMean = exchangeMean;
+    }
+
+    public int getExchangeStdDev() {
+        return exchangeStdDev;
+    }
+
+    public void setExchangeStdDev(int exchangeStdDev) {
+        this.exchangeStdDev = exchangeStdDev;
+    }
+
+    public int getFieldOfView() {
+        return fieldOfView;
+    }
+
+    public void setFieldOfView(int fieldOfView) {
+        this.fieldOfView = fieldOfView;
+    }
+
+    public int getMAX_FAMILY() {
+        return MAX_FAMILY;
+    }
+
+    public void setMAX_FAMILY(int MAX_FAMILY) {
+        this.MAX_FAMILY = MAX_FAMILY;
+    }
+
+    public int getMAX_ALONE() {
+        return MAX_ALONE;
+    }
+
+    public void setMAX_ALONE(int MAX_ALONE) {
+        this.MAX_ALONE = MAX_ALONE;
+    }
+
+    public int getMAX_CURRENT_FAMILY() {
+        return MAX_CURRENT_FAMILY;
+    }
+
+    public void setMAX_CURRENT_FAMILY(int MAX_CURRENT_FAMILY) {
+        this.MAX_CURRENT_FAMILY = MAX_CURRENT_FAMILY;
+    }
+
+    public int getMAX_CURRENT_ALONE() {
+        return MAX_CURRENT_ALONE;
+    }
+
+    public void setMAX_CURRENT_ALONE(int MAX_CURRENT_ALONE) {
+        this.MAX_CURRENT_ALONE = MAX_CURRENT_ALONE;
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {
@@ -371,10 +477,10 @@ public class Grocery extends Environment {
                 GroceryAgent.Gender gender3 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
                 GroceryAgent.Gender gender4 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
 
-                GroceryAgent agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, true, false);
-                this.getAgents().add(agent1);
-                GroceryAgent agent2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender2, GroceryAgent.AgeGroup.FROM_25_TO_54, false, false);
-                this.getAgents().add(agent2);
+                GroceryAgent persona1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, true, false);
+                this.getAgents().add(persona1);
+                GroceryAgent persona2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender2, GroceryAgent.AgeGroup.FROM_25_TO_54, false, false);
+                this.getAgents().add(persona2);
                 GroceryAgent agent3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender3, GroceryAgent.AgeGroup.FROM_15_TO_24, false, false);
                 this.getAgents().add(agent3);
                 GroceryAgent agent4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER, gender4, GroceryAgent.AgeGroup.FROM_15_TO_24, false, false);
@@ -384,10 +490,10 @@ public class Grocery extends Environment {
             else if (familyType == 1){
                 GroceryAgent.Gender gender3 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
 
-                GroceryAgent agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, GroceryAgent.Gender.FEMALE, GroceryAgent.AgeGroup.FROM_25_TO_54, true, false);
-                this.getAgents().add(agent1);
-                GroceryAgent agent2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, GroceryAgent.Gender.FEMALE, GroceryAgent.AgeGroup.FROM_25_TO_54, false, false);
-                this.getAgents().add(agent2);
+                GroceryAgent persona1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, GroceryAgent.Gender.FEMALE, GroceryAgent.AgeGroup.FROM_25_TO_54, true, false);
+                this.getAgents().add(persona1);
+                GroceryAgent persona2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, GroceryAgent.Gender.FEMALE, GroceryAgent.AgeGroup.FROM_25_TO_54, false, false);
+                this.getAgents().add(persona2);
                 GroceryAgent agent3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.HELP_FAMILY_CUSTOMER, gender3, GroceryAgent.AgeGroup.FROM_15_TO_24, false, false);
                 this.getAgents().add(agent3);
             }
@@ -395,10 +501,10 @@ public class Grocery extends Environment {
                 GroceryAgent.Gender gender1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
                 GroceryAgent.Gender gender2 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.MALE : GroceryAgent.Gender.FEMALE;
 
-                GroceryAgent agent1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.DUO_FAMILY_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, true, false);
-                this.getAgents().add(agent1);
-                GroceryAgent agent2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.DUO_FAMILY_CUSTOMER, gender2, GroceryAgent.AgeGroup.FROM_15_TO_24, false, false);
-                this.getAgents().add(agent2);
+                GroceryAgent persona1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.DUO_FAMILY_CUSTOMER, gender1, GroceryAgent.AgeGroup.FROM_25_TO_54, true, false);
+                this.getAgents().add(persona1);
+                GroceryAgent persona2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER, GroceryAgent.Persona.DUO_FAMILY_CUSTOMER, gender2, GroceryAgent.AgeGroup.FROM_15_TO_24, false, false);
+                this.getAgents().add(persona2);
             }
             ctr++;
         }
@@ -420,303 +526,908 @@ public class Grocery extends Environment {
             }
             ctr++;
         }
+    }
 
-        for (int i = 0; i < this.getAgents().size(); i++){
-            GroceryAgent.Persona agent1 = agents.get(i).getPersona();
-            ArrayList<Integer> IOSScales = new ArrayList<>();
-            for (int j = 0 ; j < this.getAgents().size(); j++){
+    public double convertToChanceInteraction(int x){// Convert IOS to chance based only on threshold, not 0 to said scale
+        double CHANCE = ((double) x - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7;
+        return CHANCE;
+    }
+
+    public void convertIOSToChances(){
+        IOSInteractionChances = new CopyOnWriteArrayList<>();
+        IOSScales.toString();
+        for(int i = 0; i < agents.size(); i++){
+            IOSInteractionChances.add(new CopyOnWriteArrayList<>());
+            for(int j = 0; j < agents.size(); j++){
                 if (i == j){
-                    IOSScales.add(0);
+                    IOSInteractionChances.get(i).add((double) 0);
                 }
-                else {
-                    GroceryAgent.Persona agent2 = agents.get(j).getPersona();
-                    if (agent1 == GroceryAgent.Persona.GUARD_ENTRANCE){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
+                else{
+                    GroceryAgent agent1 = agents.get(i), agent2 = agents.get(j);
+                    int IOS;
+                    if (agent1.getPersonaActionGroup() == GroceryAgent.PersonaActionGroup.FAMILY){
+                        if (agent1.getPersona().getID() > agent2.getPersona().getID()){
+                            IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                         }
-                    }
-                    else if (agent1 == GroceryAgent.Persona.GUARD_EXIT){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                        }
-                    }
-                    else if (agent1 == GroceryAgent.Persona.STAFF_AISLE){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                        }
-                    }
-                    else if (agent1 == GroceryAgent.Persona.BUTCHER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                        }
-                    }
-                    else if (agent1 == GroceryAgent.Persona.CASHIER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                        }
-                    }
-                    else if (agent1 == GroceryAgent.Persona.BAGGER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                        }
-                    }
-                    else if (agent1 == GroceryAgent.Persona.CUSTOMER_SERVICE){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                        }
-                    }
-                    else if (agent1 == GroceryAgent.Persona.STAFF_FOOD){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1));
-                        }
-                    }
-                    else if (agent1 == GroceryAgent.Persona.STTP_ALONE_CUSTOMER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                        }
-                    }
-                    else if (agent1 == GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                        }
-                    }
-                    else if (agent1 == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> {
-                                GroceryAgent agent = agents.get(i), otherAgent = agents.get(j);
-                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 3 >= otherAgent.getId()) // leader of family
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
-                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 3 >= agent.getId()) // follower of family
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                        else if (agent1.getPersona().getID() == agent2.getPersona().getID()){
+                            if (agent1.getPersona() == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER){
+                                if (agent1.isLeader() && agent2.getId() - agent1.getId() > 0 && agent2.getId() - agent1.getId() <= 3
+                                        || agent2.isLeader() && agent1.getId() - agent2.getId() > 0 && agent1.getId() - agent2.getId() <= 3){
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
+                                }
+                                else{
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
+                                }
                             }
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
+                            else if (agent1.getPersona() == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER){
+                                if (agent1.isLeader() && agent2.getId() - agent1.getId() > 0 && agent2.getId() - agent1.getId() <= 2
+                                    || agent2.isLeader() && agent1.getId() - agent2.getId() > 0 && agent1.getId() - agent2.getId() <= 2){
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
+                                }
+                                else{
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
+                                }
+                            }
+                            else{
+                                if (agent1.isLeader() && agent2.getId() - agent1.getId() == 1
+                                        || agent2.isLeader() && agent1.getId() - agent2.getId() == 1){
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
+                                }
+                                else{
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
+                                }
+                            }
+                        }
+                        else{
+                            IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
                         }
                     }
-                    else if (agent1 == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case HELP_FAMILY_CUSTOMER -> {
-                                GroceryAgent agent = agents.get(i), otherAgent = agents.get(j);
-                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 2 >= otherAgent.getId()) // leader of family
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
-                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 2 >= agent.getId()) // follower of family
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            }
-                            case DUO_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                        }
+                    else{
+                        IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                     }
-                    else if (agent1 == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER){
-                        //1. Get IOS Scale of each agent then put in an array
-                        //2. Place in convert function and replace IOS
-                        switch (agent2){
-                            case GUARD_ENTRANCE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case GUARD_EXIT -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STAFF_AISLE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BUTCHER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CASHIER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case BAGGER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case CUSTOMER_SERVICE -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 1);
-                            case STAFF_FOOD -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case STTP_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case MODERATE_ALONE_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case COMPLETE_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case HELP_FAMILY_CUSTOMER -> IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            case DUO_FAMILY_CUSTOMER -> {
-                                GroceryAgent agent = agents.get(i), otherAgent = agents.get(j);
-                                if (agent.isLeader() && agent.getId() < otherAgent.getId() && agent.getId() + 1 >= otherAgent.getId()) // leader of family
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
-                                else if (otherAgent.isLeader() && otherAgent.getId() < agent.getId() && otherAgent.getId() + 1 >= agent.getId()) // follower of family
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 5);
-                                else
-                                    IOSScales.add(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 1);
-                            }
+                    IOSInteractionChances.get(i).add(this.convertToChanceInteraction(IOS));
+                }
+            }
+        }
+    }
+
+    public static void configureDefaultIOS(){
+        defaultIOS = new CopyOnWriteArrayList<>();
+        for (int i = 0; i < GroceryAgent.Persona.values().length; i++){
+            CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>> personaIOS = new CopyOnWriteArrayList<>();
+            for (int j = 0; j < GroceryAgent.Persona.values().length; j++){
+                GroceryAgent.Persona persona1 = GroceryAgent.Persona.values()[i];
+                GroceryAgent.Persona persona2 = GroceryAgent.Persona.values()[j];
+                if (persona1 == GroceryAgent.Persona.GUARD_ENTRANCE){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.GUARD_EXIT){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.STAFF_AISLE){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.BUTCHER){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.CASHIER){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.BAGGER){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.CUSTOMER_SERVICE){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.STAFF_FOOD){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.STTP_ALONE_CUSTOMER){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case COMPLETE_FAMILY_CUSTOMER -> {
+                            personaIOS.add(new CopyOnWriteArrayList<>(List.of(5, 6, 7)));
+                            personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        }
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case HELP_FAMILY_CUSTOMER -> {
+                            personaIOS.add(new CopyOnWriteArrayList<>(List.of(5, 6, 7)));
+                            personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        }
+                        case DUO_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                    }
+                }
+                else if (persona1 == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER){
+                    //1. Get IOS Scale of each agent then put in an array
+                    //2. Place in convert function and replace IOS
+                    switch (persona2){
+                        case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case CUSTOMER_SERVICE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_FOOD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case STTP_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case MODERATE_ALONE_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case COMPLETE_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case HELP_FAMILY_CUSTOMER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                        case DUO_FAMILY_CUSTOMER -> {
+                            personaIOS.add(new CopyOnWriteArrayList<>(List.of(5, 6, 7)));
+                            personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                         }
                     }
                 }
             }
-            IOS.add(convertToChanceInteraction(IOSScales));
+            defaultIOS.add(personaIOS);
         }
     }
 
-    public CopyOnWriteArrayList<Double> convertToChanceInteraction(ArrayList<Integer> IOSScales){// Convert IOS to chance based only on threshold, not 0 to said scale
-        CopyOnWriteArrayList<Double> listIOS = new CopyOnWriteArrayList<>();
-        for (int iosScale : IOSScales) {
-            if (iosScale <= 0)
-                listIOS.add((double) 0);
-            else
-                listIOS.add((iosScale - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7);
-//            listIOS.add(Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * iosScale / 7);
+    public static void configureDefaultInteractionTypeChances(){
+        defaultInteractionTypeChances = new CopyOnWriteArrayList<>();
+        for (int i = 0; i < GroceryAgent.PersonaActionGroup.values().length; i++){
+            CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>> interactionChances = new CopyOnWriteArrayList<>();
+            for (int j = 0; j < GroceryAction.Name.values().length; j++){
+                GroceryAgent.PersonaActionGroup personaGroup = GroceryAgent.PersonaActionGroup.values()[i];
+                GroceryAction.Name action = GroceryAction.Name.values()[j];
+                switch (personaGroup){
+                    case GUARD_ENTRANCE -> {
+                        switch(action){
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRODUCT_WALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FROZEN -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FRESH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_MEAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_ASK_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FOOD_STALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GET_CART -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_PRODUCTS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SHOP -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_BAGGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUY_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_STAFF_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_EAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SEAT_FOOD_COURT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EATING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RECEIPT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case BAGGER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BAGGER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+
+                    case GUARD_EXIT -> {
+                        switch(action){
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRODUCT_WALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FROZEN -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FRESH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_MEAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_ASK_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FOOD_STALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GET_CART -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_PRODUCTS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SHOP -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_BAGGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUY_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_STAFF_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_EAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SEAT_FOOD_COURT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EATING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RECEIPT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case BAGGER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BAGGER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case STAFF_AISLE -> {
+                        switch(action){
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRODUCT_WALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FROZEN -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FRESH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_MEAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_ASK_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FOOD_STALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GET_CART -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_PRODUCTS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SHOP -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_BAGGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUY_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_STAFF_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_EAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SEAT_FOOD_COURT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EATING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RECEIPT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case BAGGER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BAGGER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case BUTCHER -> {
+                        switch(action){
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRODUCT_WALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FROZEN -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FRESH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_MEAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_ASK_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FOOD_STALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GET_CART -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_PRODUCTS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SHOP -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_BAGGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUY_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_STAFF_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_EAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SEAT_FOOD_COURT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EATING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RECEIPT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case BAGGER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BAGGER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case CASHIER -> {
+                        switch(action){
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRODUCT_WALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FROZEN -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FRESH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_MEAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_ASK_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FOOD_STALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GET_CART -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_PRODUCTS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SHOP -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_BAGGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUY_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_STAFF_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_EAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SEAT_FOOD_COURT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EATING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RECEIPT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case BAGGER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BAGGER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case BAGGER -> {
+                        switch(action){
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRODUCT_WALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FROZEN -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FRESH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_MEAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_ASK_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FOOD_STALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GET_CART -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_PRODUCTS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SHOP -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_BAGGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUY_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_STAFF_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_EAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SEAT_FOOD_COURT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EATING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RECEIPT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case BAGGER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BAGGER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case CUSTOMER_SERVICE -> {
+                        switch(action){
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRODUCT_WALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FROZEN -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FRESH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_MEAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_ASK_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FOOD_STALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GET_CART -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_PRODUCTS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SHOP -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_BAGGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUY_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_STAFF_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_EAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SEAT_FOOD_COURT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EATING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RECEIPT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case BAGGER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BAGGER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case STAFF_FOOD -> {
+                        switch(action){
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRODUCT_WALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FROZEN -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FRESH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_MEAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_ASK_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FOOD_STALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GET_CART -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_PRODUCTS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SHOP -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_BAGGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUY_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_STAFF_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_EAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SEAT_FOOD_COURT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EATING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RECEIPT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case BAGGER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BAGGER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case ALONE -> {
+                        switch(action){
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRODUCT_WALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FROZEN -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FRESH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_MEAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_ASK_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FOOD_STALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GET_CART -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_PRODUCTS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SHOP -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_BAGGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUY_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_STAFF_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_EAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SEAT_FOOD_COURT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EATING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RECEIPT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case BAGGER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BAGGER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case FAMILY -> {
+                        switch(action){
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_PRODUCT_WALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FROZEN -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FRESH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_MEAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_ASK_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_FOOD_STALL -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GET_CART -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_PRODUCTS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SHOP -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_BAGGER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CUSTOMER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_SERVICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUY_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_STAFF_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FOLLOW_LEADER_EAT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_SEAT_FOOD_COURT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case EATING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RECEIPT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_GROCERIES_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BUTCHER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CASHIER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case BAGGER_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case BAGGER_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SERVICE_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                }
+            }
+            defaultInteractionTypeChances.add(interactionChances);
         }
-        return listIOS;
+    }
+
+    public CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> getIOSScales(){
+        return this.IOSScales;
+    }
+    public void setIOSScales(CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> IOSScales){
+        this.IOSScales = IOSScales;
+    }
+    public CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> getInteractionTypeChances(){
+        return this.interactionTypeChances;
+    }
+
+    public void copyDefaultToIOS(){
+        this.IOSScales = new CopyOnWriteArrayList<>();
+        for(int i = 0; i < defaultIOS.size(); i++){
+            this.IOSScales.add(new CopyOnWriteArrayList<>());
+            for(int j = 0; j < defaultIOS.get(i).size(); j++){
+                this.IOSScales.get(i).add(new CopyOnWriteArrayList<>());
+                for (int k = 0; k < defaultIOS.get(i).get(j).size(); k++){
+                    this.IOSScales.get(i).get(j).add(defaultIOS.get(i).get(j).get(k));
+                }
+            }
+        }
+    }
+
+    public void copyDefaultToInteractionTypeChances(){
+        this.interactionTypeChances = new CopyOnWriteArrayList<>();
+        for(int i = 0; i < defaultInteractionTypeChances.size(); i++){
+            this.interactionTypeChances.add(new CopyOnWriteArrayList<>());
+            for(int j = 0; j < defaultInteractionTypeChances.get(i).size(); j++){
+                this.interactionTypeChances.get(i).add(new CopyOnWriteArrayList<>());
+                for (int k = 0; k < defaultInteractionTypeChances.get(i).get(j).size(); k++){
+                    this.interactionTypeChances.get(i).get(j).add(defaultInteractionTypeChances.get(i).get(j).get(k));
+                }
+            }
+        }
     }
 
     public static class GroceryFactory extends BaseObject.ObjectFactory {
