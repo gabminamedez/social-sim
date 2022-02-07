@@ -147,7 +147,7 @@ public class UniversityEditInteractionsController {
     public void openHelp(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
         ImageView img = new ImageView();
-        img.setImage(new Image(getClass().getResource("../../../view/image/IOS_help.png").toExternalForm()));
+        img.setImage(new Image(getClass().getResource("../../../view/image/interaction_help.png").toExternalForm()));
         alert.initStyle(StageStyle.TRANSPARENT);
         alert.getDialogPane().setContent(img);
         alert.showAndWait();
