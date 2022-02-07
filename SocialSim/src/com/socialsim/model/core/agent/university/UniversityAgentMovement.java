@@ -1790,29 +1790,29 @@ public class UniversityAgentMovement extends AgentMovement {
     public void forceStationedInteraction(UniversityAgent.Type agentType) {
         UniversitySimulator.currentPatchCount[currentPatch.getMatrixPosition().getRow()][currentPatch.getMatrixPosition().getColumn()]++;
         if (agentType == UniversityAgent.Type.PROFESSOR) {
-            if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(0)) {
-                UniversitySimulator.currentPatchCount[12][6]++;
-            }
-            else if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(1)) {
-                UniversitySimulator.currentPatchCount[12][26]++;
-            }
-            else if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(2)) {
-                UniversitySimulator.currentPatchCount[46][37]++;
-            }
-            else if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(3)) {
-                UniversitySimulator.currentPatchCount[46][56]++;
-            }
-            else if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(4)) {
-                UniversitySimulator.currentPatchCount[46][75]++;
-            }
-            else if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(5)) {
-                UniversitySimulator.currentPatchCount[46][94]++;
-            }
+//            if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(0)) {
+//                UniversitySimulator.currentPatchCount[12][6]++;
+//            }
+//            else if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(1)) {
+//                UniversitySimulator.currentPatchCount[12][26]++;
+//            }
+//            else if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(2)) {
+//                UniversitySimulator.currentPatchCount[46][37]++;
+//            }
+//            else if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(3)) {
+//                UniversitySimulator.currentPatchCount[46][56]++;
+//            }
+//            else if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(4)) {
+//                UniversitySimulator.currentPatchCount[46][75]++;
+//            }
+//            else if (currentPatch.getPatchField().getKey() == university.getClassrooms().get(5)) {
+//                UniversitySimulator.currentPatchCount[46][94]++;
+//            }
 //            else if (currentPatch.getPatchField().getKey() == university.getLaboratories().get(0)) {
 //                UniversitySimulator.currentPatchCount[53][108]++;
 //            }
             UniversitySimulator.currentStudentProfCount++;
-            this.interactionDuration = this.duration;
+            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * 5 + 12)));
         }
         else if (agentType == UniversityAgent.Type.GUARD) {
             UniversitySimulator.currentPatchCount[33][2]++;
