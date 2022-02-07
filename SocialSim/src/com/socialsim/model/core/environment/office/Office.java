@@ -544,7 +544,34 @@ public class Office extends Environment {
                     IOSInteractionChances.get(i).add((double) 0);
                 }
                 else{
-                    int IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                    OfficeAgent agent1 = agents.get(i), agent2 = agents.get(j);
+                    int IOS;
+                    if (agent1.getPersonaActionGroup() == PersonaActionGroup.MANAGER
+                            || agent1.getPersonaActionGroup() == PersonaActionGroup.INT_WORKER
+                            || agent1.getPersonaActionGroup() == PersonaActionGroup.EXT_WORKER
+                            || agent1.getPersonaActionGroup() == PersonaActionGroup.INT_TECHNICAL
+                            || agent1.getPersonaActionGroup() == PersonaActionGroup.EXT_TECHNICAL){
+                        int offset;
+                        switch (agent2.getPersona()){
+                            case PROFESSIONAL_BOSS, APPROACHABLE_BOSS, MANAGER -> offset = 0;
+                            case INT_BUSINESS -> offset = 1;
+                            case EXT_BUSINESS -> offset = 2;
+                            case INT_RESEARCHER -> offset = 3;
+                            case EXT_RESEARCHER -> offset = 4;
+                            case INT_TECHNICAL -> offset = 5;
+                            case EXT_TECHNICAL -> offset = 6;
+                            default -> offset = 7;
+                        }
+                        if (agent2.getTeam() == 0){
+                            IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + offset).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + offset).size()));
+                        }
+                        else if (agent1.getTeam() > 0 && agent1.getTeam() == agent2.getTeam())
+                            IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + offset).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + offset).size()));
+                        else
+                            IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + offset + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + offset + 1).size()));
+                    }
+                    else
+                        IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                     IOSInteractionChances.get(i).add(this.convertToChanceInteraction(IOS));
                 }
             }

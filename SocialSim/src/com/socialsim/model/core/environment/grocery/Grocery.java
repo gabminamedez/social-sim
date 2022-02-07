@@ -543,7 +543,48 @@ public class Grocery extends Environment {
                     IOSInteractionChances.get(i).add((double) 0);
                 }
                 else{
-                    int IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                    GroceryAgent agent1 = agents.get(i), agent2 = agents.get(j);
+                    int IOS;
+                    if (agent1.getPersonaActionGroup() == GroceryAgent.PersonaActionGroup.FAMILY){
+                        if (agent1.getPersona().getID() > agent2.getPersona().getID()){
+                            IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
+                        }
+                        else if (agent1.getPersona().getID() == agent2.getPersona().getID()){
+                            if (agent1.getPersona() == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER){
+                                if (agent1.isLeader() && agent2.getId() - agent1.getId() > 0 && agent2.getId() - agent1.getId() <= 3
+                                        || agent2.isLeader() && agent1.getId() - agent2.getId() > 0 && agent1.getId() - agent2.getId() <= 3){
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
+                                }
+                                else{
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
+                                }
+                            }
+                            else if (agent1.getPersona() == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER){
+                                if (agent1.isLeader() && agent2.getId() - agent1.getId() > 0 && agent2.getId() - agent1.getId() <= 2
+                                    || agent2.isLeader() && agent1.getId() - agent2.getId() > 0 && agent1.getId() - agent2.getId() <= 2){
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
+                                }
+                                else{
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
+                                }
+                            }
+                            else{
+                                if (agent1.isLeader() && agent2.getId() - agent1.getId() == 1
+                                        || agent2.isLeader() && agent1.getId() - agent2.getId() == 1){
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
+                                }
+                                else{
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
+                                }
+                            }
+                        }
+                        else{
+                            IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
+                        }
+                    }
+                    else{
+                        IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
+                    }
                     IOSInteractionChances.get(i).add(this.convertToChanceInteraction(IOS));
                 }
             }

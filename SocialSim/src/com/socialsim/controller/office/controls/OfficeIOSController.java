@@ -46,7 +46,7 @@ public class OfficeIOSController {
                         }
                         else{
                             if (other){
-                                gridPane.add(new Label(OfficeAgent.Persona.values()[i - 1].name() + "_OTHER"), i + otherCtr, j);
+                                gridPane.add(new Label(OfficeAgent.Persona.values()[i - 1].name() + "_OTHER_TEAM"), i + otherCtr, j);
                             }
                             else{
                                 gridPane.add(new Label(OfficeAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
@@ -57,13 +57,14 @@ public class OfficeIOSController {
                 }
                 else{
                     if (other){
-                        if ((OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.MANAGER && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.MANAGER)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_BUSINESS && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_BUSINESS)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_BUSINESS && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_BUSINESS)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_RESEARCHER && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_RESEARCHER)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_RESEARCHER && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_RESEARCHER)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_TECHNICAL && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_TECHNICAL)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_TECHNICAL && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_TECHNICAL)){
+                        if ((OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.MANAGER || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_BUSINESS
+                                || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_BUSINESS || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_RESEARCHER
+                                || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_RESEARCHER || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_TECHNICAL
+                                || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_TECHNICAL) &&
+                                (OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.MANAGER || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_BUSINESS
+                                        || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_BUSINESS || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_RESEARCHER
+                                        || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_RESEARCHER || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_TECHNICAL
+                                        || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_TECHNICAL)){
                             otherArr[j - 1]++;
                             gridPane.add(new TextField(office.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
                         }
@@ -132,13 +133,14 @@ public class OfficeIOSController {
                 }
                 else{
                     if (other){
-                        if ((OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.MANAGER && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.MANAGER)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_BUSINESS && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_BUSINESS)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_BUSINESS && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_BUSINESS)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_RESEARCHER && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_RESEARCHER)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_RESEARCHER && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_RESEARCHER)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_TECHNICAL && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_TECHNICAL)
-                                || (OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_TECHNICAL && OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_TECHNICAL)){
+                        if ((OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.MANAGER || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_BUSINESS
+                                || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_BUSINESS || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_RESEARCHER
+                                || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_RESEARCHER || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.INT_TECHNICAL
+                                || OfficeAgent.Persona.values()[j - 1] == OfficeAgent.Persona.EXT_TECHNICAL) &&
+                                (OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.MANAGER || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_BUSINESS
+                                || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_BUSINESS || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_RESEARCHER
+                                || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_RESEARCHER || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_TECHNICAL
+                                || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_TECHNICAL)){
                             otherArr[j - 1]++;
                             gridPane.add(new TextField(Office.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
                         }

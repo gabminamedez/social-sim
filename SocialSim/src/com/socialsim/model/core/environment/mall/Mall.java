@@ -578,61 +578,61 @@ public class Mall extends Environment {
                     if (agent1.getPersona() == MallAgent.Persona.STAFF_STORE_SALES || agent1.getPersona() == MallAgent.Persona.STAFF_STORE_CASHIER){
                         if (agent2.getPersona() == MallAgent.Persona.STAFF_STORE_SALES){
                             if (agent1.getTeam() > 0 && agent1.getTeam() == agent2.getTeam())
-                                IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                                IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                             else
-                                IOS = IOSScales.get(i).get(j + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j + 1).size()));
+                                IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
                         }
                         else if (agent2.getPersona() == MallAgent.Persona.STAFF_STORE_CASHIER){
                             if (agent1.getTeam() > 0 && agent1.getTeam() == agent2.getTeam()){
-                                IOS = IOSScales.get(i).get(j + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j + 1).size()));
+                                IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
                             }
                             else
-                                IOS = IOSScales.get(i).get(j + 2).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j + 2).size()));
+                                IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 2).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 2).size()));
                         }
                         else{
-                            IOS = IOSScales.get(i).get(j + 2).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j + 2).size()));
+                            IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 2).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 2).size()));
                         }
                     }
                     else if (agent1.getPersonaActionGroup() == MallAgent.PersonaActionGroup.FAMILY || agent1.getPersonaActionGroup() == MallAgent.PersonaActionGroup.FRIENDS
                         || agent1.getPersonaActionGroup() == MallAgent.PersonaActionGroup.COUPLE){
-                        if (agent1.getPersona().getID() < agent2.getPersona().getID()){
-                            IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                        if (agent1.getPersona().getID() > agent2.getPersona().getID()){
+                            IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                         }
                         else if (agent1.getPersona().getID() == agent2.getPersona().getID()){
                             if (agent1.getPersonaActionGroup() == MallAgent.PersonaActionGroup.FAMILY){
                                 if (agent1.isLeader() && agent2.getId() - agent1.getId() > 0 && agent2.getId() - agent1.getId() <= 3
                                     || agent2.isLeader() && agent1.getId() - agent2.getId() > 0 && agent1.getId() - agent2.getId() <= 3){
-                                    IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                                 }
                                 else{
-                                    IOS = IOSScales.get(i).get(j + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j + 1).size()));
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
                                 }
                             }
                             else if (agent1.getPersonaActionGroup() == MallAgent.PersonaActionGroup.FRIENDS){
                                 if (agent1.isLeader() && agent2.getId() - agent1.getId() > 0 && agent2.getId() - agent1.getId() <= 2
                                         || agent2.isLeader() && agent1.getId() - agent2.getId() > 0 && agent1.getId() - agent2.getId() <= 2){
-                                    IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                                 }
                                 else{
-                                    IOS = IOSScales.get(i).get(j + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j + 1).size()));
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
                                 }
                             }
                             else{
                                 if (agent1.isLeader() && agent2.getId() - agent1.getId() == 1
                                         || agent2.isLeader() && agent1.getId() - agent2.getId() == 1){
-                                    IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                                 }
                                 else{
-                                    IOS = IOSScales.get(i).get(j + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j + 1).size()));
+                                    IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
                                 }
                             }
                         }
                         else{
-                            IOS = IOSScales.get(i).get(j + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j + 1).size()));
+                            IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID() + 1).size()));
                         }
                     }
                     else{
-                        IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                        IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                     }
 //                    int IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
                     IOSInteractionChances.get(i).add(this.convertToChanceInteraction(IOS));
@@ -1251,7 +1251,6 @@ public class Mall extends Environment {
                 this.IOSScales.get(i).add(new CopyOnWriteArrayList<>());
                 for (int k = 0; k < defaultIOS.get(i).get(j).size(); k++){
                     this.IOSScales.get(i).get(j).add(defaultIOS.get(i).get(j).get(k));
-                    System.out.println("insert");
                 }
             }
         }
