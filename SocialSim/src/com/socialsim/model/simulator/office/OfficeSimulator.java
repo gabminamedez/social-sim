@@ -486,16 +486,31 @@ public class OfficeSimulator extends Simulator {
                                 agentMovement.getRoutePlan().getCanUrgent() <= 0){
                             double CHANCE = Simulator.roll();
 
-                            if(CHANCE < OfficeRoutePlan.BATH_CHANCE && agentMovement.getRoutePlan().getBATH_PM() > 0){
-                                agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
-                                agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
-                                        agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
-                                agentMovement.setNextState(agentMovement.getStateIndex());
-                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                                agentMovement.getRoutePlan().setFromBathPM(true);
+                            if(CHANCE < OfficeRoutePlan.BATH_CHANCE){
+
+                                if(currentTick < 2160 && agentMovement.getRoutePlan().getBATH_AM() > 0){
+
+                                    agentMovement.getRoutePlan().setFromBathAM(true);
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                            agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }else if(agentMovement.getRoutePlan().getBATH_PM() > 0){
+
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1,
+                                            agentMovement.getRoutePlan().addUrgentRoute("BATHROOM", agent));
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                    agentMovement.getRoutePlan().setFromBathPM(true);
+                                }
                             }
                         }
                     }
@@ -601,8 +616,16 @@ public class OfficeSimulator extends Simulator {
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
+                                if(agentMovement.getRoutePlan().isFromBathAM()){
+                                    agentMovement.getRoutePlan().setFromBathAM(false);
+                                }else if(agentMovement.getRoutePlan().isFromBathPM()){
+                                    agentMovement.getRoutePlan().setFromBathPM(false);
+                                }
                             }else{
-                                if(agentMovement.getRoutePlan().isFromBathPM()){
+                                if(agentMovement.getRoutePlan().isFromBathAM()){
+                                    agentMovement.getRoutePlan().setFromBathAM(false);
+                                    agentMovement.getRoutePlan().setBATH_AM(1);
+                                }else if(agentMovement.getRoutePlan().isFromBathPM()){
                                     agentMovement.getRoutePlan().setFromBathPM(false);
                                     agentMovement.getRoutePlan().setBATH_PM(1);
                                 }else{
@@ -1435,7 +1458,6 @@ public class OfficeSimulator extends Simulator {
                         if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
-                            System.out.println(agent.getPersona().name() + " " + agentMovement.getCurrentPath().getPath());
                             if (agentMovement.hasReachedNextPatchInPath()) {
                                 agentMovement.reachPatchInPath();
                                 if (agentMovement.hasAgentReachedFinalPatchInPath()) {
