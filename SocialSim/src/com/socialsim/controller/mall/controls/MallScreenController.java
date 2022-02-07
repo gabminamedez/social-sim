@@ -576,7 +576,7 @@ public class MallScreenController extends ScreenController {
 
     public void updateSimulationTime() {
         LocalTime currentTime = Main.mallSimulator.getSimulationTime().getTime();
-        long elapsedTime = Main.mallSimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS);
+        long elapsedTime = Main.mallSimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS) / 5;
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
         elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");

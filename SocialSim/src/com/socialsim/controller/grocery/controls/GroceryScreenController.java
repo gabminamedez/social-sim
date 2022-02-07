@@ -361,7 +361,7 @@ public class GroceryScreenController extends ScreenController {
 
     public void updateSimulationTime() {
         LocalTime currentTime = Main.grocerySimulator.getSimulationTime().getTime();
-        long elapsedTime = Main.grocerySimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS);
+        long elapsedTime = Main.grocerySimulator.getSimulationTime().getStartTime().until(currentTime, ChronoUnit.SECONDS) / 5;
         String timeString;
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
         elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
