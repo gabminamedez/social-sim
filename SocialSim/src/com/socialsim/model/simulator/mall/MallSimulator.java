@@ -101,6 +101,8 @@ public class MallSimulator extends Simulator {
 
     public void resetToDefaultConfiguration(Mall mall) {
         this.mall = mall;
+        replenishStaticVars();
+        MallAgent.clearMallAgentCounts();
         this.time.reset();
         this.running.set(false);
         currentPatchCount = new int[mall.getRows()][mall.getColumns()];
@@ -1154,6 +1156,34 @@ public class MallSimulator extends Simulator {
                 }
             }
         }
+    }
+
+    public void replenishStaticVars() {
+        currentPatronCount = 0;
+        currentNonverbalCount = 0;
+        currentCooperativeCount = 0;
+        currentExchangeCount = 0;
+        totalFamilyCount = 0;
+        totalFriendsCount = 0;
+        totalAloneCount = 0;
+        totalCoupleCount = 0;
+        averageNonverbalDuration = 0;
+        averageCooperativeDuration = 0;
+        averageExchangeDuration = 0;
+        currentPatronPatronCount = 0;
+        currentPatronStaffStoreCount = 0;
+        currentPatronStaffRestoCount = 0;
+        currentPatronStaffKioskCount = 0;
+        currentPatronGuardCount = 0;
+        currentStaffStoreStaffStoreCount = 0;
+        currentStaffStoreStaffRestoCount = 0;
+        currentStaffStoreStaffKioskCount = 0;
+        currentStaffStoreGuardCount = 0;
+        currentStaffRestoStaffRestoCount = 0;
+        currentStaffRestoStaffKioskCount = 0;
+        currentStaffRestoGuardCount = 0;
+        currentStaffKioskStaffKioskCount = 0;
+        currentStaffKioskGuardCount = 0;
     }
 
 }

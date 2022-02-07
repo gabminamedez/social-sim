@@ -250,6 +250,7 @@ public class GroceryAgent extends Agent {
     }
 
     public static void clearGroceryAgentCounts() {
+        idCtr = 0;
         agentCount = 0;
         customerCount = 0;
         staffAisleCount = 0;

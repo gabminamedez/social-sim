@@ -132,6 +132,8 @@ public class GrocerySimulator extends Simulator {
 
     public void resetToDefaultConfiguration(Grocery grocery) {
         this.grocery = grocery;
+        replenishStaticVars();
+        GroceryAgent.clearGroceryAgentCounts();
         this.time.reset();
         this.running.set(false);
         currentPatchCount = new int[grocery.getRows()][grocery.getColumns()];
@@ -964,4 +966,55 @@ public class GrocerySimulator extends Simulator {
             }
         }
     }
+
+    public void replenishStaticVars() {
+        currentFamilyCount = 0;
+        currentAloneCustomerCount = 0;
+        totalFamilyCount = 0;
+        totalAloneCustomerCount = 0;
+        currentNonverbalCount = 0;
+        currentCooperativeCount = 0;
+        currentExchangeCount = 0;
+        averageNonverbalDuration = 0;
+        averageCooperativeDuration = 0;
+        averageExchangeDuration = 0;
+        currentFamilyToFamilyCount = 0;
+        currentCustomerCustomerCount = 0;
+        currentCustomerAisleCount = 0;
+        currentCustomerCashierCount = 0;
+        currentCustomerBaggerCount = 0;
+        currentCustomerGuardCount = 0;
+        currentCustomerButcherCount = 0;
+        currentCustomerServiceCount = 0;
+        currentCustomerFoodCount = 0;
+        currentAisleAisleCount = 0;
+        currentAisleCashierCount = 0;
+        currentAisleBaggerCount = 0;
+        currentAisleGuardCount = 0;
+        currentAisleButcherCount = 0;
+        currentAisleServiceCount = 0;
+        currentAisleFoodCount = 0;
+        currentCashierCashierCount = 0;
+        currentCashierBaggerCount = 0;
+        currentCashierGuardCount = 0;
+        currentCashierButcherCount = 0;
+        currentCashierServiceCount = 0;
+        currentCashierFoodCount = 0;
+        currentBaggerBaggerCount = 0;
+        currentBaggerGuardCount = 0;
+        currentBaggerButcherCount = 0;
+        currentBaggerServiceCount = 0;
+        currentBaggerFoodCount = 0;
+        currentGuardGuardCount = 0;
+        currentGuardButcherCount = 0;
+        currentGuardServiceCount = 0;
+        currentGuardFoodCount = 0;
+        currentButcherButcherCount = 0;
+        currentButcherServiceCount = 0;
+        currentButcherFoodCount = 0;
+        currentServiceServiceCount = 0;
+        currentServiceFoodCount = 0;
+        currentFoodFoodCount = 0;
+    }
+
 }

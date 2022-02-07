@@ -296,6 +296,7 @@ public class UniversityAgent extends Agent {
     }
 
     public static void clearUniversityAgentCounts() {
+        idCtr = 0;
         agentCount = 0;
         guardCount = 0;
         janitorCount = 0;

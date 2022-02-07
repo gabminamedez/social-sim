@@ -2106,8 +2106,8 @@ public class MallAgentMovement extends AgentMovement {
         }
 
         if (agentPersona != MallAgent.Persona.GUARD) {
-            MallSimulator.currentExchangeCount++;
-            MallSimulator.averageExchangeDuration = (MallSimulator.averageExchangeDuration * (MallSimulator.currentExchangeCount - 1) + this.interactionDuration) / MallSimulator.currentExchangeCount;
+            MallSimulator.currentCooperativeCount++;
+            MallSimulator.averageCooperativeDuration = (MallSimulator.averageCooperativeDuration * (MallSimulator.currentCooperativeCount - 1) + this.interactionDuration) / MallSimulator.currentCooperativeCount;
         }
         else {
             int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
@@ -2287,7 +2287,7 @@ public class MallAgentMovement extends AgentMovement {
         //TODO: Statistics in interaction
 
         // if 0 na, remove interacting phase for agent
-        if (this.interactionDuration == 0){
+        if (this.interactionDuration <= 0){
             this.isInteracting = false;
             this.interactionType = null;
         }

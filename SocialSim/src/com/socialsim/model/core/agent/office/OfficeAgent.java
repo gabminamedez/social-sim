@@ -375,6 +375,7 @@ public class OfficeAgent extends Agent {
     }
 
     public static void clearOfficeAgentCounts() {
+        idCtr = 0;
         agentCount = 0;
         bossCount = 0;
         managerCount = 0;
