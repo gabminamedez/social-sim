@@ -4,6 +4,8 @@ import com.socialsim.controller.Main;
 import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.mall.Mall;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -42,14 +44,23 @@ public class MallIOSController {
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0){
-                            gridPane.add(new Label(MallAgent.Persona.values()[j - 1].name()), i + otherCtr, j);
+                            Label l = new Label(MallAgent.Persona.values()[j - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i + otherCtr, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
                         }
                         else{
                             if (other){
-                                gridPane.add(new Label(MallAgent.Persona.values()[i - 1].name() + "_OTHER"), i + otherCtr, j);
+                                Label l = new Label(MallAgent.Persona.values()[i - 1].name() + "_OTHER");
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
                             else{
-                                gridPane.add(new Label(MallAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
+                                Label l = new Label(MallAgent.Persona.values()[i - 1].name());
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
                         }
                     }
@@ -64,7 +75,10 @@ public class MallIOSController {
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_FRIENDS && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FRIENDS)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_COUPLE && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_COUPLE)){
                             otherArr[j - 1]++;
-                            gridPane.add(new TextField(mall.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                            TextField tf = new TextField(mall.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                            tf.setAlignment(Pos.CENTER);
+                            gridPane.add(tf, i + otherCtr, j);
+                            GridPane.setHalignment(tf, HPos.CENTER);
                         }
                         else{
 //                            System.out.println(i + " " + j + " " + MallAgent.Persona.values()[i - 1] + " " + MallAgent.Persona.values()[j - 1]);
@@ -74,7 +88,10 @@ public class MallIOSController {
                         }
                     }
                     else{
-                        gridPane.add(new TextField(mall.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                        TextField tf = new TextField(mall.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                        tf.setAlignment(Pos.CENTER);
+                        gridPane.add(tf, i + otherCtr, j);
+                        GridPane.setHalignment(tf, HPos.CENTER);
                     }
                     if (j == MallAgent.Persona.values().length && other){
                         other = false;
@@ -116,14 +133,23 @@ public class MallIOSController {
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0){
-                            gridPane.add(new Label(MallAgent.Persona.values()[j - 1].name()), i + otherCtr, j);
+                            Label l = new Label(MallAgent.Persona.values()[j - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i + otherCtr, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
                         }
                         else{
                             if (other){
-                                gridPane.add(new Label(MallAgent.Persona.values()[i - 1].name() + "_OTHER"), i + otherCtr, j);
+                                Label l = new Label(MallAgent.Persona.values()[i - 1].name() + "_OTHER");
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
                             else{
-                                gridPane.add(new Label(MallAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
+                                Label l = new Label(MallAgent.Persona.values()[i - 1].name());
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
 
                         }
@@ -139,7 +165,10 @@ public class MallIOSController {
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_FRIENDS && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FRIENDS)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_COUPLE && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_COUPLE)){
                             otherArr[j - 1]++;
-                            gridPane.add(new TextField(Mall.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                            TextField tf = new TextField(Mall.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                            tf.setAlignment(Pos.CENTER);
+                            gridPane.add(tf, i + otherCtr, j);
+                            GridPane.setHalignment(tf, HPos.CENTER);
                         }
                         else{
                             TextField tf = new TextField("");
@@ -148,7 +177,10 @@ public class MallIOSController {
                         }
                     }
                     else{
-                        gridPane.add(new TextField(Mall.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                        TextField tf = new TextField(Mall.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                        tf.setAlignment(Pos.CENTER);
+                        gridPane.add(tf, i + otherCtr, j);
+                        GridPane.setHalignment(tf, HPos.CENTER);
                     }
                     if (j == MallAgent.Persona.values().length && other){
                         other = false;

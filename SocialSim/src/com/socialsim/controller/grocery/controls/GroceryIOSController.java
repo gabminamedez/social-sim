@@ -5,6 +5,8 @@ import com.socialsim.model.core.agent.grocery.GroceryAgent;
 import com.socialsim.model.core.environment.grocery.Grocery;
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -43,14 +45,23 @@ public class GroceryIOSController {
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0){
-                            gridPane.add(new Label(GroceryAgent.Persona.values()[j - 1].name()), i + otherCtr, j);
+                            Label l = new Label(GroceryAgent.Persona.values()[j - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i + otherCtr, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
                         }
                         else{
                             if (other){
-                                gridPane.add(new Label(GroceryAgent.Persona.values()[i - 1].name() + "_OTHER"), i + otherCtr, j);
+                                Label l = new Label(GroceryAgent.Persona.values()[i - 1].name() + "_OTHER");
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
                             else{
-                                gridPane.add(new Label(GroceryAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
+                                Label l = new Label(GroceryAgent.Persona.values()[i - 1].name());
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
 
                         }
@@ -62,7 +73,10 @@ public class GroceryIOSController {
                                 || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER)
                                 || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER)){
                             otherArr[j - 1]++;
-                            gridPane.add(new TextField(grocery.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                            TextField tf = new TextField(grocery.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                            tf.setAlignment(Pos.CENTER);
+                            gridPane.add(tf, i + otherCtr, j);
+                            GridPane.setHalignment(tf, HPos.CENTER);
                         }
                         else{
 //                            System.out.println(i + " " + j + " " + GroceryAgent.Persona.values()[i - 1] + " " + GroceryAgent.Persona.values()[j - 1]);
@@ -72,7 +86,10 @@ public class GroceryIOSController {
                         }
                     }
                     else{
-                        gridPane.add(new TextField(grocery.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                        TextField tf = new TextField(grocery.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                        tf.setAlignment(Pos.CENTER);
+                        gridPane.add(tf, i + otherCtr, j);
+                        GridPane.setHalignment(tf, HPos.CENTER);
                     }
                     if (j == GroceryAgent.Persona.values().length && other){
                         other = false;
@@ -110,14 +127,23 @@ public class GroceryIOSController {
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0){
-                            gridPane.add(new Label(GroceryAgent.Persona.values()[j - 1].name()), i + otherCtr, j);
+                            Label l = new Label(GroceryAgent.Persona.values()[j - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i + otherCtr, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
                         }
                         else{
                             if (other){
-                                gridPane.add(new Label(GroceryAgent.Persona.values()[i - 1].name() + "_OTHER"), i + otherCtr, j);
+                                Label l = new Label(GroceryAgent.Persona.values()[i - 1].name() + "_OTHER");
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
                             else{
-                                gridPane.add(new Label(GroceryAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
+                                Label l = new Label(GroceryAgent.Persona.values()[i - 1].name());
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
 
                         }
@@ -129,7 +155,10 @@ public class GroceryIOSController {
                                 || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER)
                                 || (GroceryAgent.Persona.values()[j - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER && GroceryAgent.Persona.values()[i - 1] == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER)){
                             otherArr[j - 1]++;
-                            gridPane.add(new TextField(Grocery.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                            TextField tf = new TextField(Grocery.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                            tf.setAlignment(Pos.CENTER);
+                            gridPane.add(tf, i + otherCtr, j);
+                            GridPane.setHalignment(tf, HPos.CENTER);
                         }
                         else{
                             TextField tf = new TextField("");
@@ -138,7 +167,10 @@ public class GroceryIOSController {
                         }
                     }
                     else{
-                        gridPane.add(new TextField(Grocery.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                        TextField tf = new TextField(Grocery.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                        tf.setAlignment(Pos.CENTER);
+                        gridPane.add(tf, i + otherCtr, j);
+                        GridPane.setHalignment(tf, HPos.CENTER);
                     }
                     if (j == GroceryAgent.Persona.values().length && other){
                         other = false;

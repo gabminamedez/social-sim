@@ -3,8 +3,12 @@ package com.socialsim.controller.mall.controls;
 import com.socialsim.controller.Main;
 import com.socialsim.model.core.agent.mall.MallAction;
 import com.socialsim.model.core.agent.mall.MallAgent;
+import com.socialsim.model.core.agent.mall.MallAction;
+import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.mall.Mall;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -38,14 +42,26 @@ public class MallEditInteractionsController {
                     if (i == 0 && j == 0)
                         gridPane.add(new Label(""), i, j);
                     else{
-                        if (i == 0)
-                            gridPane.add(new Label(MallAction.Name.values()[j - 1].name()), i, j);
-                        else
-                            gridPane.add(new Label(MallAgent.PersonaActionGroup.values()[i - 1].name()), i, j);
+                        if (i == 0){
+                            Label l = new Label(MallAction.Name.values()[j - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
+                        }
+                        else{
+                            Label l = new Label(MallAgent.PersonaActionGroup.values()[i - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
+
+                        }
                     }
                 }
                 else{
-                    gridPane.add(new TextField(mall.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
+                    TextField tf = new TextField(mall.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", ""));
+                    tf.setAlignment(Pos.CENTER);
+                    gridPane.add(tf, i, j);
+                    GridPane.setHalignment(tf, HPos.CENTER);
                 }
             }
         }

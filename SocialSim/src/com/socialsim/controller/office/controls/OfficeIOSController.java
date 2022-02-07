@@ -4,6 +4,8 @@ import com.socialsim.controller.Main;
 import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.environment.office.Office;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -42,14 +44,23 @@ public class OfficeIOSController {
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0){
-                            gridPane.add(new Label(OfficeAgent.Persona.values()[j - 1].name()), i + otherCtr, j);
+                            Label l = new Label(OfficeAgent.Persona.values()[j - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i + otherCtr, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
                         }
                         else{
                             if (other){
-                                gridPane.add(new Label(OfficeAgent.Persona.values()[i - 1].name() + "_OTHER_TEAM"), i + otherCtr, j);
+                                Label l = new Label(OfficeAgent.Persona.values()[i - 1].name() + "_OTHER_TEAM");
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
                             else{
-                                gridPane.add(new Label(OfficeAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
+                                Label l = new Label(OfficeAgent.Persona.values()[i - 1].name());
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
 
                         }
@@ -66,7 +77,10 @@ public class OfficeIOSController {
                                         || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_RESEARCHER || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_TECHNICAL
                                         || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_TECHNICAL)){
                             otherArr[j - 1]++;
-                            gridPane.add(new TextField(office.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                            TextField tf = new TextField(office.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                            tf.setAlignment(Pos.CENTER);
+                            gridPane.add(tf, i + otherCtr, j);
+                            GridPane.setHalignment(tf, HPos.CENTER);
                         }
                         else{
 //                            System.out.println(i + " " + j + " " + OfficeAgent.Persona.values()[i - 1] + " " + OfficeAgent.Persona.values()[j - 1]);
@@ -76,7 +90,10 @@ public class OfficeIOSController {
                         }
                     }
                     else{
-                        gridPane.add(new TextField(office.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                        TextField tf = new TextField(office.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                        tf.setAlignment(Pos.CENTER);
+                        gridPane.add(tf, i + otherCtr, j);
+                        GridPane.setHalignment(tf, HPos.CENTER);
                     }
                     if (j == OfficeAgent.Persona.values().length && other){
                         other = false;
@@ -118,14 +135,23 @@ public class OfficeIOSController {
                         gridPane.add(new Label(""), i, j);
                     else{
                         if (i == 0){
-                            gridPane.add(new Label(OfficeAgent.Persona.values()[j - 1].name()), i + otherCtr, j);
+                            Label l = new Label(OfficeAgent.Persona.values()[j - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i + otherCtr, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
                         }
                         else{
                             if (other){
-                                gridPane.add(new Label(OfficeAgent.Persona.values()[i - 1].name() + "_OTHER_TEAM"), i + otherCtr, j);
+                                Label l = new Label(OfficeAgent.Persona.values()[i - 1].name() + "_OTHER_TEAM");
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
                             else{
-                                gridPane.add(new Label(OfficeAgent.Persona.values()[i - 1].name()), i + otherCtr, j);
+                                Label l = new Label(OfficeAgent.Persona.values()[i - 1].name());
+                                l.setAlignment(Pos.CENTER);
+                                gridPane.add(l, i + otherCtr, j);
+                                GridPane.setHalignment(l, HPos.CENTER);
                             }
 
                         }
@@ -142,7 +168,10 @@ public class OfficeIOSController {
                                 || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_RESEARCHER || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.INT_TECHNICAL
                                 || OfficeAgent.Persona.values()[i - 1] == OfficeAgent.Persona.EXT_TECHNICAL)){
                             otherArr[j - 1]++;
-                            gridPane.add(new TextField(Office.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                            TextField tf = new TextField(Office.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                            tf.setAlignment(Pos.CENTER);
+                            gridPane.add(tf, i + otherCtr, j);
+                            GridPane.setHalignment(tf, HPos.CENTER);
                         }
                         else{
                             TextField tf = new TextField("");
@@ -151,7 +180,10 @@ public class OfficeIOSController {
                         }
                     }
                     else{
-                        gridPane.add(new TextField(Office.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", "")), i + otherCtr, j);
+                        TextField tf = new TextField(Office.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
+                        tf.setAlignment(Pos.CENTER);
+                        gridPane.add(tf, i + otherCtr, j);
+                        GridPane.setHalignment(tf, HPos.CENTER);
                     }
                     if (j == OfficeAgent.Persona.values().length && other){
                         other = false;

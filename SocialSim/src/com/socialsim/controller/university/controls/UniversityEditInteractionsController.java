@@ -5,6 +5,8 @@ import com.socialsim.model.core.agent.university.UniversityAction;
 import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.university.University;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -38,14 +40,25 @@ public class UniversityEditInteractionsController {
                     if (i == 0 && j == 0)
                         gridPane.add(new Label(""), i, j);
                     else{
-                        if (i == 0)
-                            gridPane.add(new Label(UniversityAction.Name.values()[j - 1].name()), i, j);
-                        else
-                            gridPane.add(new Label(UniversityAgent.PersonaActionGroup.values()[i - 1].name()), i, j);
+                        if (i == 0){
+                            Label l = new Label(UniversityAction.Name.values()[j - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
+                        }
+                        else{
+                            Label l = new Label(UniversityAgent.PersonaActionGroup.values()[i - 1].name());
+                            l.setAlignment(Pos.CENTER);
+                            gridPane.add(l, i, j);
+                            GridPane.setHalignment(l, HPos.CENTER);
+                        }
                     }
                 }
                 else{
+                    TextField tf = new TextField(university.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", ""));
+                    tf.setAlignment(Pos.CENTER);
                     gridPane.add(new TextField(university.getInteractionTypeChances().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", "")), i, j);
+                    GridPane.setHalignment(tf, HPos.CENTER);
                 }
             }
         }
