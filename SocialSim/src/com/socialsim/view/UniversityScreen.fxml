@@ -182,7 +182,7 @@
                             <VBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                 <Label prefHeight="17.0" prefWidth="248.0" text="Simulation speed:" />
                                 <Slider fx:id="speedSlider" max="300.0" min="1.0" prefWidth="273.0" snapToTicks="true" value="1.0" />
-                        <Button mnemonicParsing="false" onAction="#generateHeatMap" text="Generate Heat Map" />
+<!--                        <Button mnemonicParsing="false" onAction="#generateHeatMap" text="Generate Heat Map" />-->
                             </VBox>
                         </VBox>
                     </TitledPane>
