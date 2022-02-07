@@ -89,7 +89,7 @@ public class UniversityScreenController extends ScreenController {
     @FXML private Button editInteractionButton;
 
 
-    private final double CANVAS_SCALE = 0.7;
+    private final double CANVAS_SCALE = 0.5;
 
     public UniversityScreenController() {
     }
@@ -127,8 +127,8 @@ public class UniversityScreenController extends ScreenController {
         if (validateParameters()){
             University university = Main.universitySimulator.getUniversity();
             this.configureParameters(university);
-            university.convertIOSToChances();
             initializeUniversity(university);
+            university.convertIOSToChances();
             setElements();
             playButton.setDisable(false);
             disableEdits();

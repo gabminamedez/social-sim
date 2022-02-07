@@ -442,7 +442,8 @@ public class University extends Environment {
                     IOSInteractionChances.get(i).add((double) 0);
                 }
                 else{
-                    int IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
+                    UniversityAgent agent1 = agents.get(i), agent2 = agents.get(j);
+                    int IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                     IOSInteractionChances.get(i).add(this.convertToChanceInteraction(IOS));
                 }
             }
