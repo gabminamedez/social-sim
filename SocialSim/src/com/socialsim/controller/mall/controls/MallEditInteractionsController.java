@@ -11,9 +11,12 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +27,7 @@ public class MallEditInteractionsController {
 
     @FXML VBox container;
     @FXML GridPane gridPane;
+    @FXML Button btnHelp;
     @FXML Button btnCancel;
     @FXML Button btnResetToDefault;
     @FXML Button btnSave;
@@ -141,6 +145,17 @@ public class MallEditInteractionsController {
         }
         else{
             return false;
+        }
+    }
+    public void openHelp(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+        ImageView img = new ImageView();
+        img.setImage(new Image(getClass().getResource("../../../view/image/IOS_help.png").toExternalForm()));
+        alert.initStyle(StageStyle.TRANSPARENT);
+        alert.getDialogPane().setContent(img);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+            alert.close();
         }
     }
 }

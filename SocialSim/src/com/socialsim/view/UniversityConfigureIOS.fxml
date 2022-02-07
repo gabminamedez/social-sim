@@ -28,7 +28,12 @@
       </ScrollPane>
       <HBox alignment="CENTER" prefHeight="47.0" prefWidth="1024.0">
          <children>
-            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancelChanges" text="Cancel">
+             <Button fx:id="btnHelp" mnemonicParsing="false" onAction="#openHelp" text="Help">
+             <HBox.margin>
+                 <Insets right="60.0" />
+             </HBox.margin>
+             </Button>
+             <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancelChanges" text="Cancel">
                <HBox.margin>
                   <Insets right="60.0" />
                </HBox.margin>

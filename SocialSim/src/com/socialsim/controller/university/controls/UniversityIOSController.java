@@ -8,8 +8,11 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.*;
 
 import java.util.Arrays;
@@ -22,6 +25,7 @@ public class UniversityIOSController {
     @FXML VBox container;
     @FXML GridPane gridPane;
     @FXML Button btnCancel;
+    @FXML Button btnHelp;
     @FXML Button btnResetToDefault;
     @FXML Button btnSave;
 
@@ -131,6 +135,17 @@ public class UniversityIOSController {
         }
         else{
             return false;
+        }
+    }
+    public void openHelp(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+        ImageView img = new ImageView();
+        img.setImage(new Image(getClass().getResource("../../../view/image/IOS_help.png").toExternalForm()));
+        alert.initStyle(StageStyle.TRANSPARENT);
+        alert.getDialogPane().setContent(img);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+            alert.close();
         }
     }
 }
