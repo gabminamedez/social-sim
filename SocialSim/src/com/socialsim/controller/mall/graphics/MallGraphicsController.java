@@ -232,12 +232,6 @@ public class MallGraphicsController extends Controller {
                 }
             }
 
-            if (patchNumPair2 != null) { // TODO: FOR VISUALIZATION ONLY; DELETE LATER
-                patchColor = Color.rgb(0, 0, 0);
-                backgroundGraphicsContext.setFill(patchColor);
-                backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
-            }
-
             if (!background) { // Draw each agent in this patch, if the foreground is to be drawn
                 for (Agent agent : patch.getAgents()) {
                     MallAgent mallAgent = (MallAgent) agent;
