@@ -206,6 +206,8 @@ public class OfficeSimulator extends Simulator {
 
     public void resetToDefaultConfiguration(Office office) {
         this.office = office;
+        replenishStaticVars();
+        OfficeAgent.clearOfficeAgentCounts();
         this.time.reset();
         this.running.set(false);
         currentPatchCount = new int[office.getRows()][office.getColumns()];
@@ -2109,7 +2111,7 @@ public class OfficeSimulator extends Simulator {
         }
     }
 
-    public void replenishSeats() {
+    public void replenishStaticVars() {
         MANAGERS_1 = new LinkedList<Integer>(List.of(11));
         MANAGERS_2 = new LinkedList<Integer>(List.of(19));
         MANAGERS_3 = new LinkedList<Integer>(List.of(27));
@@ -2126,6 +2128,101 @@ public class OfficeSimulator extends Simulator {
         TECHNICAL_2 = new LinkedList<Integer>(List.of(43));
         TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
         TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
+        currentManagerCount = 0;
+        currentBusinessCount = 0;
+        currentResearchCount = 0;
+        currentTechnicalCount = 0;
+        currentSecretaryCount = 0;
+        currentClientCount = 0;
+        currentDriverCount = 0;
+        currentVisitorCount = 0;
+        currentNonverbalCount = 0;
+        currentCooperativeCount = 0;
+        currentExchangeCount = 0;
+        averageNonverbalDuration = 0;
+        averageCooperativeDuration = 0;
+        averageExchangeDuration = 0;
+        currentTeam1Count = 0;
+        currentTeam2Count = 0;
+        currentTeam3Count = 0;
+        currentTeam4Count = 0;
+        currentBossManagerCount = 0;
+        currentBossBusinessCount = 0;
+        currentBossResearcherCount = 0;
+        currentBossTechnicalCount = 0;
+        currentBossJanitorCount = 0;
+        currentBossClientCount = 0;
+        currentBossDriverCount = 0;
+        currentBossVisitorCount = 0;
+        currentBossGuardCount = 0;
+        currentBossReceptionistCount = 0;
+        currentBossSecretaryCount = 0;
+        currentManagerManagerCount = 0;
+        currentManagerBusinessCount = 0;
+        currentManagerResearcherCount = 0;
+        currentManagerTechnicalCount = 0;
+        currentManagerJanitorCount = 0;
+        currentManagerClientCount = 0;
+        currentManagerDriverCount = 0;
+        currentManagerVisitorCount = 0;
+        currentManagerGuardCount = 0;
+        currentManagerReceptionistCount = 0;
+        currentManagerSecretaryCount = 0;
+        currentBusinessBusinessCount = 0;
+        currentBusinessResearcherCount = 0;
+        currentBusinessTechnicalCount = 0;
+        currentBusinessJanitorCount = 0;
+        currentBusinessClientCount = 0;
+        currentBusinessDriverCount = 0;
+        currentBusinessVisitorCount = 0;
+        currentBusinessGuardCount = 0;
+        currentBusinessReceptionistCount = 0;
+        currentBusinessSecretaryCount = 0;
+        currentResearcherResearcherCount = 0;
+        currentResearcherTechnicalCount = 0;
+        currentResearcherJanitorCount = 0;
+        currentResearcherClientCount = 0;
+        currentResearcherDriverCount = 0;
+        currentResearcherVisitorCount = 0;
+        currentResearcherGuardCount = 0;
+        currentResearcherReceptionistCount = 0;
+        currentResearcherSecretaryCount = 0;
+        currentTechnicalTechnicalCount = 0;
+        currentTechnicalJanitorCount = 0;
+        currentTechnicalClientCount = 0;
+        currentTechnicalDriverCount = 0;
+        currentTechnicalVisitorCount = 0;
+        currentTechnicalGuardCount = 0;
+        currentTechnicalReceptionistCount = 0;
+        currentTechnicalSecretaryCount = 0;
+        currentJanitorJanitorCount = 0;
+        currentJanitorClientCount = 0;
+        currentJanitorDriverCount = 0;
+        currentJanitorVisitorCount = 0;
+        currentJanitorGuardCount = 0;
+        currentJanitorReceptionistCount = 0;
+        currentJanitorSecretaryCount = 0;
+        currentClientClientCount = 0;
+        currentClientDriverCount = 0;
+        currentClientVisitorCount = 0;
+        currentClientGuardCount = 0;
+        currentClientReceptionistCount = 0;
+        currentClientSecretaryCount = 0;
+        currentDriverDriverCount = 0;
+        currentDriverVisitorCount = 0;
+        currentDriverGuardCount = 0;
+        currentDriverReceptionistCount = 0;
+        currentDriverSecretaryCount = 0;
+        currentVisitorVisitorCount = 0;
+        currentVisitorGuardCount = 0;
+        currentVisitorReceptionistCount = 0;
+        currentVisitorSecretaryCount = 0;
+        currentGuardGuardCount = 0;
+        currentGuardReceptionistCount = 0;
+        currentGuardSecretaryCount = 0;
+        currentReceptionistReceptionistCount = 0;
+        currentReceptionistSecretaryCount = 0;
+        currentSecretarySecretaryCount = 0;
     }
 
 }

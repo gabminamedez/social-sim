@@ -20,29 +20,38 @@ public class UniversityRoutePlan {
     private static int CLASSROOM_SIZES_STUDENT[][] = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
     private static int CLASSROOM_SIZES_PROF[][] = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
     private double UrgentCtr = -2;
+    public int MAX_CLASS_ASKS = 2;
 
     //Chances of INT Y1-Y4
-    public static final double INT_CHANCE_WANDERING_AROUND = 0.22, INT_CHANCE_GOING_TO_STUDY = 0.58,
-            INT_NEED_BATHROOM_NO_CLASSES = 0.10, INT_NEEDS_DRINK_NO_CLASSES = 0.10,
-            INT_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, INT_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
+    public static final double INT_CHANCE_WANDERING_AROUND = 0.16, INT_CHANCE_GOING_TO_STUDY = 0.58,
+            INT_NEED_BATHROOM_NO_CLASSES = 0.05, INT_NEEDS_DRINK_NO_CLASSES = 0.05,
+            INT_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, INT_CHANCE_NEEDS_DRINK_STUDYING = 0.05,
+            INT_CHANCE_SNACKS = 0.16;
     //Chances of INT ORG Y1-Y4
-    public static final double INT_ORG_CHANCE_WANDERING_AROUND = 0.22, INT_ORG_CHANCE_GOING_TO_STUDY = 0.58,
-            INT_ORG_NEED_BATHROOM_NO_CLASSES = 0.10, INT_ORG_NEEDS_DRINK_NO_CLASSES = 0.10,
-            INT_ORG_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, INT_ORG_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
+    public static final double INT_ORG_CHANCE_WANDERING_AROUND = 0.16, INT_ORG_CHANCE_GOING_TO_STUDY = 0.58,
+            INT_ORG_NEED_BATHROOM_NO_CLASSES = 0.05, INT_ORG_NEEDS_DRINK_NO_CLASSES = 0.05,
+            INT_ORG_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, INT_ORG_CHANCE_NEEDS_DRINK_STUDYING = 0.05,
+            INT_ORG_CHANCE_SNACKS = 0.16;
     //Chances of EXT Y1-Y4
-    public static final double EXT_CHANCE_WANDERING_AROUND = 0.40, EXT_CHANCE_GOING_TO_STUDY = 0.40,
-            EXT_NEED_BATHROOM_NO_CLASSES = 0.10, EXT_NEEDS_DRINK_NO_CLASSES = 0.10,
-            EXT_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, EXT_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
+    public static final double EXT_CHANCE_WANDERING_AROUND = 0.25, EXT_CHANCE_GOING_TO_STUDY = 0.40,
+            EXT_NEED_BATHROOM_NO_CLASSES = 0.05, EXT_NEEDS_DRINK_NO_CLASSES = 0.05,
+            EXT_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, EXT_CHANCE_NEEDS_DRINK_STUDYING = 0.05,
+            EXT_CHANCE_SNACKS = 0.25;
     //Chances of EXT ORG Y1-Y4
-    public static final double EXT_ORG_CHANCE_WANDERING_AROUND = 0.48, EXT_ORG_CHANCE_GOING_TO_STUDY = 0.32,
-            EXT_ORG_NEED_BATHROOM_NO_CLASSES = 0.10, EXT_ORG_NEEDS_DRINK_NO_CLASSES = 0.10,
-            EXT_ORG_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, EXT_ORG_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
+    public static final double EXT_ORG_CHANCE_WANDERING_AROUND = 0.29, EXT_ORG_CHANCE_GOING_TO_STUDY = 0.32,
+            EXT_ORG_NEED_BATHROOM_NO_CLASSES = 0.05, EXT_ORG_NEEDS_DRINK_NO_CLASSES = 0.05,
+            EXT_ORG_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, EXT_ORG_CHANCE_NEEDS_DRINK_STUDYING = 0.05,
+            EXT_ORG_CHANCE_SNACKS = 0.29;
 
     //Chances of PROF
-    public static final double PROF_CHANCE_WANDERING_AROUND = 0.80, PROF_CHANCE_GOING_TO_STUDY = 0.10,
-            PROF_NEED_BATHROOM_NO_CLASSES = 0.10, PROF_NEEDS_DRINK_NO_CLASSES = 0,
-            PROF_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, PROF_CHANCE_NEEDS_DRINK_STUDYING = 0.05;
+    public static final double PROF_CHANCE_WANDERING_AROUND = 0.45, PROF_CHANCE_GOING_TO_STUDY = 0.10,
+            PROF_NEED_BATHROOM_NO_CLASSES = 0.05, PROF_NEEDS_DRINK_NO_CLASSES = 0,
+            PROF_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, PROF_CHANCE_NEEDS_DRINK_STUDYING = 0.05,
+            PROF_CHANCE_SNACKS = 0.40;
     public static final double THROW_CHANCE = 0.02;
+    public static final int CHANCE_INT_GUARD_INTERACT = 10, CHANCE_EXT_GUARD_INTERACT = 30, CHANCE_INTORG_GUARD_INTERACT = 20, CHANCE_EXTORG_GUARD_INTERACT = 40, CHANCE_SPROF_GUARD_INTERACT = 20, CHANCE_APROF_GUARD_INTERACT = 50, CHANCE_GUARD_VERBAL = 10;
+    public static final int CHANCE_INT_ASK = 0, CHANCE_EXT_ASK = 10, CHANCE_INTORG_ASK = 5, CHANCE_EXTORG_ASK = 15;
+
     public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch, int tickEntered) {
         this.routePlan = new ArrayList<>();
         //List<UniversityState> routePlan = new ArrayList<>();
@@ -242,6 +251,17 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, 12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         }
+                        else if (x < INT_CHANCE_WANDERING_AROUND + INT_CHANCE_GOING_TO_STUDY + INT_NEED_BATHROOM_NO_CLASSES + INT_CHANCE_SNACKS) {
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR));
+                            actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR));
+                            actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, 12, 36));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA));
+                            actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, 180, 360));
+                            routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
+                        }
                         else {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_DRINKING_FOUNTAIN));
@@ -307,6 +327,17 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
                             actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, 12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
+                        }
+                        else if (x < INT_ORG_CHANCE_WANDERING_AROUND + INT_ORG_CHANCE_GOING_TO_STUDY + INT_ORG_NEED_BATHROOM_NO_CLASSES + INT_ORG_CHANCE_SNACKS) {
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR));
+                            actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR));
+                            actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, 12, 36));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA));
+                            actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, 180, 360));
+                            routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                         }
                         else {
                             actions = new ArrayList<>();
@@ -374,6 +405,17 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, 12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         }
+                        else if (x < EXT_CHANCE_WANDERING_AROUND + EXT_CHANCE_GOING_TO_STUDY + EXT_NEED_BATHROOM_NO_CLASSES + EXT_CHANCE_SNACKS) {
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR));
+                            actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR));
+                            actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, 12, 36));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA));
+                            actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, 180, 360));
+                            routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
+                        }
                         else {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_DRINKING_FOUNTAIN));
@@ -439,6 +481,17 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
                             actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, 12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
+                        }
+                        else if (x < EXT_ORG_CHANCE_WANDERING_AROUND + EXT_ORG_CHANCE_GOING_TO_STUDY + EXT_ORG_NEED_BATHROOM_NO_CLASSES + EXT_ORG_CHANCE_SNACKS) {
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR));
+                            actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR));
+                            actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, 12, 36));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA));
+                            actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, 180, 360));
+                            routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
                         }
                         else {
                             actions = new ArrayList<>();
@@ -506,6 +559,17 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.WASH_IN_SINK, 12));
                             routePlan.add(new UniversityState(UniversityState.Name.NEEDS_BATHROOM, this, agent, actions));
                         }
+                        else {
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_VENDOR));
+                            actions.add(new UniversityAction(UniversityAction.Name.QUEUE_VENDOR));
+                            actions.add(new UniversityAction(UniversityAction.Name.CHECKOUT, 12, 36));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_LUNCH, this, agent, actions));
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.FIND_SEAT_CAFETERIA));
+                            actions.add(new UniversityAction(UniversityAction.Name.LUNCH_STAY_PUT, 180, 360));
+                            routePlan.add(new UniversityState(UniversityState.Name.EATING_LUNCH, this, agent, actions));
+                        }
                     }
                     int availableClass = 6;
                     for(int ctr = 0; ctr < MAX_CLASSES; ctr++)
@@ -556,7 +620,7 @@ public class UniversityRoutePlan {
     }
 
     public static void resetClassroomSizes() {
-        CLASSROOM_SIZES_STUDENT = new int[][]{{40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}, {40, 48, 40, 40, 40, 40}};
+        CLASSROOM_SIZES_STUDENT = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
         CLASSROOM_SIZES_PROF = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
     }
 

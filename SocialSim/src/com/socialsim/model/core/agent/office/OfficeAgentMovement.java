@@ -2123,7 +2123,7 @@ public class OfficeAgentMovement extends AgentMovement {
         //TODO: Statistics in interaction
 
         // if 0 na, remove interacting phase for agent
-        if (this.interactionDuration == 0){
+        if (this.interactionDuration <= 0){
             this.isInteracting = false;
             this.interactionType = null;
         }

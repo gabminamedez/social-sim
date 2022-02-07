@@ -187,8 +187,8 @@
                             </HBox>
 
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="230.0" spacing="10.0">
-                                <ToggleButton fx:id="playButton" mnemonicParsing="false" onAction="#playAction" prefHeight="25.0" prefWidth="230.0" text="Play" />
-                                <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetAction" prefHeight="25.0" prefWidth="117.0" text="Reset" />
+                                <ToggleButton fx:id="playButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="230.0" text="Play" onAction="#playAction" />
+                                <Button fx:id="resetButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Reset" onAction="#initializeAction" />
                             </HBox>
 
                             <VBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">

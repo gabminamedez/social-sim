@@ -738,7 +738,7 @@ public class OfficeScreenController extends ScreenController {
     @FXML
     public void resetAction() {
         Main.officeSimulator.reset();
-        Main.officeSimulator.replenishSeats();
+        // Main.officeSimulator.replenishSeats();
         OfficeAgent.clearOfficeAgentCounts();
         clearOffice(Main.officeSimulator.getOffice());
         Main.officeSimulator.spawnInitialAgents(Main.officeSimulator.getOffice());

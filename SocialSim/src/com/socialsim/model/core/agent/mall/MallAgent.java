@@ -159,6 +159,7 @@ public class MallAgent extends Agent {
     }
 
     public static void clearMallAgentCounts() {
+        idCtr = 0;
         agentCount = 0;
         patronCount = 0;
         staffStoreSalesCount = 0;
