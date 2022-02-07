@@ -86,7 +86,7 @@ public class MallScreenController extends ScreenController {
     @FXML private Label currentStaffStoreStaffStoreCount;
     @FXML private Label currentStaffRestoStaffRestoCount;
 
-    private final double CANVAS_SCALE = 0.7;
+    private final double CANVAS_SCALE = 0.5;
 
     public MallScreenController() {
     }

@@ -89,7 +89,7 @@ public class UniversityScreenController extends ScreenController {
     @FXML private Button editInteractionButton;
 
 
-    private final double CANVAS_SCALE = 0.7;
+    private final double CANVAS_SCALE = 0.5;
 
     public UniversityScreenController() {
     }
