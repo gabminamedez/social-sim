@@ -76,7 +76,7 @@ public class UniversityIOSController {
             if (node.getClass() == TextField.class){
                 int row = GridPane.getRowIndex(node), column = GridPane.getColumnIndex(node);
                 if (row > 0 && column > 0)
-                    ((TextField) node).setText(University.defaultIOS.get(column - 1).get(row - 1).toString().replace("]", "").replace("[", ""));
+                    ((TextField) node).setText(University.defaultIOS.get(row - 1).get(column - 1).toString().replace("]", "").replace("[", ""));
             }
         }
     }

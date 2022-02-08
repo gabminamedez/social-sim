@@ -73,6 +73,7 @@ public class MallIOSController {
                     if (other){
                         if (((MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_STORE_SALES || MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_STORE_CASHIER)
                                 && (MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_SALES || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_CASHIER))
+                                || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_RESTO && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_RESTO)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.ERRAND_FAMILY && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FAMILY)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_FAMILY && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FAMILY)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.ERRAND_FRIENDS && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FRIENDS)
@@ -103,6 +104,7 @@ public class MallIOSController {
                     else if (j == MallAgent.Persona.values().length){
                         if (MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_SALES
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_CASHIER
+                                || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_RESTO
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FAMILY
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FAMILY
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FRIENDS
@@ -163,6 +165,7 @@ public class MallIOSController {
                     if (other){
                         if (((MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_STORE_SALES || MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_STORE_CASHIER)
                                 && (MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_SALES || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_CASHIER))
+                                || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_RESTO && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_RESTO)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.ERRAND_FAMILY && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FAMILY)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_FAMILY && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FAMILY)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.ERRAND_FRIENDS && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FRIENDS)
@@ -192,6 +195,7 @@ public class MallIOSController {
                     else if (j == MallAgent.Persona.values().length){
                         if (MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_SALES
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_CASHIER
+                                || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_RESTO
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FAMILY
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FAMILY
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FRIENDS
