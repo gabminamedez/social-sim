@@ -40,18 +40,18 @@ public class UniversityIOSController {
             for (int j = 0; j < UniversityAgent.Persona.values().length + 1; j++) { // row
                 if (i == 0 || j == 0){
                     if (i == 0 && j == 0)
-                        gridPane.add(new Label(""), i, j);
+                        gridPane.add(new Label(""), j, i);
                     else{
                         if (i == 0){
                             Label l = new Label(UniversityAgent.Persona.values()[j - 1].name());
                             l.setAlignment(Pos.CENTER);
-                            gridPane.add(l, i, j);
+                            gridPane.add(l, j, i);
                             GridPane.setHalignment(l, HPos.CENTER);
                         }
                         else{
                             Label l = new Label(UniversityAgent.Persona.values()[i - 1].name());
                             l.setAlignment(Pos.CENTER);
-                            gridPane.add(l, i, j);
+                            gridPane.add(l, j, i);
                             GridPane.setHalignment(l, HPos.CENTER);
                         }
                     }
@@ -59,7 +59,7 @@ public class UniversityIOSController {
                 else{
                     TextField tf = new TextField(university.getIOSScales().get(i - 1).get(j - 1).toString().replace("]", "").replace("[", ""));
                     tf.setAlignment(Pos.CENTER);
-                    gridPane.add(tf, i, j);
+                    gridPane.add(tf, j, i);
                     GridPane.setHalignment(tf, HPos.CENTER);
                 }
             }
