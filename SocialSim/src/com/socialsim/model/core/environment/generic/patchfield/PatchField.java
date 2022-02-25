@@ -2,7 +2,6 @@ package com.socialsim.model.core.environment.generic.patchfield;
 
 import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
-
 import java.util.ArrayList;
 import java.util.List;
 

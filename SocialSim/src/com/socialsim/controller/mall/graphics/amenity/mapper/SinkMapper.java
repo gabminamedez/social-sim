@@ -14,8 +14,6 @@ public class SinkMapper extends AmenityMapper {
     public static void draw(List<Patch> patches) {
         for (Patch patch : patches) {
             List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-            int origPatchRow = patch.getMatrixPosition().getRow();
-            int origPatchCol = patch.getMatrixPosition().getColumn();
 
             Amenity.AmenityBlock.AmenityBlockFactory amenityBlockFactory = Sink.SinkBlock.sinkBlockFactory;
             Amenity.AmenityBlock amenityBlock = amenityBlockFactory.create(patch, true, true);

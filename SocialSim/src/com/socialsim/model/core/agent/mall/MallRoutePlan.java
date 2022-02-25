@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class MallRoutePlan {
 
-    private MallState currentState; // Denotes the current class of the amenity/patchfield in the route plan
+    private MallState currentState;
     private ArrayList<MallState> routePlan;
     private int MAX_BATHROOM = 2;
     public int MAX_STORE_HELP = 1;
@@ -23,7 +23,6 @@ public class MallRoutePlan {
     public static final int LFAMILY_RESTO_CHANCE = 100, LFAMILY_WANDERING_CHANCE = 100;
     public static final int EFRIENDS_RESTO_CHANCE = 50, EFRIENDS_WANDERING_CHANCE = 80;
     public static final int LFRIENDS_RESTO_CHANCE = 80, LFRIENDS_WANDERING_CHANCE = 100;
-//    public static final int ECOUPLE_RESTO_CHANCE = 100, ECOUPLE_WANDERING_CHANCE = 100;
     public static final int LCOUPLE_RESTO_CHANCE = 100, LCOUPLE_WANDERING_CHANCE = 100;
     public static final int EALONE_RESTO_CHANCE = 30, EALONE_WANDERING_CHANCE = 15;
     public static final int LALONE_RESTO_CHANCE = 80, LALONE_WANDERING_CHANCE = 100;
@@ -104,7 +103,7 @@ public class MallRoutePlan {
         aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(55));
     }
 
-    public MallRoutePlan(MallAgent agent, MallAgent leaderAgent, Mall mall, Patch spawnPatch, int team) { // leaderAgent is only for agents that follow and deviate
+    public MallRoutePlan(MallAgent agent, MallAgent leaderAgent, Mall mall, Patch spawnPatch, int team) {
         this.routePlan = new ArrayList<>();
         ArrayList<MallAction> actions;
 
@@ -195,14 +194,12 @@ public class MallRoutePlan {
         this.currentState = s;
     }
 
-    public MallState setNextState(int i) { // Set the next class in the route plan
-        // this.currentState = this.currentRoutePlan.next();
+    public MallState setNextState(int i) {
         this.currentState = this.routePlan.get(i+1);
         return this.currentState;
     }
 
     public MallState setPreviousState(int i) {
-        // this.currentState = this.currentRoutePlan.previous();
         this.currentState = this.routePlan.get(i-1);
         return this.currentState;
     }

@@ -1,12 +1,11 @@
 package com.socialsim.model.core.environment.generic.patchobject.passable;
 
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
-
 import java.util.List;
 
 public abstract class NonObstacle extends Amenity {
 
-    protected boolean enabled; // Denotes whether this passable patch object is enabled or not (agents cannot pass through it)
+    protected boolean enabled;
 
     public NonObstacle(List<AmenityBlock> amenityBlocks, boolean enabled) {
         super(amenityBlocks);

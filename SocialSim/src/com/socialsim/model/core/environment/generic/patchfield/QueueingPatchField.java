@@ -4,7 +4,6 @@ import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,29 +36,8 @@ public class QueueingPatchField extends BaseObject {
         return queueingAgents;
     }
 
-    public Patch getNextQueuePatch(Patch patch) {
-        if (associatedPatches.contains(patch)){
-            if (associatedPatches.indexOf(patch) == 0){
-                return null;
-            }
-            else{
-                return associatedPatches.get(associatedPatches.indexOf(patch) - 1);
-            }
-        }
-        else{
-            return null;
-        }
-    }
-
     public Patch getLastQueuePatch() {
         return this.associatedPatches.get(associatedPatches.size() - 1);
-    }
-
-    public boolean inLastQueuePatch(Patch patch) {
-        if (associatedPatches.indexOf(patch) == associatedPatches.size() - 1){
-            return true;
-        }
-        return false;
     }
 
     public Agent getCurrentAgent() {

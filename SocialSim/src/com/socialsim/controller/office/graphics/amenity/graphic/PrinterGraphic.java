@@ -15,5 +15,4 @@ public class PrinterGraphic extends OfficeAmenityGraphic {
         super(printer, ROW_SPAN, COLUMN_SPAN, NORMAL_ROW_OFFSET, NORMAL_COLUMN_OFFSET);
     }
 
-
 }

@@ -2,7 +2,6 @@ package com.socialsim.model.core.environment.generic.patchfield;
 
 import com.socialsim.model.core.environment.generic.Patch;
 import javafx.util.Pair;
-
 import java.util.List;
 
 public class Wall extends PatchField {

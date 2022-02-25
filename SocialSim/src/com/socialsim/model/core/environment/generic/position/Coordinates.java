@@ -1,10 +1,9 @@
 package com.socialsim.model.core.environment.generic.position;
 
 import com.socialsim.model.core.environment.generic.Patch;
-
 import java.util.Objects;
 
-public class Coordinates extends Location { // Represents a pair of 2D Cartesian coordinates in the simulation
+public class Coordinates extends Location {
 
     private double x;
     private double y;
@@ -97,18 +96,6 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
         return headingDifference;
     }
 
-    public static double meanHeading(double... headings) {
-        double xHeadingSum = 0.0;
-        double yHeadingSum = 0.0;
-
-        for (double heading : headings) {
-            xHeadingSum += Math.cos(heading);
-            yHeadingSum += Math.sin(heading);
-        }
-
-        return Math.atan2(yHeadingSum / headings.length, xHeadingSum / headings.length);
-    }
-
     public static Coordinates computeFuturePosition(Coordinates startingPosition, double heading, double magnitude) {
         double newX = startingPosition.getX() + Math.cos(heading) * magnitude;
         double newY = startingPosition.getY() - Math.sin(heading) * magnitude;
@@ -128,30 +115,6 @@ public class Coordinates extends Location { // Represents a pair of 2D Cartesian
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
-    }
-
-    public static class PatchPair {
-        private final Patch patch1;
-        private final Patch patch2;
-
-        public PatchPair(Patch patch1, Patch patch2) {
-            this.patch1 = patch1;
-            this.patch2 = patch2;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PatchPair that = (PatchPair) o;
-
-            return patch1.equals(that.patch1) && patch2.equals(that.patch2);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(patch1, patch2);
-        }
     }
 
 }

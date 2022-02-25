@@ -363,13 +363,11 @@ public class Grocery extends Environment {
     }
 
     public void createInitialAgentDemographics(int MAX_FAMILY, int MAX_ALONE){
-        //Guards
         GroceryAgent guard1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, GroceryAgent.Persona.GUARD_ENTRANCE, null, null, false, true);
         this.getAgents().add(guard1);
         GroceryAgent guard2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.GUARD, GroceryAgent.Persona.GUARD_EXIT, null, null, false, true);
         this.getAgents().add(guard2);
 
-        //Cashiers
         GroceryAgent cashier1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier1);
         GroceryAgent cashier2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
@@ -387,7 +385,6 @@ public class Grocery extends Environment {
         GroceryAgent cashier8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier8);
 
-        //Baggers
         GroceryAgent bagger1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger1);
         GroceryAgent bagger2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
@@ -405,7 +402,6 @@ public class Grocery extends Environment {
         GroceryAgent bagger8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger8);
 
-        //Service
         GroceryAgent service1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, GroceryAgent.Persona.CUSTOMER_SERVICE, null, null, false, true);
         this.getAgents().add(service1);
         GroceryAgent service2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, GroceryAgent.Persona.CUSTOMER_SERVICE, null, null, false, true);
@@ -413,7 +409,6 @@ public class Grocery extends Environment {
         GroceryAgent service3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, GroceryAgent.Persona.CUSTOMER_SERVICE, null, null, false, true);
         this.getAgents().add(service3);
 
-        //Staff Food
         GroceryAgent food1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food1);
         GroceryAgent food2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
@@ -431,13 +426,11 @@ public class Grocery extends Environment {
         GroceryAgent food8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food8);
 
-        //Butcher
         GroceryAgent butcher1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BUTCHER, GroceryAgent.Persona.BUTCHER, null, null, false, true);
         this.getAgents().add(butcher1);
         GroceryAgent butcher2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BUTCHER, GroceryAgent.Persona.BUTCHER, null, null, false, true);
         this.getAgents().add(butcher2);
 
-        //Staff Aisle
         GroceryAgent aisle1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle1);
         GroceryAgent aisle2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
@@ -458,8 +451,6 @@ public class Grocery extends Environment {
         this.getAgents().add(aisle9);
         GroceryAgent aisle10 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_AISLE, GroceryAgent.Persona.STAFF_AISLE, null, null, false, true);
         this.getAgents().add(aisle10);
-
-        //Family Customers
 
         int ctr = 0;
 
@@ -509,8 +500,6 @@ public class Grocery extends Environment {
             ctr++;
         }
 
-        //Alone Customers
-
         ctr = 0;
         while (ctr < MAX_ALONE){
             boolean isSttp = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
@@ -528,7 +517,7 @@ public class Grocery extends Environment {
         }
     }
 
-    public double convertToChanceInteraction(int x){// Convert IOS to chance based only on threshold, not 0 to said scale
+    public double convertToChanceInteraction(int x){
         double CHANCE = ((double) x - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7;
         return CHANCE;
     }
@@ -599,8 +588,6 @@ public class Grocery extends Environment {
                 GroceryAgent.Persona persona1 = GroceryAgent.Persona.values()[i];
                 GroceryAgent.Persona persona2 = GroceryAgent.Persona.values()[j];
                 if (persona1 == GroceryAgent.Persona.GUARD_ENTRANCE){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
@@ -618,8 +605,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.GUARD_EXIT){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
@@ -637,8 +622,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.STAFF_AISLE){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
@@ -656,8 +639,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.BUTCHER){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
@@ -675,8 +656,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.CASHIER){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
@@ -694,8 +673,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.BAGGER){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
@@ -713,8 +690,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.CUSTOMER_SERVICE){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
@@ -732,8 +707,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.STAFF_FOOD){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1)));
@@ -751,8 +724,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.STTP_ALONE_CUSTOMER){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
@@ -770,8 +741,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
@@ -789,8 +758,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
@@ -811,8 +778,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
@@ -833,8 +798,6 @@ public class Grocery extends Environment {
                     }
                 }
                 else if (persona1 == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER){
-                    //1. Get IOS Scale of each agent then put in an array
-                    //2. Place in convert function and replace IOS
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));

@@ -18,8 +18,8 @@ public class MallAmenityGraphic extends Graphic {
 
     static {
         final List<AmenityGraphicLocation> benchGraphic = new ArrayList<>();
-        benchGraphic.add(new AmenityGraphicLocation(3, 0)); // Horizontal
-        benchGraphic.add(new AmenityGraphicLocation(2, 2)); // Vertical
+        benchGraphic.add(new AmenityGraphicLocation(3, 0));
+        benchGraphic.add(new AmenityGraphicLocation(2, 2));
         AMENITY_GRAPHICS.put(Bench.class, benchGraphic);
 
         final List<AmenityGraphicLocation> digitalGraphic = new ArrayList<>();
@@ -47,8 +47,8 @@ public class MallAmenityGraphic extends Graphic {
         AMENITY_GRAPHICS.put(StoreCounter.class, storeCounterGraphic);
 
         final List<AmenityGraphicLocation> tableGraphic = new ArrayList<>();
-        tableGraphic.add(new AmenityGraphicLocation(2, 0)); // Horizontal
-        tableGraphic.add(new AmenityGraphicLocation(2, 3)); // Vertical
+        tableGraphic.add(new AmenityGraphicLocation(2, 0));
+        tableGraphic.add(new AmenityGraphicLocation(2, 3));
         AMENITY_GRAPHICS.put(Table.class, tableGraphic);
 
         final List<AmenityGraphicLocation> trashGraphic = new ArrayList<>();
@@ -64,8 +64,8 @@ public class MallAmenityGraphic extends Graphic {
         AMENITY_GRAPHICS.put(Sink.class, sinkGraphic);
 
         final List<AmenityGraphicLocation> storeAisleGraphic = new ArrayList<>();
-        storeAisleGraphic.add(new AmenityGraphicLocation(13, 2)); // Horizontal
-        storeAisleGraphic.add(new AmenityGraphicLocation(14, 0)); // Vertical
+        storeAisleGraphic.add(new AmenityGraphicLocation(13, 2));
+        storeAisleGraphic.add(new AmenityGraphicLocation(14, 0));
         AMENITY_GRAPHICS.put(StoreAisle.class, storeAisleGraphic);
     }
 
@@ -73,8 +73,8 @@ public class MallAmenityGraphic extends Graphic {
     protected final List<AmenityGraphicLocation> graphics;
     protected int graphicIndex;
 
-    private final MallAmenityGraphic.AmenityGraphicScale amenityGraphicScale; // Denotes the rows and columns spanned by this graphic
-    private final MallAmenityGraphic.AmenityGraphicOffset amenityGraphicOffset; // Denotes the offset of this graphic
+    private final MallAmenityGraphic.AmenityGraphicScale amenityGraphicScale;
+    private final MallAmenityGraphic.AmenityGraphicOffset amenityGraphicOffset;
 
     public MallAmenityGraphic(Amenity amenity, int rowSpan, int columnSpan, int rowOffset, int columnOffset) {
         this.amenity = amenity;

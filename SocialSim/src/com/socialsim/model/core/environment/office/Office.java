@@ -12,12 +12,9 @@ import com.socialsim.model.core.environment.office.patchobject.passable.gate.Off
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
 import com.socialsim.model.simulator.office.OfficeSimulator;
-
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import static com.socialsim.model.core.agent.office.OfficeAgent.*;
-//import static com.socialsim.model.core.agent.office.OfficeAgent.EXT_ORG_CHANCE_SPAWN;
 
 public class Office extends Environment {
 
@@ -419,23 +416,18 @@ public class Office extends Environment {
     }
 
     public void createInitialAgentDemographics(int MAX_CLIENTS, int MAX_DRIVERS, int MAX_VISITORS){
-        //Janitor
         OfficeAgent janitor = OfficeAgent.OfficeAgentFactory.create(Type.JANITOR, true, 0);
         this.getAgents().add(janitor);
 
-        //Guard
         OfficeAgent guard = OfficeAgent.OfficeAgentFactory.create(Type.GUARD, true, 0);
         this.getAgents().add(guard);
 
-        // Receptionist
         OfficeAgent receptionist = OfficeAgent.OfficeAgentFactory.create(Type.RECEPTIONIST, true, 0);
         this.getAgents().add(receptionist);
 
-        //Boss
         OfficeAgent boss = OfficeAgent.OfficeAgentFactory.create(Type.BOSS, true, 0);
         this.getAgents().add(boss);
 
-        //Team 1
         OfficeAgent manager_1 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 1);
         this.getAgents().add(manager_1);
 
@@ -452,7 +444,6 @@ public class Office extends Environment {
             this.getAgents().add(researcher_1);
         }
 
-        //Team 2
         OfficeAgent manager_2 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 2);
         this.getAgents().add(manager_2);
 
@@ -469,7 +460,6 @@ public class Office extends Environment {
             this.getAgents().add(researcher_2);
         }
 
-        //Team 3
         OfficeAgent manager_3 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 3);
         this.getAgents().add(manager_3);
 
@@ -486,7 +476,6 @@ public class Office extends Environment {
             this.getAgents().add(researcher_3);
         }
 
-        //Team 4
         OfficeAgent manager_4 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 4);
         this.getAgents().add(manager_4);
 
@@ -503,7 +492,6 @@ public class Office extends Environment {
             this.getAgents().add(researcher_4);
         }
 
-        // Secretary
         OfficeAgent secretary = OfficeAgent.OfficeAgentFactory.create(Type.SECRETARY, true, 0);
         this.getAgents().add(secretary);
 
@@ -529,7 +517,7 @@ public class Office extends Environment {
         }
     }
 
-    public double convertToChanceInteraction(int x){// Convert IOS to chance based only on threshold, not 0 to said scale
+    public double convertToChanceInteraction(int x){
         double CHANCE = ((double) x - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7;
         return CHANCE;
     }

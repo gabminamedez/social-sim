@@ -4,7 +4,6 @@ import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.Main;
 import com.socialsim.controller.office.graphics.OfficeGraphicsController;
 import com.socialsim.controller.office.graphics.amenity.mapper.*;
-import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.agent.office.OfficeAgentMovement;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
@@ -16,7 +15,6 @@ import com.socialsim.model.simulator.office.OfficeSimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -25,7 +23,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -33,24 +30,13 @@ import java.util.List;
 
 public class OfficeScreenController extends ScreenController {
 
-    @FXML private ScrollPane scrollPane;
-    @FXML private Group canvasGroup;
     @FXML private StackPane stackPane;
     @FXML private Canvas backgroundCanvas;
     @FXML private Canvas foregroundCanvas;
     @FXML private Canvas markingsCanvas;
-    @FXML private TabPane sidebar;
-    @FXML private Spinner guardsSpinner;
-    @FXML private Spinner janitorsSpinner;
-    @FXML private Spinner professorsSpinner;
-    @FXML private Spinner studentsSpinner;
-    @FXML private Slider spawnsSlider;
     @FXML private Text elapsedTimeText;
-    @FXML private Button initializeButton;
     @FXML private ToggleButton playButton;
-    @FXML private Button resetButton;
     @FXML private Slider speedSlider;
-    @FXML private Tab parameters;
     @FXML private Button resetToDefaultButton;
     @FXML private TextField nonverbalMean;
     @FXML private TextField nonverbalStdDev;
@@ -67,7 +53,6 @@ public class OfficeScreenController extends ScreenController {
     @FXML private TextField fieldOfView;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
-
     @FXML private Label currentManagerCount;
     @FXML private Label currentBusinessCount;
     @FXML private Label currentResearchCount;
@@ -176,26 +161,25 @@ public class OfficeScreenController extends ScreenController {
         resetToDefault();
         playButton.setDisable(true);
 
-        int width = 60; // Value may be from 25-100
-        int length = 100; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
+        int width = 60;
+        int length = 100;
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS);
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS);
         Office office = Office.OfficeFactory.create(rows, columns);
         Main.officeSimulator.resetToDefaultConfiguration(office);
         Office.configureDefaultIOS();
         office.copyDefaultToIOS();
         Office.configureDefaultInteractionTypeChances();
         office.copyDefaultToInteractionTypeChances();
-
     }
 
     @FXML
     public void initializeAction() {
-        if (Main.officeSimulator.isRunning()) { // If the simulator is running, stop it
+        if (Main.officeSimulator.isRunning()) {
             playAction();
             playButton.setSelected(false);
         }
-        if (validateParameters()){
+        if (validateParameters()) {
             Office office = Main.officeSimulator.getOffice();
             this.configureParameters(office);
             initializeOffice(office);
@@ -216,7 +200,6 @@ public class OfficeScreenController extends ScreenController {
     public void mapOffice() {
         Office office = Main.officeSimulator.getOffice();
         int rows = office.getRows();
-        int cols = office.getColumns();
 
         List<Patch> wallPatches = new ArrayList<>();
         for (int i = 0; i < rows; i++) {
@@ -335,65 +318,44 @@ public class OfficeScreenController extends ScreenController {
         CabinetMapper.draw(cabinetUpPatches, "UP");
 
         List<Patch> chairPatches = new ArrayList<>();
-        chairPatches.add(office.getPatch(51,58)); // 0
-        chairPatches.add(office.getPatch(51,61)); // 1
-        chairPatches.add(office.getPatch(46,37));  // 2
-        chairPatches.add(office.getPatch(49,50)); // 3
-        chairPatches.add(office.getPatch(55,60)); // 4
-        chairPatches.add(office.getPatch(55,63)); // 5
-        // meeting room chairs
-        for (int i = 87; i < 95; i++) { //
-            chairPatches.add(office.getPatch(9, i));// 6, 12, 18, 24, 30, 36, 42, 48
-            chairPatches.add(office.getPatch(14, i));// 7, 13, 19, 25, 31, 37, 43, 49
-            chairPatches.add(office.getPatch(27, i));// 8, 14, 20, 26, 32, 38, 44, 50
-            chairPatches.add(office.getPatch(32, i));// 9, 15, 21, 27, 33, 39, 45, 51
-            chairPatches.add(office.getPatch(45, i));// 10, 16, 22, 28, 34, 40, 46, 52
-            chairPatches.add(office.getPatch(50, i));// 11, 17, 23, 29, 35, 41, 47, 53
-        }//54, 58, 62
+        chairPatches.add(office.getPatch(51,58));
+        chairPatches.add(office.getPatch(51,61));
+        chairPatches.add(office.getPatch(46,37));
+        chairPatches.add(office.getPatch(49,50));
+        chairPatches.add(office.getPatch(55,60));
+        chairPatches.add(office.getPatch(55,63));
+        for (int i = 87; i < 95; i++) {
+            chairPatches.add(office.getPatch(9, i));
+            chairPatches.add(office.getPatch(14, i));
+            chairPatches.add(office.getPatch(27, i));
+            chairPatches.add(office.getPatch(32, i));
+            chairPatches.add(office.getPatch(45, i));
+            chairPatches.add(office.getPatch(50, i));
+        }
         chairPatches.add(office.getPatch(11,85));
         chairPatches.add(office.getPatch(12,85));
         chairPatches.add(office.getPatch(11,96));
         chairPatches.add(office.getPatch(12,96));
-
         chairPatches.add(office.getPatch(29,85));
         chairPatches.add(office.getPatch(30,85));
         chairPatches.add(office.getPatch(29,96));
         chairPatches.add(office.getPatch(30,96));
-
         chairPatches.add(office.getPatch(47,85));
         chairPatches.add(office.getPatch(48,85));
         chairPatches.add(office.getPatch(47,96));
         chairPatches.add(office.getPatch(48,96));
-        // collaboration desk chairs
         for (int i = 64; i < 70; i++) {
-            chairPatches.add(office.getPatch(7, i)); // 6, 16, 26, 36, 46, 56
-            chairPatches.add(office.getPatch(10, i)); // 7
-            chairPatches.add(office.getPatch(14, i)); // 8
-            chairPatches.add(office.getPatch(17, i)); // 9
-            chairPatches.add(office.getPatch(21, i)); // 10
-            chairPatches.add(office.getPatch(24, i)); // 11
-            chairPatches.add(office.getPatch(28, i)); // 12
-            chairPatches.add(office.getPatch(31, i)); // 13
-            chairPatches.add(office.getPatch(35, i)); // 14
-            chairPatches.add(office.getPatch(38, i)); // 15
+            chairPatches.add(office.getPatch(7, i));
+            chairPatches.add(office.getPatch(10, i));
+            chairPatches.add(office.getPatch(14, i));
+            chairPatches.add(office.getPatch(17, i));
+            chairPatches.add(office.getPatch(21, i));
+            chairPatches.add(office.getPatch(24, i));
+            chairPatches.add(office.getPatch(28, i));
+            chairPatches.add(office.getPatch(31, i));
+            chairPatches.add(office.getPatch(35, i));
+            chairPatches.add(office.getPatch(38, i));
         }
-        // Break room chairs
-        /*chairPatches.add(office.getPatch(32,1)); chairPatches.add(office.getPatch(32,3));
-        chairPatches.add(office.getPatch(33,1)); chairPatches.add(office.getPatch(33,3));
-        chairPatches.add(office.getPatch(32,5)); chairPatches.add(office.getPatch(32,7));
-        chairPatches.add(office.getPatch(33,5)); chairPatches.add(office.getPatch(33,7));
-        chairPatches.add(office.getPatch(32,9)); chairPatches.add(office.getPatch(32,11));
-        chairPatches.add(office.getPatch(33,9)); chairPatches.add(office.getPatch(33,11));
-        chairPatches.add(office.getPatch(32,13)); chairPatches.add(office.getPatch(32,15));
-        chairPatches.add(office.getPatch(33,13)); chairPatches.add(office.getPatch(33,15));
-        chairPatches.add(office.getPatch(36,1)); chairPatches.add(office.getPatch(36,3));
-        chairPatches.add(office.getPatch(37,1)); chairPatches.add(office.getPatch(37,3));
-        chairPatches.add(office.getPatch(36,5)); chairPatches.add(office.getPatch(36,7));
-        chairPatches.add(office.getPatch(37,5)); chairPatches.add(office.getPatch(37,7));
-        chairPatches.add(office.getPatch(36,9)); chairPatches.add(office.getPatch(36,11));
-        chairPatches.add(office.getPatch(37,9)); chairPatches.add(office.getPatch(37,11));
-        chairPatches.add(office.getPatch(36,13)); chairPatches.add(office.getPatch(36,15));
-        chairPatches.add(office.getPatch(37,13)); chairPatches.add(office.getPatch(37,15));*/
         ChairMapper.draw(chairPatches);
 
         List<Patch> collabDeskPatches = new ArrayList<>();
@@ -481,18 +443,18 @@ public class OfficeScreenController extends ScreenController {
         CubicleMapper.draw(cubicleDownPatches, "DOWN");
 
         List<Patch> doorRightPatches = new ArrayList<>();
-        doorRightPatches.add(office.getPatch(6,19)); // 0
-        doorRightPatches.add(office.getPatch(27,19)); // 1
+        doorRightPatches.add(office.getPatch(6,19));
+        doorRightPatches.add(office.getPatch(27,19));
         DoorMapper.draw(doorRightPatches, "RIGHT");
 
         List<Patch> doorLeftPatches = new ArrayList<>();
-        doorLeftPatches.add(office.getPatch(10,80)); // 2
-        doorLeftPatches.add(office.getPatch(28,80)); // 3
-        doorLeftPatches.add(office.getPatch(46,80)); // 4
+        doorLeftPatches.add(office.getPatch(10,80));
+        doorLeftPatches.add(office.getPatch(28,80));
+        doorLeftPatches.add(office.getPatch(46,80));
         DoorMapper.draw(doorLeftPatches, "LEFT");
 
         List<Patch> doorUpPatches = new ArrayList<>();
-        doorUpPatches.add(office.getPatch(45,59)); // 5
+        doorUpPatches.add(office.getPatch(45,59));
         DoorMapper.draw(doorUpPatches, "UP");
 
         List<Patch> meetingDeskPatches = new ArrayList<>();
@@ -537,14 +499,10 @@ public class OfficeScreenController extends ScreenController {
         ReceptionTableMapper.draw(receptionTablePatches);
 
         List<Patch> tableUpPatches = new ArrayList<>();
-        //tableUpPatches.add(office.getPatch(21,9));
         tableUpPatches.add(office.getPatch(23,9));
-        //tableUpPatches.add(office.getPatch(23,9));
         tableUpPatches.add(office.getPatch(23,13));
-        //tableUpPatches.add(office.getPatch(21,11));
         tableUpPatches.add(office.getPatch(26,9));
-        //tableUpPatches.add(office.getPatch(23,11));
-        tableUpPatches.add(office.getPatch(26,13)); // couch tables
+        tableUpPatches.add(office.getPatch(26,13));
         tableUpPatches.add(office.getPatch(51,9));
         tableUpPatches.add(office.getPatch(52,9));
         tableUpPatches.add(office.getPatch(53,9));
@@ -584,22 +542,22 @@ public class OfficeScreenController extends ScreenController {
     }
 
     private void drawInterface() {
-        drawOfficeViewBackground(Main.officeSimulator.getOffice()); // Initially draw the Office environment
-        drawOfficeViewForeground(Main.officeSimulator.getOffice(), false); // Then draw the agents in the Office
+        drawOfficeViewBackground(Main.officeSimulator.getOffice());
+        drawOfficeViewForeground(Main.officeSimulator.getOffice(), false);
     }
 
-    public void drawOfficeViewBackground(Office office) { // Draw the office view background
+    public void drawOfficeViewBackground(Office office) {
         OfficeGraphicsController.requestDrawOfficeView(stackPane, office, OfficeGraphicsController.tileSize, true, false);
     }
 
-    public void drawOfficeViewForeground(Office office, boolean speedAware) { // Draw the office view foreground
+    public void drawOfficeViewForeground(Office office, boolean speedAware) {
         OfficeGraphicsController.requestDrawOfficeView(stackPane, office, OfficeGraphicsController.tileSize, false, speedAware);
         requestUpdateInterfaceSimulationElements();
     }
 
-    private void requestUpdateInterfaceSimulationElements() { // Update the interface elements pertinent to the simulation
-        Platform.runLater(this::updateSimulationTime); // Update the simulation time
-        Platform.runLater(this::updateStatistics); //Updates the statistics
+    private void requestUpdateInterfaceSimulationElements() {
+        Platform.runLater(this::updateSimulationTime);
+        Platform.runLater(this::updateStatistics);
     }
 
     public void updateSimulationTime() {
@@ -609,7 +567,7 @@ public class OfficeScreenController extends ScreenController {
         timeString = String.format("%02d", currentTime.getHour()) + ":" + String.format("%02d", currentTime.getMinute()) + ":" + String.format("%02d", currentTime.getSecond());
         elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
     }
-    public void updateStatistics(){
+    public void updateStatistics() {
         currentManagerCount.setText(String.valueOf(OfficeSimulator.currentManagerCount));
         currentBusinessCount.setText(String.valueOf(OfficeSimulator.currentBusinessCount));
         currentResearchCount.setText(String.valueOf(OfficeSimulator.currentResearchCount));
@@ -724,7 +682,7 @@ public class OfficeScreenController extends ScreenController {
 
     @FXML
     public void playAction() {
-        if (!Main.officeSimulator.isRunning()) { // Not yet running to running (play simulation)
+        if (!Main.officeSimulator.isRunning()) {
             Main.officeSimulator.setRunning(true);
             Main.officeSimulator.getPlaySemaphore().release();
             playButton.setText("Pause");
@@ -735,38 +693,11 @@ public class OfficeScreenController extends ScreenController {
         }
     }
 
-    @FXML
-    public void resetAction() {
-        Main.officeSimulator.reset();
-        // Main.officeSimulator.replenishSeats();
-        OfficeAgent.clearOfficeAgentCounts();
-        clearOffice(Main.officeSimulator.getOffice());
-        Main.officeSimulator.spawnInitialAgents(Main.officeSimulator.getOffice());
-        drawOfficeViewForeground(Main.officeSimulator.getOffice(), false); // Redraw the canvas
-        if (Main.officeSimulator.isRunning()) { // If the simulator is running, stop it
-            playAction();
-            playButton.setSelected(false);
-        }
-        enableEdits();
-    }
-
-    public static void clearOffice(Office office) {
-        for (OfficeAgent agent : office.getAgents()) { // Remove the relationship between the patch and the agents
-            agent.getAgentMovement().getCurrentPatch().getAgents().clear();
-            agent.getAgentMovement().setCurrentPatch(null);
-        }
-
-        // Remove all the agents
-        office.getAgents().removeAll(office.getAgents());
-        office.getAgents().clear();
-        office.getAgentPatchSet().clear();
-    }
-
     @Override
     protected void closeAction() {
     }
 
-    public void disableEdits(){
+    public void disableEdits() {
         nonverbalMean.setDisable(true);
         nonverbalStdDev.setDisable(true);
         cooperativeMean.setDisable(true);
@@ -780,32 +711,12 @@ public class OfficeScreenController extends ScreenController {
         maxCurrentDrivers.setDisable(true);
         maxVisitors.setDisable(true);
         maxCurrentVisitors.setDisable(true);
-
         resetToDefaultButton.setDisable(true);
         configureIOSButton.setDisable(true);
         editInteractionButton.setDisable(true);
     }
-    public void enableEdits(){
-        nonverbalMean.setDisable(false);
-        nonverbalStdDev.setDisable(false);
-        cooperativeMean.setDisable(false);
-        cooperativeStdDev.setDisable(false);
-        exchangeMean.setDisable(false);
-        exchangeStdDev.setDisable(false);
-        fieldOfView.setDisable(false);
-        maxClients.setDisable(false);
-        maxCurrentClients.setDisable(false);
-        maxDrivers.setDisable(false);
-        maxCurrentDrivers.setDisable(false);
-        maxVisitors.setDisable(false);
-        maxCurrentVisitors.setDisable(false);
 
-        resetToDefaultButton.setDisable(false);
-        configureIOSButton.setDisable(false);
-        editInteractionButton.setDisable(false);
-    }
-
-    public void resetToDefault(){
+    public void resetToDefault() {
         nonverbalMean.setText(Integer.toString(OfficeAgentMovement.defaultNonverbalMean));
         nonverbalStdDev.setText(Integer.toString(OfficeAgentMovement.defaultNonverbalStdDev));
         cooperativeMean.setText(Integer.toString(OfficeAgentMovement.defaultCooperativeMean));
@@ -821,8 +732,8 @@ public class OfficeScreenController extends ScreenController {
         maxCurrentVisitors.setText(Integer.toString(OfficeSimulator.defaultMaxCurrentVisitors));
     }
 
-    public void openIOSLevels(){
-        try{
+    public void openIOSLevels() {
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/OfficeConfigureIOS.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
@@ -831,12 +742,12 @@ public class OfficeScreenController extends ScreenController {
             stage.setScene(new Scene(root));
             stage.showAndWait();
         }
-        catch(Exception e){
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
-    public void openEditInteractions(){
-        try{
+    public void openEditInteractions() {
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/OfficeEditInteractions.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
@@ -845,11 +756,11 @@ public class OfficeScreenController extends ScreenController {
             stage.setScene(new Scene(root));
             stage.show();
         }
-        catch(Exception e){
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
-    public void configureParameters(Office office){
+    public void configureParameters(Office office) {
         office.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
         office.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
         office.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
@@ -875,16 +786,13 @@ public class OfficeScreenController extends ScreenController {
         currentNonverbalCount.setText(String.valueOf(OfficeSimulator.currentNonverbalCount));
         currentCooperativeCount.setText(String.valueOf(OfficeSimulator.currentCooperativeCount));
         currentExchangeCount.setText(String.valueOf(OfficeSimulator.currentExchangeCount));
-
         averageNonverbalDuration.setText(String.valueOf(OfficeSimulator.averageNonverbalDuration));
         averageCooperativeDuration.setText(String.valueOf(OfficeSimulator.averageCooperativeDuration));
         averageExchangeDuration.setText(String.valueOf(OfficeSimulator.averageExchangeDuration));
-
         currentTeam1Count.setText(String.valueOf(OfficeSimulator.currentTeam1Count));
         currentTeam2Count.setText(String.valueOf(OfficeSimulator.currentTeam2Count));
         currentTeam3Count.setText(String.valueOf(OfficeSimulator.currentTeam3Count));
         currentTeam4Count.setText(String.valueOf(OfficeSimulator.currentTeam4Count));
-
         currentBossManagerCount.setText(String.valueOf(OfficeSimulator.currentBossManagerCount));
         currentBossBusinessCount.setText(String.valueOf(OfficeSimulator.currentBossBusinessCount));
         currentBossResearcherCount.setText(String.valueOf(OfficeSimulator.currentBossResearcherCount));
@@ -896,7 +804,6 @@ public class OfficeScreenController extends ScreenController {
         currentBossGuardCount.setText(String.valueOf(OfficeSimulator.currentBossGuardCount));
         currentBossReceptionistCount.setText(String.valueOf(OfficeSimulator.currentBossReceptionistCount));
         currentBossSecretaryCount.setText(String.valueOf(OfficeSimulator.currentBossSecretaryCount));
-
         currentManagerManagerCount.setText(String.valueOf(OfficeSimulator.currentManagerManagerCount));
         currentManagerBusinessCount.setText(String.valueOf(OfficeSimulator.currentManagerBusinessCount));
         currentManagerResearcherCount.setText(String.valueOf(OfficeSimulator.currentManagerResearcherCount));
@@ -908,7 +815,6 @@ public class OfficeScreenController extends ScreenController {
         currentManagerGuardCount.setText(String.valueOf(OfficeSimulator.currentManagerGuardCount));
         currentManagerReceptionistCount.setText(String.valueOf(OfficeSimulator.currentManagerReceptionistCount));
         currentManagerSecretaryCount.setText(String.valueOf(OfficeSimulator.currentManagerSecretaryCount));
-
         currentBusinessBusinessCount.setText(String.valueOf(OfficeSimulator.currentBusinessBusinessCount));
         currentBusinessResearcherCount.setText(String.valueOf(OfficeSimulator.currentBusinessResearcherCount));
         currentBusinessTechnicalCount.setText(String.valueOf(OfficeSimulator.currentBusinessTechnicalCount));
@@ -919,7 +825,6 @@ public class OfficeScreenController extends ScreenController {
         currentBusinessGuardCount.setText(String.valueOf(OfficeSimulator.currentBusinessGuardCount));
         currentBusinessReceptionistCount.setText(String.valueOf(OfficeSimulator.currentBusinessReceptionistCount));
         currentBusinessSecretaryCount.setText(String.valueOf(OfficeSimulator.currentBusinessSecretaryCount));
-
         currentResearcherResearcherCount.setText(String.valueOf(OfficeSimulator.currentResearcherResearcherCount));
         currentResearcherTechnicalCount.setText(String.valueOf(OfficeSimulator.currentResearcherTechnicalCount));
         currentResearcherJanitorCount.setText(String.valueOf(OfficeSimulator.currentResearcherJanitorCount));
@@ -929,7 +834,6 @@ public class OfficeScreenController extends ScreenController {
         currentResearcherGuardCount.setText(String.valueOf(OfficeSimulator.currentResearcherGuardCount));
         currentResearcherReceptionistCount.setText(String.valueOf(OfficeSimulator.currentResearcherReceptionistCount));
         currentResearcherSecretaryCount.setText(String.valueOf(OfficeSimulator.currentResearcherSecretaryCount));
-
         currentTechnicalTechnicalCount.setText(String.valueOf(OfficeSimulator.currentTechnicalTechnicalCount));
         currentTechnicalJanitorCount.setText(String.valueOf(OfficeSimulator.currentTechnicalJanitorCount));
         currentTechnicalClientCount.setText(String.valueOf(OfficeSimulator.currentTechnicalClientCount));
@@ -938,46 +842,39 @@ public class OfficeScreenController extends ScreenController {
         currentTechnicalGuardCount.setText(String.valueOf(OfficeSimulator.currentTechnicalGuardCount));
         currentTechnicalReceptionistCount.setText(String.valueOf(OfficeSimulator.currentTechnicalReceptionistCount));
         currentTechnicalSecretaryCount.setText(String.valueOf(OfficeSimulator.currentTechnicalSecretaryCount));
-
         currentJanitorJanitorCount.setText(String.valueOf(OfficeSimulator.currentJanitorJanitorCount));
         currentJanitorClientCount.setText(String.valueOf(OfficeSimulator.currentJanitorClientCount));
         currentJanitorDriverCount.setText(String.valueOf(OfficeSimulator.currentJanitorDriverCount));
         currentJanitorVisitorCount.setText(String.valueOf(OfficeSimulator.currentJanitorVisitorCount));
         currentJanitorSecretaryCount.setText(String.valueOf(OfficeSimulator.currentJanitorSecretaryCount));
-
         currentClientClientCount.setText(String.valueOf(OfficeSimulator.currentClientClientCount));
         currentClientDriverCount.setText(String.valueOf(OfficeSimulator.currentClientDriverCount));
         currentClientVisitorCount.setText(String.valueOf(OfficeSimulator.currentClientVisitorCount));
         currentClientGuardCount.setText(String.valueOf(OfficeSimulator.currentClientGuardCount));
         currentClientReceptionistCount.setText(String.valueOf(OfficeSimulator.currentClientReceptionistCount));
         currentClientSecretaryCount.setText(String.valueOf(OfficeSimulator.currentClientSecretaryCount));
-
         currentDriverDriverCount.setText(String.valueOf(OfficeSimulator.currentDriverDriverCount));
         currentDriverVisitorCount.setText(String.valueOf(OfficeSimulator.currentDriverVisitorCount));
         currentDriverGuardCount.setText(String.valueOf(OfficeSimulator.currentDriverGuardCount));
         currentDriverReceptionistCount.setText(String.valueOf(OfficeSimulator.currentDriverReceptionistCount));
         currentDriverSecretaryCount.setText(String.valueOf(OfficeSimulator.currentDriverSecretaryCount));
-
         currentVisitorVisitorCount.setText(String.valueOf(OfficeSimulator.currentVisitorVisitorCount));
         currentVisitorGuardCount.setText(String.valueOf(OfficeSimulator.currentVisitorGuardCount));
         currentVisitorReceptionistCount.setText(String.valueOf(OfficeSimulator.currentVisitorReceptionistCount));
         currentVisitorSecretaryCount.setText(String.valueOf(OfficeSimulator.currentVisitorSecretaryCount));
-
         currentGuardSecretaryCount.setText(String.valueOf(OfficeSimulator.currentGuardSecretaryCount));
-
         currentReceptionistSecretaryCount.setText(String.valueOf(OfficeSimulator.currentReceptionistSecretaryCount));
-
         currentSecretarySecretaryCount.setText(String.valueOf(OfficeSimulator.currentSecretarySecretaryCount));
     }
 
-    public boolean validateParameters(){
+    public boolean validateParameters() {
         boolean validParameters = Integer.parseInt(nonverbalMean.getText()) >= 0 && Integer.parseInt(nonverbalMean.getText()) >= 0
                 && Integer.parseInt(cooperativeMean.getText()) >= 0 && Integer.parseInt(cooperativeStdDev.getText()) >= 0
                 && Integer.parseInt(exchangeMean.getText()) >= 0 && Integer.parseInt(exchangeStdDev.getText()) >= 0
                 && Integer.parseInt(fieldOfView.getText()) >= 0 && Integer.parseInt(fieldOfView.getText()) <= 360
                 && Integer.parseInt(maxClients.getText()) >= 0 && Integer.parseInt(maxDrivers.getText()) >= 0
                 && Integer.parseInt(maxVisitors.getText()) >= 0;
-        if (!validParameters){
+        if (!validParameters) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
             Label label = new Label("Failed to initialize. Please make sure all values are greater than 0, and field of view is not greater than 360 degrees");
             label.setWrapText(true);
@@ -989,7 +886,5 @@ public class OfficeScreenController extends ScreenController {
         }
         return validParameters;
     }
-    public void generateHeatMap(){
 
-    }
 }

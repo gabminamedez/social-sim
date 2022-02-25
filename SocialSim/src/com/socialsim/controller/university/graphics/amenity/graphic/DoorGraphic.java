@@ -2,7 +2,6 @@ package com.socialsim.controller.university.graphics.amenity.graphic;
 
 import com.socialsim.controller.university.graphics.amenity.UniversityAmenityGraphic;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Door;
-
 import java.util.Objects;
 
 public class DoorGraphic extends UniversityAmenityGraphic {

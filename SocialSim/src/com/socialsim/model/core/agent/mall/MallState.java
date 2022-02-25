@@ -39,28 +39,21 @@ public class MallState {
     private ArrayList<MallAction> actions;
     private int storeNum;
 
-    public MallState(MallState mallState, MallRoutePlan routePlan, MallAgent agent) {
+    public MallState (MallState mallState, MallRoutePlan routePlan, MallAgent agent) {
         this.name = mallState.getName();
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = mallState.getActions();
     }
 
-    public MallState(Name a, MallRoutePlan routePlan, MallAgent agent) {
-        this.name = a;
-        this.routePlan = routePlan;
-        this.agent = agent;
-        this.actions = new ArrayList<>();
-    }
-
-    public MallState(Name a, MallRoutePlan routePlan, MallAgent agent, ArrayList<MallAction> actions) {
+    public MallState (Name a, MallRoutePlan routePlan, MallAgent agent, ArrayList<MallAction> actions) {
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
         this.actions = actions;
     }
 
-    public MallState(Name a, MallRoutePlan routePlan, MallAgent agent, ArrayList<MallAction> actions, int storeNum) {
+    public MallState (Name a, MallRoutePlan routePlan, MallAgent agent, ArrayList<MallAction> actions, int storeNum) {
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;

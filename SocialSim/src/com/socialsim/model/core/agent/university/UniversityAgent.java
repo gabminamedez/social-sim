@@ -2,11 +2,7 @@ package com.socialsim.model.core.agent.university;
 
 import com.socialsim.controller.university.graphics.agent.UniversityAgentGraphic;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.simulator.Simulator;
-
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class UniversityAgent extends Agent {
@@ -24,15 +20,10 @@ public class UniversityAgent extends Agent {
     private UniversityAgent.Persona persona = null;
     private PersonaActionGroup personaActionGroup = null;
     private final boolean inOnStart;
-
     private final UniversityAgentGraphic agentGraphic;
     private UniversityAgentMovement agentMovement;
 
     public static final UniversityAgent.UniversityAgentFactory agentFactory;
-
-    public static final double INT_CHANCE_SPAWN = 0.10, INT_ORG_CHANCE_SPAWN = 0.10,
-            EXT_CHANCE_SPAWN = 0.10, EXT_ORG_CHANCE_SPAWN = 0.10,
-            STRICT_PROF_CHANCE_SPAWN = 0.10, APPROACHABLE_PROF_CHANCE_SPAWN = 0.10;
 
     static {
         agentFactory = new UniversityAgent.UniversityAgentFactory();
@@ -185,9 +176,6 @@ public class UniversityAgent extends Agent {
     }
 
     public static class UniversityAgentFactory extends Agent.AgentFactory {
-//        public static UniversityAgent create(UniversityAgent.Type type, Patch spawnPatch, boolean inOnStart, long currentTick) {
-//            return new UniversityAgent(type, spawnPatch, inOnStart, currentTick);
-//        }
         public static UniversityAgent create(UniversityAgent.Type type, boolean inOnStart) {
             return new UniversityAgent(type, inOnStart);
         }

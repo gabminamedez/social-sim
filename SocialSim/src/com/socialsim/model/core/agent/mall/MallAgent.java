@@ -2,10 +2,7 @@ package com.socialsim.model.core.agent.mall;
 
 import com.socialsim.controller.mall.graphics.agent.MallAgentGraphic;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.agent.grocery.GroceryAgent;
-import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.simulator.Simulator;
-
 import java.util.Objects;
 
 public class MallAgent extends Agent {
@@ -150,9 +147,6 @@ public class MallAgent extends Agent {
     }
 
     public static class MallAgentFactory extends Agent.AgentFactory {
-//        public static MallAgent create(MallAgent.Type type, MallAgent.Persona persona, MallAgent.Gender gender, MallAgent.AgeGroup ageGroup, Patch spawnPatch, boolean inOnStart, MallAgent leaderAgent, int currentTick, int team) {
-//            return new MallAgent(type, persona, gender, ageGroup, spawnPatch, inOnStart, leaderAgent, currentTick, team);
-//        }
         public static MallAgent create(MallAgent.Type type, MallAgent.Persona persona, MallAgent.Gender gender, MallAgent.AgeGroup ageGroup, boolean leader, boolean inOnStart, int team) {
             return new MallAgent(type, persona, gender, ageGroup, leader, inOnStart, team);
         }

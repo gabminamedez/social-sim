@@ -2,7 +2,6 @@ package com.socialsim.controller.office.graphics.amenity.graphic;
 
 import com.socialsim.controller.office.graphics.amenity.OfficeAmenityGraphic;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Door;
-
 import java.util.Objects;
 
 public class DoorGraphic extends OfficeAmenityGraphic {

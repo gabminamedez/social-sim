@@ -3,22 +3,20 @@ package com.socialsim.model.core.environment.generic.patchobject.passable.gate;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Drawable;
 import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
-import com.socialsim.model.core.agent.Agent;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Gate extends NonObstacle implements Drawable {
 
-    private final List<GateBlock> spawners; // Denotes the spawners of this gate
+    private final List<GateBlock> spawners;
 
     protected Gate(List<AmenityBlock> amenityBlocks, boolean enabled) {
         super(amenityBlocks, enabled);
 
-        if (this.getAmenityBlocks() != null) { // Only proceed when this amenity has blocks
+        if (this.getAmenityBlocks() != null) {
             this.spawners = new ArrayList<>();
 
-            for (AmenityBlock amenityBlock : this.getAmenityBlocks()) { // Set all this amenity's spawners to the pertinent list
+            for (AmenityBlock amenityBlock : this.getAmenityBlocks()) {
                 GateBlock gateBlock = ((GateBlock) amenityBlock);
 
                 if (gateBlock.isSpawner()) {
@@ -33,12 +31,6 @@ public abstract class Gate extends NonObstacle implements Drawable {
 
     public List<GateBlock> getSpawners() {
         return spawners;
-    }
-
-    public abstract Agent spawnAgent(); // Spawn an agent in this position
-
-    public void despawnPassenger(Agent agent) { // Despawn an agent in this position
-        // agent.getAgentMovement().despawn();
     }
 
     public static abstract class GateBlock extends AmenityBlock {

@@ -2,7 +2,7 @@ package com.socialsim.model.core.environment.generic.position;
 
 import java.util.List;
 
-public class Vector { // Create a vector given the starting position, the heading, and the future position
+public class Vector {
 
     private Coordinates startingPosition;
     private double heading;
@@ -10,15 +10,6 @@ public class Vector { // Create a vector given the starting position, the headin
     private double xDisplacement;
     private double yDisplacement;
     private double magnitude;
-
-    public Vector(Vector vector) {
-        this.startingPosition = vector.getStartingPosition();
-        this.heading = vector.getHeading();
-        this.futurePosition = vector.getFuturePosition();
-        this.xDisplacement = vector.getXDisplacement();
-        this.yDisplacement = vector.getYDisplacement();
-        this.magnitude = vector.getMagnitude();
-    }
 
     public Vector(Coordinates startingPosition, double heading, Coordinates futurePosition, double magnitude) {
         setVector(startingPosition, heading, futurePosition);

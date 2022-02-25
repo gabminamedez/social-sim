@@ -2,7 +2,6 @@ package com.socialsim.controller.grocery.graphics.amenity;
 
 import com.socialsim.controller.generic.graphics.Graphic;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
-import com.socialsim.controller.university.graphics.agent.UniversityAgentGraphic;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
@@ -54,8 +53,8 @@ public class GroceryAmenityGraphic extends Graphic {
         AMENITY_GRAPHICS.put(ProductShelf.class, productShelfGraphic);
 
         final List<AmenityGraphicLocation> productWallGraphic = new ArrayList<>();
-        productWallGraphic.add(new AmenityGraphicLocation(6, 0)); // Horizontal; Facing down
-        productWallGraphic.add(new AmenityGraphicLocation(6, 2)); // Vertical; Facing left
+        productWallGraphic.add(new AmenityGraphicLocation(6, 0));
+        productWallGraphic.add(new AmenityGraphicLocation(6, 2));
         AMENITY_GRAPHICS.put(ProductWall.class, productWallGraphic);
 
         final List<AmenityGraphicLocation> securityGraphic = new ArrayList<>();
@@ -79,20 +78,17 @@ public class GroceryAmenityGraphic extends Graphic {
     protected final List<AmenityGraphicLocation> graphics;
     protected int graphicIndex;
 
-    private final AmenityGraphicScale amenityGraphicScale; // Denotes the rows and columns spanned by this graphic
-    private final AmenityGraphicOffset amenityGraphicOffset; // Denotes the offset of this graphic
+    private final AmenityGraphicScale amenityGraphicScale;
+    private final AmenityGraphicOffset amenityGraphicOffset;
 
     public GroceryAmenityGraphic(Amenity amenity, int rowSpan, int columnSpan, int rowOffset, int columnOffset) {
         this.amenity = amenity;
-
         this.amenityGraphicScale = new AmenityGraphicScale(rowSpan, columnSpan);
         this.amenityGraphicOffset = new AmenityGraphicOffset(rowOffset, columnOffset);
-
         this.graphics = new ArrayList<>();
 
         for (AmenityGraphicLocation amenityGraphicLocation : AMENITY_GRAPHICS.get(amenity.getClass())) {
             AmenityGraphicLocation newAmenityGraphicLocation = new AmenityGraphicLocation(amenityGraphicLocation.getGraphicRow(), amenityGraphicLocation.getGraphicColumn());
-
             newAmenityGraphicLocation.setGraphicWidth(columnSpan);
             newAmenityGraphicLocation.setGraphicHeight(rowSpan);
             this.graphics.add(newAmenityGraphicLocation);

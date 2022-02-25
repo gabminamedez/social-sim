@@ -14,8 +14,6 @@ public class ToiletMapper extends AmenityMapper {
     public static void draw(List<Patch> patches) {
         for (Patch patch : patches) {
             List<Amenity.AmenityBlock> amenityBlocks = new ArrayList<>();
-            int origPatchRow = patch.getMatrixPosition().getRow();
-            int origPatchCol = patch.getMatrixPosition().getColumn();
 
             Amenity.AmenityBlock.AmenityBlockFactory amenityBlockFactory = Toilet.ToiletBlock.toiletBlockFactory;
             Amenity.AmenityBlock amenityBlock = amenityBlockFactory.create(patch, true, true);

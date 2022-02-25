@@ -35,32 +35,32 @@ public class MallIOSController {
 
     @FXML
     private void initialize() {
-        //TODO: Create columns of IOS levels
         Mall mall = Main.mallSimulator.getMall();
 
         int otherCtr = 0;
         boolean other = false;
         int[] otherArr = new int[MallAgent.Persona.values().length];
-        for (int i = 0; i < MallAgent.Persona.values().length + 1; i++) { // column
-            for (int j = 0; j < MallAgent.Persona.values().length + 1; j++) { // row
-                if (i == 0 || j == 0){
-                    if (i == 0 && j == 0)
+        for (int i = 0; i < MallAgent.Persona.values().length + 1; i++) {
+            for (int j = 0; j < MallAgent.Persona.values().length + 1; j++) {
+                if (i == 0 || j == 0) {
+                    if (i == 0 && j == 0) {
                         gridPane.add(new Label(""), i, j);
-                    else{
-                        if (i == 0){
+                    }
+                    else {
+                        if (i == 0) {
                             Label l = new Label(MallAgent.Persona.values()[j - 1].name());
                             l.setAlignment(Pos.CENTER);
                             gridPane.add(l, i + otherCtr, j);
                             GridPane.setHalignment(l, HPos.CENTER);
                         }
-                        else{
-                            if (other){
+                        else {
+                            if (other) {
                                 Label l = new Label(MallAgent.Persona.values()[i - 1].name() + "_OTHER");
                                 l.setAlignment(Pos.CENTER);
                                 gridPane.add(l, i + otherCtr, j);
                                 GridPane.setHalignment(l, HPos.CENTER);
                             }
-                            else{
+                            else {
                                 Label l = new Label(MallAgent.Persona.values()[i - 1].name());
                                 l.setAlignment(Pos.CENTER);
                                 gridPane.add(l, i + otherCtr, j);
@@ -69,8 +69,8 @@ public class MallIOSController {
                         }
                     }
                 }
-                else{
-                    if (other){
+                else {
+                    if (other) {
                         if (((MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_STORE_SALES || MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_STORE_CASHIER)
                                 && (MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_SALES || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_CASHIER))
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_RESTO && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_RESTO)
@@ -78,30 +78,29 @@ public class MallIOSController {
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_FAMILY && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FAMILY)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.ERRAND_FRIENDS && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FRIENDS)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_FRIENDS && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FRIENDS)
-                                || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_COUPLE && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_COUPLE)){
+                                || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_COUPLE && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_COUPLE)) {
                             otherArr[j - 1]++;
                             TextField tf = new TextField(mall.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
                             tf.setAlignment(Pos.CENTER);
                             gridPane.add(tf, i + otherCtr, j);
                             GridPane.setHalignment(tf, HPos.CENTER);
                         }
-                        else{
-//                            System.out.println(i + " " + j + " " + MallAgent.Persona.values()[i - 1] + " " + MallAgent.Persona.values()[j - 1]);
+                        else {
                             TextField tf = new TextField("");
                             tf.setDisable(true);
                             gridPane.add(tf, otherCtr, j);
                         }
                     }
-                    else{
+                    else {
                         TextField tf = new TextField(mall.getIOSScales().get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
                         tf.setAlignment(Pos.CENTER);
                         gridPane.add(tf, i + otherCtr, j);
                         GridPane.setHalignment(tf, HPos.CENTER);
                     }
-                    if (j == MallAgent.Persona.values().length && other){
+                    if (j == MallAgent.Persona.values().length && other) {
                         other = false;
                     }
-                    else if (j == MallAgent.Persona.values().length){
+                    else if (j == MallAgent.Persona.values().length) {
                         if (MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_SALES
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_CASHIER
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_RESTO
@@ -109,7 +108,7 @@ public class MallIOSController {
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FAMILY
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FRIENDS
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FRIENDS
-                                || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_COUPLE){
+                                || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_COUPLE) {
                             other = true;
                             i--;
                             otherCtr++;
@@ -120,38 +119,39 @@ public class MallIOSController {
         }
     }
 
-    public void cancelChanges(){
+    public void cancelChanges() {
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
     }
 
-    public void resetToDefault(){
+    public void resetToDefault() {
         Group g = (Group) gridPane.getChildren().get(0);
         gridPane.getChildren().removeAll(gridPane.getChildren());
         gridPane.getChildren().add(0, g);
         int otherCtr = 0;
         boolean other = false;
         int[] otherArr = new int[MallAgent.Persona.values().length];
-        for (int i = 0; i < MallAgent.Persona.values().length + 1; i++) { // column
-            for (int j = 0; j < MallAgent.Persona.values().length + 1; j++) { // row
-                if (i == 0 || j == 0){
-                    if (i == 0 && j == 0)
+        for (int i = 0; i < MallAgent.Persona.values().length + 1; i++) {
+            for (int j = 0; j < MallAgent.Persona.values().length + 1; j++) {
+                if (i == 0 || j == 0) {
+                    if (i == 0 && j == 0) {
                         gridPane.add(new Label(""), i, j);
-                    else{
-                        if (i == 0){
+                    }
+                    else {
+                        if (i == 0) {
                             Label l = new Label(MallAgent.Persona.values()[j - 1].name());
                             l.setAlignment(Pos.CENTER);
                             gridPane.add(l, i + otherCtr, j);
                             GridPane.setHalignment(l, HPos.CENTER);
                         }
-                        else{
-                            if (other){
+                        else {
+                            if (other) {
                                 Label l = new Label(MallAgent.Persona.values()[i - 1].name() + "_OTHER");
                                 l.setAlignment(Pos.CENTER);
                                 gridPane.add(l, i + otherCtr, j);
                                 GridPane.setHalignment(l, HPos.CENTER);
                             }
-                            else{
+                            else {
                                 Label l = new Label(MallAgent.Persona.values()[i - 1].name());
                                 l.setAlignment(Pos.CENTER);
                                 gridPane.add(l, i + otherCtr, j);
@@ -161,8 +161,8 @@ public class MallIOSController {
                         }
                     }
                 }
-                else{
-                    if (other){
+                else {
+                    if (other) {
                         if (((MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_STORE_SALES || MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_STORE_CASHIER)
                                 && (MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_SALES || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_CASHIER))
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.STAFF_RESTO && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_RESTO)
@@ -170,29 +170,29 @@ public class MallIOSController {
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_FAMILY && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FAMILY)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.ERRAND_FRIENDS && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FRIENDS)
                                 || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_FRIENDS && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FRIENDS)
-                                || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_COUPLE && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_COUPLE)){
+                                || (MallAgent.Persona.values()[j - 1] == MallAgent.Persona.LOITER_COUPLE && MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_COUPLE)) {
                             otherArr[j - 1]++;
                             TextField tf = new TextField(Mall.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
                             tf.setAlignment(Pos.CENTER);
                             gridPane.add(tf, i + otherCtr, j);
                             GridPane.setHalignment(tf, HPos.CENTER);
                         }
-                        else{
+                        else {
                             TextField tf = new TextField("");
                             tf.setDisable(true);
                             gridPane.add(tf, otherCtr, j);
                         }
                     }
-                    else{
+                    else {
                         TextField tf = new TextField(Mall.defaultIOS.get(j - 1).get(i - 1 + otherArr[j-1]).toString().replace("]", "").replace("[", ""));
                         tf.setAlignment(Pos.CENTER);
                         gridPane.add(tf, i + otherCtr, j);
                         GridPane.setHalignment(tf, HPos.CENTER);
                     }
-                    if (j == MallAgent.Persona.values().length && other){
+                    if (j == MallAgent.Persona.values().length && other) {
                         other = false;
                     }
-                    else if (j == MallAgent.Persona.values().length){
+                    else if (j == MallAgent.Persona.values().length) {
                         if (MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_SALES
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_STORE_CASHIER
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.STAFF_RESTO
@@ -200,7 +200,7 @@ public class MallIOSController {
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FAMILY
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.ERRAND_FRIENDS
                                 || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_FRIENDS
-                                || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_COUPLE){
+                                || MallAgent.Persona.values()[i - 1] == MallAgent.Persona.LOITER_COUPLE) {
                             other = true;
                             i--;
                             otherCtr++;
@@ -211,18 +211,18 @@ public class MallIOSController {
         }
     }
 
-    public void saveChanges(){
+    public void saveChanges() {
         boolean validIOS = false;
 
-        for (Node node: gridPane.getChildren()){
-            if (node.getClass() == TextField.class && !node.isDisabled()){
+        for (Node node: gridPane.getChildren()) {
+            if (node.getClass() == TextField.class && !node.isDisabled()) {
                 validIOS = this.checkValidIOS(((TextField) node).getText());
                 if (!validIOS){
                     break;
                 }
             }
         }
-        if (!validIOS){
+        if (!validIOS) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
             Label label = new Label("Failed to parse. Please make sure IOS levels are from 1-7 only, and separate them with commas (,). Also ensure there are no duplicates in a field.");
             label.setWrapText(true);
@@ -232,24 +232,21 @@ public class MallIOSController {
                 alert.close();
             }
         }
-        else{
+        else {
             Mall mall = Main.mallSimulator.getMall();
             CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> newIOS = new CopyOnWriteArrayList<>();
-            for (int i = 0; i < MallAgent.Persona.values().length + 1; i++) { // row
-                if (i > 0)
+            for (int i = 0; i < MallAgent.Persona.values().length + 1; i++) {
+                if (i > 0) {
                     newIOS.add(new CopyOnWriteArrayList<>());
-                for (int j = 0; j < MallAgent.Persona.values().length + 1 + 7; j++) { // column, +7 for 7 OTHER cases
+                }
+                for (int j = 0; j < MallAgent.Persona.values().length + 1 + 7; j++) {
                     int index = 1 + j * (MallAgent.Persona.values().length + 1) + i;
-                    if (index > MallAgent.Persona.values().length + 1 && index % (MallAgent.Persona.values().length + 1) - 1 != 0){
+                    if (index > MallAgent.Persona.values().length + 1 && index % (MallAgent.Persona.values().length + 1) - 1 != 0) {
                         String s = ((TextField) gridPane.getChildren().get(index)).getText();
-                        if (!s.equals("")){
+                        if (!s.equals("")) {
                             Integer[] IOSArr = Arrays.stream(s.replace(" ", "").split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
-
                             newIOS.get(i - 1).add(new CopyOnWriteArrayList<>(List.of(IOSArr)));
                         }
-                    }
-                    else{ // invalid
-//                        System.out.println(gridPane.getChildren().get(index));
                     }
                 }
             }
@@ -267,18 +264,19 @@ public class MallIOSController {
         }
     }
 
-    public boolean checkValidIOS(String s){
+    public boolean checkValidIOS(String s) {
         s = s.replace(" ", "");
-        if (s.matches("^[1-7](,[1-7])*$")){
+        if (s.matches("^[1-7](,[1-7])*$")) {
             Integer[] IOSArr = Arrays.stream(s.split(",")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
             HashSet<Integer> IOSSet = new HashSet<>(List.of((IOSArr)));
             return IOSSet.size() == IOSArr.length;
         }
-        else{
+        else {
             return false;
         }
     }
-    public void openHelp(){
+
+    public void openHelp() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
         ImageView img = new ImageView();
         img.setImage(new Image(getClass().getResource("../../../view/image/IOS_help.png").toExternalForm()));
@@ -289,4 +287,5 @@ public class MallIOSController {
             alert.close();
         }
     }
+
 }

@@ -2,12 +2,10 @@ package com.socialsim.model.core.environment.generic.position;
 
 import com.socialsim.model.core.environment.Environment;
 import com.socialsim.model.core.environment.generic.BaseObject;
-import com.socialsim.model.core.environment.university.University;
 
-public class Location extends BaseObject /*implements Environment*/ {
+public class Location extends BaseObject {
 
-    // Convert the given continuous screen coordinates to a discrete row and column
-    public static MatrixPosition screenCoordinatesToMatrixPosition(Environment environment, double x, double y, double tileSize) {
+    public static MatrixPosition screenCoordinatesToMatrixPosition (Environment environment, double x, double y, double tileSize) {
         double rawX = x;
         double rawY = y;
 

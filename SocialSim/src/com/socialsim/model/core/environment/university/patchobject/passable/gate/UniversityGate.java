@@ -3,20 +3,15 @@ package com.socialsim.model.core.environment.university.patchobject.passable.gat
 import com.socialsim.controller.university.graphics.amenity.UniversityAmenityGraphic;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.university.graphics.amenity.graphic.UniversityGateGraphic;
-import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
-import com.socialsim.model.core.environment.university.University;
-
-import java.util.HashSet;
 import java.util.List;
 
 public class UniversityGate extends Gate {
 
-    private double chancePerTick; // Denotes the chance of generating an agent per second
-    private UniversityGateMode universityGateMode; // Denotes the mode of this station gate (whether it's entry/exit only, or both)
-    private int agentBacklogCount; // Denotes the number of agents who are supposed to enter the gate, but cannot
+    private double chancePerTick;
+    private UniversityGateMode universityGateMode;
+    private int agentBacklogCount;
     public static final UniversityGateFactory universityGateFactory;
     private final UniversityGateGraphic universityGateGraphic;
 
@@ -74,36 +69,6 @@ public class UniversityGate extends Gate {
     @Override
     public AmenityGraphicLocation getGraphicLocation() {
         return this.universityGateGraphic.getGraphicLocation();
-    }
-
-    public boolean isGateFree() {
-        HashSet<Patch> patchesToCheck = new HashSet<>();
-        boolean patchesFree = true;
-
-        // Check if all attractors and spawners in this amenity have no agents
-        for (AmenityBlock attractor : this.getAttractors()) {
-            patchesToCheck.add(attractor.getPatch());
-            patchesToCheck.addAll(attractor.getPatch().getNeighbors());
-        }
-
-        for (GateBlock spawner : this.getSpawners()) {
-            patchesToCheck.add(spawner.getPatch());
-            patchesToCheck.addAll(spawner.getPatch().getNeighbors());
-        }
-
-        for (Patch patchToCheck : patchesToCheck) {
-            if (!patchToCheck.getAgents().isEmpty()) {
-                patchesFree = false;
-                break;
-            }
-        }
-
-        return patchesFree;
-    }
-
-    @Override
-    public Agent spawnAgent() {
-        return null;
     }
 
     public enum UniversityGateMode {

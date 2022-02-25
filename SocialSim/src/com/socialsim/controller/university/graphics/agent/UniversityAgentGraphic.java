@@ -3,7 +3,6 @@ package com.socialsim.controller.university.graphics.agent;
 import com.socialsim.controller.generic.graphics.Graphic;
 import com.socialsim.controller.generic.graphics.agent.AgentGraphicLocation;
 import com.socialsim.model.core.agent.university.UniversityAgent;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -289,88 +288,36 @@ public class UniversityAgentGraphic extends Graphic {
         double agentHeadingDegrees = Math.toDegrees(agentHeading);
 
         if (agentHeadingDegrees >= 315 && agentHeadingDegrees < 360 || agentHeadingDegrees >= 0 && agentHeadingDegrees < 45) {
-            if (this.agent.getAgentMovement().isInteracting())
+            if (this.agent.getAgentMovement().isInteracting()) {
                 this.graphicIndex = 5;
-            else{
-                //System.out.println(this.graphicIndex);
+            }
+            else {
                 this.graphicIndex = 1;
             }
         }
         else if (agentHeadingDegrees >= 45 && agentHeadingDegrees < 135) {
-            if (this.agent.getAgentMovement().isInteracting())
+            if (this.agent.getAgentMovement().isInteracting()) {
                 this.graphicIndex = 4;
-            else{
-                //System.out.println(this.graphicIndex);
+            }
+            else {
                 this.graphicIndex = 0;
             }
         }
         else if (agentHeadingDegrees >= 135 && agentHeadingDegrees < 225) {
-            if (this.agent.getAgentMovement().isInteracting())
+            if (this.agent.getAgentMovement().isInteracting()) {
                 this.graphicIndex = 7;
-            else{
-//                System.out.println(this.graphicIndex);
+            }
+            else {
                 this.graphicIndex = 3;
             }
         }
         else if (agentHeadingDegrees >= 225 && agentHeadingDegrees < 315) {
-            if (this.agent.getAgentMovement().isInteracting())
+            if (this.agent.getAgentMovement().isInteracting()) {
                 this.graphicIndex = 6;
-            else{
-                //System.out.println(this.graphicIndex);
+            }
+            else {
                 this.graphicIndex = 2;
             }
-        }
-    }
-
-    public static class AmenityGraphicScale {
-        private int rowSpan;
-        private int columnSpan;
-
-        public AmenityGraphicScale(int rowSpan, int columnSpan) {
-            this.rowSpan = rowSpan;
-            this.columnSpan = columnSpan;
-        }
-
-        public int getRowSpan() {
-            return rowSpan;
-        }
-
-        public void setRowSpan(int rowSpan) {
-            this.rowSpan = rowSpan;
-        }
-
-        public int getColumnSpan() {
-            return columnSpan;
-        }
-
-        public void setColumnSpan(int columnSpan) {
-            this.columnSpan = columnSpan;
-        }
-    }
-
-    public static class AmenityGraphicOffset {
-        private int rowOffset;
-        private int columnOffset;
-
-        public AmenityGraphicOffset(int rowOffset, int columnOffset) {
-            this.rowOffset = rowOffset;
-            this.columnOffset = columnOffset;
-        }
-
-        public int getRowOffset() {
-            return rowOffset;
-        }
-
-        public void setRowOffset(int rowOffset) {
-            this.rowOffset = rowOffset;
-        }
-
-        public int getColumnOffset() {
-            return columnOffset;
-        }
-
-        public void setColumnOffset(int columnOffset) {
-            this.columnOffset = columnOffset;
         }
     }
 

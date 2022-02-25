@@ -3,19 +3,15 @@ package com.socialsim.model.core.environment.grocery.patchobject.passable.gate;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.grocery.graphics.amenity.GroceryAmenityGraphic;
 import com.socialsim.controller.grocery.graphics.amenity.graphic.GroceryGateGraphic;
-import com.socialsim.model.core.agent.grocery.GroceryAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
-import com.socialsim.model.core.environment.grocery.Grocery;
-
-import java.util.HashSet;
 import java.util.List;
 
 public class GroceryGate extends Gate {
 
-    private double chancePerTick; // Denotes the chance of generating an agent per second
+    private double chancePerTick;
     private GroceryGateMode groceryGateMode;
-    private int agentBacklogCount; // Denotes the number of agents who are supposed to enter the gate, but cannot
+    private int agentBacklogCount;
     public static final GroceryGateFactory groceryGateFactory;
     private final GroceryGateGraphic groceryGateGraphic;
 
@@ -73,45 +69,6 @@ public class GroceryGate extends Gate {
     @Override
     public AmenityGraphicLocation getGraphicLocation() {
         return this.groceryGateGraphic.getGraphicLocation();
-    }
-
-    @Override
-    public GroceryAgent spawnAgent() { // Spawn an agent in this position
-        Grocery grocery = (Grocery) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
-        GateBlock spawner = this.getSpawners().get(0);
-
-        if (grocery != null) {
-            // return GroceryAgent.GroceryAgentFactory.create(UniversityAgent.Type.STUDENT, UniversityAgent.Gender.MALE, 21, spawner.getPatch());
-            return null; // For the meantime
-        }
-        else {
-            return null;
-        }
-    }
-
-    public boolean isGateFree() {
-        HashSet<Patch> patchesToCheck = new HashSet<>();
-        boolean patchesFree = true;
-
-        // Check if all attractors and spawners in this amenity have no agents
-        for (AmenityBlock attractor : this.getAttractors()) {
-            patchesToCheck.add(attractor.getPatch());
-            patchesToCheck.addAll(attractor.getPatch().getNeighbors());
-        }
-
-        for (GateBlock spawner : this.getSpawners()) {
-            patchesToCheck.add(spawner.getPatch());
-            patchesToCheck.addAll(spawner.getPatch().getNeighbors());
-        }
-
-        for (Patch patchToCheck : patchesToCheck) {
-            if (!patchToCheck.getAgents().isEmpty()) {
-                patchesFree = false;
-                break;
-            }
-        }
-
-        return patchesFree;
     }
 
     public enum GroceryGateMode {

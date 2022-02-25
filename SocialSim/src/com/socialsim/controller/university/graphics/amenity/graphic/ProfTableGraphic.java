@@ -2,7 +2,6 @@ package com.socialsim.controller.university.graphics.amenity.graphic;
 
 import com.socialsim.controller.university.graphics.amenity.UniversityAmenityGraphic;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.ProfTable;
-
 import java.util.Objects;
 
 public class ProfTableGraphic extends UniversityAmenityGraphic {

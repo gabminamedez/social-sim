@@ -12,7 +12,6 @@ import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallG
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
-
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -26,27 +25,21 @@ public class MallSimulator extends Simulator {
     public static int defaultMaxAlone = 10;
 
     private Mall mall;
-
-    // Simulator variables
     private final AtomicBoolean running;
-    private final SimulationTime time; // Denotes the current time in the simulation
+    private final SimulationTime time;
     private final Semaphore playSemaphore;
-
 
     public static int currentPatronCount = 0;
     public static int currentNonverbalCount = 0;
     public static int currentCooperativeCount = 0;
     public static int currentExchangeCount = 0;
-
     public static int totalFamilyCount = 0;
     public static int totalFriendsCount = 0;
     public static int totalAloneCount = 0;
     public static int totalCoupleCount = 0;
-
     public static float averageNonverbalDuration = 0;
     public static float averageCooperativeDuration = 0;
     public static float averageExchangeDuration = 0;
-
     public static int currentPatronPatronCount = 0;
     public static int currentPatronStaffStoreCount = 0;
     public static int currentPatronStaffRestoCount = 0;
@@ -63,13 +56,12 @@ public class MallSimulator extends Simulator {
     public static int currentStaffKioskGuardCount = 0;
     public static int[][] currentPatchCount;
 
-
     public MallSimulator() {
         this.mall = null;
         this.running = new AtomicBoolean(false);
         this.time = new SimulationTime(10, 0, 0);
         this.playSemaphore = new Semaphore(0);
-        this.start(); // Start the simulation thread, but in reality it would be activated much later
+        this.start();
     }
 
     public Mall getMall() {
@@ -314,13 +306,13 @@ public class MallSimulator extends Simulator {
 
     private void start() {
         new Thread(() -> {
-            final int speedAwarenessLimitMilliseconds = 10; // For times shorter than this, speed awareness will be implemented
+            final int speedAwarenessLimitMilliseconds = 10;
 
             while (true) {
                 try {
-                    playSemaphore.acquire(); // Wait until the play button has been pressed
+                    playSemaphore.acquire();
 
-                    while (this.isRunning()) { // Keep looping until paused
+                    while (this.isRunning()) {
                         long currentTick = this.time.getStartTime().until(this.time.getTime(), ChronoUnit.SECONDS) / 5;
                         try {
                             updateAgentsInMall(mall);
@@ -329,8 +321,6 @@ public class MallSimulator extends Simulator {
                             ex.printStackTrace();
                         }
 
-                        // Redraw the visualization
-                        // If the refreshes are frequent enough, update the visualization in a speed-aware manner
                         ((MallScreenController) Main.mainScreenController).drawMallViewForeground(Main.mallSimulator.getMall(), SimulationTime.SLEEP_TIME_MILLISECONDS.get() < speedAwarenessLimitMilliseconds);
 
                         this.time.tick();
@@ -348,11 +338,11 @@ public class MallSimulator extends Simulator {
         }).start();
     }
 
-    public static void updateAgentsInMall(Mall mall) throws InterruptedException { // Manage all agent-related updates
+    public static void updateAgentsInMall(Mall mall) throws InterruptedException {
         moveAll(mall);
     }
 
-    private static void moveAll(Mall mall) { // Make all agents move for one tick
+    private static void moveAll(Mall mall) {
         for (MallAgent agent : mall.getMovableAgents()) {
             try {
                 moveOne(agent);
@@ -605,7 +595,7 @@ public class MallSimulator extends Simulator {
                                     agentMovement.faceNextPosition();
                                     agentMovement.moveSocialForce();
                                     if (agentMovement.hasReachedNextPatchInPath()) {
-                                        agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                        agentMovement.reachPatchInPath();
                                     }
                                 }
                                 else {
@@ -796,7 +786,7 @@ public class MallSimulator extends Simulator {
                                     agentMovement.faceNextPosition();
                                     agentMovement.moveSocialForce();
                                     if (agentMovement.hasReachedNextPatchInPath()) {
-                                        agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                        agentMovement.reachPatchInPath();
                                         if (agentMovement.hasAgentReachedFinalPatchInPath()) {
                                             agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
@@ -926,7 +916,7 @@ public class MallSimulator extends Simulator {
                                     agentMovement.faceNextPosition();
                                     agentMovement.moveSocialForce();
                                     if (agentMovement.hasReachedNextPatchInPath()) {
-                                        agentMovement.reachPatchInPath(); // The passenger has reached the next patch in the path, so remove this from this passenger's current path
+                                        agentMovement.reachPatchInPath();
                                     }
                                     else {
                                         if (agentMovement.getCurrentPath().getPath().size() <= 2) {
@@ -980,23 +970,19 @@ public class MallSimulator extends Simulator {
             }
         }
 
-        if (agentMovement.isInteracting()){
-            // cases: early termination of interaction
-            //reducing of interaction duration
-            // termination of interaction
-            if (agentMovement.getDuration() == 0){
+        if (agentMovement.isInteracting()) {
+            if (agentMovement.getDuration() == 0) {
                 agentMovement.setInteracting(false);
                 agentMovement.setInteractionType(null);
             }
-            else{
+            else {
                 agentMovement.interact();
             }
-
         }
-        else{
+        else {
             List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
-            for (Patch patch: patches){
-                for (Agent otherAgent: patch.getAgents()){
+            for (Patch patch: patches) {
+                for (Agent otherAgent: patch.getAgents()) {
                     MallAgent mallAgent = (MallAgent) otherAgent;
                     if (!mallAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
                         if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), mallAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
@@ -1009,14 +995,14 @@ public class MallSimulator extends Simulator {
                     break;
             }
             patches = agentMovement.get3x3Field(agentMovement.getHeading(), true, Math.toRadians(270));
-            for (Patch patch: patches){
-                for (Agent otherAgent: patch.getAgents()){
+            for (Patch patch: patches) {
+                for (Agent otherAgent: patch.getAgents()) {
                     MallAgent mallAgent = (MallAgent) otherAgent;
                     if (!mallAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
                         if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), mallAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
                             if (Coordinates.isWithinFieldOfView(mallAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), mallAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
                                 agentMovement.rollAgentInteraction(mallAgent);
-                                if (agentMovement.isInteracting()){ // interaction was successful
+                                if (agentMovement.isInteracting()) {
                                     currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
                                     currentPatchCount[mallAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][mallAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
                                 }
@@ -1033,7 +1019,6 @@ public class MallSimulator extends Simulator {
 
     private void spawnAgent(Mall mall, long currentTick) {
         MallGate gate = mall.getMallGates().get(1);
-        MallAgent agent1 = null;
         MallAgent agent2 = null;
         MallAgent agent3 = null;
         MallAgent agent4 = null;

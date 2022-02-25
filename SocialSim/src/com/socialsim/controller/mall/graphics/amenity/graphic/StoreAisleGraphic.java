@@ -2,7 +2,6 @@ package com.socialsim.controller.mall.graphics.amenity.graphic;
 
 import com.socialsim.controller.mall.graphics.amenity.MallAmenityGraphic;
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.StoreAisle;
-
 import java.util.Objects;
 
 public class StoreAisleGraphic extends MallAmenityGraphic {

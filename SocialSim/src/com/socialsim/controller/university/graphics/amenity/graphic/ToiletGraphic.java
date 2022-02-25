@@ -1,7 +1,6 @@
 package com.socialsim.controller.university.graphics.amenity.graphic;
 
 import com.socialsim.controller.university.graphics.amenity.UniversityAmenityGraphic;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Fountain;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet;
 
 public class ToiletGraphic extends UniversityAmenityGraphic {

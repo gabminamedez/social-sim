@@ -4,7 +4,6 @@ import com.socialsim.model.core.environment.university.patchobject.passable.gate
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.model.core.environment.generic.BaseObject;
 import com.socialsim.model.core.environment.generic.Patch;
-
 import java.util.ArrayList;
 import java.util.List;
 

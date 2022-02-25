@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SimulationTime {
 
-    private static final int DEFAULT_SLEEP_TIME_IN_MILLISECONDS = 1000; // The time a thread has to pause (in milliseconds) in order to make the pace of the simulation conducive to visualization
+    private static final int DEFAULT_SLEEP_TIME_IN_MILLISECONDS = 1000;
     public static final AtomicInteger SLEEP_TIME_MILLISECONDS = new AtomicInteger(DEFAULT_SLEEP_TIME_IN_MILLISECONDS);
 
     private final LocalTime startTime;
@@ -26,11 +26,7 @@ public class SimulationTime {
         this.startTime = this.time;
     }
 
-    public boolean isTimeBeforeOrDuring(SimulationTime endingTime) { // Return true unless the given time is ahead of the given ending time
-        return this.time.compareTo(endingTime.getTime()) <= 0;
-    }
-
-    public void tick() { // Increment the time by one second
+    public void tick() {
         final long INCREMENT_COUNT = 5L;
         this.setTime(this.time.plusSeconds(INCREMENT_COUNT));
     }

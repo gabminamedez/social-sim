@@ -62,7 +62,6 @@ public class CabinetMapper extends AmenityMapper {
                 patch4.setAmenityBlock(amenityBlock4);
             }
 
-
             Cabinet cabinetToAdd = Cabinet.CabinetFactory.create(amenityBlocks, true, facing);
             Main.officeSimulator.getOffice().getCabinets().add(cabinetToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));

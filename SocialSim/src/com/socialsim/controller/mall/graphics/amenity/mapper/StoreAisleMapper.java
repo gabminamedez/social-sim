@@ -22,7 +22,7 @@ public class StoreAisleMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock);
             patch.setAmenityBlock(amenityBlock);
 
-            if(facing.equals("UP") || facing.equals("DOWN")) { // Horizontal
+            if(facing.equals("UP") || facing.equals("DOWN")) {
                 Patch patch2 = Main.mallSimulator.getMall().getPatch(origPatchRow, origPatchCol + 1);
                 Amenity.AmenityBlock amenityBlock2 = amenityBlockFactory.create(patch2, true, false);
                 amenityBlocks.add(amenityBlock2);

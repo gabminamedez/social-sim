@@ -4,7 +4,6 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.grocery.graphics.GroceryGraphicsController;
 import com.socialsim.controller.grocery.graphics.amenity.mapper.*;
-import com.socialsim.model.core.agent.grocery.GroceryAgent;
 import com.socialsim.model.core.agent.grocery.GroceryAgentMovement;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
@@ -15,7 +14,6 @@ import com.socialsim.model.simulator.grocery.GrocerySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -32,24 +30,13 @@ import java.util.List;
 
 public class GroceryScreenController extends ScreenController {
 
-    @FXML private ScrollPane scrollPane;
-    @FXML private Group canvasGroup;
     @FXML private StackPane stackPane;
     @FXML private Canvas backgroundCanvas;
     @FXML private Canvas foregroundCanvas;
     @FXML private Canvas markingsCanvas;
-    @FXML private TabPane sidebar;
-    @FXML private Spinner guardsSpinner;
-    @FXML private Spinner janitorsSpinner;
-    @FXML private Spinner professorsSpinner;
-    @FXML private Spinner studentsSpinner;
-    @FXML private Slider spawnsSlider;
     @FXML private Text elapsedTimeText;
-    @FXML private Button initializeButton;
     @FXML private ToggleButton playButton;
-    @FXML private Button resetButton;
     @FXML private Slider speedSlider;
-    @FXML private Tab parameters;
     @FXML private Button resetToDefaultButton;
     @FXML private TextField nonverbalMean;
     @FXML private TextField nonverbalStdDev;
@@ -64,7 +51,6 @@ public class GroceryScreenController extends ScreenController {
     @FXML private TextField fieldOfView;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
-
     @FXML private Label currentFamilyCount;
     @FXML private Label currentAloneCustomerCount;
     @FXML private Label totalFamilyCount;
@@ -104,10 +90,10 @@ public class GroceryScreenController extends ScreenController {
         resetToDefault();
         playButton.setDisable(true);
 
-        int width = 60; // Value may be from 25-100
-        int length = 100; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 100 columns
+        int width = 60;
+        int length = 100;
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS);
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS);
         Grocery grocery = Grocery.GroceryFactory.create(rows, columns);
         Main.grocerySimulator.resetToDefaultConfiguration(grocery);
         Grocery.configureDefaultIOS();
@@ -118,11 +104,12 @@ public class GroceryScreenController extends ScreenController {
 
     @FXML
     public void initializeAction() {
-        if (Main.grocerySimulator.isRunning()) { // If the simulator is running, stop it
+        if (Main.grocerySimulator.isRunning()) {
             playAction();
             playButton.setSelected(false);
         }
-        if (validateParameters()){
+
+        if (validateParameters()) {
             Grocery grocery = Main.grocerySimulator.getGrocery();
             this.configureParameters(grocery);
             initializeGrocery(grocery);
@@ -211,57 +198,57 @@ public class GroceryScreenController extends ScreenController {
         MeatSectionMapper.draw(meatSectionPatches);
 
         List<Patch> productAislePatches = new ArrayList<>();
-        productAislePatches.add(grocery.getPatch(10,31)); // 0
-        productAislePatches.add(grocery.getPatch(10,58)); // 1
-        productAislePatches.add(grocery.getPatch(10,83)); // 2
-        productAislePatches.add(grocery.getPatch(16,31)); // 3
-        productAislePatches.add(grocery.getPatch(16,58)); // 4
-        productAislePatches.add(grocery.getPatch(16,83)); // 5
-        productAislePatches.add(grocery.getPatch(22,31)); // 6
-        productAislePatches.add(grocery.getPatch(22,58)); // 7
-        productAislePatches.add(grocery.getPatch(22,83)); // 8
-        productAislePatches.add(grocery.getPatch(28,31)); // 9
-        productAislePatches.add(grocery.getPatch(28,58)); // 10
-        productAislePatches.add(grocery.getPatch(28,83)); // 11
+        productAislePatches.add(grocery.getPatch(10,31));
+        productAislePatches.add(grocery.getPatch(10,58));
+        productAislePatches.add(grocery.getPatch(10,83));
+        productAislePatches.add(grocery.getPatch(16,31));
+        productAislePatches.add(grocery.getPatch(16,58));
+        productAislePatches.add(grocery.getPatch(16,83));
+        productAislePatches.add(grocery.getPatch(22,31));
+        productAislePatches.add(grocery.getPatch(22,58));
+        productAislePatches.add(grocery.getPatch(22,83));
+        productAislePatches.add(grocery.getPatch(28,31));
+        productAislePatches.add(grocery.getPatch(28,58));
+        productAislePatches.add(grocery.getPatch(28,83));
         ProductAisleMapper.draw(productAislePatches);
 
         List<Patch> productShelfPatches = new ArrayList<>();
-        productShelfPatches.add(grocery.getPatch(10,47)); // 0
-        productShelfPatches.add(grocery.getPatch(10,73)); // 1
-        productShelfPatches.add(grocery.getPatch(16,47)); // 2
-        productShelfPatches.add(grocery.getPatch(16,73)); // 3
-        productShelfPatches.add(grocery.getPatch(22,47)); // 4
-        productShelfPatches.add(grocery.getPatch(22,73)); // 5
-        productShelfPatches.add(grocery.getPatch(28,47)); // 6
-        productShelfPatches.add(grocery.getPatch(28,73)); // 7
-        productShelfPatches.add(grocery.getPatch(34,9)); // 8
-        productShelfPatches.add(grocery.getPatch(34,20)); // 9
-        productShelfPatches.add(grocery.getPatch(34,31)); // 10
-        productShelfPatches.add(grocery.getPatch(34,42)); // 11
-        productShelfPatches.add(grocery.getPatch(34,53)); // 12
-        productShelfPatches.add(grocery.getPatch(34,64)); // 13
-        productShelfPatches.add(grocery.getPatch(34,75)); // 14
-        productShelfPatches.add(grocery.getPatch(34,86)); // 15
+        productShelfPatches.add(grocery.getPatch(10,47));
+        productShelfPatches.add(grocery.getPatch(10,73));
+        productShelfPatches.add(grocery.getPatch(16,47));
+        productShelfPatches.add(grocery.getPatch(16,73));
+        productShelfPatches.add(grocery.getPatch(22,47));
+        productShelfPatches.add(grocery.getPatch(22,73));
+        productShelfPatches.add(grocery.getPatch(28,47));
+        productShelfPatches.add(grocery.getPatch(28,73));
+        productShelfPatches.add(grocery.getPatch(34,9));
+        productShelfPatches.add(grocery.getPatch(34,20));
+        productShelfPatches.add(grocery.getPatch(34,31));
+        productShelfPatches.add(grocery.getPatch(34,42));
+        productShelfPatches.add(grocery.getPatch(34,53));
+        productShelfPatches.add(grocery.getPatch(34,64));
+        productShelfPatches.add(grocery.getPatch(34,75));
+        productShelfPatches.add(grocery.getPatch(34,86));
         ProductShelfMapper.draw(productShelfPatches);
 
         List<Patch> productWallDownPatches = new ArrayList<>();
-        productWallDownPatches.add(grocery.getPatch(0,5)); // 0
-        productWallDownPatches.add(grocery.getPatch(0,14)); // 1
-        productWallDownPatches.add(grocery.getPatch(0,23)); // 2
-        productWallDownPatches.add(grocery.getPatch(0,32)); // 3
-        productWallDownPatches.add(grocery.getPatch(0,41)); // 4
-        productWallDownPatches.add(grocery.getPatch(0,51)); // 5
-        productWallDownPatches.add(grocery.getPatch(0,60)); // 6
-        productWallDownPatches.add(grocery.getPatch(0,69)); // 7
-        productWallDownPatches.add(grocery.getPatch(0,78)); // 8
-        productWallDownPatches.add(grocery.getPatch(0,87)); // 9
+        productWallDownPatches.add(grocery.getPatch(0,5));
+        productWallDownPatches.add(grocery.getPatch(0,14));
+        productWallDownPatches.add(grocery.getPatch(0,23));
+        productWallDownPatches.add(grocery.getPatch(0,32));
+        productWallDownPatches.add(grocery.getPatch(0,41));
+        productWallDownPatches.add(grocery.getPatch(0,51));
+        productWallDownPatches.add(grocery.getPatch(0,60));
+        productWallDownPatches.add(grocery.getPatch(0,69));
+        productWallDownPatches.add(grocery.getPatch(0,78));
+        productWallDownPatches.add(grocery.getPatch(0,87));
         ProductWallMapper.draw(productWallDownPatches, "DOWN");
 
         List<Patch> productWallLeftPatches = new ArrayList<>();
-        productWallLeftPatches.add(grocery.getPatch(6,98)); // 10
-        productWallLeftPatches.add(grocery.getPatch(15,98)); // 11
-        productWallLeftPatches.add(grocery.getPatch(25,98)); // 12
-        productWallLeftPatches.add(grocery.getPatch(34,98)); // 13
+        productWallLeftPatches.add(grocery.getPatch(6,98));
+        productWallLeftPatches.add(grocery.getPatch(15,98));
+        productWallLeftPatches.add(grocery.getPatch(25,98));
+        productWallLeftPatches.add(grocery.getPatch(34,98));
         ProductWallMapper.draw(productWallLeftPatches, "LEFT");
 
         List<Patch> tablePatches = new ArrayList<>();
@@ -341,21 +328,21 @@ public class GroceryScreenController extends ScreenController {
     }
 
     private void drawInterface() {
-        drawGroceryViewBackground(Main.grocerySimulator.getGrocery()); // Initially draw the Grocery environment
-        drawGroceryViewForeground(Main.grocerySimulator.getGrocery(), false); // Then draw the agents in the Grocery
+        drawGroceryViewBackground(Main.grocerySimulator.getGrocery());
+        drawGroceryViewForeground(Main.grocerySimulator.getGrocery(), false);
     }
 
-    public void drawGroceryViewBackground(Grocery grocery) { // Draw the grocery view background
+    public void drawGroceryViewBackground(Grocery grocery) {
         GroceryGraphicsController.requestDrawGroceryView(stackPane, grocery, GroceryGraphicsController.tileSize, true, false);
     }
 
-    public void drawGroceryViewForeground(Grocery grocery, boolean speedAware) { // Draw the grocery view foreground
+    public void drawGroceryViewForeground(Grocery grocery, boolean speedAware) {
         GroceryGraphicsController.requestDrawGroceryView(stackPane, grocery, GroceryGraphicsController.tileSize, false, speedAware);
         requestUpdateInterfaceSimulationElements();
     }
 
-    private void requestUpdateInterfaceSimulationElements() { // Update the interface elements pertinent to the simulation
-        Platform.runLater(this::updateSimulationTime); // Update the simulation time
+    private void requestUpdateInterfaceSimulationElements() {
+        Platform.runLater(this::updateSimulationTime);
         Platform.runLater(this::updateStatistics);
     }
 
@@ -413,7 +400,7 @@ public class GroceryScreenController extends ScreenController {
 
     @FXML
     public void playAction() {
-        if (!Main.grocerySimulator.isRunning()) { // Not yet running to running (play simulation)
+        if (!Main.grocerySimulator.isRunning()) {
             Main.grocerySimulator.setRunning(true);
             Main.grocerySimulator.getPlaySemaphore().release();
             playButton.setText("Pause");
@@ -424,36 +411,11 @@ public class GroceryScreenController extends ScreenController {
         }
     }
 
-    @FXML
-    public void resetAction() {
-        Main.grocerySimulator.reset();
-        GroceryAgent.clearGroceryAgentCounts();
-        clearGrocery(Main.grocerySimulator.getGrocery());
-        Main.grocerySimulator.spawnInitialAgents(Main.grocerySimulator.getGrocery());
-        drawGroceryViewForeground(Main.grocerySimulator.getGrocery(), false); // Redraw the canvas
-        if (Main.grocerySimulator.isRunning()) { // If the simulator is running, stop it
-            playAction();
-            playButton.setSelected(false);
-        }
-        enableEdits();
-    }
-
-    public static void clearGrocery(Grocery grocery) {
-        for (GroceryAgent agent : grocery.getAgents()) { // Remove the relationship between the patch and the agents
-            agent.getAgentMovement().getCurrentPatch().getAgents().clear();
-            agent.getAgentMovement().setCurrentPatch(null);
-        }
-
-        // Remove all the agents
-        grocery.getAgents().removeAll(grocery.getAgents());
-        grocery.getAgents().clear();
-        grocery.getAgentPatchSet().clear();
-    }
-
     @Override
     protected void closeAction() {
     }
-    public void disableEdits(){
+
+    public void disableEdits() {
         nonverbalMean.setDisable(true);
         nonverbalStdDev.setDisable(true);
         cooperativeMean.setDisable(true);
@@ -465,30 +427,12 @@ public class GroceryScreenController extends ScreenController {
         maxAlone.setDisable(true);
         maxCurrentFamily.setDisable(true);
         maxCurrentAlone.setDisable(true);
-
         resetToDefaultButton.setDisable(true);
         configureIOSButton.setDisable(true);
         editInteractionButton.setDisable(true);
     }
-    public void enableEdits(){
-        nonverbalMean.setDisable(false);
-        nonverbalStdDev.setDisable(false);
-        cooperativeMean.setDisable(false);
-        cooperativeStdDev.setDisable(false);
-        exchangeMean.setDisable(false);
-        exchangeStdDev.setDisable(false);
-        fieldOfView.setDisable(false);
-        maxFamily.setDisable(false);
-        maxAlone.setDisable(false);
-        maxCurrentFamily.setDisable(false);
-        maxCurrentAlone.setDisable(false);
 
-        resetToDefaultButton.setDisable(false);
-        configureIOSButton.setDisable(false);
-        editInteractionButton.setDisable(false);
-    }
-
-    public void resetToDefault(){
+    public void resetToDefault() {
         nonverbalMean.setText(Integer.toString(GroceryAgentMovement.defaultNonverbalMean));
         nonverbalStdDev.setText(Integer.toString(GroceryAgentMovement.defaultNonverbalStdDev));
         cooperativeMean.setText(Integer.toString(GroceryAgentMovement.defaultCooperativeMean));
@@ -502,8 +446,8 @@ public class GroceryScreenController extends ScreenController {
         maxCurrentAlone.setText(Integer.toString(GrocerySimulator.defaultMaxCurrentAlone));
     }
 
-    public void openIOSLevels(){
-        try{
+    public void openIOSLevels() {
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/GroceryConfigureIOS.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
@@ -512,12 +456,13 @@ public class GroceryScreenController extends ScreenController {
             stage.setScene(new Scene(root));
             stage.showAndWait();
         }
-        catch(Exception e){
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
-    public void openEditInteractions(){
-        try{
+
+    public void openEditInteractions() {
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/GroceryEditInteractions.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
@@ -526,11 +471,11 @@ public class GroceryScreenController extends ScreenController {
             stage.setScene(new Scene(root));
             stage.show();
         }
-        catch(Exception e){
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
-    public void configureParameters(Grocery grocery){
+    public void configureParameters(Grocery grocery) {
         grocery.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
         grocery.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
         grocery.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
@@ -544,14 +489,15 @@ public class GroceryScreenController extends ScreenController {
         grocery.setMAX_CURRENT_ALONE(Integer.parseInt(maxCurrentAlone.getText()));
     }
 
-    public boolean validateParameters(){
+    public boolean validateParameters() {
         boolean validParameters = Integer.parseInt(nonverbalMean.getText()) >= 0 && Integer.parseInt(nonverbalMean.getText()) >= 0
                 && Integer.parseInt(cooperativeMean.getText()) >= 0 && Integer.parseInt(cooperativeStdDev.getText()) >= 0
                 && Integer.parseInt(exchangeMean.getText()) >= 0 && Integer.parseInt(exchangeStdDev.getText()) >= 0
                 && Integer.parseInt(fieldOfView.getText()) >= 0 && Integer.parseInt(fieldOfView.getText()) <= 360
                 && Integer.parseInt(maxFamily.getText()) >= 0 && Integer.parseInt(maxAlone.getText()) >= 0
                 && Integer.parseInt(maxCurrentFamily.getText()) >= 0 && Integer.parseInt(maxCurrentAlone.getText()) >= 0;
-        if (!validParameters){
+
+        if (!validParameters) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
             Label label = new Label("Failed to initialize. Please make sure all values are greater than 0, and field of view is not greater than 360 degrees");
             label.setWrapText(true);
@@ -561,9 +507,8 @@ public class GroceryScreenController extends ScreenController {
                 alert.close();
             }
         }
+
         return validParameters;
     }
-    public void generateHeatMap(){
 
-    }
 }

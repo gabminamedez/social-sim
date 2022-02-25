@@ -7,7 +7,6 @@ import com.socialsim.model.core.environment.generic.position.MatrixPosition;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.University;
 import com.socialsim.model.simulator.SimulationObject;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -59,7 +58,6 @@ public abstract class Environment extends BaseObject implements SimulationObject
         return this.patches;
     }
 
-    // Get patches in the agent's field of vision
     public static List<Patch> get7x7Field(Environment environment, Patch centerPatch, double heading, boolean includeCenterPatch, double fieldOfViewAngle) {
         int truncatedX = (int) (centerPatch.getPatchCenterCoordinates().getX() / Patch.PATCH_SIZE_IN_SQUARE_METERS);
         int truncatedY = (int) (centerPatch.getPatchCenterCoordinates().getY() / Patch.PATCH_SIZE_IN_SQUARE_METERS);

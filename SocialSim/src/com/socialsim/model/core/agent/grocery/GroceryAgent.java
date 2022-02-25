@@ -2,9 +2,7 @@ package com.socialsim.model.core.agent.grocery;
 
 import com.socialsim.controller.grocery.graphics.agent.GroceryAgentGraphic;
 import com.socialsim.model.core.agent.Agent;
-import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.simulator.Simulator;
-
 import java.util.Objects;
 
 public class GroceryAgent extends Agent {
@@ -51,37 +49,11 @@ public class GroceryAgent extends Agent {
         agentFactory = new GroceryAgent.GroceryAgentFactory();
     }
 
-    private GroceryAgent(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, boolean leader, boolean inOnStart) {
+    private GroceryAgent (GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, boolean leader, boolean inOnStart) {
         this.id = idCtr++;
         this.type = type;
         this.leader = leader;
         this.inOnStart = inOnStart;
-
-//        if (type == Type.CUSTOMER) {
-//            GroceryAgent.customerCount++;
-//        }
-//        else if (type == Type.STAFF_AISLE) {
-//            GroceryAgent.staffAisleCount++;
-//        }
-//        else if (type == Type.CASHIER) {
-//            GroceryAgent.cashierCount++;
-//        }
-//        else if (type == Type.BAGGER) {
-//            GroceryAgent.baggerCount++;
-//        }
-//        else if (type == GroceryAgent.Type.GUARD) {
-//            GroceryAgent.guardCount++;
-//        }
-//        else if (type == Type.BUTCHER) {
-//            GroceryAgent.butcherCount++;
-//        }
-//        else if (type == Type.CUSTOMER_SERVICE) {
-//            GroceryAgent.customerServiceCount++;
-//        }
-//        else if (type == Type.STAFF_FOOD) {
-//            GroceryAgent.staffFoodCount++;
-//        }
-//        GroceryAgent.agentCount++;
 
         this.gender = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? GroceryAgent.Gender.FEMALE : GroceryAgent.Gender.MALE;
 
@@ -185,11 +157,8 @@ public class GroceryAgent extends Agent {
     }
 
     public static class GroceryAgentFactory extends Agent.AgentFactory {
-//        public static GroceryAgent create(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, Patch spawnPatch, boolean leader, boolean inOnStart, GroceryAgent leaderAgent, long currentTick) {
-//            return new GroceryAgent(type, persona, gender, ageGroup, spawnPatch, leader, inOnStart, leaderAgent, currentTick);
-//        }
-        public static GroceryAgent create(GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, boolean leader, boolean inOnStart) {
-            return new GroceryAgent(type, persona, gender, ageGroup, leader, inOnStart);
+        public static GroceryAgent create (GroceryAgent.Type type, GroceryAgent.Persona persona, GroceryAgent.Gender gender, GroceryAgent.AgeGroup ageGroup, boolean leader, boolean inOnStart) {
+            return new GroceryAgent (type, persona, gender, ageGroup, leader, inOnStart);
         }
     }
 

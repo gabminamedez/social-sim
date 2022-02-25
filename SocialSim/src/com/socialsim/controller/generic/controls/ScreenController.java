@@ -89,6 +89,6 @@ public abstract class ScreenController extends Controller {
         return windowOutput;
     }
 
-    protected abstract void closeAction(); // For what stages need to do when the window is closed
+    protected abstract void closeAction();
 
 }

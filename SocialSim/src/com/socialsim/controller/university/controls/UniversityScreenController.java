@@ -4,7 +4,6 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.controls.ScreenController;
 import com.socialsim.controller.university.graphics.UniversityGraphicsController;
 import com.socialsim.controller.university.graphics.amenity.mapper.*;
-import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.agent.university.UniversityAgentMovement;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.university.University;
@@ -12,51 +11,32 @@ import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.simulator.SimulationTime;
-import com.socialsim.model.simulator.grocery.GrocerySimulator;
 import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class UniversityScreenController extends ScreenController {
 
-    @FXML private ScrollPane scrollPane;
-    @FXML private Group canvasGroup;
     @FXML private StackPane stackPane;
     @FXML private Canvas backgroundCanvas;
     @FXML private Canvas foregroundCanvas;
     @FXML private Canvas markingsCanvas;
-    @FXML private TabPane sidebar;
-    @FXML private Spinner guardsSpinner;
-    @FXML private Spinner janitorsSpinner;
-    @FXML private Spinner professorsSpinner;
-    @FXML private Spinner studentsSpinner;
-    @FXML private Slider spawnsSlider;
-    @FXML private Slider classroomsSlider;
-    @FXML private ChoiceBox entranceChoice;
     @FXML private Text elapsedTimeText;
-    @FXML private Button initializeButton;
     @FXML private ToggleButton playButton;
-    @FXML private Button resetButton;
     @FXML private Slider speedSlider;
-    @FXML private Tab parameters;
     @FXML private Button resetToDefaultButton;
     @FXML private TextField nonverbalMean;
     @FXML private TextField nonverbalStdDev;
@@ -69,7 +49,7 @@ public class UniversityScreenController extends ScreenController {
     @FXML private TextField maxCurrentStudents;
     @FXML private TextField maxCurrentProfessors;
     @FXML private TextField fieldOfView;
-    @FXML private Label currentProfessorCount; //TODO: Add more labels
+    @FXML private Label currentProfessorCount;
     @FXML private Label currentStudentCount;
     @FXML private Label currentNonverbalCount;
     @FXML private Label currentCooperativeCount;
@@ -88,7 +68,6 @@ public class UniversityScreenController extends ScreenController {
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
 
-
     private final double CANVAS_SCALE = 0.5;
 
     public UniversityScreenController() {
@@ -106,10 +85,10 @@ public class UniversityScreenController extends ScreenController {
         resetToDefault();
         playButton.setDisable(true);
 
-        int width = 60; // Value may be from 25-100
-        int length = 120; // Value may be from 106-220
-        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 60 rows
-        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS); // 130 columns
+        int width = 60;
+        int length = 120;
+        int rows = (int) Math.ceil(width / Patch.PATCH_SIZE_IN_SQUARE_METERS);
+        int columns = (int) Math.ceil(length / Patch.PATCH_SIZE_IN_SQUARE_METERS);
         University university = University.UniversityFactory.create(rows, columns);
         Main.universitySimulator.resetToDefaultConfiguration(university);
         University.configureDefaultIOS();
@@ -120,11 +99,11 @@ public class UniversityScreenController extends ScreenController {
 
     @FXML
     public void initializeAction() {
-        if (Main.universitySimulator.isRunning()) { // If the simulator is running, stop it
+        if (Main.universitySimulator.isRunning()) {
             playAction();
             playButton.setSelected(false);
         }
-        if (validateParameters()){
+        if (validateParameters()) {
             University university = Main.universitySimulator.getUniversity();
             this.configureParameters(university);
             initializeUniversity(university);
@@ -154,7 +133,7 @@ public class UniversityScreenController extends ScreenController {
                     if (i < 24 && (j < 60 || j > 71)) {
                         wallPatches.add(university.getPatch(i, j));
                     }
-                    else if (i > 35 && (j >= 20/* && j <= 119 */)) {
+                    else if (i > 35 && j >= 20) {
                         wallPatches.add(university.getPatch(i, j));
                     }
                 }
@@ -244,15 +223,6 @@ public class UniversityScreenController extends ScreenController {
         }
         Main.universitySimulator.getUniversity().getClassrooms().add(Classroom.classroomFactory.create(classroom6Patches, 5));
 
-//        List<Patch> laboratoryPatches = new ArrayList<>();
-//        for (int i = 36; i < 56; i++) {
-//            for (int j = 99; j < 119; j++) {
-//                if (i != 36 || (j >= 107 && j <= 110))
-//                    laboratoryPatches.add(university.getPatch(i, j));
-//            }
-//        }
-//        Main.universitySimulator.getUniversity().getLaboratories().add(Laboratory.laboratoryFactory.create(laboratoryPatches, 1));
-
         List<Patch> studyAreaPatches = new ArrayList<>();
         for (int i = 3; i < 24; i++) {
             for (int j = 74; j < 94; j++) {
@@ -295,27 +265,22 @@ public class UniversityScreenController extends ScreenController {
         BenchMapper.draw(benchUpPatches, "UP");
 
         List<Patch> boardRightPatches = new ArrayList<>();
-        boardRightPatches.add(university.getPatch(6,5)); // Classroom 1
-        boardRightPatches.add(university.getPatch(14,5)); // Classroom 1
-        boardRightPatches.add(university.getPatch(6,25)); // Classroom 2
-        boardRightPatches.add(university.getPatch(14,25)); // Classroom 2
+        boardRightPatches.add(university.getPatch(6,5));
+        boardRightPatches.add(university.getPatch(14,5));
+        boardRightPatches.add(university.getPatch(6,25));
+        boardRightPatches.add(university.getPatch(14,25));
         BoardMapper.draw(boardRightPatches, "RIGHT");
 
         List<Patch> boardLeftPatches = new ArrayList<>();
-        boardLeftPatches.add(university.getPatch(40,38)); // Classroom 3
-        boardLeftPatches.add(university.getPatch(48,38)); // Classroom 3
-        boardLeftPatches.add(university.getPatch(40,57)); // Classroom 4
-        boardLeftPatches.add(university.getPatch(48,57)); // Classroom 4
-        boardLeftPatches.add(university.getPatch(40,76)); // Classroom 5
-        boardLeftPatches.add(university.getPatch(48,76)); // Classroom 5
-        boardLeftPatches.add(university.getPatch(40,95)); // Classroom 6
-        boardLeftPatches.add(university.getPatch(48,95)); // Classroom 6
+        boardLeftPatches.add(university.getPatch(40,38));
+        boardLeftPatches.add(university.getPatch(48,38));
+        boardLeftPatches.add(university.getPatch(40,57));
+        boardLeftPatches.add(university.getPatch(48,57));
+        boardLeftPatches.add(university.getPatch(40,76));
+        boardLeftPatches.add(university.getPatch(48,76));
+        boardLeftPatches.add(university.getPatch(40,95));
+        boardLeftPatches.add(university.getPatch(48,95));
         BoardMapper.draw(boardLeftPatches, "LEFT");
-
-//        List<Patch> boardUpPatches = new ArrayList<>();
-//        boardUpPatches.add(university.getPatch(55,102)); // Laboratory
-//        boardUpPatches.add(university.getPatch(55,110)); // Laboratory
-//        BoardMapper.draw(boardUpPatches, "UP");
 
         List<Patch> bulletinRightPatches = new ArrayList<>();
         bulletinRightPatches.add(university.getPatch(36,0));
@@ -334,7 +299,7 @@ public class UniversityScreenController extends ScreenController {
         BulletinMapper.draw(bulletinUpPatches, "UP");
 
         List<Patch> chairPatches = new ArrayList<>();
-        for (int i = 4; i < 23; i++) { // Classroom 1
+        for (int i = 4; i < 23; i++) {
             if (i == 4 || i == 6 || i == 8 || i == 10 || i == 15 || i == 17 || i == 19 || i == 21) {
                 for (int j = 10; j < 19; j++) {
                     if (j % 2 == 0) {
@@ -343,7 +308,7 @@ public class UniversityScreenController extends ScreenController {
                 }
             }
         }
-        for (int i = 4; i < 23; i++) { // Classroom 2
+        for (int i = 4; i < 23; i++) {
             if (i == 4 || i == 6 || i == 8 || i == 10 || i == 15 || i == 17 || i == 19 || i == 21) {
                 for (int j = 30; j < 44; j++) {
                     if (j % 2 == 0) {
@@ -352,7 +317,7 @@ public class UniversityScreenController extends ScreenController {
                 }
             }
         }
-        for (int i = 38; i < 56; i++) { // Classroom 3
+        for (int i = 38; i < 56; i++) {
             if (i == 38 || i == 40 || i == 42 || i == 44 || i == 49 || i == 51 || i == 53 || i == 55) {
                 for (int j = 25; j < 34; j++) {
                     if (j % 2 == 1) {
@@ -361,7 +326,7 @@ public class UniversityScreenController extends ScreenController {
                 }
             }
         }
-        for (int i = 38; i < 56; i++) { // Classroom 4
+        for (int i = 38; i < 56; i++) {
             if (i == 38 || i == 40 || i == 42 || i == 44 || i == 49 || i == 51 || i == 53 || i == 55) {
                 for (int j = 44; j < 53; j++) {
                     if (j % 2 == 0) {
@@ -370,7 +335,7 @@ public class UniversityScreenController extends ScreenController {
                 }
             }
         }
-        for (int i = 38; i < 56; i++) { // Classroom 5
+        for (int i = 38; i < 56; i++) {
             if (i == 38 || i == 40 || i == 42 || i == 44 || i == 49 || i == 51 || i == 53 || i == 55) {
                 for (int j = 63; j < 72; j++) {
                     if (j % 2 == 1) {
@@ -379,7 +344,7 @@ public class UniversityScreenController extends ScreenController {
                 }
             }
         }
-        for (int i = 38; i < 56; i++) { // Classroom 6
+        for (int i = 38; i < 56; i++) {
             if (i == 38 || i == 40 || i == 42 || i == 44 || i == 49 || i == 51 || i == 53 || i == 55) {
                 for (int j = 82; j < 91; j++) {
                     if (j % 2 == 0) {
@@ -391,28 +356,28 @@ public class UniversityScreenController extends ScreenController {
         ChairMapper.draw(chairPatches);
 
         List<Patch> doorDownPatches = new ArrayList<>();
-        doorDownPatches.add(university.getPatch(23,5)); // Classroom 1
-        doorDownPatches.add(university.getPatch(23,17)); // Classroom 1
-        doorDownPatches.add(university.getPatch(23,25)); // Classroom 2
-        doorDownPatches.add(university.getPatch(23,41)); // Classroom 2
-        doorDownPatches.add(university.getPatch(23,82)); // Study Room
+        doorDownPatches.add(university.getPatch(23,5));
+        doorDownPatches.add(university.getPatch(23,17));
+        doorDownPatches.add(university.getPatch(23,25));
+        doorDownPatches.add(university.getPatch(23,41));
+        doorDownPatches.add(university.getPatch(23,82));
         DoorMapper.draw(doorDownPatches, "DOWN");
 
         List<Patch> doorUpPatches = new ArrayList<>();
-        doorUpPatches.add(university.getPatch(36,23)); // Classroom 3
-        doorUpPatches.add(university.getPatch(36,35)); // Classroom 3
-        doorUpPatches.add(university.getPatch(36,42)); // Classroom 4
-        doorUpPatches.add(university.getPatch(36,54)); // Classroom 4
-        doorUpPatches.add(university.getPatch(36,61)); // Classroom 5
-        doorUpPatches.add(university.getPatch(36,73)); // Classroom 5
-        doorUpPatches.add(university.getPatch(36,80)); // Classroom 6
-        doorUpPatches.add(university.getPatch(36,92)); // Classroom 6
-        doorUpPatches.add(university.getPatch(36,107)); // Laboratory
+        doorUpPatches.add(university.getPatch(36,23));
+        doorUpPatches.add(university.getPatch(36,35));
+        doorUpPatches.add(university.getPatch(36,42));
+        doorUpPatches.add(university.getPatch(36,54));
+        doorUpPatches.add(university.getPatch(36,61));
+        doorUpPatches.add(university.getPatch(36,73));
+        doorUpPatches.add(university.getPatch(36,80));
+        doorUpPatches.add(university.getPatch(36,92));
+        doorUpPatches.add(university.getPatch(36,107));
         DoorMapper.draw(doorUpPatches, "UP");
 
         List<Patch> doorRightPatches = new ArrayList<>();
-        doorRightPatches.add(university.getPatch(11, 59)); // mBathroom
-        doorRightPatches.add(university.getPatch(2, 59)); // fBathroom
+        doorRightPatches.add(university.getPatch(11, 59));
+        doorRightPatches.add(university.getPatch(2, 59));
         DoorMapper.draw(doorRightPatches, "RIGHT");
 
         List<Patch> eatTablePatches = new ArrayList<>();
@@ -451,34 +416,17 @@ public class UniversityScreenController extends ScreenController {
         sinkPatches.add(university.getPatch(9,58));
         SinkMapper.draw(sinkPatches);
 
-//        List<Patch> labTablePatches = new ArrayList<>();
-//        labTablePatches.add(university.getPatch(39,102));
-//        labTablePatches.add(university.getPatch(39,112));
-//        labTablePatches.add(university.getPatch(42,102));
-//        labTablePatches.add(university.getPatch(42,112));
-//        labTablePatches.add(university.getPatch(45,102));
-//        labTablePatches.add(university.getPatch(45,112));
-//        labTablePatches.add(university.getPatch(48,102));
-//        labTablePatches.add(university.getPatch(48,112));
-//        labTablePatches.add(university.getPatch(51,102));
-//        labTablePatches.add(university.getPatch(51,112));
-//        LabTableMapper.draw(labTablePatches);
-
         List<Patch> profTableRightPatches = new ArrayList<>();
-        profTableRightPatches.add(university.getPatch(12,7)); // Classroom 1
-        profTableRightPatches.add(university.getPatch(12,27)); // Classroom 2
+        profTableRightPatches.add(university.getPatch(12,7));
+        profTableRightPatches.add(university.getPatch(12,27));
         ProfTableMapper.draw(profTableRightPatches, "RIGHT");
 
         List<Patch> profTableLeftPatches = new ArrayList<>();
-        profTableLeftPatches.add(university.getPatch(46,36)); // Classroom 3
-        profTableLeftPatches.add(university.getPatch(46,55)); // Classroom 4
-        profTableLeftPatches.add(university.getPatch(46,74)); // Classroom 5
-        profTableLeftPatches.add(university.getPatch(46,93)); // Classroom 6
+        profTableLeftPatches.add(university.getPatch(46,36));
+        profTableLeftPatches.add(university.getPatch(46,55));
+        profTableLeftPatches.add(university.getPatch(46,74));
+        profTableLeftPatches.add(university.getPatch(46,93));
         ProfTableMapper.draw(profTableLeftPatches, "LEFT");
-
-//        List<Patch> profTableUpPatches = new ArrayList<>();
-//        profTableUpPatches.add(university.getPatch(52,108)); // Laboratory
-//        ProfTableMapper.draw(profTableUpPatches, "UP");
 
         List<Patch> studyTablePatches = new ArrayList<>();
         for (int i = 5; i < 17; i++) {
@@ -507,32 +455,18 @@ public class UniversityScreenController extends ScreenController {
         StudyTableMapper.draw(studyTablePatches, "UP");
 
         List<Patch> studyTable2Patches = new ArrayList<>();
-//        for (int i = 5; i < 17; i++) {
-//            if (i == 5 || i == 8 || i == 13 || i == 16) {
-//                for (int j = 77; j < 82; j++) {
-//                    if (j == 77 || j == 81) {
-//                        studyTable2Patches.add(university.getPatch(i, j));
-//                    }
-//                }
-//            }
-//        }
-//        StudyTableMapper.draw(studyTablePatches, "LEFT");
-//        studyTable2Patches = new ArrayList<>();
         studyTable2Patches.add(university.getPatch(40, 101));
         studyTable2Patches.add(university.getPatch(44, 101));
         studyTable2Patches.add(university.getPatch(48, 101));
         studyTable2Patches.add(university.getPatch(52, 101));
-
         studyTable2Patches.add(university.getPatch(40, 105));
         studyTable2Patches.add(university.getPatch(44, 105));
         studyTable2Patches.add(university.getPatch(48, 105));
         studyTable2Patches.add(university.getPatch(52, 105));
-
         studyTable2Patches.add(university.getPatch(40, 111));
         studyTable2Patches.add(university.getPatch(44, 111));
         studyTable2Patches.add(university.getPatch(48, 111));
         studyTable2Patches.add(university.getPatch(52, 111));
-
         studyTable2Patches.add(university.getPatch(40, 115));
         studyTable2Patches.add(university.getPatch(44, 115));
         studyTable2Patches.add(university.getPatch(48, 115));
@@ -575,15 +509,15 @@ public class UniversityScreenController extends ScreenController {
     }
 
     private void drawInterface() {
-        drawUniversityViewBackground(Main.universitySimulator.getUniversity()); // Initially draw the University environment
-        drawUniversityViewForeground(Main.universitySimulator.getUniversity(), false); // Then draw the agents in the University
+        drawUniversityViewBackground(Main.universitySimulator.getUniversity());
+        drawUniversityViewForeground(Main.universitySimulator.getUniversity(), false);
     }
 
-    public void drawUniversityViewBackground(University university) { // Draw the university view background
+    public void drawUniversityViewBackground(University university) {
         UniversityGraphicsController.requestDrawUniversityView(stackPane, university, UniversityGraphicsController.tileSize, true, false);
     }
 
-    public void drawUniversityViewForeground(University university, boolean speedAware) { // Draw the university view foreground
+    public void drawUniversityViewForeground(University university, boolean speedAware) {
         UniversityGraphicsController.requestDrawUniversityView(stackPane, university, UniversityGraphicsController.tileSize, false, speedAware);
         requestUpdateInterfaceSimulationElements();
     }
@@ -591,10 +525,8 @@ public class UniversityScreenController extends ScreenController {
     public void generateHeatMap() {
         int[][] currentPatchCount = UniversitySimulator.currentPatchCount;
         int maxPatchCount = Arrays.stream(currentPatchCount).flatMapToInt(Arrays::stream).max().getAsInt();
-        for(int i = 0; i < currentPatchCount.length; i++){
-            for (int j = 0; j < currentPatchCount[0].length; j++){
-//                System.out.println(currentPatchCount.length);
-//                System.out.println(currentPatchCount[0].length);
+        for(int i = 0; i < currentPatchCount.length; i++) {
+            for (int j = 0; j < currentPatchCount[0].length; j++) {
                 int patchRGBCount = 255 - currentPatchCount[i][j] * 255 / maxPatchCount;
                 foregroundCanvas.getGraphicsContext2D().setFill(Color.rgb(255, patchRGBCount, patchRGBCount));
                 foregroundCanvas.getGraphicsContext2D().fillRect(j * UniversityGraphicsController.tileSize, i * UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize, UniversityGraphicsController.tileSize);
@@ -602,9 +534,9 @@ public class UniversityScreenController extends ScreenController {
         }
     }
 
-    private void requestUpdateInterfaceSimulationElements() { // Update the interface elements pertinent to the simulation
-        Platform.runLater(this::updateSimulationTime); // Update the simulation time
-        Platform.runLater(this::updateStatistics); //TODO: Update Statistics
+    private void requestUpdateInterfaceSimulationElements() {
+        Platform.runLater(this::updateSimulationTime);
+        Platform.runLater(this::updateStatistics);
     }
 
     public void updateSimulationTime() {
@@ -615,8 +547,7 @@ public class UniversityScreenController extends ScreenController {
         elapsedTimeText.setText("Current time: " + timeString + " (" + elapsedTime + " ticks)");
     }
 
-    public void updateStatistics(){
-        //TODO: Statistics
+    public void updateStatistics() {
         currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount));
         currentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentCount));
         currentNonverbalCount.setText(String.valueOf(UniversitySimulator.currentNonverbalCount));
@@ -657,7 +588,7 @@ public class UniversityScreenController extends ScreenController {
 
     @FXML
     public void playAction() {
-        if (!Main.universitySimulator.isRunning()) { // Not yet running to running (play simulation)
+        if (!Main.universitySimulator.isRunning()) {
             Main.universitySimulator.setRunning(true);
             Main.universitySimulator.getPlaySemaphore().release();
             playButton.setText("Pause");
@@ -666,32 +597,6 @@ public class UniversityScreenController extends ScreenController {
             Main.universitySimulator.setRunning(false);
             playButton.setText("Play");
         }
-    }
-
-    @FXML
-    public void resetAction() {
-        Main.universitySimulator.reset();
-        UniversityAgent.clearUniversityAgentCounts();
-        clearUniversity(Main.universitySimulator.getUniversity());
-        Main.universitySimulator.spawnInitialAgents(Main.universitySimulator.getUniversity());
-        drawUniversityViewForeground(Main.universitySimulator.getUniversity(), false); // Redraw the canvas
-        if (Main.universitySimulator.isRunning()) { // If the simulator is running, stop it
-            playAction();
-            playButton.setSelected(false);
-        }
-        enableEdits();
-    }
-
-    public static void clearUniversity(University university) {
-        for (UniversityAgent agent : university.getAgents()) { // Remove the relationship between the patch and the agents
-            agent.getAgentMovement().getCurrentPatch().getAgents().clear();
-            agent.getAgentMovement().setCurrentPatch(null);
-        }
-
-        // Remove all the agents
-        university.getAgents().removeAll(university.getAgents());
-        university.getAgents().clear();
-        university.getAgentPatchSet().clear();
     }
 
     @Override
@@ -710,30 +615,12 @@ public class UniversityScreenController extends ScreenController {
         maxProfessors.setDisable(true);
         maxCurrentStudents.setDisable(true);
         maxCurrentProfessors.setDisable(true);
-
         resetToDefaultButton.setDisable(true);
         configureIOSButton.setDisable(true);
         editInteractionButton.setDisable(true);
     }
-    public void enableEdits(){
-        nonverbalMean.setDisable(false);
-        nonverbalStdDev.setDisable(false);
-        cooperativeMean.setDisable(false);
-        cooperativeStdDev.setDisable(false);
-        exchangeMean.setDisable(false);
-        exchangeStdDev.setDisable(false);
-        fieldOfView.setDisable(false);
-        maxStudents.setDisable(false);
-        maxProfessors.setDisable(false);
-        maxCurrentStudents.setDisable(false);
-        maxCurrentProfessors.setDisable(false);
 
-        resetToDefaultButton.setDisable(false);
-        configureIOSButton.setDisable(false);
-        editInteractionButton.setDisable(false);
-    }
-
-    public void resetToDefault(){
+    public void resetToDefault() {
         nonverbalMean.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalMean));
         nonverbalStdDev.setText(Integer.toString(UniversityAgentMovement.defaultNonverbalStdDev));
         cooperativeMean.setText(Integer.toString(UniversityAgentMovement.defaultCooperativeMean));
@@ -747,8 +634,8 @@ public class UniversityScreenController extends ScreenController {
         maxCurrentProfessors.setText(Integer.toString(UniversitySimulator.defaultMaxCurrentProfessors));
     }
 
-    public void openIOSLevels(){
-        try{
+    public void openIOSLevels() {
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityConfigureIOS.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
@@ -757,12 +644,12 @@ public class UniversityScreenController extends ScreenController {
             stage.setScene(new Scene(root));
             stage.showAndWait();
         }
-        catch(Exception e){
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
-    public void openEditInteractions(){
-        try{
+    public void openEditInteractions() {
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/socialsim/view/UniversityEditInteractions.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
@@ -771,11 +658,12 @@ public class UniversityScreenController extends ScreenController {
             stage.setScene(new Scene(root));
             stage.show();
         }
-        catch(Exception e){
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
-    public void configureParameters(University university){
+
+    public void configureParameters(University university) {
         university.setNonverbalMean(Integer.parseInt(nonverbalMean.getText()));
         university.setNonverbalStdDev(Integer.parseInt(nonverbalStdDev.getText()));
         university.setCooperativeMean(Integer.parseInt(cooperativeMean.getText()));
@@ -787,7 +675,6 @@ public class UniversityScreenController extends ScreenController {
         university.setMAX_PROFESSORS(Integer.parseInt(maxProfessors.getText()));
         university.setMAX_CURRENT_STUDENTS(Integer.parseInt(maxCurrentStudents.getText()));
         university.setMAX_CURRENT_PROFESSORS(Integer.parseInt(maxCurrentProfessors.getText()));
-
 
         currentProfessorCount.setText(String.valueOf(UniversitySimulator.currentProfessorCount));
         currentStudentCount.setText(String.valueOf(UniversitySimulator.currentStudentCount));
@@ -807,14 +694,15 @@ public class UniversityScreenController extends ScreenController {
         currentJanitorJanitorCount.setText(String.valueOf(UniversitySimulator.currentJanitorJanitorCount));
     }
 
-    public boolean validateParameters(){
+    public boolean validateParameters() {
         boolean validParameters = Integer.parseInt(nonverbalMean.getText()) >= 0 && Integer.parseInt(nonverbalMean.getText()) >= 0
                 && Integer.parseInt(cooperativeMean.getText()) >= 0 && Integer.parseInt(cooperativeStdDev.getText()) >= 0
                 && Integer.parseInt(exchangeMean.getText()) >= 0 && Integer.parseInt(exchangeStdDev.getText()) >= 0
                 && Integer.parseInt(fieldOfView.getText()) >= 0 && Integer.parseInt(fieldOfView.getText()) <= 360
                 && Integer.parseInt(maxStudents.getText()) >= 0 && Integer.parseInt(maxProfessors.getText()) >= 0
                 && Integer.parseInt(maxCurrentStudents.getText()) >= 0 && Integer.parseInt(maxCurrentProfessors.getText()) >= 0;
-        if (!validParameters){
+
+        if (!validParameters) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
             Label label = new Label("Failed to initialize. Please make sure all values are greater than 0, and field of view is not greater than 360 degrees");
             label.setWrapText(true);
@@ -826,4 +714,5 @@ public class UniversityScreenController extends ScreenController {
         }
         return validParameters;
     }
+
 }

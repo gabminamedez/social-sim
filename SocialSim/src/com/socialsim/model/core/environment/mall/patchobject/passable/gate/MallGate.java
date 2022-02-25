@@ -3,19 +3,15 @@ package com.socialsim.model.core.environment.mall.patchobject.passable.gate;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.mall.graphics.amenity.MallAmenityGraphic;
 import com.socialsim.controller.mall.graphics.amenity.graphic.MallGateGraphic;
-import com.socialsim.model.core.agent.mall.MallAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
-import com.socialsim.model.core.environment.mall.Mall;
-
-import java.util.HashSet;
 import java.util.List;
 
 public class MallGate extends Gate {
 
-    private double chancePerTick; // Denotes the chance of generating an agent per second
-    private MallGate.MallGateMode mallGateMode; // Denotes the mode of this station gate (whether it's entry/exit only, or both)
-    private int agentBacklogCount; // Denotes the number of agents who are supposed to enter the gate, but cannot
+    private double chancePerTick;
+    private MallGate.MallGateMode mallGateMode;
+    private int agentBacklogCount;
     public static final MallGate.MallGateFactory mallGateFactory;
     private final MallGateGraphic mallGateGraphic;
 
@@ -73,45 +69,6 @@ public class MallGate extends Gate {
     @Override
     public AmenityGraphicLocation getGraphicLocation() {
         return this.mallGateGraphic.getGraphicLocation();
-    }
-
-    @Override
-    public MallAgent spawnAgent() { // Spawn an agent in this position
-        Mall mall = (Mall) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
-        GateBlock spawner = this.getSpawners().get(0);
-
-        if (mall != null) {
-            // return MallAgent.MallAgentFactory.create(MallAgent.Type.STUDENT, MallAgent.Gender.MALE, 21, spawner.getPatch());
-            return null; // For the meantime
-        }
-        else {
-            return null;
-        }
-    }
-
-    public boolean isGateFree() {
-        HashSet<Patch> patchesToCheck = new HashSet<>();
-        boolean patchesFree = true;
-
-        // Check if all attractors and spawners in this amenity have no agents
-        for (AmenityBlock attractor : this.getAttractors()) {
-            patchesToCheck.add(attractor.getPatch());
-            patchesToCheck.addAll(attractor.getPatch().getNeighbors());
-        }
-
-        for (GateBlock spawner : this.getSpawners()) {
-            patchesToCheck.add(spawner.getPatch());
-            patchesToCheck.addAll(spawner.getPatch().getNeighbors());
-        }
-
-        for (Patch patchToCheck : patchesToCheck) {
-            if (!patchToCheck.getAgents().isEmpty()) {
-                patchesFree = false;
-                break;
-            }
-        }
-
-        return patchesFree;
     }
 
     public enum MallGateMode {

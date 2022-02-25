@@ -5,7 +5,6 @@ import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +21,8 @@ public class OfficeAmenityGraphic extends Graphic {
         AMENITY_GRAPHICS.put(Chair.class, chairGraphic);
 
         final List<AmenityGraphicLocation> cabinetGraphic = new ArrayList<>();
-        cabinetGraphic.add(new AmenityGraphicLocation(10, 0)); // Up
-        cabinetGraphic.add(new AmenityGraphicLocation(8, 2)); // Down
+        cabinetGraphic.add(new AmenityGraphicLocation(10, 0));
+        cabinetGraphic.add(new AmenityGraphicLocation(8, 2));
         AMENITY_GRAPHICS.put(Cabinet.class, cabinetGraphic);
 
         final List<AmenityGraphicLocation> collabDeskGraphic = new ArrayList<>();
@@ -31,18 +30,18 @@ public class OfficeAmenityGraphic extends Graphic {
         AMENITY_GRAPHICS.put(CollabDesk.class, collabDeskGraphic);
 
         final List<AmenityGraphicLocation> couchGraphic = new ArrayList<>();
-        couchGraphic.add(new AmenityGraphicLocation(4, 0)); // Down
-        couchGraphic.add(new AmenityGraphicLocation(4, 2)); // Right
+        couchGraphic.add(new AmenityGraphicLocation(4, 0));
+        couchGraphic.add(new AmenityGraphicLocation(4, 2));
         AMENITY_GRAPHICS.put(Couch.class, couchGraphic);
 
         final List<AmenityGraphicLocation> cubicleGraphic = new ArrayList<>();
-        cubicleGraphic.add(new AmenityGraphicLocation(2, 0)); // Up
-        cubicleGraphic.add(new AmenityGraphicLocation(2, 2)); // Down
+        cubicleGraphic.add(new AmenityGraphicLocation(2, 0));
+        cubicleGraphic.add(new AmenityGraphicLocation(2, 2));
         AMENITY_GRAPHICS.put(Cubicle.class, cubicleGraphic);
 
         final List<AmenityGraphicLocation> doorGraphic = new ArrayList<>();
-        doorGraphic.add(new AmenityGraphicLocation(9, 0)); // Horizontal
-        doorGraphic.add(new AmenityGraphicLocation(0, 3)); // Vertical
+        doorGraphic.add(new AmenityGraphicLocation(9, 0));
+        doorGraphic.add(new AmenityGraphicLocation(0, 3));
         AMENITY_GRAPHICS.put(Door.class, doorGraphic);
 
         final List<AmenityGraphicLocation> meetingDeskGraphic = new ArrayList<>();
@@ -74,8 +73,8 @@ public class OfficeAmenityGraphic extends Graphic {
         AMENITY_GRAPHICS.put(Security.class, securityGraphic);
 
         final List<AmenityGraphicLocation> tableGraphic = new ArrayList<>();
-        tableGraphic.add(new AmenityGraphicLocation(6, 0)); // Horizontal
-        tableGraphic.add(new AmenityGraphicLocation(10, 3)); // Vertical
+        tableGraphic.add(new AmenityGraphicLocation(6, 0));
+        tableGraphic.add(new AmenityGraphicLocation(10, 3));
         AMENITY_GRAPHICS.put(Table.class, tableGraphic);
 
         final List<AmenityGraphicLocation> sinkGraphic = new ArrayList<>();
@@ -91,8 +90,8 @@ public class OfficeAmenityGraphic extends Graphic {
     protected final List<AmenityGraphicLocation> graphics;
     protected int graphicIndex;
 
-    private final OfficeAmenityGraphic.AmenityGraphicScale amenityGraphicScale; // Denotes the rows and columns spanned by this graphic
-    private final OfficeAmenityGraphic.AmenityGraphicOffset amenityGraphicOffset; // Denotes the offset of this graphic
+    private final OfficeAmenityGraphic.AmenityGraphicScale amenityGraphicScale;
+    private final OfficeAmenityGraphic.AmenityGraphicOffset amenityGraphicOffset;
 
     public OfficeAmenityGraphic(Amenity amenity, int rowSpan, int columnSpan, int rowOffset, int columnOffset) {
         this.amenity = amenity;

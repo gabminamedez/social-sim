@@ -3,18 +3,14 @@ package com.socialsim.model.core.environment.office.patchobject.passable.gate;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
 import com.socialsim.controller.office.graphics.amenity.OfficeAmenityGraphic;
 import com.socialsim.controller.office.graphics.amenity.graphic.OfficeGateGraphic;
-import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
-import com.socialsim.model.core.environment.office.Office;
-
-import java.util.HashSet;
 import java.util.List;
 
 public class OfficeGate extends Gate {
 
-    private double chancePerTick; // Denotes the chance of generating an agent per second
-    private OfficeGate.OfficeGateMode officeGateMode; // Denotes the mode of this station gate (whether it's entry/exit only, or both)
+    private double chancePerTick;
+    private OfficeGate.OfficeGateMode officeGateMode;
     public static final OfficeGate.OfficeGateFactory officeGateFactory;
     private final OfficeGateGraphic officeGateGraphic;
 
@@ -59,45 +55,6 @@ public class OfficeGate extends Gate {
     @Override
     public AmenityGraphicLocation getGraphicLocation() {
         return this.officeGateGraphic.getGraphicLocation();
-    }
-
-    @Override
-    public OfficeAgent spawnAgent() { // Spawn an agent in this position
-        Office office = (Office) this.getAmenityBlocks().get(0).getPatch().getEnvironment();
-        GateBlock spawner = this.getSpawners().get(0);
-
-        if (office != null) {
-            // return OfficeAgent.OfficeAgentFactory.create(OfficeAgent.Type.STUDENT, OfficeAgent.Gender.MALE, 21, spawner.getPatch());
-            return null; // For the meantime
-        }
-        else {
-            return null;
-        }
-    }
-
-    public boolean isGateFree() {
-        HashSet<Patch> patchesToCheck = new HashSet<>();
-        boolean patchesFree = true;
-
-        // Check if all attractors and spawners in this amenity have no agents
-        for (AmenityBlock attractor : this.getAttractors()) {
-            patchesToCheck.add(attractor.getPatch());
-            patchesToCheck.addAll(attractor.getPatch().getNeighbors());
-        }
-
-        for (GateBlock spawner : this.getSpawners()) {
-            patchesToCheck.add(spawner.getPatch());
-            patchesToCheck.addAll(spawner.getPatch().getNeighbors());
-        }
-
-        for (Patch patchToCheck : patchesToCheck) {
-            if (!patchToCheck.getAgents().isEmpty()) {
-                patchesFree = false;
-                break;
-            }
-        }
-
-        return patchesFree;
     }
 
     public enum OfficeGateMode {

@@ -1,7 +1,6 @@
 package com.socialsim.model.core.environment.generic.position;
 
 import com.socialsim.model.core.environment.Environment;
-
 import java.util.Objects;
 
 public class MatrixPosition extends Location {

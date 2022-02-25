@@ -11,14 +11,11 @@ import com.socialsim.model.core.environment.university.patchfield.*;
 import com.socialsim.model.core.environment.university.patchobject.passable.gate.UniversityGate;
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
-
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import static com.socialsim.model.core.agent.university.UniversityAgent.*;
 
 public class University extends Environment {
-
 
     public static CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> defaultIOS;
     public static CopyOnWriteArrayList<CopyOnWriteArrayList<CopyOnWriteArrayList<Integer>>> defaultInteractionTypeChances;
@@ -401,11 +398,9 @@ public class University extends Environment {
     }
 
     public void createInitialAgentDemographics(int MAX_STUDENTS, int MAX_PROFESSORS){
-        //Guard
         UniversityAgent guard = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.GUARD, true);
         this.getAgents().add(guard);
 
-        //Janitor
         UniversityAgent janitor1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, true);
         this.getAgents().add(janitor1);
 
@@ -413,7 +408,7 @@ public class University extends Environment {
         this.getAgents().add(janitor2);
 
         int ctr = 0;
-        //Students and Professors
+
         while (ctr < MAX_STUDENTS){
             UniversityAgent newAgent = UniversityAgent.UniversityAgentFactory.create(Type.STUDENT, true);
             ctr++;
@@ -427,7 +422,7 @@ public class University extends Environment {
         }
     }
 
-    public double convertToChanceInteraction(int x){// Convert IOS to chance based only on threshold, not 0 to said scale
+    public double convertToChanceInteraction(int x){
         double CHANCE = ((double) x - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7;
         return CHANCE;
     }

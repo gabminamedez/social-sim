@@ -16,17 +16,8 @@ public class UniversityState {
     private UniversityRoutePlan routePlan;
     private UniversityAgent agent;
     private ArrayList<UniversityAction> actions;
-
-    // Class-specific attributes
     private int tickClassStart;
     private int classroomID;
-
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent) {
-        this.name = a;
-        this.routePlan = routePlan;
-        this.agent = agent;
-        this.actions = new ArrayList<>();
-    }
 
     public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, ArrayList<UniversityAction> actions) {
         this.name = a;
@@ -35,26 +26,11 @@ public class UniversityState {
         this.actions = actions;
     }
 
-    public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, int tickClassStart, int classroomID) { // Class state
-        this.name = a;
-        this.routePlan = routePlan;
-        this.agent = agent;
-        this.tickClassStart = tickClassStart;
-        this.classroomID = classroomID;
-        this.actions = new ArrayList<>();
-    }
     public UniversityState(Name a, UniversityRoutePlan routePlan, UniversityAgent agent, int tickClassStart, int classroomID, ArrayList<UniversityAction> actions) { // Class state
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
         this.tickClassStart = tickClassStart;
-        this.classroomID = classroomID;
-        this.actions = actions;
-    }
-    public UniversityState(Name a, UniversityRoutePlan routePlan, int classroomID,UniversityAgent agent, ArrayList<UniversityAction> actions) { // Class state
-        this.name = a;
-        this.routePlan = routePlan;
-        this.agent = agent;
         this.classroomID = classroomID;
         this.actions = actions;
     }
@@ -127,4 +103,5 @@ public class UniversityState {
             s.append(action.getName().name() + "\n");
         return s.toString();
     }
+
 }

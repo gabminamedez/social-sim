@@ -1,22 +1,16 @@
 package com.socialsim.model.core.agent.office;
 
-import com.socialsim.model.core.agent.university.UniversityAction;
-import com.socialsim.model.core.agent.university.UniversityState;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Cubicle;
-import com.socialsim.model.core.environment.university.patchfield.Bathroom;
-import com.socialsim.model.core.environment.university.patchobject.passable.goal.Door;
 import com.socialsim.model.simulator.Simulator;
-import javafx.util.Pair;
-
 import java.util.*;
 
 public class OfficeRoutePlan {
 
-    private OfficeState currentState; // Denotes the current class of the amenity/patchfield in the route plan
-    private ArrayList<OfficeState> routePlan; // Denotes the current route plan of the agent which owns this
+    private OfficeState currentState;
+    private ArrayList<OfficeState> routePlan;
     private boolean fromBathPM, fromBathAM;
     private int lastDuration = -1;
     private int canUrgent = 2;
@@ -32,7 +26,6 @@ public class OfficeRoutePlan {
 
     OfficeState LUNCH_INSTANCE = null;
 
-    // Chances
     public static final double APP_BOSS_LUNCH = 0.7;
     public static final double INT_LUNCH = 0.3;
     public static final double EXT_LUNCH = 1.0;
@@ -40,11 +33,9 @@ public class OfficeRoutePlan {
     public static final double EXT_BUSINESS_COOPERATE = 0.9;
     public static final double INT_RESEARCHER_COOPERATE = 0.6;
     public static final double EXT_RESEARCHER_COOPERATE = 0.9;
-    public static final double BATH_CHANCE = 0.15, PRINT_CHANCE = 0.1, TECHNICAL_CUBICLE_CHANCE = 0.1,
-    TECHNICAL_PRINTER_CHANCE = 0.1;
+    public static final double BATH_CHANCE = 0.15, PRINT_CHANCE = 0.1, TECHNICAL_CUBICLE_CHANCE = 0.1, TECHNICAL_PRINTER_CHANCE = 0.1;
 
     public static ArrayList<ArrayList<Long>> meetingTimes = new ArrayList<>();
-
 
     public OfficeRoutePlan(OfficeAgent agent, Office office, Patch spawnPatch, int tickEntered, int team, Cubicle assignedCubicle) {
         this.routePlan = new ArrayList<>();
@@ -53,12 +44,9 @@ public class OfficeRoutePlan {
         if(meetingTimes.size() == 0){
             long start = 0, end = 0;
 
-            // meeting can start at either of these times
             start = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(600 - 300 + 1) + 300;
-            // meeting duration + start time
             end = (Simulator.RANDOM_NUMBER_GENERATOR.nextInt(1440 - 720 + 1) + 720) + start;
 
-            // pair times with possible room numbers
             meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,1L)));
             meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,2L)));
             meetingTimes.add(new ArrayList<Long>(Arrays.asList(start,end,3L)));
@@ -382,7 +370,7 @@ public class OfficeRoutePlan {
         return officeState;
     }
 
-    public OfficeState addUrgentRoute(OfficeAgent agent, Office office) { // technical fix cubicle
+    public OfficeState addUrgentRoute(OfficeAgent agent, Office office) {
         ArrayList<OfficeAction> actions;
 
         actions = new ArrayList<>();

@@ -1,7 +1,6 @@
 package com.socialsim.model.core.agent.generic.pathfinding;
 
 import com.socialsim.model.core.environment.generic.Patch;
-
 import java.util.Arrays;
 import java.util.Stack;
 

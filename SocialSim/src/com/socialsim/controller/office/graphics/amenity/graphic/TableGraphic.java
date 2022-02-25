@@ -2,7 +2,6 @@ package com.socialsim.controller.office.graphics.amenity.graphic;
 
 import com.socialsim.controller.office.graphics.amenity.OfficeAmenityGraphic;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Table;
-
 import java.util.Objects;
 
 public class TableGraphic extends OfficeAmenityGraphic {

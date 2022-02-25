@@ -45,7 +45,7 @@ public class GroceryState {
 
     private AisleCluster aisleCluster;
 
-    public GroceryState(GroceryState groceryState, GroceryRoutePlan routePlan, GroceryAgent agent){
+    public GroceryState (GroceryState groceryState, GroceryRoutePlan routePlan, GroceryAgent agent) {
         this.name = groceryState.getName();
         this.routePlan = routePlan;
         this.agent = agent;
@@ -56,14 +56,7 @@ public class GroceryState {
         }
     }
 
-    public GroceryState(Name a, GroceryRoutePlan routePlan, GroceryAgent agent){
-        this.name = a;
-        this.routePlan = routePlan;
-        this.agent = agent;
-        this.actions = new ArrayList<>();
-    }
-
-    public GroceryState(Name a, GroceryRoutePlan routePlan, GroceryAgent agent, ArrayList<GroceryAction> actions, AisleCluster cluster){
+    public GroceryState (Name a, GroceryRoutePlan routePlan, GroceryAgent agent, ArrayList<GroceryAction> actions, AisleCluster cluster) {
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
@@ -71,7 +64,7 @@ public class GroceryState {
         this.actions = actions;
     }
 
-    public GroceryState(Name a, GroceryRoutePlan routePlan, GroceryAgent agent, ArrayList<GroceryAction> actions){
+    public GroceryState (Name a, GroceryRoutePlan routePlan, GroceryAgent agent, ArrayList<GroceryAction> actions) {
         this.name = a;
         this.routePlan = routePlan;
         this.agent = agent;
@@ -122,8 +115,9 @@ public class GroceryState {
         actions.add(a);
     }
 
-    public static AisleCluster[] route1(){
-        return new GroceryState.AisleCluster[]{AisleCluster.RIGHT_WALL_CLUSTER,
+    public static AisleCluster[] route1 () {
+        return new GroceryState.AisleCluster[] {
+                AisleCluster.RIGHT_WALL_CLUSTER,
                 AisleCluster.TOP_WALL_CLUSTER,
                 AisleCluster.AISLE_1_2_CLUSTER,
                 AisleCluster.AISLE_2_3_CLUSTER,
@@ -136,8 +130,9 @@ public class GroceryState {
                 AisleCluster.FRESH_2_FRONT_CLUSTER,
                 AisleCluster.MEAT_CLUSTER};
     }
-    public static AisleCluster[] route2(){
-        return new GroceryState.AisleCluster[]{
+
+    public static AisleCluster[] route2 () {
+        return new GroceryState.AisleCluster[] {
                 AisleCluster.AISLE_4_FRONT_CLUSTER,
                 AisleCluster.AISLE_3_4_CLUSTER,
                 AisleCluster.AISLE_2_3_CLUSTER,
@@ -151,8 +146,9 @@ public class GroceryState {
                 AisleCluster.FRESH_2_FRONT_CLUSTER,
                 AisleCluster.MEAT_CLUSTER};
     }
-    public static AisleCluster[] route3(){
-        return new GroceryState.AisleCluster[]{
+
+    public static AisleCluster[] route3 () {
+        return new GroceryState.AisleCluster[] {
                 AisleCluster.MEAT_CLUSTER,
                 AisleCluster.FRESH_2_FRONT_CLUSTER,
                 AisleCluster.FRESH_1_2_CLUSTER,
@@ -164,10 +160,11 @@ public class GroceryState {
                 AisleCluster.AISLE_2_3_CLUSTER,
                 AisleCluster.AISLE_3_4_CLUSTER,
                 AisleCluster.AISLE_4_FRONT_CLUSTER,
-                AisleCluster.RIGHT_WALL_CLUSTER,};
+                AisleCluster.RIGHT_WALL_CLUSTER};
     }
-    public static AisleCluster[] route4(){
-        return new GroceryState.AisleCluster[]{
+
+    public static AisleCluster[] route4 () {
+        return new GroceryState.AisleCluster[] {
                 AisleCluster.FRESH_2_FRONT_CLUSTER,
                 AisleCluster.FRESH_1_2_CLUSTER,
                 AisleCluster.MEAT_CLUSTER,
@@ -181,8 +178,9 @@ public class GroceryState {
                 AisleCluster.AISLE_4_FRONT_CLUSTER,
                 AisleCluster.RIGHT_WALL_CLUSTER};
     }
-    public static AisleCluster[] createRoute(int route){
-        switch (route){
+
+    public static AisleCluster[] createRoute (int route) {
+        switch (route) {
             case 0 -> {
                 return route1();
             }
@@ -197,4 +195,5 @@ public class GroceryState {
             }
         }
     }
+
 }

@@ -62,7 +62,6 @@ public class CubicleMapper extends AmenityMapper {
                 patch4.setAmenityBlock(amenityBlock4);
             }
 
-
             Cubicle cubicleToAdd = Cubicle.CubicleFactory.create(amenityBlocks, true, facing);
             Main.officeSimulator.getOffice().getCubicles().add(cubicleToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));

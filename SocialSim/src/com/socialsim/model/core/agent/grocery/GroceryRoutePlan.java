@@ -3,17 +3,15 @@ package com.socialsim.model.core.agent.grocery;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.simulator.Simulator;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class GroceryRoutePlan {
 
     private ArrayList<GroceryState> routePlan;
-    private GroceryState currentState; // Denotes the current class of the amenity/patchfield in the route plan
+    private GroceryState currentState;
     public int MAX_AISLE_HELP = 1;
 
-    private static final int MIN_AISLE_ORGANIZE = 10;
     private static final int MAX_BUTCHER_STATION = 10;
     private static final int MIN_PRODUCTS = 2;
     private static final int MAX_PRODUCTS = 20;
@@ -27,7 +25,7 @@ public class GroceryRoutePlan {
     public static final int AISLE_HELP_CHANCE_STTP = 2, AISLE_HELP_CHANCE_MODERATE = 6, AISLE_HELP_CHANCE_COMPLETE = 10, AISLE_HELP_CHANCE_HELP = 10, AISLE_HELP_CHANCE_DUO = 8;
     public static final int CHANCE_BAGGER_INTERACT = 30, CHANCE_GUARD_INTERACT = 50, CHANCE_GUARD_VERBAL = 10;
 
-    public GroceryRoutePlan(GroceryAgent agent, GroceryAgent leaderAgent, Grocery grocery, Patch spawnPatch) { //leaderAgent is only for agents that follow and deviate
+    public GroceryRoutePlan(GroceryAgent agent, GroceryAgent leaderAgent, Grocery grocery, Patch spawnPatch) {
         this.routePlan = new ArrayList<>();
         ArrayList<GroceryAction> actions;
 
@@ -74,8 +72,7 @@ public class GroceryRoutePlan {
             routePlan.add(new GroceryState(GroceryState.Name.STAFF_FOOD, this, agent, actions));
         }
         else {
-            // Customers
-            if (agent.getPersona() == GroceryAgent.Persona.STTP_ALONE_CUSTOMER){
+            if (agent.getPersona() == GroceryAgent.Persona.STTP_ALONE_CUSTOMER) {
                 routePlan = createSTTPRoute(agent, spawnPatch, grocery);
                 int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                 if (x < STTP_CHANCE_SERVICE) {
@@ -101,7 +98,7 @@ public class GroceryRoutePlan {
                     }
                 }
             }
-            else if (agent.getPersona() == GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER){
+            else if (agent.getPersona() == GroceryAgent.Persona.MODERATE_ALONE_CUSTOMER) {
                 int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                 if (x < MODERATE_ALL_AISLE_CHANCE)
                     routePlan = createFullRoute(agent, spawnPatch, grocery);
@@ -131,8 +128,8 @@ public class GroceryRoutePlan {
                     }
                 }
             }
-            else if (agent.getPersona() == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER){
-                if (leaderAgent == null) { // The current agent is the leader itself
+            else if (agent.getPersona() == GroceryAgent.Persona.COMPLETE_FAMILY_CUSTOMER) {
+                if (leaderAgent == null) {
                     int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                     if (x < COMPLETE_FAMILY_ALL_AISLE_CHANCE)
                         routePlan = createFullRoute(agent, spawnPatch, grocery);
@@ -162,12 +159,12 @@ public class GroceryRoutePlan {
                         }
                     }
                 }
-                else{ // deviating or following
+                else {
                     routePlan = createFollowingRoute(agent, leaderAgent);
                 }
             }
-            else if (agent.getPersona() == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER){
-                if (leaderAgent == null) { // The current agent is the leader itself
+            else if (agent.getPersona() == GroceryAgent.Persona.HELP_FAMILY_CUSTOMER) {
+                if (leaderAgent == null) {
                     int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                     if (x < HELP_FAMILY_ALL_AISLE_CHANCE)
                         routePlan = createFullRoute(agent, spawnPatch, grocery);
@@ -197,12 +194,12 @@ public class GroceryRoutePlan {
                         }
                     }
                 }
-                else{ // deviating or following
+                else {
                     routePlan = createFollowingRoute(agent, leaderAgent);
                 }
             }
-            else if (agent.getPersona() == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER){
-                if (leaderAgent == null) { // The current agent is the leader itself
+            else if (agent.getPersona() == GroceryAgent.Persona.DUO_FAMILY_CUSTOMER) {
+                if (leaderAgent == null) {
                     int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                     if (x < DUO_FAMILY_ALL_AISLE_CHANCE)
                         routePlan = createFullRoute(agent, spawnPatch, grocery);
@@ -232,7 +229,7 @@ public class GroceryRoutePlan {
                         }
                     }
                 }
-                else { // deviating or following
+                else {
                     routePlan = createFollowingRoute(agent, leaderAgent);
                 }
             }
@@ -254,14 +251,12 @@ public class GroceryRoutePlan {
         this.currentState = s;
     }
 
-    public GroceryState setNextState(int i) { // Set the next class in the route plan
-        // this.currentState = this.currentRoutePlan.next();
-        this.currentState = this.routePlan.get(i+1);
+    public GroceryState setNextState(int i) {
+        this.currentState = this.routePlan.get(i + 1);
         return this.currentState;
     }
 
     public GroceryState setPreviousState(int i) {
-        // this.currentState = this.currentRoutePlan.previous();
         this.currentState = this.routePlan.get(i-1);
         return this.currentState;
     }
@@ -468,7 +463,7 @@ public class GroceryRoutePlan {
         actions.add(new GroceryAction(GroceryAction.Name.GOING_TO_SECURITY_QUEUE));
         actions.add(new GroceryAction(GroceryAction.Name.GO_THROUGH_SCANNER, (GroceryAgent) null, 2));
         routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SECURITY, this, agent, actions));
-        int routeIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4); // 4 Routes available
+        int routeIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4);
         int routeIndexFinal = routeIndex;
         GroceryState.AisleCluster[] route = GroceryState.createRoute(routeIndex);
         routeIndex = 0;
@@ -785,4 +780,5 @@ public class GroceryRoutePlan {
 
         return routePlan;
     }
+
 }

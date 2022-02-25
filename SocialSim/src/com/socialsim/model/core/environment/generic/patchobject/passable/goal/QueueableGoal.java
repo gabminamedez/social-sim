@@ -4,7 +4,6 @@ import com.socialsim.model.core.environment.generic.patchobject.Drawable;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
 import com.socialsim.model.simulator.Simulator;
-
 import java.util.List;
 
 public abstract class QueueableGoal extends NonObstacle implements Drawable {
@@ -25,12 +24,6 @@ public abstract class QueueableGoal extends NonObstacle implements Drawable {
 
     public void setWaitingTime(int waitingTime) {
         this.waitingTime = waitingTime;
-    }
-
-    public boolean allowPass() { // Check if this goal will now allow an agent to pass
-        this.waitingTimeLeft--;
-
-        return this.waitingTimeLeft <= 0;
     }
 
     public void resetWaitingTime() {

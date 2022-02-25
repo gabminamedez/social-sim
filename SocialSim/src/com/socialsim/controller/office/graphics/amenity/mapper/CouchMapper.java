@@ -22,7 +22,7 @@ public class CouchMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock);
             patch.setAmenityBlock(amenityBlock);
 
-            if (facing.equals("DOWN")) { // Horizontal
+            if (facing.equals("DOWN")) {
                 for (int i = 1; i < 8; i++) {
                     Patch patchBack = Main.officeSimulator.getOffice().getPatch(origPatchRow, origPatchCol + i);
                     Amenity.AmenityBlock amenityBlockBack = null;

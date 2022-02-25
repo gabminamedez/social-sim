@@ -11,7 +11,6 @@ import com.socialsim.model.core.environment.mall.patchfield.*;
 import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
-
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -458,7 +457,7 @@ public class Mall extends Environment {
         this.getAgents().add(sales19);
 
         int ctr = 0;
-        //Students and Professors
+
         while (ctr < MAX_FAMILY){
             boolean isErrand = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
             MallAgent.Persona thisType = null;
@@ -558,7 +557,7 @@ public class Mall extends Environment {
 
     }
 
-    public double convertToChanceInteraction(int x){// Convert IOS to chance based only on threshold, not 0 to said scale
+    public double convertToChanceInteraction(int x){
         double CHANCE = ((double) x - 1) / 7 + Simulator.RANDOM_NUMBER_GENERATOR.nextDouble() * 1/7;
         return CHANCE;
     }
@@ -634,7 +633,6 @@ public class Mall extends Environment {
                     else{
                         IOS = IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(agent1.getPersona().getID()).get(agent2.getPersona().getID()).size()));
                     }
-//                    int IOS = IOSScales.get(i).get(j).get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(IOSScales.get(i).get(j).size()));
                     IOSInteractionChances.get(i).add(this.convertToChanceInteraction(IOS));
                 }
             }

@@ -1,6 +1,5 @@
 package com.socialsim.controller.office.graphics;
 
-import com.socialsim.controller.Main;
 import com.socialsim.controller.generic.Controller;
 import com.socialsim.controller.generic.graphics.agent.AgentGraphicLocation;
 import com.socialsim.controller.generic.graphics.amenity.AmenityGraphicLocation;
@@ -10,14 +9,11 @@ import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.office.OfficeAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
-import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
 import com.socialsim.model.core.environment.generic.patchfield.Wall;
 import com.socialsim.model.core.environment.generic.patchobject.Amenity;
 import com.socialsim.model.core.environment.generic.patchobject.Drawable;
 import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
-import com.socialsim.model.core.environment.generic.position.Location;
-import com.socialsim.model.core.environment.generic.position.MatrixPosition;
 import com.socialsim.model.core.environment.office.Office;
 import com.socialsim.model.core.environment.office.patchfield.*;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.Sink;
@@ -29,8 +25,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
-
-import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,39 +39,25 @@ public class OfficeGraphicsController extends Controller {
 
     public static List<Amenity.AmenityBlock> firstPortalAmenityBlocks;
     public static double tileSize;
-    private static boolean isDrawingStraightX;
-    private static boolean isDrawingStraightY;
-    private static Double lockedX;
-    private static Double lockedY;
-    private static boolean drawMeasurement;
-    private static Patch measurementStartPatch;
     public static boolean willPeek;
     private static long millisecondsLastCanvasRefresh;
 
     static {
         OfficeGraphicsController.firstPortalAmenityBlocks = null;
-        OfficeGraphicsController.isDrawingStraightX = false;
-        OfficeGraphicsController.isDrawingStraightY = false;
-        OfficeGraphicsController.lockedX = null;
-        OfficeGraphicsController.lockedY = null;
-        OfficeGraphicsController.drawMeasurement = false;
-        OfficeGraphicsController.measurementStartPatch = null;
         OfficeGraphicsController.willPeek = false;
         millisecondsLastCanvasRefresh = 0;
     }
 
-    // Send a request to draw the office view on the canvas
     public static void requestDrawOfficeView(StackPane canvases, Office office, double tileSize, boolean background, boolean speedAware) {
-        if (speedAware) { // If the speed-aware option is true, only perform canvas refreshes after a set interval has elapsed; This is done to avoid having too many refreshes within a short period of time
+        if (speedAware) {
             final int millisecondsIntervalBetweenCalls = 2000;
             long currentTimeMilliseconds = System.currentTimeMillis();
 
-            // If enough time has passed between the current time and the time of last canvas refresh, do the canvas refresh
             if (currentTimeMilliseconds - millisecondsLastCanvasRefresh < millisecondsIntervalBetweenCalls) {
                 return;
             }
             else {
-                millisecondsLastCanvasRefresh = System.currentTimeMillis(); // If a canvas refresh will be performed, reset the time of last canvas refresh
+                millisecondsLastCanvasRefresh = System.currentTimeMillis();
             }
         }
 
@@ -86,16 +66,13 @@ public class OfficeGraphicsController extends Controller {
         });
     }
 
-    // Draw all that is requested on the office view on the canvases
     private static void drawOfficeView(StackPane canvases, Office office, double tileSize, boolean background) {
-        // Get the canvases and their graphics contexts
         final Canvas backgroundCanvas = (Canvas) canvases.getChildren().get(0);
         final Canvas foregroundCanvas = (Canvas) canvases.getChildren().get(1);
 
         final GraphicsContext backgroundGraphicsContext = backgroundCanvas.getGraphicsContext2D();
         final GraphicsContext foregroundGraphicsContext = foregroundCanvas.getGraphicsContext2D();
 
-        // Get the height and width of the canvases
         final double canvasWidth = backgroundCanvas.getWidth();
         final double canvasHeight = backgroundCanvas.getHeight();
 
@@ -115,19 +92,15 @@ public class OfficeGraphicsController extends Controller {
     }
 
     private static void drawOfficeObjects(Office office, boolean background, GraphicsContext backgroundGraphicsContext, GraphicsContext foregroundGraphicsContext, double tileSize) {
-        // Draw all the patches of this office
-        // If the background is supposed to be drawn, draw from all the patches; If not, draw only from the combined agent and amenity set
         List<Patch> patches;
 
         if (background) {
             patches = Arrays.stream(office.getPatches()).flatMap(Arrays::stream).collect(Collectors.toList());
         }
         else {
-            SortedSet<Patch> amenityAgentSet = new TreeSet<>(); // Combine this office's amenity and agent set into a single set
-
+            SortedSet<Patch> amenityAgentSet = new TreeSet<>();
             amenityAgentSet.addAll(new ArrayList<>(office.getAmenityPatchSet()));
             amenityAgentSet.addAll(new ArrayList<>(office.getAgentPatchSet()));
-
             patches = new ArrayList<>(amenityAgentSet);
         }
 
@@ -138,15 +111,13 @@ public class OfficeGraphicsController extends Controller {
 
             int row = patch.getMatrixPosition().getRow();
             int column = patch.getMatrixPosition().getColumn();
-            Patch currentPatch = office.getPatch(row, column); // Get the current patch
+            Patch currentPatch = office.getPatch(row, column);
 
             boolean drawGraphicTransparently;
             drawGraphicTransparently = false;
 
-            // Draw graphics corresponding to whatever is in the content of the patch; If the patch has no amenity on it, just draw a blank patch
             Amenity.AmenityBlock patchAmenityBlock = currentPatch.getAmenityBlock();
             Pair<PatchField, Integer> patchNumPair = currentPatch.getPatchField();
-            Pair<QueueingPatchField, Integer> patchNumPair2 = currentPatch.getQueueingPatchField();
             Color patchColor;
 
             if (patchAmenityBlock == null) {
@@ -193,7 +164,7 @@ public class OfficeGraphicsController extends Controller {
                                 tileSize * ((OfficeAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
                     }
 
-                    if (drawGraphicTransparently) { // Reset transparency if previously added
+                    if (drawGraphicTransparently) {
                         foregroundGraphicsContext.setGlobalAlpha(1.0);
                     }
                 }
@@ -234,7 +205,7 @@ public class OfficeGraphicsController extends Controller {
                 }
             }
 
-            if (!background) { // Draw each agent in this patch, if the foreground is to be drawn
+            if (!background) {
                 if (!patch.getAgents().isEmpty()) {
                     for (Agent agent : patch.getAgents()) {
                         OfficeAgent officeAgent = (OfficeAgent) agent;
@@ -264,44 +235,6 @@ public class OfficeGraphicsController extends Controller {
                     }
                 }
             }
-        }
-    }
-
-    private static Patch retrievePatchFromMouseClick(MouseEvent event) {
-        double mouseX = event.getX();
-        double mouseY = event.getY();
-
-        // If a straight x-axis draw is requested, and there is no locked x coordinate yet, set the locked x coordinate
-        if (isDrawingStraightX && lockedX == null) {
-            lockedX = mouseX;
-        }
-
-        // If a straight y-axis draw is requested, and there is no locked y coordinate yet, set the locked y coordinate
-        if (isDrawingStraightY && lockedY == null) {
-            lockedY = mouseY;
-        }
-
-        // Take into account whether the mouse x or y coordinates are to be used
-        MatrixPosition matrixPosition = Location.screenCoordinatesToMatrixPosition(
-                Main.officeSimulator.getOffice(),
-                isDrawingStraightX ? lockedX : mouseX,
-                isDrawingStraightY ? lockedY : mouseY,
-                tileSize);
-
-        if (matrixPosition != null) { // When the position given is a null, this means the mouse has been dragged out of bounds
-            Patch patchAtMousePosition = Main.officeSimulator.getOffice().getPatch(matrixPosition);
-
-            if (drawMeasurement) { // If a measurement is requested, compute it; Compute for the start coordinates, if one hasn't been computed yet
-                if (measurementStartPatch == null) {
-                    measurementStartPatch = Main.officeSimulator.getOffice().getPatch(matrixPosition);
-                }
-            }
-
-            // Retrieve the patch at that location
-            return patchAtMousePosition;
-        }
-        else {
-            return null;
         }
     }
 
