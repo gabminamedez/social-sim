@@ -658,21 +658,32 @@ public class MallAgentMovement extends AgentMovement {
 
             if (this.leaderAgent == null) {
                 if (type == "RESTO") {
-                    for (int i = 0; i < 32; i++) {
-                        tables.add(Main.mallSimulator.getMall().getTables().get(i));
+                    boolean isResto1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+
+                    if (isResto1) {
+                        for (int i = 0; i < 16; i++) {
+                            tables.add(Main.mallSimulator.getMall().getTables().get(i));
+                        }
+                        for (int i = 35; i < 40; i++) {
+                            tables.add(Main.mallSimulator.getMall().getTables().get(i));
+                        }
                     }
-                    for (int i = 35; i < 45; i++) {
-                        tables.add(Main.mallSimulator.getMall().getTables().get(i));
+                    else {
+                        for (int i = 16; i < 32; i++) {
+                            tables.add(Main.mallSimulator.getMall().getTables().get(i));
+                        }
+                        for (int i = 40; i < 45; i++) {
+                            tables.add(Main.mallSimulator.getMall().getTables().get(i));
+                        }
                     }
                 }
                 else {
-                    tables.add(Main.mallSimulator.getMall().getTables().get(32));
-                    tables.add(Main.mallSimulator.getMall().getTables().get(33));
-                    tables.add(Main.mallSimulator.getMall().getTables().get(34));
-                    tables.add(Main.mallSimulator.getMall().getTables().get(45));
-                    tables.add(Main.mallSimulator.getMall().getTables().get(46));
-                    tables.add(Main.mallSimulator.getMall().getTables().get(47));
-                    tables.add(Main.mallSimulator.getMall().getTables().get(48));
+                    for (int i = 32; i < 35; i++) {
+                        tables.add(Main.mallSimulator.getMall().getTables().get(i));
+                    }
+                    for (int i = 45; i < 49; i++) {
+                        tables.add(Main.mallSimulator.getMall().getTables().get(i));
+                    }
                 }
 
                 for (Amenity amenity : tables) {

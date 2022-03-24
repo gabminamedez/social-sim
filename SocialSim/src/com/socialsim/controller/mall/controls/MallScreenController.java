@@ -389,8 +389,8 @@ public class MallScreenController extends ScreenController {
         KioskMapper.draw(kioskPatches);
 
         List<Patch> tableUpPatches = new ArrayList<>();
-        tableUpPatches.add(mall.getPatch(47,52));
-        tableUpPatches.add(mall.getPatch(47,58));
+        tableUpPatches.add(mall.getPatch(47,52)); // 0
+        tableUpPatches.add(mall.getPatch(47,58)); // 1
         tableUpPatches.add(mall.getPatch(47,64));
         tableUpPatches.add(mall.getPatch(47,70));
         tableUpPatches.add(mall.getPatch(50,52));
@@ -404,8 +404,9 @@ public class MallScreenController extends ScreenController {
         tableUpPatches.add(mall.getPatch(56,52));
         tableUpPatches.add(mall.getPatch(56,58));
         tableUpPatches.add(mall.getPatch(56,64));
-        tableUpPatches.add(mall.getPatch(56,70));
-        tableUpPatches.add(mall.getPatch(47,74));
+        tableUpPatches.add(mall.getPatch(56,70)); // 15
+
+        tableUpPatches.add(mall.getPatch(47,74)); // 16
         tableUpPatches.add(mall.getPatch(47,80));
         tableUpPatches.add(mall.getPatch(47,86));
         tableUpPatches.add(mall.getPatch(47,92));
@@ -420,10 +421,11 @@ public class MallScreenController extends ScreenController {
         tableUpPatches.add(mall.getPatch(56,74));
         tableUpPatches.add(mall.getPatch(56,80));
         tableUpPatches.add(mall.getPatch(56,86));
-        tableUpPatches.add(mall.getPatch(56,92));
-        tableUpPatches.add(mall.getPatch(27,103));
+        tableUpPatches.add(mall.getPatch(56,92)); // 31
+
+        tableUpPatches.add(mall.getPatch(27,103)); // 32
         tableUpPatches.add(mall.getPatch(27,107));
-        tableUpPatches.add(mall.getPatch(27,111));
+        tableUpPatches.add(mall.getPatch(27,111)); // 34
         TableMapper.draw(tableUpPatches, "UP");
 
         List<Patch> tableRightPatches = new ArrayList<>();
@@ -432,11 +434,13 @@ public class MallScreenController extends ScreenController {
         tableRightPatches.add(mall.getPatch(42,62));
         tableRightPatches.add(mall.getPatch(42,66));
         tableRightPatches.add(mall.getPatch(42,70));
+
         tableRightPatches.add(mall.getPatch(42,76));
         tableRightPatches.add(mall.getPatch(42,80));
         tableRightPatches.add(mall.getPatch(42,84));
         tableRightPatches.add(mall.getPatch(42,88));
         tableRightPatches.add(mall.getPatch(42,92));
+
         tableRightPatches.add(mall.getPatch(31,103));
         tableRightPatches.add(mall.getPatch(31,106));
         tableRightPatches.add(mall.getPatch(31,109));
@@ -461,7 +465,6 @@ public class MallScreenController extends ScreenController {
         plantPatches.add(mall.getPatch(36,52));
         plantPatches.add(mall.getPatch(18,91));
         plantPatches.add(mall.getPatch(36,91));
-
         plantPatches.add(mall.getPatch(29,18));
         plantPatches.add(mall.getPatch(30,18));
         plantPatches.add(mall.getPatch(29,19));
@@ -476,6 +479,18 @@ public class MallScreenController extends ScreenController {
         plantPatches.add(mall.getPatch(30,40));
         plantPatches.add(mall.getPatch(20,104));
         plantPatches.add(mall.getPatch(39,104));
+        plantPatches.add(mall.getPatch(27,61));
+        plantPatches.add(mall.getPatch(28,61));
+        plantPatches.add(mall.getPatch(27,62));
+        plantPatches.add(mall.getPatch(28,62));
+        plantPatches.add(mall.getPatch(27,63));
+        plantPatches.add(mall.getPatch(28,63));
+        plantPatches.add(mall.getPatch(27,79));
+        plantPatches.add(mall.getPatch(28,79));
+        plantPatches.add(mall.getPatch(27,80));
+        plantPatches.add(mall.getPatch(28,80));
+        plantPatches.add(mall.getPatch(27,81));
+        plantPatches.add(mall.getPatch(28,81));
         PlantMapper.draw(plantPatches);
 
         List<Patch> benchUpPatches = new ArrayList<>();
@@ -485,6 +500,10 @@ public class MallScreenController extends ScreenController {
         benchUpPatches.add(mall.getPatch(31,38));
         benchUpPatches.add(mall.getPatch(20,100));
         benchUpPatches.add(mall.getPatch(20,105));
+        benchUpPatches.add(mall.getPatch(26,61));
+        benchUpPatches.add(mall.getPatch(26,79));
+        benchUpPatches.add(mall.getPatch(29,61));
+        benchUpPatches.add(mall.getPatch(29,79));
         benchUpPatches.add(mall.getPatch(39,100));
         benchUpPatches.add(mall.getPatch(39,105));
         BenchMapper.draw(benchUpPatches, "UP");
@@ -494,6 +513,10 @@ public class MallScreenController extends ScreenController {
         benchRightPatches.add(mall.getPatch(28,21));
         benchRightPatches.add(mall.getPatch(28,37));
         benchRightPatches.add(mall.getPatch(28,41));
+        benchRightPatches.add(mall.getPatch(26,60));
+        benchRightPatches.add(mall.getPatch(26,64));
+        benchRightPatches.add(mall.getPatch(26,78));
+        benchRightPatches.add(mall.getPatch(26,82));
         BenchMapper.draw(benchRightPatches, "RIGHT");
 
         List<Patch> toiletPatches = new ArrayList<>();
