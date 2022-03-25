@@ -304,7 +304,6 @@ public class UniversitySimulator extends Simulator {
                 }
 
                 moveOne(agent);
-                agent.getAgentGraphic().change();
             } catch (Throwable ex) {
                 ex.printStackTrace();
             }
@@ -1071,7 +1070,7 @@ public class UniversitySimulator extends Simulator {
                     }
                     else if (state.getName() == UniversityState.Name.THROW_TRASH){
                         if (action.getName() == UniversityAction.Name.GO_TO_TRASH) {
-                            agentMovement.setSimultaneousInteractionAllowed(true);
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (!agentMovement.chooseGoal(Trash.class)) {
                                     if (agentMovement.getRoutePlan().isFromStudying()) {
@@ -2241,14 +2240,7 @@ public class UniversitySimulator extends Simulator {
         }
 
         if (agentMovement.isInteracting()) {
-            if (agentMovement.getDuration() <= 0) {
-                agentMovement.setInteracting(false);
-                agentMovement.setInteractionType(null);
-            }
-            else {
-                agentMovement.interact();
-            }
-
+            agentMovement.interact();
         }
         else {
             List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
@@ -2291,6 +2283,7 @@ public class UniversitySimulator extends Simulator {
                     break;
             }
         }
+        agent.getAgentGraphic().change();
     }
 
     private void spawnAgent(University university, long currentTick) {

@@ -297,7 +297,6 @@ public class OfficeSimulator extends Simulator {
                 }
 
                 moveOne(agent, currentTick);
-                agent.getAgentGraphic().change();
             } catch (Throwable ex) {
                 ex.printStackTrace();
             }
@@ -1869,6 +1868,7 @@ public class OfficeSimulator extends Simulator {
                     break;
             }
         }
+        agent.getAgentGraphic().change();
     }
 
     private void spawnAgent(Office office, long currentTick) {

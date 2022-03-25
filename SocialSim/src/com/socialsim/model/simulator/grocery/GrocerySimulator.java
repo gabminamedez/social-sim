@@ -381,7 +381,6 @@ public class GrocerySimulator extends Simulator {
         for (GroceryAgent agent : grocery.getMovableAgents()) {
             try {
                 moveOne(agent);
-                agent.getAgentGraphic().change();
             } catch (Throwable ex) {
                 ex.printStackTrace();
             }
@@ -818,6 +817,7 @@ public class GrocerySimulator extends Simulator {
                     break;
             }
         }
+        agent.getAgentGraphic().change();
     }
 
     private void spawnAgent(Grocery grocery, long currentTick) {

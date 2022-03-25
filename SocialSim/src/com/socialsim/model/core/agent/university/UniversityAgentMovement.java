@@ -1327,12 +1327,12 @@ public class UniversityAgentMovement extends AgentMovement {
             CHANCE1 = Simulator.roll() * IOS1;
             CHANCE2 = Simulator.roll() * IOS2;
             double CHANCE = (CHANCE1 + CHANCE2) / 2;
-            double CHANCE_NONVERBAL1 = 0,
-                    CHANCE_COOPERATIVE1 = 0,
-                    CHANCE_EXCHANGE1 = 0,
-                    CHANCE_NONVERBAL2 = 0,
-                    CHANCE_COOPERATIVE2 = 0,
-                    CHANCE_EXCHANGE2 = 0;
+            double CHANCE_NONVERBAL1 = ((double) university.getInteractionTypeChances().get(this.getParent().getPersonaActionGroup().getID()).get(this.getParent().getAgentMovement().getCurrentAction().getName().getID()).get(0)) / 100,
+                    CHANCE_COOPERATIVE1 = ((double) university.getInteractionTypeChances().get(this.getParent().getPersonaActionGroup().getID()).get(this.getParent().getAgentMovement().getCurrentAction().getName().getID()).get(1)) / 100,
+                    CHANCE_EXCHANGE1 = ((double) university.getInteractionTypeChances().get(this.getParent().getPersonaActionGroup().getID()).get(this.getParent().getAgentMovement().getCurrentAction().getName().getID()).get(2)) / 100,
+                    CHANCE_NONVERBAL2 = ((double) university.getInteractionTypeChances().get(agent.getPersonaActionGroup().getID()).get(agent.getAgentMovement().getCurrentAction().getName().getID()).get(0)) / 100,
+                    CHANCE_COOPERATIVE2 = ((double) university.getInteractionTypeChances().get(agent.getPersonaActionGroup().getID()).get(agent.getAgentMovement().getCurrentAction().getName().getID()).get(1)) / 100,
+                    CHANCE_EXCHANGE2 = ((double) university.getInteractionTypeChances().get(agent.getPersonaActionGroup().getID()).get(agent.getAgentMovement().getCurrentAction().getName().getID()).get(2)) / 100;
 
             if (CHANCE < (CHANCE_NONVERBAL1 + CHANCE_NONVERBAL2) / 2){
                 UniversitySimulator.currentNonverbalCount++;

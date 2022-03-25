@@ -346,7 +346,6 @@ public class MallSimulator extends Simulator {
         for (MallAgent agent : mall.getMovableAgents()) {
             try {
                 moveOne(agent);
-                agent.getAgentGraphic().change();
             } catch (Throwable ex) {
                 ex.printStackTrace();
             }
@@ -1015,6 +1014,7 @@ public class MallSimulator extends Simulator {
                     break;
             }
         }
+        agent.getAgentGraphic().change();
     }
 
     private void spawnAgent(Mall mall, long currentTick) {
