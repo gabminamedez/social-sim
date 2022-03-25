@@ -211,7 +211,6 @@ public class OfficeAgentGraphic extends Graphic {
                 this.graphicIndex = 5;
             }
             else {
-                System.out.println(this.graphicIndex);
                 this.graphicIndex = 1;
             }
         }
@@ -220,7 +219,6 @@ public class OfficeAgentGraphic extends Graphic {
                 this.graphicIndex = 4;
             }
             else {
-                System.out.println(this.graphicIndex);
                 this.graphicIndex = 0;
             }
         }
@@ -229,7 +227,6 @@ public class OfficeAgentGraphic extends Graphic {
                 this.graphicIndex = 7;
             }
             else {
-                System.out.println(this.graphicIndex);
                 this.graphicIndex = 3;
             }
         }
@@ -238,7 +235,6 @@ public class OfficeAgentGraphic extends Graphic {
                 this.graphicIndex = 6;
             }
             else {
-                System.out.println(this.graphicIndex);
                 this.graphicIndex = 2;
             }
         }

@@ -1040,7 +1040,7 @@ public class OfficeSimulator extends Simulator {
                 else if (state.getName() == OfficeState.Name.NEEDS_PRINT) {
                     if (action.getName() == OfficeAction.Name.GO_TO_PRINTER) {
                         agentMovement.setSimultaneousInteractionAllowed(false);
-                        if (agentMovement.getGoalQueueingPatchField() == null) {
+                        if (agentMovement.getGoalAmenity() == null) {
                             if (!agentMovement.chooseGoal(Printer.class)) {
                                 isFull = true;
                                 agentMovement.setNextState(agentMovement.getStateIndex());
@@ -1057,6 +1057,7 @@ public class OfficeSimulator extends Simulator {
                             isFull = false;
                         }
                         else {
+                            //System.out.println(agent.getId() + " Patch: " + agentMovement.getCurrentPatch());
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();
                                 agentMovement.moveSocialForce();
@@ -1304,6 +1305,7 @@ public class OfficeSimulator extends Simulator {
                         agentMovement.setDuration(agentMovement.getDuration() - 1);
                         if (agentMovement.getDuration() <= 0) {
                             agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                             agentMovement.setActionIndex(0);
                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                             agentMovement.getGoalAttractor().setIsReserved(false);
