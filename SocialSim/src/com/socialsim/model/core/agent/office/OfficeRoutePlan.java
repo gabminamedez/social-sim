@@ -330,7 +330,7 @@ public class OfficeRoutePlan {
             case "PRINT" -> {
                 actions = new ArrayList<>();
                 actions.add(new OfficeAction(OfficeAction.Name.GO_TO_PRINTER));
-                actions.add(new OfficeAction(OfficeAction.Name.QUEUE_PRINTER));
+                //actions.add(new OfficeAction(OfficeAction.Name.QUEUE_PRINTER));
                 actions.add(new OfficeAction(OfficeAction.Name.PRINTING, 4, 36));
                 officeState = new OfficeState(OfficeState.Name.NEEDS_PRINT, this, agent, actions);
             }
