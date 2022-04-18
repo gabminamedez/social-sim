@@ -59,11 +59,17 @@ public class Office extends Environment {
     private final List<Sink> sinks;
     private final List<Toilet> toilets;
 
+    private final List<Bulletin> bulletins;
+    private final List<Fridge> fridges;
+    private final List<WaterDispenser> waterDispensers;
+    private final List<Whiteboard> whiteboards;
+
     private final List<Bathroom> bathrooms;
     private final List<Breakroom> breakrooms;
     private final List<MeetingRoom> meetingRooms;
     private final List<OfficeRoom> officeRooms;
     private final List<Reception> receptions;
+    private final List<SecretaryRoom> secretaryRooms;
     private final List<Wall> walls;
     private final List<SecurityField> securityFields;
 
@@ -99,11 +105,17 @@ public class Office extends Environment {
         this.sinks = Collections.synchronizedList(new ArrayList<>());
         this.toilets = Collections.synchronizedList(new ArrayList<>());
 
+        this.bulletins = Collections.synchronizedList(new ArrayList<>());
+        this.fridges = Collections.synchronizedList(new ArrayList<>());
+        this.waterDispensers = Collections.synchronizedList(new ArrayList<>());
+        this.whiteboards = Collections.synchronizedList(new ArrayList<>());
+
         this.bathrooms = Collections.synchronizedList(new ArrayList<>());
         this.breakrooms = Collections.synchronizedList(new ArrayList<>());
         this.meetingRooms = Collections.synchronizedList(new ArrayList<>());
         this.officeRooms = Collections.synchronizedList(new ArrayList<>());
         this.receptions = Collections.synchronizedList(new ArrayList<>());
+        this.secretaryRooms = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
         this.securityFields = Collections.synchronizedList(new ArrayList<>());
     }
@@ -229,6 +241,22 @@ public class Office extends Environment {
         return toilets;
     }
 
+    public List<Bulletin> getBulletins() {
+        return bulletins;
+    }
+
+    public List<Fridge> getFridges() {
+        return fridges;
+    }
+
+    public List<WaterDispenser> getWaterDispensers() {
+        return waterDispensers;
+    }
+
+    public List<Whiteboard> getWhiteboards() {
+        return whiteboards;
+    }
+
     public List<Bathroom> getBathrooms() {
         return bathrooms;
     }
@@ -247,6 +275,10 @@ public class Office extends Environment {
 
     public List<Reception> getReceptions() {
         return receptions;
+    }
+
+    public List<SecretaryRoom> getSecretaryRooms() {
+        return secretaryRooms;
     }
 
     public List<Wall> getWalls() {

@@ -50,7 +50,8 @@ public class Mall extends Environment {
     private final List<Toilet> toilets;
     private final List<Sink> sinks;
     private final List<StoreAisle> storeAisles;
-
+    private final List<Concierge> concierges;
+    private final List<RestoCounter> restoCounters;
 
     private final List<Bathroom> bathrooms;
     private final List<Dining> dinings;
@@ -88,6 +89,8 @@ public class Mall extends Environment {
         this.toilets = Collections.synchronizedList(new ArrayList<>());
         this.sinks = Collections.synchronizedList(new ArrayList<>());
         this.storeAisles = Collections.synchronizedList(new ArrayList<>());
+        this.concierges = Collections.synchronizedList(new ArrayList<>());
+        this.restoCounters = Collections.synchronizedList(new ArrayList<>());
 
         this.bathrooms = Collections.synchronizedList(new ArrayList<>());
         this.dinings = Collections.synchronizedList(new ArrayList<>());
@@ -212,6 +215,14 @@ public class Mall extends Environment {
 
     public List<StoreAisle> getStoreAisles() {
         return storeAisles;
+    }
+
+    public List<Concierge> getConcierges() {
+        return concierges;
+    }
+
+    public List<RestoCounter> getRestoCounters() {
+        return restoCounters;
     }
 
     public List<Bathroom> getBathrooms() {
