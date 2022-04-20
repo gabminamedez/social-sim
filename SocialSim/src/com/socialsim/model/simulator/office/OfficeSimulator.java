@@ -203,13 +203,13 @@ public class OfficeSimulator extends Simulator {
         OfficeAgent.agentCount++;
 
         OfficeAgent guard = office.getAgents().get(1);
-        guard.setAgentMovement(new OfficeAgentMovement(office.getPatch(57,35), guard, 1.27, office.getPatch(57,35).getPatchCenterCoordinates(), -1, 0, null));
+        guard.setAgentMovement(new OfficeAgentMovement(office.getPatch(57,25), guard, 1.27, office.getPatch(57,25).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
         OfficeAgent.guardCount++;
         OfficeAgent.agentCount++;
 
         OfficeAgent receptionist = office.getAgents().get(2);
-        receptionist.setAgentMovement(new OfficeAgentMovement(office.getPatch(46,37), receptionist, 1.27, office.getPatch(46,37).getPatchCenterCoordinates(), -1, 0, null));
+        receptionist.setAgentMovement(new OfficeAgentMovement(office.getPatch(46,31), receptionist, 1.27, office.getPatch(46,32).getPatchCenterCoordinates(), -1, 0, null));
         office.getAgentPatchSet().add(receptionist.getAgentMovement().getCurrentPatch());
         OfficeAgent.receptionistCount++;
         OfficeAgent.agentCount++;
