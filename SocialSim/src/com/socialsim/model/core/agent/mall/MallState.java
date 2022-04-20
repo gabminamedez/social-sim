@@ -19,9 +19,7 @@ public class MallState {
         Store6(5),
         Store7(6),
         Store8(7),
-        Store9(8),
-        Store10(9),
-        Store11(10);
+        Store9(8);
 
         public final int ID;
         Shop(int ID) {
@@ -111,16 +109,12 @@ public class MallState {
                 Shop.Store6,
                 Shop.Store7,
                 Shop.Store8,
-                Shop.Store9,
-                Shop.Store11,
-                Shop.Store10
+                Shop.Store9
         };
     }
 
     public static Shop[] eatShopRight() {
         return new Shop[] {
-                Shop.Store10,
-                Shop.Store11,
                 Shop.Store9,
                 Shop.Store8,
                 Shop.Store7,
@@ -142,8 +136,6 @@ public class MallState {
                 Shop.Store7,
                 Shop.Store8,
                 Shop.Store9,
-                Shop.Store11,
-                Shop.Store10,
                 Shop.Store4,
                 Shop.Store3
         };
@@ -153,8 +145,6 @@ public class MallState {
         return new Shop[]{
                 Shop.Store3,
                 Shop.Store4,
-                Shop.Store10,
-                Shop.Store11,
                 Shop.Store9,
                 Shop.Store8,
                 Shop.Store7,

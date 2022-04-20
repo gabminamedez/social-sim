@@ -385,9 +385,10 @@ public class Mall extends Environment {
     }
 
     public void createInitialAgentDemographics(int MAX_FAMILY, int MAX_FRIENDS, int MAX_COUPLE, int MAX_ALONE){
-        //Guard
         MallAgent guard = MallAgent.MallAgentFactory.create(MallAgent.Type.GUARD, MallAgent.Persona.GUARD, null, null, false, true, 0);
         this.getAgents().add(guard);
+        MallAgent guard1 = MallAgent.MallAgentFactory.create(MallAgent.Type.GUARD, MallAgent.Persona.GUARD, null, null, false, true, 0);
+        this.getAgents().add(guard1);
 
         MallAgent kiosk1 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_KIOSK, MallAgent.Persona.STAFF_KIOSK, null, null, false, true, 0);
         this.getAgents().add(kiosk1);
@@ -403,6 +404,8 @@ public class Mall extends Environment {
         this.getAgents().add(kiosk6);
         MallAgent kiosk7 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_KIOSK, MallAgent.Persona.STAFF_KIOSK, null, null, false, true, 0);
         this.getAgents().add(kiosk7);
+        MallAgent kiosk8 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_KIOSK, MallAgent.Persona.STAFF_KIOSK, null, null, false, true, 0);
+        this.getAgents().add(kiosk8);
 
         MallAgent resto1 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_RESTO, MallAgent.Persona.STAFF_RESTO, null, null, false, true, 1);
         this.getAgents().add(resto1);
@@ -437,12 +440,8 @@ public class Mall extends Environment {
         this.getAgents().add(cashier7);
         MallAgent cashier8 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, false, true, 8);
         this.getAgents().add(cashier8);
-        MallAgent cashier9 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, false, true, 9);
-        this.getAgents().add(cashier9);
-        MallAgent cashier10 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, false, true, 10);
+        MallAgent cashier10 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, false, true, 9);
         this.getAgents().add(cashier10);
-        MallAgent cashier11 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_CASHIER, MallAgent.Persona.STAFF_STORE_CASHIER, null, null, false, true,  11);
-        this.getAgents().add(cashier11);
 
         MallAgent sales = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, false, true, 1);
         this.getAgents().add(sales);
@@ -460,12 +459,8 @@ public class Mall extends Environment {
         this.getAgents().add(sales11);
         MallAgent sales13 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, false, true,8);
         this.getAgents().add(sales13);
-        MallAgent sales15 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, false, true,9);
-        this.getAgents().add(sales15);
-        MallAgent sales17 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, false, true, 10);
+        MallAgent sales17 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, false, true, 9);
         this.getAgents().add(sales17);
-        MallAgent sales19 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, false, true, 11);
-        this.getAgents().add(sales19);
 
         int ctr = 0;
 

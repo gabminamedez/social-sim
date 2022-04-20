@@ -38,18 +38,16 @@ public class MallRoutePlan {
     private static ArrayList<StoreAisle> aisles7 = new ArrayList<>();
     private static ArrayList<StoreAisle> aisles8 = new ArrayList<>();
     private static ArrayList<StoreAisle> aisles9 = new ArrayList<>();
-    private static ArrayList<StoreAisle> aisles10 = new ArrayList<>();
-    private static ArrayList<StoreAisle> aisles11 = new ArrayList<>();
 
     static {
         aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(0));
         aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(1));
-        for (int i = 31; i < 36; i++) {
+        for (int i = 27; i < 32; i++) {
             aisles1.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
         }
 
-        aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(36));
-        aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(37));
+        aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(32));
+        aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(33));
         for (int i = 2; i < 6; i++) {
             aisles2.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
         }
@@ -58,49 +56,39 @@ public class MallRoutePlan {
             aisles3.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
         }
 
-        aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(38));
-        aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(39));
+        aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(34));
+        aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(35));
         for (int i = 12; i < 16; i++) {
             aisles4.add(Main.mallSimulator.getMall().getStoreAisles().get(i));
         }
 
         aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(16));
         aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(17));
-        aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(40));
-        aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(41));
+        aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(36));
+        aisles5.add(Main.mallSimulator.getMall().getStoreAisles().get(37));
 
         aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(18));
         aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(19));
-        aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(42));
-        aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(43));
+        aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(38));
+        aisles6.add(Main.mallSimulator.getMall().getStoreAisles().get(39));
 
         aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(20));
         aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(21));
         aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(22));
-        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(44));
-        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(45));
-        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(46));
-        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(47));
+        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(40));
+        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(41));
+        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(42));
+        aisles7.add(Main.mallSimulator.getMall().getStoreAisles().get(43));
 
         aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(23));
         aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(24));
-        aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(48));
-        aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(49));
+        aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(44));
+        aisles8.add(Main.mallSimulator.getMall().getStoreAisles().get(45));
 
         aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(25));
         aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(26));
-        aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(50));
-        aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(51));
-
-        aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(27));
-        aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(28));
-        aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(52));
-        aisles10.add(Main.mallSimulator.getMall().getStoreAisles().get(53));
-
-        aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(29));
-        aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(30));
-        aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(54));
-        aisles11.add(Main.mallSimulator.getMall().getStoreAisles().get(55));
+        aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(46));
+        aisles9.add(Main.mallSimulator.getMall().getStoreAisles().get(47));
     }
 
     public MallRoutePlan(MallAgent agent, MallAgent leaderAgent, Mall mall, Patch spawnPatch, int team) {
@@ -296,12 +284,6 @@ public class MallRoutePlan {
                 }
                 case 8 -> {
                     randomAisle = aisles9.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles9.size()));
-                }
-                case 9 -> {
-                    randomAisle = aisles10.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles10.size()));
-                }
-                case 10 -> {
-                    randomAisle = aisles11.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(aisles11.size()));
                 }
             }
 
@@ -650,50 +632,6 @@ public class MallRoutePlan {
                         }
                         else {
                             randomAisle = aisles9.get(i);
-                            Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
-                            actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
-                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
-                        }
-                    }
-                }
-                case 9 -> {
-                    for (int i = 0; i < aisles10.size(); i++) {
-                        if (i == 0) {
-                            randomAisle = aisles10.get(i);
-                            Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.GO_TO_STORE, randomPatch));
-                            routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
-                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
-                        }
-                        else {
-                            randomAisle = aisles10.get(i);
-                            Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
-                            actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
-                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
-                        }
-                    }
-                }
-                case 10 -> {
-                    for (int i = 0; i < aisles11.size(); i++) {
-                        if (i == 0) {
-                            randomAisle = aisles11.get(i);
-                            Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.GO_TO_STORE, randomPatch));
-                            routePlan.add(new MallState(MallState.Name.GOING_TO_STORE, this, agent, actions));
-                            actions = new ArrayList<>();
-                            actions.add(new MallAction(MallAction.Name.CHECK_AISLE, 36, 96));
-                            routePlan.add(new MallState(MallState.Name.IN_STORE, this, agent, actions));
-                        }
-                        else {
-                            randomAisle = aisles11.get(i);
                             Patch randomPatch = randomAisle.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(randomAisle.getAttractors().size())).getPatch();
                             actions = new ArrayList<>();
                             actions.add(new MallAction(MallAction.Name.GO_TO_AISLE, randomPatch));
