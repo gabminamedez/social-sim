@@ -45,6 +45,9 @@ public class MallSimulator extends Simulator {
     public static int currentPatronStaffRestoCount = 0;
     public static int currentPatronStaffKioskCount = 0;
     public static int currentPatronGuardCount = 0;
+    public static int currentPatronConciergerCount = 0;
+    public static int currentPatronJanitorCount = 0;
+    public static int currentJanitorJanitorCount = 0;
     public static int currentStaffStoreStaffStoreCount = 0;
     public static int currentStaffStoreStaffRestoCount = 0;
     public static int currentStaffStoreStaffKioskCount = 0;
@@ -109,8 +112,9 @@ public class MallSimulator extends Simulator {
         mall.getAgentPatchSet().add(guard.getAgentMovement().getCurrentPatch());
         MallAgent.guardCount++;
         MallAgent.agentCount++;
+
         MallAgent guard1 = mall.getAgents().get(1);
-        guard1.setAgentMovement(new MallAgentMovement(mall.getPatch(33, 117), guard1, null, 1.27, mall.getPatch(33, 117).getPatchCenterCoordinates(), -1, guard1.getTeam()));
+        guard1.setAgentMovement(new MallAgentMovement(mall.getPatch(41, 2), guard1, null, 1.27, mall.getPatch(41, 2).getPatchCenterCoordinates(), -1, guard1.getTeam()));
         mall.getAgentPatchSet().add(guard1.getAgentMovement().getCurrentPatch());
         MallAgent.guardCount++;
         MallAgent.agentCount++;
@@ -288,6 +292,23 @@ public class MallSimulator extends Simulator {
         mall.getAgentPatchSet().add(sales17.getAgentMovement().getCurrentPatch());
         MallAgent.staffStoreSalesCount++;
         MallAgent.agentCount++;
+
+        MallAgent concierger = mall.getAgents().get(36);
+        concierger.setAgentMovement(new MallAgentMovement(mall.getPatch(29, 11), concierger, null, 1.27, mall.getPatch(29, 11).getPatchCenterCoordinates(), -1, concierger.getTeam()));
+        mall.getAgentPatchSet().add(concierger.getAgentMovement().getCurrentPatch());
+        MallAgent.conciergerCount++;
+        MallAgent.agentCount++;
+
+        MallAgent janitor1 = mall.getAgents().get(37);
+        janitor1.setAgentMovement(new MallAgentMovement(mall.getPatch(8, 6), janitor1, null, 1.27, mall.getPatch(8, 6).getPatchCenterCoordinates(), -1, janitor1.getTeam()));
+        mall.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
+        MallAgent.janitorCount++;
+        MallAgent.agentCount++;
+        MallAgent janitor2 = mall.getAgents().get(38);
+        janitor2.setAgentMovement(new MallAgentMovement(mall.getPatch(51, 6), janitor2, null, 1.27, mall.getPatch(51, 6).getPatchCenterCoordinates(), -1, janitor2.getTeam()));
+        mall.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
+        MallAgent.janitorCount++;
+        MallAgent.agentCount++;
     }
 
     public void reset() {
@@ -424,8 +445,14 @@ public class MallSimulator extends Simulator {
                     if (state.getName() == MallState.Name.GOING_TO_SECURITY) {
                         if (action.getName() == MallAction.Name.GOING_TO_SECURITY_QUEUE) {
                             if (agentMovement.getGoalQueueingPatchField() == null) {
-                                agentMovement.setGoalQueueingPatchField(Main.mallSimulator.getMall().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
-                                agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getSecurities().get(0));
+                                if (agentMovement.getIsGate1()) {
+                                    agentMovement.setGoalQueueingPatchField(Main.mallSimulator.getMall().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
+                                    agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getSecurities().get(0));
+                                }
+                                else {
+                                    agentMovement.setGoalQueueingPatchField(Main.mallSimulator.getMall().getSecurities().get(1).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
+                                    agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getSecurities().get(1));
+                                }
                             }
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();
@@ -938,7 +965,13 @@ public class MallSimulator extends Simulator {
                     else if (state.getName() == MallState.Name.GOING_HOME) {
                         if (action.getName() == MallAction.Name.LEAVE_BUILDING) {
                             if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getMallGates().get(0));
+                                boolean isGate1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+                                if (isGate1) {
+                                    agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getMallGates().get(0));
+                                }
+                                else {
+                                    agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getMallGates().get(1));
+                                }
                                 agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
                             }
 
@@ -1008,10 +1041,21 @@ public class MallSimulator extends Simulator {
     }
 
     private void spawnAgent(Mall mall, long currentTick) {
-        MallGate gate = mall.getMallGates().get(1);
+        MallGate gate = null;
+        MallGate gate1 = mall.getMallGates().get(2);
+        MallGate gate2 = mall.getMallGates().get(3);
+
         MallAgent agent2 = null;
         MallAgent agent3 = null;
         MallAgent agent4 = null;
+
+        boolean isGate1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+        if (isGate1) {
+            gate = gate1;
+        }
+        else {
+            gate = gate2;
+        }
 
         Gate.GateBlock spawner1 = gate.getSpawners().get(0);
         Gate.GateBlock spawner2 = gate.getSpawners().get(1);
@@ -1037,24 +1081,28 @@ public class MallSimulator extends Simulator {
 
                     leaderAgent.setAgentMovement(new MallAgentMovement(spawner1.getPatch(), leaderAgent, null, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick, leaderAgent.getTeam()));
                     mall.getAgentPatchSet().add(leaderAgent.getAgentMovement().getCurrentPatch());
+                    leaderAgent.getAgentMovement().setIsGate1(isGate1);
                     currentPatronCount++;
                     MallAgent.patronCount++;
                     MallAgent.agentCount++;
 
                     agent2.setAgentMovement(new MallAgentMovement(spawner2.getPatch(), agent2, leaderAgent, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick, agent2.getTeam()));
                     mall.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+                    agent2.getAgentMovement().setIsGate1(isGate1);
                     currentPatronCount++;
                     MallAgent.patronCount++;
                     MallAgent.agentCount++;
 
                     agent3.setAgentMovement(new MallAgentMovement(spawner3.getPatch(), agent3, leaderAgent, 1.27, spawner3.getPatch().getPatchCenterCoordinates(), currentTick, agent3.getTeam()));
                     mall.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
+                    agent3.getAgentMovement().setIsGate1(isGate1);
                     currentPatronCount++;
                     MallAgent.patronCount++;
                     MallAgent.agentCount++;
 
                     agent4.setAgentMovement(new MallAgentMovement(spawner4.getPatch(), agent4, leaderAgent, 1.27, spawner4.getPatch().getPatchCenterCoordinates(), currentTick, agent4.getTeam()));
                     mall.getAgentPatchSet().add(agent4.getAgentMovement().getCurrentPatch());
+                    agent4.getAgentMovement().setIsGate1(isGate1);
                     currentPatronCount++;
                     MallAgent.patronCount++;
                     MallAgent.agentCount++;
@@ -1079,18 +1127,21 @@ public class MallSimulator extends Simulator {
 
                     leaderAgent.setAgentMovement(new MallAgentMovement(spawner1.getPatch(), leaderAgent, null, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick, leaderAgent.getTeam()));
                     mall.getAgentPatchSet().add(leaderAgent.getAgentMovement().getCurrentPatch());
+                    leaderAgent.getAgentMovement().setIsGate1(isGate1);
                     currentPatronCount++;
                     MallAgent.patronCount++;
                     MallAgent.agentCount++;
 
                     agent2.setAgentMovement(new MallAgentMovement(spawner2.getPatch(), agent2, leaderAgent, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick, agent2.getTeam()));
                     mall.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+                    agent2.getAgentMovement().setIsGate1(isGate1);
                     currentPatronCount++;
                     MallAgent.patronCount++;
                     MallAgent.agentCount++;
 
                     agent3.setAgentMovement(new MallAgentMovement(spawner3.getPatch(), agent3, leaderAgent, 1.27, spawner3.getPatch().getPatchCenterCoordinates(), currentTick, agent3.getTeam()));
                     mall.getAgentPatchSet().add(agent3.getAgentMovement().getCurrentPatch());
+                    agent3.getAgentMovement().setIsGate1(isGate1);
                     currentPatronCount++;
                     MallAgent.patronCount++;
                     MallAgent.agentCount++;
@@ -1114,12 +1165,14 @@ public class MallSimulator extends Simulator {
 
                     leaderAgent.setAgentMovement(new MallAgentMovement(spawner1.getPatch(), leaderAgent, null, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick, leaderAgent.getTeam()));
                     mall.getAgentPatchSet().add(leaderAgent.getAgentMovement().getCurrentPatch());
+                    leaderAgent.getAgentMovement().setIsGate1(isGate1);
                     currentPatronCount++;
                     MallAgent.patronCount++;
                     MallAgent.agentCount++;
 
                     agent2.setAgentMovement(new MallAgentMovement(spawner2.getPatch(), agent2, leaderAgent, 1.27, spawner2.getPatch().getPatchCenterCoordinates(), currentTick, agent2.getTeam()));
                     mall.getAgentPatchSet().add(agent2.getAgentMovement().getCurrentPatch());
+                    agent2.getAgentMovement().setIsGate1(isGate1);
                     currentPatronCount++;
                     MallAgent.patronCount++;
                     MallAgent.agentCount++;
@@ -1134,6 +1187,7 @@ public class MallSimulator extends Simulator {
                     MallAgent leaderAgent = mall.getUnspawnedAloneAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(mall.getUnspawnedAloneAgents().size()));
                     leaderAgent.setAgentMovement(new MallAgentMovement(spawner1.getPatch(), leaderAgent, null, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick, leaderAgent.getTeam()));
                     mall.getAgentPatchSet().add(leaderAgent.getAgentMovement().getCurrentPatch());
+                    leaderAgent.getAgentMovement().setIsGate1(isGate1);
                     currentPatronCount++;
                     MallAgent.patronCount++;
                     MallAgent.agentCount++;
@@ -1161,6 +1215,9 @@ public class MallSimulator extends Simulator {
         currentPatronStaffRestoCount = 0;
         currentPatronStaffKioskCount = 0;
         currentPatronGuardCount = 0;
+        currentPatronConciergerCount = 0;
+        currentPatronJanitorCount = 0;
+        currentJanitorJanitorCount = 0;
         currentStaffStoreStaffStoreCount = 0;
         currentStaffStoreStaffRestoCount = 0;
         currentStaffStoreStaffKioskCount = 0;

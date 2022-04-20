@@ -462,6 +462,14 @@ public class Mall extends Environment {
         MallAgent sales17 = MallAgent.MallAgentFactory.create(MallAgent.Type.STAFF_STORE_SALES, MallAgent.Persona.STAFF_STORE_SALES, null, null, false, true, 9);
         this.getAgents().add(sales17);
 
+        MallAgent concierger = MallAgent.MallAgentFactory.create(MallAgent.Type.CONCIERGER, MallAgent.Persona.CONCIERGER, null, null, false, true, 0);
+        this.getAgents().add(concierger);
+
+        MallAgent janitor1 = MallAgent.MallAgentFactory.create(MallAgent.Type.JANITOR, MallAgent.Persona.JANITOR, null, null, false, true, 0);
+        this.getAgents().add(janitor1);
+        MallAgent janitor2 = MallAgent.MallAgentFactory.create(MallAgent.Type.JANITOR, MallAgent.Persona.JANITOR, null, null, false, true, 0);
+        this.getAgents().add(janitor2);
+
         int ctr = 0;
 
         while (ctr < MAX_FAMILY){
@@ -673,6 +681,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case STAFF_STORE_CASHIER -> {
@@ -695,6 +705,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case STAFF_RESTO -> {
@@ -714,6 +726,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case STAFF_KIOSK -> {
@@ -730,6 +744,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case GUARD -> {
@@ -746,6 +762,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case ERRAND_FAMILY -> {
@@ -765,6 +783,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case LOITER_FAMILY -> {
@@ -784,6 +804,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case ERRAND_FRIENDS -> {
@@ -803,6 +825,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case LOITER_FRIENDS -> {
@@ -822,6 +846,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case ERRAND_ALONE -> {
@@ -838,6 +864,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case LOITER_ALONE -> {
@@ -854,6 +882,8 @@ public class Mall extends Environment {
                             case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3, 4)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case LOITER_COUPLE -> {
@@ -873,6 +903,42 @@ public class Mall extends Environment {
                                 personaIOS.add(new CopyOnWriteArrayList<>(List.of(4, 5, 6, 7)));
                                 personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             }
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        }
+                    }
+                    case CONCIERGER -> {
+                        switch (persona2){
+                            case STAFF_STORE_SALES -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case STAFF_STORE_CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case STAFF_RESTO -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case STAFF_KIOSK -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case ERRAND_FAMILY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case LOITER_FAMILY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case ERRAND_FRIENDS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case LOITER_FRIENDS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        }
+                    }
+                    case JANITOR -> {
+                        switch (persona2){
+                            case STAFF_STORE_SALES -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case STAFF_STORE_CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case STAFF_RESTO -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case STAFF_KIOSK -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case GUARD -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case ERRAND_FAMILY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case LOITER_FAMILY -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case ERRAND_FRIENDS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case LOITER_FRIENDS -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case ERRAND_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                         }
                     }
                 }
@@ -1220,6 +1286,82 @@ public class Mall extends Environment {
                             case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
                             case DINING_AREA_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                             case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_KIOSK_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_KIOSK_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_RESTO_SERVE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_RESTO_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case CONCIERGER -> {
+                        switch(action){
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VIEW_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SIT_ON_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_STAFF_SALES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RESTAURANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_STAFF_RESTO -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RESTAURANT_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DINING_AREA_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_KIOSK_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_KIOSK_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_RESTO_SERVE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_RESTO_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                        }
+                    }
+                    case JANITOR -> {
+                        switch(action){
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case VIEW_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case FIND_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case SIT_ON_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECK_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_STAFF_SALES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case QUEUE_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case CHECKOUT_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_RESTAURANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_STAFF_RESTO -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case RESTAURANT_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DINING_AREA_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_KIOSK_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));

@@ -174,6 +174,8 @@ public class MallAgent extends Agent {
         staffRestoCount = 0;
         staffKioskCount = 0;
         guardCount = 0;
+        janitorCount = 0;
+        conciergerCount = 0;
     }
 
     @Override

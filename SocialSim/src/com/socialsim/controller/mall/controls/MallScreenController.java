@@ -67,6 +67,9 @@ public class MallScreenController extends ScreenController {
     @FXML private Label currentPatronStaffRestoCount;
     @FXML private Label currentPatronStaffKioskCount;
     @FXML private Label currentPatronGuardCount;
+    @FXML private Label currentPatronConciergerCount;
+    @FXML private Label currentPatronJanitorCount;
+    @FXML private Label currentJanitorJanitorCount;
     @FXML private Label currentStaffStoreStaffStoreCount;
     @FXML private Label currentStaffRestoStaffRestoCount;
 
@@ -183,7 +186,7 @@ public class MallScreenController extends ScreenController {
 
         List<Patch> dining1Patches = new ArrayList<>();
         for (int i = 25; i < 35; i++) {
-            for (int j = 96; j < 116; j++) {
+            for (int j = 96; j < 114; j++) {
                 dining1Patches.add(mall.getPatch(i, j));
             }
         }
@@ -352,23 +355,27 @@ public class MallScreenController extends ScreenController {
         StoreAisleMapper.draw(aisleRightPatches, "RIGHT");
 
         List<Patch> mallGateExitPatches = new ArrayList<>();
+        mallGateExitPatches.add(mall.getPatch(16,0));
         mallGateExitPatches.add(mall.getPatch(24,0));
-        mallGateExitPatches.add(mall.getPatch(24,119));
         MallGateMapper.draw(mallGateExitPatches, MallGate.MallGateMode.EXIT);
 
         List<Patch> mallGateEntrancePatches = new ArrayList<>();
         mallGateEntrancePatches.add(mall.getPatch(32,0));
-        mallGateEntrancePatches.add(mall.getPatch(32,119));
+        mallGateEntrancePatches.add(mall.getPatch(40,0));
         MallGateMapper.draw(mallGateEntrancePatches, MallGate.MallGateMode.ENTRANCE);
 
         List<Patch> securityPatches = new ArrayList<>();
         securityPatches.add(mall.getPatch(32,2));
+        securityPatches.add(mall.getPatch(40,2));
         SecurityMapper.draw(securityPatches);
 
         List<Patch> digitalPatches = new ArrayList<>();
-        digitalPatches.add(mall.getPatch(27,10));
         digitalPatches.add(mall.getPatch(27,94));
         DigitalMapper.draw(digitalPatches);
+
+        List<Patch> conciergePatches = new ArrayList<>();
+        conciergePatches.add(mall.getPatch(27,10));
+        ConciergeMapper.draw(conciergePatches);
 
         List<Patch> kioskPatches = new ArrayList<>();
         kioskPatches.add(mall.getPatch(26,97));
@@ -619,6 +626,9 @@ public class MallScreenController extends ScreenController {
         currentPatronStaffRestoCount.setText(String.valueOf(MallSimulator.currentPatronStaffRestoCount));
         currentPatronStaffKioskCount.setText(String.valueOf(MallSimulator.currentPatronStaffKioskCount));
         currentPatronGuardCount.setText(String.valueOf(MallSimulator.currentPatronGuardCount));
+        currentPatronConciergerCount.setText(String.valueOf(MallSimulator.currentPatronConciergerCount));
+        currentPatronJanitorCount.setText(String.valueOf(MallSimulator.currentPatronJanitorCount));
+        currentJanitorJanitorCount.setText(String.valueOf(MallSimulator.currentJanitorJanitorCount));
         currentStaffStoreStaffStoreCount.setText(String.valueOf(MallSimulator.currentStaffStoreStaffStoreCount));
         currentStaffRestoStaffRestoCount.setText(String.valueOf(MallSimulator.currentStaffRestoStaffRestoCount));
     }

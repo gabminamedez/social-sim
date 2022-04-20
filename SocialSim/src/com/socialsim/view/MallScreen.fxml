@@ -256,6 +256,26 @@
                                         <Label fx:id="currentPatronPatronCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
                                     </children>
                                 </AnchorPane>
+
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Concierger Interactions" />
+                                        <Label fx:id="currentPatronConciergerCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Patron to Janitor Interactions" />
+                                        <Label fx:id="currentPatronJanitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Janitor to Janitor Interactions" />
+                                        <Label fx:id="currentJanitorJanitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                     <children>
                                         <Label prefHeight="26.0" prefWidth="150.0" text="Resto Staff to Resto Staff Interactions" />

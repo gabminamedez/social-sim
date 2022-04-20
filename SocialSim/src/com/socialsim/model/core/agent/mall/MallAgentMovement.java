@@ -83,6 +83,7 @@ public class MallAgentMovement extends AgentMovement {
     private boolean isSimultaneousInteractionAllowed;
     private int interactionDuration;
     private MallAgentMovement.InteractionType interactionType;
+    private boolean isGate1;
 
     public enum InteractionType {
         NON_VERBAL, COOPERATIVE, EXCHANGE
@@ -109,7 +110,7 @@ public class MallAgentMovement extends AgentMovement {
         this.currentPatch.getAgents().add(parent);
         this.mall = (Mall) currentPatch.getEnvironment();
 
-        if (parent.getInOnStart() && parent.getType() != MallAgent.Type.STAFF_STORE_CASHIER) {
+        if (parent.getInOnStart() && parent.getType() != MallAgent.Type.STAFF_STORE_CASHIER && parent.getType() != MallAgent.Type.CONCIERGER) {
             this.proposedHeading = Math.toRadians(270.0);
             this.heading = Math.toRadians(270.0);
             this.fieldOfViewAngle = this.mall.getFieldOfView();
@@ -125,6 +126,11 @@ public class MallAgentMovement extends AgentMovement {
                 this.heading = Math.toRadians(270.0);
                 this.fieldOfViewAngle = this.mall.getFieldOfView();
             }
+        }
+        else if (parent.getInOnStart() && parent.getType() == MallAgent.Type.CONCIERGER) {
+            this.proposedHeading = Math.toRadians(180.0);
+            this.heading = Math.toRadians(180.0);
+            this.fieldOfViewAngle = this.mall.getFieldOfView();
         }
         else {
             this.proposedHeading = Math.toRadians(0);
@@ -154,6 +160,8 @@ public class MallAgentMovement extends AgentMovement {
         if (this.currentAction.getDuration() != 0) {
             this.duration = this.currentAction.getDuration();
         }
+
+        isGate1 = false;
     }
 
     public MallAgent getParent() {
@@ -349,6 +357,14 @@ public class MallAgentMovement extends AgentMovement {
 
     public QueueingPatchField getGoalQueueingPatchField() {
         return goalQueueingPatchField;
+    }
+
+    public boolean getIsGate1() {
+        return isGate1;
+    }
+
+    public void setIsGate1(boolean isGate1) {
+        this.isGate1 = isGate1;
     }
 
     public void setGoalQueueingPatchField(QueueingPatchField goalQueueingPatchField) {
@@ -1594,7 +1610,12 @@ public class MallAgentMovement extends AgentMovement {
             this.interactionDuration = this.duration;
         }
         else if (agentPersona == MallAgent.Persona.GUARD) {
-            MallSimulator.currentPatchCount[33][2]++;
+            if (isGate1) {
+                MallSimulator.currentPatchCount[33][2]++;
+            }
+            else {
+                MallSimulator.currentPatchCount[41][2]++;
+            }
             MallSimulator.currentPatronGuardCount++;
             this.heading = 0;
             this.interactionDuration = this.duration;
@@ -1732,6 +1753,14 @@ public class MallAgentMovement extends AgentMovement {
                     case STAFF_KIOSK -> MallSimulator.currentPatronStaffKioskCount++;
                     case GUARD -> MallSimulator.currentPatronGuardCount++;
                     case PATRON -> MallSimulator.currentPatronPatronCount++;
+
+                    case CONCIERGER -> MallSimulator.currentPatronConciergerCount++;
+                    case JANITOR -> MallSimulator.currentPatronJanitorCount++;
+                }
+            }
+            else if (this.parent.getType() == MallAgent.Type.JANITOR){
+                switch (agent.getType()){
+                    case JANITOR -> MallSimulator.currentJanitorJanitorCount++;
                 }
             }
             this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
