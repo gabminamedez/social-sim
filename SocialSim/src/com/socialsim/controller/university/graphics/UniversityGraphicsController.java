@@ -188,6 +188,11 @@ public class UniversityGraphicsController extends Controller {
                     backgroundGraphicsContext.setFill(patchColor);
                     backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }
+                else if (patchPatchField.getClass() == StaffOffice.class){
+                    patchColor = Color.rgb(234, 133, 101);
+                    backgroundGraphicsContext.setFill(patchColor);
+                    backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+                }
                 else if (patchPatchField.getClass() == Wall.class) {
                     patchColor = Color.rgb(104, 101, 101);
                     backgroundGraphicsContext.setFill(patchColor);
@@ -202,7 +207,7 @@ public class UniversityGraphicsController extends Controller {
                         AgentGraphicLocation agentGraphicLocation = universityAgent.getAgentGraphic().getGraphicLocation();
 
                         Image CURRENT_URL = null;
-                        if (universityAgent.getType() == UniversityAgent.Type.GUARD || universityAgent.getType() == UniversityAgent.Type.JANITOR) {
+                        if (universityAgent.getType() == UniversityAgent.Type.GUARD || universityAgent.getType() == UniversityAgent.Type.JANITOR || universityAgent.getType() == UniversityAgent.Type.STAFF) {
                             CURRENT_URL = AGENT_SPRITES_4;
                         }
                         else if (universityAgent.getType() == UniversityAgent.Type.PROFESSOR) {

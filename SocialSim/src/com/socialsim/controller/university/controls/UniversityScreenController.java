@@ -61,10 +61,13 @@ public class UniversityScreenController extends ScreenController {
     @FXML private Label currentStudentProfCount;
     @FXML private Label currentStudentGuardCount;
     @FXML private Label currentStudentJanitorCount;
+    @FXML private Label currentStudentStaffCount;
     @FXML private Label currentProfProfCount;
     @FXML private Label currentProfGuardCount;
     @FXML private Label currentProfJanitorCount;
+    @FXML private Label currentProfStaffCount;
     @FXML private Label currentJanitorJanitorCount;
+    @FXML private Label currentStaffStaffCount;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
 
@@ -223,15 +226,15 @@ public class UniversityScreenController extends ScreenController {
         }
         Main.universitySimulator.getUniversity().getClassrooms().add(Classroom.classroomFactory.create(classroom6Patches, 5));
 
-        List<Patch> studyAreaPatches = new ArrayList<>();
+        List<Patch> staffOfficePatches = new ArrayList<>();
         for (int i = 3; i < 24; i++) {
             for (int j = 74; j < 94; j++) {
                 if (i != 23 || (j >= 82 && j <= 85)) {
-                    studyAreaPatches.add(university.getPatch(i, j));
+                    staffOfficePatches.add(university.getPatch(i, j));
                 }
             }
         }
-        Main.universitySimulator.getUniversity().getStudyAreas().add(StudyArea.studyAreaFactory.create(studyAreaPatches, 1));
+        Main.universitySimulator.getUniversity().getStaffOffices().add(StaffOffice.staffOfficeFactory.create(staffOfficePatches, 1));
 
         List<Patch> studyArea2Patches = new ArrayList<>();
         for (int i = 36; i < 56; i++) {
@@ -258,10 +261,13 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> benchDownPatches = new ArrayList<>();
         benchDownPatches.add(university.getPatch(24,47));
         benchDownPatches.add(university.getPatch(24,55));
+        benchDownPatches.add(university.getPatch(24,11));
         BenchMapper.draw(benchDownPatches, "DOWN");
 
         List<Patch> benchUpPatches = new ArrayList<>();
         benchUpPatches.add(university.getPatch(35,98));
+        benchUpPatches.add(university.getPatch(35,29));
+        benchUpPatches.add(university.getPatch(35,67));
         BenchMapper.draw(benchUpPatches, "UP");
 
         List<Patch> boardRightPatches = new ArrayList<>();
@@ -287,14 +293,14 @@ public class UniversityScreenController extends ScreenController {
         BulletinMapper.draw(bulletinRightPatches, "RIGHT");
 
         List<Patch> bulletinDownPatches = new ArrayList<>();
-        bulletinDownPatches.add(university.getPatch(23,10));
+//        bulletinDownPatches.add(university.getPatch(23,10));
         bulletinDownPatches.add(university.getPatch(23,32));
         BulletinMapper.draw(bulletinDownPatches, "DOWN");
 
         List<Patch> bulletinUpPatches = new ArrayList<>();
-        bulletinUpPatches.add(university.getPatch(36,28));
-        bulletinUpPatches.add(university.getPatch(36,47));
-        bulletinUpPatches.add(university.getPatch(36,66));
+//        bulletinUpPatches.add(university.getPatch(36,28));
+//        bulletinUpPatches.add(university.getPatch(36,47));
+//        bulletinUpPatches.add(university.getPatch(36,66));
         bulletinUpPatches.add(university.getPatch(36,85));
         BulletinMapper.draw(bulletinUpPatches, "UP");
 
@@ -353,6 +359,16 @@ public class UniversityScreenController extends ScreenController {
                 }
             }
         }
+
+        chairPatches.add(university.getPatch(11, 77));
+        chairPatches.add(university.getPatch(11, 82));
+        chairPatches.add(university.getPatch(11, 87));
+        chairPatches.add(university.getPatch(15, 74));
+        chairPatches.add(university.getPatch(18, 74));
+        chairPatches.add(university.getPatch(21, 74));
+        chairPatches.add(university.getPatch(15, 93));
+        chairPatches.add(university.getPatch(18, 93));
+        chairPatches.add(university.getPatch(21, 93));
         ChairMapper.draw(chairPatches);
 
         List<Patch> doorDownPatches = new ArrayList<>();
@@ -428,50 +444,90 @@ public class UniversityScreenController extends ScreenController {
         profTableLeftPatches.add(university.getPatch(46,93));
         ProfTableMapper.draw(profTableLeftPatches, "LEFT");
 
+//        List<Patch> studyTablePatches = new ArrayList<>();
+//        for (int i = 5; i < 17; i++) {
+//            if (i == 5 || i == 8 || i == 13 || i == 16) {
+//                for (int j = 77; j < 82; j++) {
+//                    if (j == 77 || j == 81) {
+//                        studyTablePatches.add(university.getPatch(i, j));
+//                    }
+//                }
+//            }
+//        }
+//        StudyTableMapper.draw(studyTablePatches, "LEFT");
+//        studyTablePatches = new ArrayList<>();
+//        studyTablePatches.add(university.getPatch(12, 86));
+//        studyTablePatches.add(university.getPatch(20, 86));
+//        studyTablePatches.add(university.getPatch(12, 90));
+//        studyTablePatches.add(university.getPatch(20, 90));
+//        studyTablePatches.add(university.getPatch(4, 86));
+//        studyTablePatches.add(university.getPatch(8, 86));
+//        studyTablePatches.add(university.getPatch(4, 90));
+//        studyTablePatches.add(university.getPatch(8, 90));
+//        studyTablePatches.add(university.getPatch(16, 86));
+//        studyTablePatches.add(university.getPatch(16, 90));
+//        studyTablePatches.add(university.getPatch(20, 76));
+//        studyTablePatches.add(university.getPatch(20, 80));
+//        StudyTableMapper.draw(studyTablePatches, "UP");
+
         List<Patch> studyTablePatches = new ArrayList<>();
-        for (int i = 5; i < 17; i++) {
-            if (i == 5 || i == 8 || i == 13 || i == 16) {
-                for (int j = 77; j < 82; j++) {
-                    if (j == 77 || j == 81) {
-                        studyTablePatches.add(university.getPatch(i, j));
-                    }
-                }
-            }
-        }
-        StudyTableMapper.draw(studyTablePatches, "LEFT");
-        studyTablePatches = new ArrayList<>();
-        studyTablePatches.add(university.getPatch(12, 86));
-        studyTablePatches.add(university.getPatch(20, 86));
-        studyTablePatches.add(university.getPatch(12, 90));
-        studyTablePatches.add(university.getPatch(20, 90));
-        studyTablePatches.add(university.getPatch(4, 86));
-        studyTablePatches.add(university.getPatch(8, 86));
-        studyTablePatches.add(university.getPatch(4, 90));
-        studyTablePatches.add(university.getPatch(8, 90));
-        studyTablePatches.add(university.getPatch(16, 86));
-        studyTablePatches.add(university.getPatch(16, 90));
-        studyTablePatches.add(university.getPatch(20, 76));
-        studyTablePatches.add(university.getPatch(20, 80));
+        studyTablePatches.add(university.getPatch(40, 101));
+        studyTablePatches.add(university.getPatch(44, 101));
+        studyTablePatches.add(university.getPatch(48, 101));
+        studyTablePatches.add(university.getPatch(52, 101));
+        studyTablePatches.add(university.getPatch(40, 105));
+        studyTablePatches.add(university.getPatch(44, 105));
+        studyTablePatches.add(university.getPatch(48, 105));
+        studyTablePatches.add(university.getPatch(52, 105));
+        studyTablePatches.add(university.getPatch(40, 111));
+        studyTablePatches.add(university.getPatch(44, 111));
+        studyTablePatches.add(university.getPatch(48, 111));
+        studyTablePatches.add(university.getPatch(52, 111));
+        studyTablePatches.add(university.getPatch(40, 115));
+        studyTablePatches.add(university.getPatch(44, 115));
+        studyTablePatches.add(university.getPatch(48, 115));
+        studyTablePatches.add(university.getPatch(52, 115));
         StudyTableMapper.draw(studyTablePatches, "UP");
 
-        List<Patch> studyTable2Patches = new ArrayList<>();
-        studyTable2Patches.add(university.getPatch(40, 101));
-        studyTable2Patches.add(university.getPatch(44, 101));
-        studyTable2Patches.add(university.getPatch(48, 101));
-        studyTable2Patches.add(university.getPatch(52, 101));
-        studyTable2Patches.add(university.getPatch(40, 105));
-        studyTable2Patches.add(university.getPatch(44, 105));
-        studyTable2Patches.add(university.getPatch(48, 105));
-        studyTable2Patches.add(university.getPatch(52, 105));
-        studyTable2Patches.add(university.getPatch(40, 111));
-        studyTable2Patches.add(university.getPatch(44, 111));
-        studyTable2Patches.add(university.getPatch(48, 111));
-        studyTable2Patches.add(university.getPatch(52, 111));
-        studyTable2Patches.add(university.getPatch(40, 115));
-        studyTable2Patches.add(university.getPatch(44, 115));
-        studyTable2Patches.add(university.getPatch(48, 115));
-        studyTable2Patches.add(university.getPatch(52, 115));
-        StudyTableMapper.draw(studyTable2Patches, "UP");
+        List<Patch> officeTablePatches = new ArrayList<>();
+        officeTablePatches.add(university.getPatch(10, 74));
+        officeTablePatches.add(university.getPatch(10, 76));
+        officeTablePatches.add(university.getPatch(10, 78));
+        officeTablePatches.add(university.getPatch(10, 80));
+        officeTablePatches.add(university.getPatch(10, 82));
+        officeTablePatches.add(university.getPatch(10, 84));
+        officeTablePatches.add(university.getPatch(10, 86));
+        officeTablePatches.add(university.getPatch(10, 88));
+
+
+        officeTablePatches.add(university.getPatch(6, 77));
+        officeTablePatches.add(university.getPatch(7, 77));
+        officeTablePatches.add(university.getPatch(6, 79));
+        officeTablePatches.add(university.getPatch(7, 79));
+        officeTablePatches.add(university.getPatch(6, 81));
+        officeTablePatches.add(university.getPatch(7, 81));
+        officeTablePatches.add(university.getPatch(6, 85));
+        officeTablePatches.add(university.getPatch(7, 85));
+        officeTablePatches.add(university.getPatch(6, 87));
+        officeTablePatches.add(university.getPatch(7, 87));
+        officeTablePatches.add(university.getPatch(6, 89));
+        officeTablePatches.add(university.getPatch(7, 89));
+        OfficeTableMapper.draw(officeTablePatches, "DOWN");
+
+        List<Patch> cabinetPatches = new ArrayList<>();
+        cabinetPatches.add(university.getPatch(3, 74));
+        cabinetPatches.add(university.getPatch(3, 76));
+        cabinetPatches.add(university.getPatch(3, 78));
+        cabinetPatches.add(university.getPatch(3, 80));
+        cabinetPatches.add(university.getPatch(3, 82));
+        cabinetPatches.add(university.getPatch(3, 84));
+        cabinetPatches.add(university.getPatch(3, 86));
+        cabinetPatches.add(university.getPatch(3, 88));
+        cabinetPatches.add(university.getPatch(3, 90));
+        cabinetPatches.add(university.getPatch(3, 92));
+        cabinetPatches.add(university.getPatch(5, 74));
+        cabinetPatches.add(university.getPatch(5, 92));
+        CabinetMapper.draw(cabinetPatches, "DOWN");
 
         List<Patch> trashPatches = new ArrayList<>();
         trashPatches.add(university.getPatch(36,19));
@@ -482,6 +538,9 @@ public class UniversityScreenController extends ScreenController {
         trashPatches.add(university.getPatch(20,71));
         trashPatches.add(university.getPatch(22,71));
         trashPatches.add(university.getPatch(24,95));
+        trashPatches.add(university.getPatch(35,47));
+        trashPatches.add(university.getPatch(35,49));
+        trashPatches.add(university.getPatch(35,51));
         TrashMapper.draw(trashPatches);
 
         List<Patch> universityGateExitPatches = new ArrayList<>();
@@ -560,10 +619,13 @@ public class UniversityScreenController extends ScreenController {
         currentStudentProfCount.setText(String.valueOf(UniversitySimulator.currentStudentProfCount));
         currentStudentGuardCount.setText(String.valueOf(UniversitySimulator.currentStudentGuardCount));
         currentStudentJanitorCount.setText(String.valueOf(UniversitySimulator.currentStudentJanitorCount));
+        currentStudentStaffCount.setText(String.valueOf(UniversitySimulator.currentStudentStaffCount));
         currentProfProfCount.setText(String.valueOf(UniversitySimulator.currentProfProfCount));
         currentProfGuardCount.setText(String.valueOf(UniversitySimulator.currentProfGuardCount));
         currentProfJanitorCount.setText(String.valueOf(UniversitySimulator.currentProfJanitorCount));
+        currentProfStaffCount.setText(String.valueOf(UniversitySimulator.currentProfStaffCount));
         currentJanitorJanitorCount.setText(String.valueOf(UniversitySimulator.currentJanitorJanitorCount));
+        currentStaffStaffCount.setText(String.valueOf(UniversitySimulator.currentStaffStaffCount));
     }
 
     public void setElements() {
@@ -688,10 +750,13 @@ public class UniversityScreenController extends ScreenController {
         currentStudentProfCount.setText(String.valueOf(UniversitySimulator.currentStudentProfCount));
         currentStudentGuardCount.setText(String.valueOf(UniversitySimulator.currentStudentGuardCount));
         currentStudentJanitorCount.setText(String.valueOf(UniversitySimulator.currentStudentJanitorCount));
+        currentStudentStaffCount.setText(String.valueOf(UniversitySimulator.currentStudentStaffCount));
         currentProfProfCount.setText(String.valueOf(UniversitySimulator.currentProfProfCount));
         currentProfGuardCount.setText(String.valueOf(UniversitySimulator.currentProfGuardCount));
         currentProfJanitorCount.setText(String.valueOf(UniversitySimulator.currentProfJanitorCount));
+        currentProfStaffCount.setText(String.valueOf(UniversitySimulator.currentProfStaffCount));
         currentJanitorJanitorCount.setText(String.valueOf(UniversitySimulator.currentJanitorJanitorCount));
+        currentStaffStaffCount.setText(String.valueOf(UniversitySimulator.currentStaffStaffCount));
     }
 
     public boolean validateParameters() {

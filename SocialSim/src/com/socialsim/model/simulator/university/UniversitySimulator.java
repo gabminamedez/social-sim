@@ -41,11 +41,14 @@ public class UniversitySimulator extends Simulator {
     public static int currentStudentProfCount = 0;
     public static int currentStudentGuardCount = 0;
     public static int currentStudentJanitorCount = 0;
+    public static int currentStudentStaffCount = 0;
     public static int currentProfProfCount = 0;
     public static int currentProfGuardCount = 0;
     public static int currentProfJanitorCount = 0;
+    public static int currentProfStaffCount = 0;
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
+    public static int currentStaffStaffCount = 0;
     public static int[][] currentPatchCount;
 
     public UniversitySimulator() {
@@ -112,6 +115,24 @@ public class UniversitySimulator extends Simulator {
         janitor2.setAgentMovement(new UniversityAgentMovement(university.getPatch(7,66), janitor2, 1.27, university.getPatch(7,66).getPatchCenterCoordinates(), -1));
         university.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
         UniversityAgent.janitorCount++;
+        UniversityAgent.agentCount++;
+
+        UniversityAgent staff1 = university.getAgents().get(3);
+        staff1.setAgentMovement(new UniversityAgentMovement(university.getPatch(9,77), staff1, 1.27, university.getPatch(9,77).getPatchCenterCoordinates(), -1));
+        university.getAgentPatchSet().add(staff1.getAgentMovement().getCurrentPatch());
+        UniversityAgent.staffCount++;
+        UniversityAgent.agentCount++;
+
+        UniversityAgent staff2 = university.getAgents().get(4);
+        staff2.setAgentMovement(new UniversityAgentMovement(university.getPatch(9,82), staff2, 1.27, university.getPatch(9,82).getPatchCenterCoordinates(), -1));
+        university.getAgentPatchSet().add(staff2.getAgentMovement().getCurrentPatch());
+        UniversityAgent.staffCount++;
+        UniversityAgent.agentCount++;
+
+        UniversityAgent staff3 = university.getAgents().get(5);
+        staff3.setAgentMovement(new UniversityAgentMovement(university.getPatch(9,87), staff3, 1.27, university.getPatch(9,87).getPatchCenterCoordinates(), -1));
+        university.getAgentPatchSet().add(staff3.getAgentMovement().getCurrentPatch());
+        UniversityAgent.staffCount++;
         UniversityAgent.agentCount++;
     }
 
@@ -2334,6 +2355,9 @@ public class UniversitySimulator extends Simulator {
         currentProfJanitorCount = 0;
         currentGuardJanitorCount = 0;
         currentJanitorJanitorCount = 0;
+        currentStudentStaffCount = 0;
+        currentProfStaffCount = 0;
+        currentStaffStaffCount = 0;
     }
 
 }

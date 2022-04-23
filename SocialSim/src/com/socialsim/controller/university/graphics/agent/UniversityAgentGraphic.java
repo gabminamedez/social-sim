@@ -201,6 +201,12 @@ public class UniversityAgentGraphic extends Graphic {
         else if (agent.getType() == UniversityAgent.Type.JANITOR && agent.getGender() == UniversityAgent.Gender.FEMALE) {
             agentGraphics = femaleJanitorGraphics;
         }
+        else if (agent.getType() == UniversityAgent.Type.STAFF && agent.getGender() == UniversityAgent.Gender.MALE) {
+            agentGraphics = maleOfficerGraphics;
+        }
+        else if (agent.getType() == UniversityAgent.Type.STAFF && agent.getGender() == UniversityAgent.Gender.FEMALE) {
+            agentGraphics = femaleOfficerGraphics;
+        }
         else if (agent.getGender() == UniversityAgent.Gender.MALE && agent.getPersona() == UniversityAgent.Persona.STRICT_PROFESSOR) {
             agentGraphics = strictMaleProfessor;
         }
@@ -290,41 +296,41 @@ public class UniversityAgentGraphic extends Graphic {
         if (agentHeadingDegrees >= 315 && agentHeadingDegrees < 360 || agentHeadingDegrees >= 0 && agentHeadingDegrees < 45) {
             if (this.agent.getAgentMovement().isInteracting()) {
                 this.graphicIndex = 5;
-                System.out.println("Interacting");
+//                System.out.println("Interacting");
             }
             else {
                 this.graphicIndex = 1;
-                System.out.println("Not Interacting");
+//                System.out.println("Not Interacting");
             }
         }
         else if (agentHeadingDegrees >= 45 && agentHeadingDegrees < 135) {
             if (this.agent.getAgentMovement().isInteracting()) {
                 this.graphicIndex = 4;
-                System.out.println("Interacting");
+//                System.out.println("Interacting");
             }
             else {
                 this.graphicIndex = 0;
-                System.out.println("Not Interacting");
+//                System.out.println("Not Interacting");
             }
         }
         else if (agentHeadingDegrees >= 135 && agentHeadingDegrees < 225) {
             if (this.agent.getAgentMovement().isInteracting()) {
                 this.graphicIndex = 7;
-                System.out.println("Interacting");
+//                System.out.println("Interacting");
             }
             else {
                 this.graphicIndex = 3;
-                System.out.println("Not Interacting");
+//                System.out.println("Not Interacting");
             }
         }
         else if (agentHeadingDegrees >= 225 && agentHeadingDegrees < 315) {
             if (this.agent.getAgentMovement().isInteracting()) {
                 this.graphicIndex = 6;
-                System.out.println("Interacting");
+//                System.out.println("Interacting");
             }
             else {
                 this.graphicIndex = 2;
-                System.out.println("Not Interacting");
+//                System.out.println("Not Interacting");
             }
         }
     }

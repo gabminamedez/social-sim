@@ -56,6 +56,8 @@ public class University extends Environment {
     private final List<Stall> stalls;
     private final List<StudyTable> studyTables;
     private final List<Trash> trashes;
+    private final List<OfficeTable> officeTables;
+    private final List<Cabinet> cabinets;
 
     private final List<Bathroom> bathrooms;
     private final List<Cafeteria> cafeterias;
@@ -65,6 +67,7 @@ public class University extends Environment {
     private final List<SecurityField> securityFields;
     private final List<StallField> stallFields;
     private final List<StudyArea> studyAreas;
+    private final List<StaffOffice> staffOffices;
     private final List<Wall> walls;
 
     public static final University.UniversityFactory universityFactory;
@@ -99,6 +102,8 @@ public class University extends Environment {
         this.stalls = Collections.synchronizedList(new ArrayList<>());
         this.studyTables = Collections.synchronizedList(new ArrayList<>());
         this.trashes = Collections.synchronizedList(new ArrayList<>());
+        this.officeTables = Collections.synchronizedList(new ArrayList<>());
+        this.cabinets = Collections.synchronizedList(new ArrayList<>());
 
         this.bathrooms = Collections.synchronizedList(new ArrayList<>());
         this.cafeterias = Collections.synchronizedList(new ArrayList<>());
@@ -108,6 +113,7 @@ public class University extends Environment {
         this.securityFields = Collections.synchronizedList(new ArrayList<>());
         this.stallFields = Collections.synchronizedList(new ArrayList<>());
         this.studyAreas = Collections.synchronizedList(new ArrayList<>());
+        this.staffOffices = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
     }
 
@@ -211,6 +217,14 @@ public class University extends Environment {
         return studyTables;
     }
 
+    public List<OfficeTable> getOfficeTables() {
+        return officeTables;
+    }
+
+    public List<Cabinet> getCabinets() {
+        return cabinets;
+    }
+
     public List<Trash> getTrashes() {
         return trashes;
     }
@@ -245,6 +259,10 @@ public class University extends Environment {
 
     public List<StudyArea> getStudyAreas() {
         return studyAreas;
+    }
+
+    public List<StaffOffice> getStaffOffices() {
+        return staffOffices;
     }
 
     public List<Wall> getWalls() {
@@ -407,6 +425,15 @@ public class University extends Environment {
         UniversityAgent janitor2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.JANITOR, true);
         this.getAgents().add(janitor2);
 
+        UniversityAgent staff1 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STAFF, true);
+        this.getAgents().add(staff1);
+
+        UniversityAgent staff2 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STAFF, true);
+        this.getAgents().add(staff2);
+
+        UniversityAgent staff3 = UniversityAgent.UniversityAgentFactory.create(UniversityAgent.Type.STAFF, true);
+        this.getAgents().add(staff3);
+
         int ctr = 0;
 
         while (ctr < MAX_STUDENTS){
@@ -429,7 +456,7 @@ public class University extends Environment {
 
     public void convertIOSToChances(){
         IOSInteractionChances = new CopyOnWriteArrayList<>();
-        IOSScales.toString();
+//        IOSScales.toString();
         for(int i = 0; i < agents.size(); i++){
             IOSInteractionChances.add(new CopyOnWriteArrayList<>());
             for(int j = 0; j < agents.size(); j++){

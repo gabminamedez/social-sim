@@ -92,6 +92,15 @@ public abstract class UniversityAmenityGraphic extends Graphic {
         final List<AmenityGraphicLocation> trashGraphic = new ArrayList<>();
         trashGraphic.add(new AmenityGraphicLocation(1, 1));
         AMENITY_GRAPHICS.put(Trash.class, trashGraphic);
+
+        final List<AmenityGraphicLocation> officeTableGraphic = new ArrayList<>();
+        officeTableGraphic.add(new AmenityGraphicLocation(0, 2));
+        officeTableGraphic.add(new AmenityGraphicLocation(2, 1));
+        AMENITY_GRAPHICS.put(OfficeTable.class, officeTableGraphic);
+
+        final List<AmenityGraphicLocation> cabinetGraphic = new ArrayList<>();
+        cabinetGraphic.add(new AmenityGraphicLocation(16, 2));
+        AMENITY_GRAPHICS.put(Cabinet.class, cabinetGraphic);
     }
 
     protected final Amenity amenity;

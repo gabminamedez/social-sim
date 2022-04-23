@@ -13,6 +13,7 @@ public class UniversityAgent extends Agent {
     public static int janitorCount = 0;
     public static int professorCount = 0;
     public static int studentCount = 0;
+    public static int staffCount = 0;
     private final int id;
     private final UniversityAgent.Type type;
     private final UniversityAgent.Gender gender;
@@ -131,6 +132,11 @@ public class UniversityAgent extends Agent {
                 this.personaActionGroup = PersonaActionGroup.EXT_ORG_STUDENT;
             }
         }
+        else if (this.type == Type.STAFF){
+            this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_25_TO_54 : AgeGroup.FROM_55_TO_64;
+            this.persona = Persona.STAFF;
+            this.personaActionGroup = PersonaActionGroup.STAFF;
+        }
         this.agentGraphic = new UniversityAgentGraphic(this);
         this.agentMovement = null;
     }
@@ -188,6 +194,7 @@ public class UniversityAgent extends Agent {
         janitorCount = 0;
         professorCount = 0;
         studentCount = 0;
+        staffCount = 0;
         UniversityRoutePlan.resetClassroomSizes();
     }
 
@@ -211,7 +218,7 @@ public class UniversityAgent extends Agent {
     }
 
     public enum Type {
-        GUARD, JANITOR, PROFESSOR, STUDENT
+        GUARD, JANITOR, PROFESSOR, STUDENT, STAFF
     }
 
     public enum Gender {
@@ -228,7 +235,8 @@ public class UniversityAgent extends Agent {
         INT_Y1_ORG_STUDENT(3), INT_Y2_ORG_STUDENT(3), INT_Y3_ORG_STUDENT(3), INT_Y4_ORG_STUDENT(3),
         EXT_Y1_STUDENT(4), EXT_Y2_STUDENT(4), EXT_Y3_STUDENT(4), EXT_Y4_STUDENT(4),
         EXT_Y1_ORG_STUDENT(5), EXT_Y2_ORG_STUDENT(5), EXT_Y3_ORG_STUDENT(5), EXT_Y4_ORG_STUDENT(5),
-        STRICT_PROFESSOR(6), APPROACHABLE_PROFESSOR(7);
+        STRICT_PROFESSOR(6), APPROACHABLE_PROFESSOR(7),
+        STAFF(8);
 
         final int ID;
         Persona(int ID){
@@ -247,7 +255,8 @@ public class UniversityAgent extends Agent {
         EXT_STUDENT(),
         EXT_ORG_STUDENT(),
         STRICT_PROFESSOR(),
-        APPROACHABLE_PROFESSOR();
+        APPROACHABLE_PROFESSOR(),
+        STAFF();
 
         final int ID;
         PersonaActionGroup(){

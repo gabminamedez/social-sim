@@ -1289,10 +1289,19 @@ public class UniversityAgentMovement extends AgentMovement {
         else if (agentType == UniversityAgent.Type.GUARD) {
             UniversitySimulator.currentPatchCount[33][2]++;
             if (parent.getType() == UniversityAgent.Type.PROFESSOR) {
-                UniversitySimulator.currentProfessorCount++;
+                UniversitySimulator.currentProfGuardCount++;
             }
             else {
                 UniversitySimulator.currentStudentGuardCount++;
+            }
+            this.interactionDuration = this.duration;
+        }
+        else if (agentType == UniversityAgent.Type.STAFF){
+            if (parent.getType() == UniversityAgent.Type.PROFESSOR) {
+                UniversitySimulator.currentProfStaffCount++;
+            }
+            else {
+                UniversitySimulator.currentStudentStaffCount++;
             }
             this.interactionDuration = this.duration;
         }
