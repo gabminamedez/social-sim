@@ -15,6 +15,8 @@ import com.socialsim.model.core.environment.generic.patchobject.Drawable;
 import com.socialsim.model.core.environment.generic.patchobject.passable.NonObstacle;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.grocery.Grocery;
+import com.socialsim.model.core.environment.grocery.patchfield.BathroomField;
+import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Stall;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 public class GroceryGraphicsController extends Controller {
 
     private static final Image AMENITY_SPRITES = new Image(GroceryAmenityGraphic.AMENITY_SPRITE_SHEET_URL);
+    private static final Image FOOD_AMENITY_SPRITE = new Image(GroceryAmenityGraphic.FOOD_AMENITY_SPRITE_URL);
     private static final Image AGENT_SPRITES_1 = new Image(GroceryAgentGraphic.AGENTS_URL_1);
     private static final Image AGENT_SPRITES_2 = new Image(GroceryAgentGraphic.AGENTS_URL_2);
     private static final Image AGENT_SPRITES_3 = new Image(GroceryAgentGraphic.AGENTS_URL_3);
@@ -140,15 +143,26 @@ public class GroceryGraphicsController extends Controller {
 
                     AmenityGraphicLocation amenityGraphicLocation = drawablePatchAmenity.getGraphicLocation();
 
-                    foregroundGraphicsContext.drawImage(
-                            AMENITY_SPRITES,
-                            amenityGraphicLocation.getSourceX(), amenityGraphicLocation.getSourceY(),
-                            amenityGraphicLocation.getSourceWidth(), amenityGraphicLocation.getSourceHeight(),
-                            column * tileSize + ((GroceryAmenityGraphic) drawablePatchAmenity. getGraphicObject()).getAmenityGraphicOffset().getColumnOffset() * tileSize,
-                            row * tileSize + ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getRowOffset() * tileSize,
-                            tileSize * ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getColumnSpan(),
-                            tileSize * ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
-
+                    if (patchAmenity.getClass() == Stall.class){
+                        foregroundGraphicsContext.drawImage(
+                                FOOD_AMENITY_SPRITE,
+                                amenityGraphicLocation.getSourceX(), amenityGraphicLocation.getSourceY(),
+                                amenityGraphicLocation.getSourceWidth(), amenityGraphicLocation.getSourceHeight(),
+                                column * tileSize + ((GroceryAmenityGraphic) drawablePatchAmenity. getGraphicObject()).getAmenityGraphicOffset().getColumnOffset() * tileSize,
+                                row * tileSize + ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getRowOffset() * tileSize,
+                                tileSize * ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getColumnSpan(),
+                                tileSize * ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
+                    }
+                    else{
+                        foregroundGraphicsContext.drawImage(
+                                AMENITY_SPRITES,
+                                amenityGraphicLocation.getSourceX(), amenityGraphicLocation.getSourceY(),
+                                amenityGraphicLocation.getSourceWidth(), amenityGraphicLocation.getSourceHeight(),
+                                column * tileSize + ((GroceryAmenityGraphic) drawablePatchAmenity. getGraphicObject()).getAmenityGraphicOffset().getColumnOffset() * tileSize,
+                                row * tileSize + ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicOffset().getRowOffset() * tileSize,
+                                tileSize * ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getColumnSpan(),
+                                tileSize * ((GroceryAmenityGraphic) drawablePatchAmenity.getGraphicObject()).getAmenityGraphicScale().getRowSpan());
+                    }
                     if (drawGraphicTransparently) {
                         foregroundGraphicsContext.setGlobalAlpha(1.0);
                     }
@@ -158,7 +172,17 @@ public class GroceryGraphicsController extends Controller {
             if (patchNumPair != null) {
                 PatchField patchPatchField = patchNumPair.getKey();
 
-                if (patchPatchField.getClass() == Wall.class) {
+                if (patchPatchField.getClass() == BathroomField.class) {
+                    if (patchNumPair.getValue() == 1) {
+                        patchColor = Color.rgb(232, 116, 206);
+                    }
+                    else {
+                        patchColor = Color.rgb(118, 237, 244);
+                    }
+                    backgroundGraphicsContext.setFill(patchColor);
+                    backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+                }
+                else if (patchPatchField.getClass() == Wall.class) {
                     patchColor = Color.rgb(104, 101, 101);
                     backgroundGraphicsContext.setFill(patchColor);
                     backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);

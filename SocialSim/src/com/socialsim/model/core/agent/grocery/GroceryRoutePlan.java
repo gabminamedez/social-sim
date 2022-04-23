@@ -17,11 +17,11 @@ public class GroceryRoutePlan {
     private static final int MAX_PRODUCTS = 20;
     private static final int CART_THRESHOLD = 5;
 
-    public static final int STTP_ALL_AISLE_CHANCE = 20, STTP_CHANCE_SERVICE = 0, STTP_CHANCE_FOOD = 20, STTP_CHANCE_EAT_TABLE = 10;
-    public static final int MODERATE_ALL_AISLE_CHANCE = 40, MODERATE_CHANCE_SERVICE = 0, MODERATE_CHANCE_FOOD = 20, MODERATE_CHANCE_EAT_TABLE = 10;
-    public static final int COMPLETE_FAMILY_ALL_AISLE_CHANCE = 60, COMPLETE_FAMILY_CHANCE_SERVICE = 20, COMPLETE_FAMILY_CHANCE_FOOD = 30, COMPLETE_FAMILY_CHANCE_EAT_TABLE = 50;
-    public static final int HELP_FAMILY_ALL_AISLE_CHANCE = 50, HELP_FAMILY_CHANCE_SERVICE = 20, HELP_FAMILY_CHANCE_FOOD = 30, HELP_FAMILY_CHANCE_EAT_TABLE = 50;
-    public static final int DUO_FAMILY_ALL_AISLE_CHANCE = 50, DUO_FAMILY_CHANCE_SERVICE = 20, DUO_FAMILY_CHANCE_FOOD = 30, DUO_FAMILY_CHANCE_EAT_TABLE = 50;
+    public static final int STTP_ALL_AISLE_CHANCE = 20, STTP_CHANCE_SERVICE = 20, STTP_CHANCE_FOOD = 35, STTP_CHANCE_EAT_TABLE = 10;
+    public static final int MODERATE_ALL_AISLE_CHANCE = 40, MODERATE_CHANCE_SERVICE = 20, MODERATE_CHANCE_FOOD = 35, MODERATE_CHANCE_EAT_TABLE = 10;
+    public static final int COMPLETE_FAMILY_ALL_AISLE_CHANCE = 60, COMPLETE_FAMILY_CHANCE_SERVICE = 20, COMPLETE_FAMILY_CHANCE_FOOD = 45, COMPLETE_FAMILY_CHANCE_EAT_TABLE = 50;
+    public static final int HELP_FAMILY_ALL_AISLE_CHANCE = 50, HELP_FAMILY_CHANCE_SERVICE = 20, HELP_FAMILY_CHANCE_FOOD = 45, HELP_FAMILY_CHANCE_EAT_TABLE = 50;
+    public static final int DUO_FAMILY_ALL_AISLE_CHANCE = 50, DUO_FAMILY_CHANCE_SERVICE = 20, DUO_FAMILY_CHANCE_FOOD = 45, DUO_FAMILY_CHANCE_EAT_TABLE = 50;
     public static final int AISLE_HELP_CHANCE_STTP = 2, AISLE_HELP_CHANCE_MODERATE = 6, AISLE_HELP_CHANCE_COMPLETE = 10, AISLE_HELP_CHANCE_HELP = 10, AISLE_HELP_CHANCE_DUO = 8;
     public static final int CHANCE_BAGGER_INTERACT = 30, CHANCE_GUARD_INTERACT = 50, CHANCE_GUARD_VERBAL = 10;
 
@@ -354,7 +354,8 @@ public class GroceryRoutePlan {
                 }
                 case 5 -> {
                     Patch randomAisle5 = grocery.getProductAisles().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3) + 6).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(20)).getPatch();
-                    Patch randomShelf5 = grocery.getProductShelves().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8) + 8).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
+                    Patch randomShelf5 = grocery.getProductShelves().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 8).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
+                    Patch randomFresh5 = grocery.getFreshProducts().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3)).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(9)).getPatch();
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomAisle5));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
@@ -367,6 +368,12 @@ public class GroceryRoutePlan {
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 24));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
+                    actions = new ArrayList<>();
+                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, randomFresh5));
+                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
+                    actions = new ArrayList<>();
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 60));
+                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                 }
                 case 6 -> {
                     Patch randomFrozen6 = grocery.getFrozenWalls().get(0).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
@@ -389,51 +396,59 @@ public class GroceryRoutePlan {
                 case 8 -> {
                     boolean frozen = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) == 0;
                     if (frozen) {
-                        Patch randomFrozen8 = grocery.getFrozenProducts().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2)).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getPatch();
+                        Patch frozen8 = grocery.getFrozenProducts().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2)).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getPatch();
                         actions = new ArrayList<>();
-                        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FROZEN, randomFrozen8));
+                        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FROZEN, frozen8));
                     }
                     else {
-                        Patch randomFresh8 = grocery.getFreshProducts().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2)).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getPatch();
+                        Patch aisle3Meat = grocery.getProductAisles().get(10).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(20)).getPatch();
                         actions = new ArrayList<>();
-                        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, randomFresh8));
+                        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle3Meat));
                     }
-                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
+                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_AISLE_CLUSTER));
                     if (frozen) {
                         actions = new ArrayList<>();
                         actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
-                        routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FROZEN, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
+                        routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FROZEN, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_AISLE_CLUSTER));
                     }
                     else {
                         actions = new ArrayList<>();
                         actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 60));
-                        routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
+                        routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_AISLE_CLUSTER));
                     }
                 }
                 case 9 -> {
-                    Patch randomFresh9 = grocery.getFreshProducts().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4)).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getPatch();
+                    Patch aisle3Meat = grocery.getProductAisles().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 10).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(20)).getPatch();
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, randomFresh9));
-                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FRESH_1_2_CLUSTER));
-                    actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 60));
-                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.FRESH_1_2_CLUSTER));
-                }
-                case 10 -> {
-                    Patch randomFresh10 = grocery.getFreshProducts().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getPatch();
-                    Patch randomShelf10 = grocery.getProductShelves().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8) + 8).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
-                    actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, randomFresh10));
-                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FRESH_2_FRONT_CLUSTER));
+                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle3Meat));
+                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.MEAT_AISLE_1_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 60));
-                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.FRESH_2_FRONT_CLUSTER));
+                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.MEAT_AISLE_1_CLUSTER));
+
+                    Patch randomShelf10 = grocery.getProductShelves().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 13).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomShelf10));
-                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FRESH_2_FRONT_CLUSTER));
+                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.MEAT_AISLE_1_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 24));
-                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.FRESH_2_FRONT_CLUSTER));
+                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.MEAT_AISLE_1_CLUSTER));
+                }
+                case 10 -> {
+                    Patch aisle = grocery.getProductAisles().get(13).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getPatch();
+                    Patch randomShelf10 = grocery.getProductShelves().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5) + 8).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, aisle));
+                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.MEAT_AISLE_FRONT_CLUSTER));
+                    actions = new ArrayList<>();
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 60));
+                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.MEAT_AISLE_FRONT_CLUSTER));
+                    actions = new ArrayList<>();
+                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomShelf10));
+                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.MEAT_AISLE_FRONT_CLUSTER));
+                    actions = new ArrayList<>();
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 24));
+                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.MEAT_AISLE_FRONT_CLUSTER));
                 }
                 default -> {
                     Patch randomMeat11 = grocery.getMeatSections().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2)).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
@@ -463,7 +478,7 @@ public class GroceryRoutePlan {
         actions.add(new GroceryAction(GroceryAction.Name.GOING_TO_SECURITY_QUEUE));
         actions.add(new GroceryAction(GroceryAction.Name.GO_THROUGH_SCANNER, (GroceryAgent) null, 2));
         routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SECURITY, this, agent, actions));
-        int routeIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4);
+        int routeIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3);
         int routeIndexFinal = routeIndex;
         GroceryState.AisleCluster[] route = GroceryState.createRoute(routeIndex);
         routeIndex = 0;
@@ -646,9 +661,9 @@ public class GroceryRoutePlan {
                 case 5 -> {
                     Patch aisle2A = grocery.getProductAisles().get(9).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(20)).getPatch();
                     Patch shelf2A = grocery.getProductShelves().get(6).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
-                    Patch aisle2B = grocery.getProductAisles().get(10).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(20)).getPatch();
                     Patch shelf2B = grocery.getProductShelves().get(7).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
                     Patch aisle2C = grocery.getProductAisles().get(11).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(20)).getPatch();
+                    Patch randomFresh5 = grocery.getFreshProducts().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3)).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(9)).getPatch();
 
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2A));
@@ -663,11 +678,11 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 24));
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle2B));
+                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, randomFresh5));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 36));
-                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 60));
+                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelf2B));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.AISLE_4_FRONT_CLUSTER));
@@ -707,38 +722,46 @@ public class GroceryRoutePlan {
                         actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FROZEN, frozen8));
                     }
                     else {
-                        Patch fresh8 = grocery.getFreshProducts().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2)).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getPatch();
+                        Patch aisle3Meat = grocery.getProductAisles().get(10).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(20)).getPatch();
                         actions = new ArrayList<>();
-                        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, fresh8));
+                        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle3Meat));
                     }
-                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
+                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_AISLE_CLUSTER));
                     if (frozen) {
                         actions = new ArrayList<>();
                         actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 36));
-                        routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FROZEN, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
+                        routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FROZEN, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_AISLE_CLUSTER));
                     }
                     else {
                         actions = new ArrayList<>();
                         actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 60));
-                        routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_FRESH_1_CLUSTER));
+                        routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.FROZEN_3_AISLE_CLUSTER));
                     }
                 }
                 case 9 -> {
-                    Patch fresh9 = grocery.getFreshProducts().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 2).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(12)).getPatch();
+                    Patch aisle3Meat = grocery.getProductAisles().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 12).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(20)).getPatch();
                     actions = new ArrayList<>();
-                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_FRESH, fresh9));
+                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, aisle3Meat));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
                     actions = new ArrayList<>();
                     actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 24, 60));
-                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_FRESH, this, agent, actions, route[routeIndex]));
+                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, route[routeIndex]));
+
+                    Patch randomShelf10 = grocery.getProductShelves().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(2) + 13).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
+                    actions = new ArrayList<>();
+                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, randomShelf10));
+                    routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, GroceryState.AisleCluster.MEAT_AISLE_1_CLUSTER));
+                    actions = new ArrayList<>();
+                    actions.add(new GroceryAction(GroceryAction.Name.CHECK_PRODUCTS, 12, 24));
+                    routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_AISLE, this, agent, actions, GroceryState.AisleCluster.MEAT_AISLE_1_CLUSTER));
                 }
                 case 10 -> {
                     List<Patch> shelves10 = new ArrayList<>();
-                    for (int i = 8; i < 16; i++) {
+                    for (int i = 8; i < 13; i++) {
                         shelves10.add(grocery.getProductShelves().get(i).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch());
                     }
 
-                    for (int i = 0; i < 8; i ++) {
+                    for (int i = 0; i < 5; i ++) {
                         actions = new ArrayList<>();
                         actions.add(new GroceryAction(GroceryAction.Name.GO_TO_AISLE, shelves10.get(i)));
                         routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_PRODUCTS, this, agent, actions, route[routeIndex]));
