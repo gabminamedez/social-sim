@@ -30,17 +30,33 @@ public class FountainMapper extends AmenityMapper {
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
 
             List<Patch> fountainFieldPatches = new ArrayList<>();
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol));
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 1, origPatchCol));
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol));
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 1));
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 2));
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 3));
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 4));
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 5));
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 6));
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 7));
-            fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 8));
+            if (origPatchCol == 62){
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 1, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 1));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 2));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 3));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 4));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 5));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 6));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 7));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow - 2, origPatchCol + 8));
+            }
+            else{
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 1, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 2, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 3, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 4, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 5, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 6, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 7, origPatchCol));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 7, origPatchCol - 1));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 7, origPatchCol - 2));
+                fountainFieldPatches.add(Main.universitySimulator.getUniversity().getPatch(origPatchRow + 7, origPatchCol - 3));
+            }
+
             Main.universitySimulator.getUniversity().getFountainFields().add(FountainField.fountainFieldFactory.create(fountainFieldPatches, fountainToAdd, 1));
         }
     }

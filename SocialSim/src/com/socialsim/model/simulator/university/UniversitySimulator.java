@@ -118,19 +118,19 @@ public class UniversitySimulator extends Simulator {
         UniversityAgent.agentCount++;
 
         UniversityAgent staff1 = university.getAgents().get(3);
-        staff1.setAgentMovement(new UniversityAgentMovement(university.getPatch(9,77), staff1, 1.27, university.getPatch(9,77).getPatchCenterCoordinates(), -1));
+        staff1.setAgentMovement(new UniversityAgentMovement(university.getPatch(10,77), staff1, 1.27, university.getPatch(10,77).getPatchCenterCoordinates(), -1));
         university.getAgentPatchSet().add(staff1.getAgentMovement().getCurrentPatch());
         UniversityAgent.staffCount++;
         UniversityAgent.agentCount++;
 
         UniversityAgent staff2 = university.getAgents().get(4);
-        staff2.setAgentMovement(new UniversityAgentMovement(university.getPatch(9,82), staff2, 1.27, university.getPatch(9,82).getPatchCenterCoordinates(), -1));
+        staff2.setAgentMovement(new UniversityAgentMovement(university.getPatch(10,82), staff2, 1.27, university.getPatch(10,82).getPatchCenterCoordinates(), -1));
         university.getAgentPatchSet().add(staff2.getAgentMovement().getCurrentPatch());
         UniversityAgent.staffCount++;
         UniversityAgent.agentCount++;
 
         UniversityAgent staff3 = university.getAgents().get(5);
-        staff3.setAgentMovement(new UniversityAgentMovement(university.getPatch(9,87), staff3, 1.27, university.getPatch(9,87).getPatchCenterCoordinates(), -1));
+        staff3.setAgentMovement(new UniversityAgentMovement(university.getPatch(10,87), staff3, 1.27, university.getPatch(10,87).getPatchCenterCoordinates(), -1));
         university.getAgentPatchSet().add(staff3.getAgentMovement().getCurrentPatch());
         UniversityAgent.staffCount++;
         UniversityAgent.agentCount++;
@@ -719,8 +719,9 @@ public class UniversitySimulator extends Simulator {
                         if (action.getName() == UniversityAction.Name.GO_TO_DRINKING_FOUNTAIN) {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalQueueingPatchField() == null) {
-                                agentMovement.setGoalQueueingPatchField(Main.universitySimulator.getUniversity().getFountains().get(0).getAmenityBlocks().get(0).getPatch().getQueueingPatchField().getKey());
-                                agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getFountains().get(0));
+                                int fountainIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(Main.universitySimulator.getUniversity().getFountains().size());
+                                agentMovement.setGoalQueueingPatchField(Main.universitySimulator.getUniversity().getFountains().get(fountainIndex).getAmenityBlocks().get(0).getPatch().getQueueingPatchField().getKey());
+                                agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getFountains().get(fountainIndex));
                             }
 
                             if (agentMovement.chooseNextPatchInPath()) {
@@ -1679,8 +1680,9 @@ public class UniversitySimulator extends Simulator {
                         if (action.getName() == UniversityAction.Name.GO_TO_DRINKING_FOUNTAIN) {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalQueueingPatchField() == null) {
-                                agentMovement.setGoalQueueingPatchField(Main.universitySimulator.getUniversity().getFountains().get(0).getAmenityBlocks().get(0).getPatch().getQueueingPatchField().getKey());
-                                agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getFountains().get(0));
+                                int fountainIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(Main.universitySimulator.getUniversity().getFountains().size());
+                                agentMovement.setGoalQueueingPatchField(Main.universitySimulator.getUniversity().getFountains().get(fountainIndex).getAmenityBlocks().get(0).getPatch().getQueueingPatchField().getKey());
+                                agentMovement.setGoalAmenity(Main.universitySimulator.getUniversity().getFountains().get(fountainIndex));
                             }
 
                             if (agentMovement.chooseNextPatchInPath()) {
