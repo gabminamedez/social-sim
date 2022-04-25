@@ -53,6 +53,8 @@ public class Grocery extends Environment {
     private final List<ServiceCounter> serviceCounters;
     private final List<Stall> stalls;
     private final List<Table> tables;
+    private final List<Sink> sinks;
+    private final List<Toilet> toilets;
 
     private final List<Wall> walls;
     private final List<CashierCounterField> cashierCounterFields;
@@ -60,6 +62,7 @@ public class Grocery extends Environment {
     private final List<SecurityField> securityFields;
     private final List<ServiceCounterField> serviceCounterFields;
     private final List<StallField> stallFields;
+    private final List<BathroomField> bathroomFields;
 
     public static final Grocery.GroceryFactory groceryFactory;
 
@@ -90,6 +93,8 @@ public class Grocery extends Environment {
         this.serviceCounters = Collections.synchronizedList(new ArrayList<>());
         this.stalls = Collections.synchronizedList(new ArrayList<>());
         this.tables = Collections.synchronizedList(new ArrayList<>());
+        this.sinks = Collections.synchronizedList(new ArrayList<>());
+        this.toilets = Collections.synchronizedList(new ArrayList<>());
 
         this.walls = Collections.synchronizedList(new ArrayList<>());
         this.cashierCounterFields = Collections.synchronizedList(new ArrayList<>());
@@ -97,6 +102,7 @@ public class Grocery extends Environment {
         this.securityFields = Collections.synchronizedList(new ArrayList<>());
         this.serviceCounterFields = Collections.synchronizedList(new ArrayList<>());
         this.stallFields = Collections.synchronizedList(new ArrayList<>());
+        this.bathroomFields = Collections.synchronizedList(new ArrayList<>());
     }
 
     public CopyOnWriteArrayList<GroceryAgent> getAgents() {
@@ -202,6 +208,14 @@ public class Grocery extends Environment {
         return tables;
     }
 
+    public List<Sink> getSinks() {
+        return sinks;
+    }
+
+    public List<Toilet> getToilets() {
+        return toilets;
+    }
+
     public List<Wall> getWalls() {
         return walls;
     }
@@ -224,6 +238,10 @@ public class Grocery extends Environment {
 
     public List<StallField> getStallFields() {
         return stallFields;
+    }
+
+    public List<BathroomField> getBathroomFields() {
+        return bathroomFields;
     }
 
     public int getNonverbalMean() {
@@ -357,6 +375,12 @@ public class Grocery extends Environment {
         else if (amenityClass == Table.class) {
             return this.getTables();
         }
+        else if (amenityClass == Sink.class) {
+            return this.getSinks();
+        }
+        else if (amenityClass == Toilet.class) {
+            return this.getToilets();
+        }
         else {
             return null;
         }
@@ -419,12 +443,6 @@ public class Grocery extends Environment {
         this.getAgents().add(food4);
         GroceryAgent food5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food5);
-        GroceryAgent food6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
-        this.getAgents().add(food6);
-        GroceryAgent food7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
-        this.getAgents().add(food7);
-        GroceryAgent food8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
-        this.getAgents().add(food8);
 
         GroceryAgent butcher1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BUTCHER, GroceryAgent.Persona.BUTCHER, null, null, false, true);
         this.getAgents().add(butcher1);

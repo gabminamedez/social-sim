@@ -13,6 +13,7 @@ import java.util.List;
 public class GroceryAmenityGraphic extends Graphic {
 
     public static final String AMENITY_SPRITE_SHEET_URL = "com/socialsim/view/image/Grocery/amenity_spritesheet.png";
+    public static final String FOOD_AMENITY_SPRITE_URL = "com/socialsim/view/image/Grocery/food_amenity.png";
     public static final HashMap<Class<?>, List<AmenityGraphicLocation>> AMENITY_GRAPHICS = new HashMap<>();
 
     static {
@@ -66,12 +67,20 @@ public class GroceryAmenityGraphic extends Graphic {
         AMENITY_GRAPHICS.put(ServiceCounter.class, serviceCounterGraphic);
 
         final List<AmenityGraphicLocation> stallGraphic = new ArrayList<>();
-        stallGraphic.add(new AmenityGraphicLocation(11, 0));
+        stallGraphic.add(new AmenityGraphicLocation(0, 0));
         AMENITY_GRAPHICS.put(Stall.class, stallGraphic);
 
         final List<AmenityGraphicLocation> tableGraphic = new ArrayList<>();
         tableGraphic.add(new AmenityGraphicLocation(10, 0));
         AMENITY_GRAPHICS.put(Table.class, tableGraphic);
+
+        final List<AmenityGraphicLocation> sinkGraphic = new ArrayList<>();
+        sinkGraphic.add(new AmenityGraphicLocation(12, 1));
+        AMENITY_GRAPHICS.put(Sink.class, sinkGraphic);
+
+        final List<AmenityGraphicLocation> toiletGraphic = new ArrayList<>();
+        toiletGraphic.add(new AmenityGraphicLocation(12, 0));
+        AMENITY_GRAPHICS.put(Toilet.class, toiletGraphic);
     }
 
     protected final Amenity amenity;

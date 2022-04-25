@@ -234,6 +234,12 @@
                                 </AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                     <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Staff to Staff Interactions" />
+                                        <Label fx:id="currentStudentStaffCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
                                         <Label prefHeight="26.0" prefWidth="150.0" text="Professor to Professor Interactions" />
                                         <Label fx:id="currentProfProfCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
                                     </children>
@@ -252,8 +258,20 @@
                                 </AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                     <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Staff to Staff Interactions" />
+                                        <Label fx:id="currentProfStaffCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
                                         <Label prefHeight="26.0" prefWidth="150.0" text="Janitor to Janitor Interactions" />
                                         <Label fx:id="currentJanitorJanitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Staff to Staff Interactions" />
+                                        <Label fx:id="currentStaffStaffCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
                                     </children>
                                 </AnchorPane>
                             </VBox>

@@ -59,6 +59,9 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.JANITOR_CHECK_FOUNTAIN, university.getFountains().get(0).getAmenityBlocks().get(0).getPatch(), 60));
             routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
         }
+        else if (agent.getPersona() == UniversityAgent.Persona.STAFF){
+            //TODO: STAFF ROUTE
+        }
         else {
             setFromClass(false);
             setFromLunch(false);

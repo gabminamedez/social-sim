@@ -21,9 +21,9 @@ public class GroceryState {
         AISLE_4_FRONT_CLUSTER(5),
         FROZEN_1_CLUSTER(6),
         FROZEN_2_CLUSTER(7),
-        FROZEN_3_FRESH_1_CLUSTER(8),
-        FRESH_1_2_CLUSTER(9),
-        FRESH_2_FRONT_CLUSTER(10),
+        FROZEN_3_AISLE_CLUSTER(8),
+        MEAT_AISLE_1_CLUSTER(9),
+        MEAT_AISLE_FRONT_CLUSTER(10),
         MEAT_CLUSTER(11);
 
         public final int ID;
@@ -125,9 +125,9 @@ public class GroceryState {
                 AisleCluster.AISLE_4_FRONT_CLUSTER,
                 AisleCluster.FROZEN_1_CLUSTER,
                 AisleCluster.FROZEN_2_CLUSTER,
-                AisleCluster.FROZEN_3_FRESH_1_CLUSTER,
-                AisleCluster.FRESH_1_2_CLUSTER,
-                AisleCluster.FRESH_2_FRONT_CLUSTER,
+                AisleCluster.FROZEN_3_AISLE_CLUSTER,
+                AisleCluster.MEAT_AISLE_1_CLUSTER,
+                AisleCluster.MEAT_AISLE_FRONT_CLUSTER,
                 AisleCluster.MEAT_CLUSTER};
     }
 
@@ -141,43 +141,43 @@ public class GroceryState {
                 AisleCluster.TOP_WALL_CLUSTER,
                 AisleCluster.FROZEN_1_CLUSTER,
                 AisleCluster.FROZEN_2_CLUSTER,
-                AisleCluster.FROZEN_3_FRESH_1_CLUSTER,
-                AisleCluster.FRESH_1_2_CLUSTER,
-                AisleCluster.FRESH_2_FRONT_CLUSTER,
+                AisleCluster.FROZEN_3_AISLE_CLUSTER,
+                AisleCluster.MEAT_AISLE_1_CLUSTER,
+                AisleCluster.MEAT_AISLE_FRONT_CLUSTER,
                 AisleCluster.MEAT_CLUSTER};
     }
 
     public static AisleCluster[] route3 () {
         return new GroceryState.AisleCluster[] {
-                AisleCluster.MEAT_CLUSTER,
-                AisleCluster.FRESH_2_FRONT_CLUSTER,
-                AisleCluster.FRESH_1_2_CLUSTER,
-                AisleCluster.FROZEN_3_FRESH_1_CLUSTER,
-                AisleCluster.FROZEN_2_CLUSTER,
-                AisleCluster.FROZEN_1_CLUSTER,
-                AisleCluster.TOP_WALL_CLUSTER,
-                AisleCluster.AISLE_1_2_CLUSTER,
-                AisleCluster.AISLE_2_3_CLUSTER,
-                AisleCluster.AISLE_3_4_CLUSTER,
                 AisleCluster.AISLE_4_FRONT_CLUSTER,
-                AisleCluster.RIGHT_WALL_CLUSTER};
+                AisleCluster.MEAT_AISLE_FRONT_CLUSTER,
+                AisleCluster.MEAT_AISLE_1_CLUSTER,
+                AisleCluster.AISLE_3_4_CLUSTER,
+                AisleCluster.AISLE_2_3_CLUSTER,
+                AisleCluster.AISLE_1_2_CLUSTER,
+                AisleCluster.RIGHT_WALL_CLUSTER,
+                AisleCluster.TOP_WALL_CLUSTER,
+                AisleCluster.FROZEN_1_CLUSTER,
+                AisleCluster.FROZEN_2_CLUSTER,
+                AisleCluster.FROZEN_3_AISLE_CLUSTER,
+                AisleCluster.MEAT_CLUSTER};
     }
 
-    public static AisleCluster[] route4 () {
-        return new GroceryState.AisleCluster[] {
-                AisleCluster.FRESH_2_FRONT_CLUSTER,
-                AisleCluster.FRESH_1_2_CLUSTER,
-                AisleCluster.MEAT_CLUSTER,
-                AisleCluster.FROZEN_3_FRESH_1_CLUSTER,
-                AisleCluster.FROZEN_2_CLUSTER,
-                AisleCluster.FROZEN_1_CLUSTER,
-                AisleCluster.TOP_WALL_CLUSTER,
-                AisleCluster.AISLE_1_2_CLUSTER,
-                AisleCluster.AISLE_2_3_CLUSTER,
-                AisleCluster.AISLE_3_4_CLUSTER,
-                AisleCluster.AISLE_4_FRONT_CLUSTER,
-                AisleCluster.RIGHT_WALL_CLUSTER};
-    }
+//    public static AisleCluster[] route4 () {
+//        return new GroceryState.AisleCluster[] {
+//                AisleCluster.MEAT_AISLE_FRONT_CLUSTER,
+//                AisleCluster.MEAT_AISLE_1_CLUSTER,
+//                AisleCluster.MEAT_CLUSTER,
+//                AisleCluster.FROZEN_3_AISLE_CLUSTER,
+//                AisleCluster.FROZEN_2_CLUSTER,
+//                AisleCluster.FROZEN_1_CLUSTER,
+//                AisleCluster.TOP_WALL_CLUSTER,
+//                AisleCluster.AISLE_1_2_CLUSTER,
+//                AisleCluster.AISLE_2_3_CLUSTER,
+//                AisleCluster.AISLE_3_4_CLUSTER,
+//                AisleCluster.AISLE_4_FRONT_CLUSTER,
+//                AisleCluster.RIGHT_WALL_CLUSTER};
+//    }
 
     public static AisleCluster[] createRoute (int route) {
         switch (route) {
@@ -187,12 +187,12 @@ public class GroceryState {
             case 1 -> {
                 return route2();
             }
-            case 2 -> {
+            default -> {
                 return route3();
             }
-            default -> {
-                return route4();
-            }
+//            default -> {
+//                return route4();
+//            }
         }
     }
 
