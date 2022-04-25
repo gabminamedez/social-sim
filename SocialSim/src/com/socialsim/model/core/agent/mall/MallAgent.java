@@ -15,6 +15,9 @@ public class MallAgent extends Agent {
     public static int staffRestoCount = 0;
     public static int staffKioskCount = 0;
     public static int guardCount = 0;
+    public static int janitorCount = 0;
+    public static int conciergerCount = 0;
+
     public static final double[][][] chancePerActionInteractionType = new double[][][]
             {
                     {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 1.00}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
@@ -79,6 +82,16 @@ public class MallAgent extends Agent {
             this.persona = Persona.STAFF_KIOSK;
             this.ageGroup = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean() ? AgeGroup.FROM_15_TO_24 : AgeGroup.FROM_25_TO_54;
             this.personaActionGroup = PersonaActionGroup.STAFF_KIOSK;
+        }
+        else if (type == Type.JANITOR) {
+            this.persona = Persona.JANITOR;
+            this.ageGroup = AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.JANITOR;
+        }
+        else if (type == Type.CONCIERGER) {
+            this.persona = Persona.CONCIERGER;
+            this.ageGroup = AgeGroup.FROM_25_TO_54;
+            this.personaActionGroup = PersonaActionGroup.CONCIERGER;
         }
         else if (type == Type.PATRON) {
             this.persona = persona;
@@ -161,6 +174,8 @@ public class MallAgent extends Agent {
         staffRestoCount = 0;
         staffKioskCount = 0;
         guardCount = 0;
+        janitorCount = 0;
+        conciergerCount = 0;
     }
 
     @Override
@@ -183,7 +198,7 @@ public class MallAgent extends Agent {
     }
 
     public enum Type {
-        PATRON, STAFF_STORE_SALES, STAFF_STORE_CASHIER, STAFF_RESTO, STAFF_KIOSK, GUARD
+        PATRON, STAFF_STORE_SALES, STAFF_STORE_CASHIER, STAFF_RESTO, STAFF_KIOSK, GUARD, JANITOR, CONCIERGER
     }
 
     public enum Gender {
@@ -199,7 +214,8 @@ public class MallAgent extends Agent {
         ERRAND_FAMILY(5), LOITER_FAMILY(5),
         ERRAND_FRIENDS(6), LOITER_FRIENDS(6),
         ERRAND_ALONE(7), LOITER_ALONE(7),
-        LOITER_COUPLE(8);
+        LOITER_COUPLE(8),
+        JANITOR(9), CONCIERGER(10);
 
         private final int ID;
 
@@ -221,7 +237,9 @@ public class MallAgent extends Agent {
         FAMILY(),
         FRIENDS(),
         ALONE(),
-        COUPLE();
+        COUPLE(),
+        JANITOR(),
+        CONCIERGER();
 
         final int ID;
         PersonaActionGroup(){

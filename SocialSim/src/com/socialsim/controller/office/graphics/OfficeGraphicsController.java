@@ -179,7 +179,12 @@ public class OfficeGraphicsController extends Controller {
                     backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }
                 else if (patchPatchField.getClass() == Bathroom.class) {
-                    patchColor = Color.rgb(244, 174, 67);
+                    if (patchNumPair.getValue() == 1) {
+                        patchColor = Color.rgb(232, 116, 206);
+                    }
+                    else {
+                        patchColor = Color.rgb(118, 237, 244);
+                    }
                     backgroundGraphicsContext.setFill(patchColor);
                     backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }
@@ -200,6 +205,11 @@ public class OfficeGraphicsController extends Controller {
                 }
                 else if (patchPatchField.getClass() == Reception.class) {
                     patchColor = Color.rgb(224, 156, 156);
+                    backgroundGraphicsContext.setFill(patchColor);
+                    backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
+                }
+                else if (patchPatchField.getClass() == SecretaryRoom.class) {
+                    patchColor = Color.rgb(244, 174, 67);
                     backgroundGraphicsContext.setFill(patchColor);
                     backgroundGraphicsContext.fillRect(column * tileSize, row * tileSize, tileSize, tileSize);
                 }

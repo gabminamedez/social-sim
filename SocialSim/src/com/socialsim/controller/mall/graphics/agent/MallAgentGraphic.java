@@ -10,6 +10,7 @@ import java.util.List;
 public class MallAgentGraphic extends Graphic {
 
     public static final String AGENTS_URL = "com/socialsim/view/image/Mall/agent_sprites.png";
+    public static final String AGENTS_URL1 = "com/socialsim/view/image/Mall/agent_sprites_1.png";
 
     public static final List<AgentGraphicLocation> maleErrandFamily;
     public static final List<AgentGraphicLocation> femaleErrandFamily;
@@ -35,6 +36,10 @@ public class MallAgentGraphic extends Graphic {
     public static final List<AgentGraphicLocation> femaleStaffKiosk;
     public static final List<AgentGraphicLocation> maleGuard;
     public static final List<AgentGraphicLocation> femaleGuard;
+    public static final List<AgentGraphicLocation> maleJanitor;
+    public static final List<AgentGraphicLocation> femaleJanitor;
+    public static final List<AgentGraphicLocation> maleConcierger;
+    public static final List<AgentGraphicLocation> femaleConcierger;
 
     static {
         maleErrandFamily = new ArrayList<>();
@@ -157,6 +162,30 @@ public class MallAgentGraphic extends Graphic {
             femaleGuard.add(new AgentGraphicLocation(23, i));
         for (int i = 0; i < 4; i++)
             femaleGuard.add(new AgentGraphicLocation(47, i));
+
+        maleJanitor = new ArrayList<>();
+        for (int i = 0; i < 4; i++)
+            maleJanitor.add(new AgentGraphicLocation(0, i));
+        for (int i = 0; i < 4; i++)
+            maleJanitor.add(new AgentGraphicLocation(6, i));
+
+        femaleJanitor = new ArrayList<>();
+        for (int i = 0; i < 4; i++)
+            femaleJanitor.add(new AgentGraphicLocation(1, i));
+        for (int i = 0; i < 4; i++)
+            femaleJanitor.add(new AgentGraphicLocation(7, i));
+
+        maleConcierger = new ArrayList<>();
+        for (int i = 0; i < 4; i++)
+            maleConcierger.add(new AgentGraphicLocation(4, i));
+        for (int i = 0; i < 4; i++)
+            maleConcierger.add(new AgentGraphicLocation(10, i));
+
+        femaleConcierger = new ArrayList<>();
+        for (int i = 0; i < 4; i++)
+            femaleConcierger.add(new AgentGraphicLocation(5, i));
+        for (int i = 0; i < 4; i++)
+            femaleConcierger.add(new AgentGraphicLocation(11, i));
     }
 
     private final MallAgent agent;
@@ -192,6 +221,18 @@ public class MallAgentGraphic extends Graphic {
         }
         else if (agent.getType() == MallAgent.Type.STAFF_RESTO && agent.getGender() == MallAgent.Gender.FEMALE) {
             agentGraphics = femaleStaffResto;
+        }
+        else if (agent.getType() == MallAgent.Type.JANITOR && agent.getGender() == MallAgent.Gender.MALE) {
+            agentGraphics = maleJanitor;
+        }
+        else if (agent.getType() == MallAgent.Type.JANITOR && agent.getGender() == MallAgent.Gender.FEMALE) {
+            agentGraphics = femaleJanitor;
+        }
+        else if (agent.getType() == MallAgent.Type.CONCIERGER && agent.getGender() == MallAgent.Gender.MALE) {
+            agentGraphics = maleConcierger;
+        }
+        else if (agent.getType() == MallAgent.Type.CONCIERGER && agent.getGender() == MallAgent.Gender.FEMALE) {
+            agentGraphics = femaleConcierger;
         }
         else if (agent.getPersona() == MallAgent.Persona.ERRAND_FAMILY && agent.getGender() == MallAgent.Gender.MALE) {
             agentGraphics = maleErrandFamily;

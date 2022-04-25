@@ -67,6 +67,9 @@ public class MallScreenController extends ScreenController {
     @FXML private Label currentPatronStaffRestoCount;
     @FXML private Label currentPatronStaffKioskCount;
     @FXML private Label currentPatronGuardCount;
+    @FXML private Label currentPatronConciergerCount;
+    @FXML private Label currentPatronJanitorCount;
+    @FXML private Label currentJanitorJanitorCount;
     @FXML private Label currentStaffStoreStaffStoreCount;
     @FXML private Label currentStaffRestoStaffRestoCount;
 
@@ -183,7 +186,7 @@ public class MallScreenController extends ScreenController {
 
         List<Patch> dining1Patches = new ArrayList<>();
         for (int i = 25; i < 35; i++) {
-            for (int j = 96; j < 116; j++) {
+            for (int j = 96; j < 114; j++) {
                 dining1Patches.add(mall.getPatch(i, j));
             }
         }
@@ -253,14 +256,6 @@ public class MallScreenController extends ScreenController {
         }
         Main.mallSimulator.getMall().getStores().add(Store.storeFactory.create(store8Patches, 8));
 
-        List<Patch> store9Patches = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            for (int j = 109; j < 119; j++) {
-                store9Patches.add(mall.getPatch(i, j));
-            }
-        }
-        Main.mallSimulator.getMall().getStores().add(Store.storeFactory.create(store9Patches, 9));
-
         List<Patch> store10Patches = new ArrayList<>();
         for (int i = 45; i < 60; i++) {
             for (int j = 96; j < 106; j++) {
@@ -269,13 +264,21 @@ public class MallScreenController extends ScreenController {
         }
         Main.mallSimulator.getMall().getStores().add(Store.storeFactory.create(store10Patches, 10));
 
-        List<Patch> store11Patches = new ArrayList<>();
-        for (int i = 45; i < 60; i++) {
-            for (int j = 108; j < 118; j++) {
-                store11Patches.add(mall.getPatch(i, j));
+        List<Patch> fBathroomPatches2 = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            for (int j = 109; j < 119; j++) {
+                fBathroomPatches2.add(mall.getPatch(i, j));
             }
         }
-        Main.mallSimulator.getMall().getStores().add(Store.storeFactory.create(store11Patches, 11));
+        Main.mallSimulator.getMall().getBathrooms().add(Bathroom.bathroomFactory.create(fBathroomPatches2, 1));
+
+        List<Patch> mBathroomPatches2 = new ArrayList<>();
+        for (int i = 45; i < 60; i++) {
+            for (int j = 108; j < 118; j++) {
+                mBathroomPatches2.add(mall.getPatch(i, j));
+            }
+        }
+        Main.mallSimulator.getMall().getBathrooms().add(Bathroom.bathroomFactory.create(mBathroomPatches2, 2));
 
         List<Patch> showcasePatches = new ArrayList<>();
         for (int i = 18; i < 37; i++) {
@@ -294,12 +297,10 @@ public class MallScreenController extends ScreenController {
         storeCounterPatches.add(mall.getPatch(1,63));
         storeCounterPatches.add(mall.getPatch(1,81));
         storeCounterPatches.add(mall.getPatch(1,99));
-        storeCounterPatches.add(mall.getPatch(1,110));
         storeCounterPatches.add(mall.getPatch(57,97));
-        storeCounterPatches.add(mall.getPatch(57,109));
         StoreCounterMapper.draw(storeCounterPatches);
 
-        List<Patch> aisleDownPatches = new ArrayList<>();
+        List<Patch> aisleDownPatches = new ArrayList<>(); // 0 - 26
         aisleDownPatches.add(mall.getPatch(16,19));
         aisleDownPatches.add(mall.getPatch(19,19));
         aisleDownPatches.add(mall.getPatch(11,38));
@@ -325,15 +326,11 @@ public class MallScreenController extends ScreenController {
         aisleDownPatches.add(mall.getPatch(12,83));
         aisleDownPatches.add(mall.getPatch(6,101));
         aisleDownPatches.add(mall.getPatch(12,101));
-        aisleDownPatches.add(mall.getPatch(6,112));
-        aisleDownPatches.add(mall.getPatch(12,112));
         aisleDownPatches.add(mall.getPatch(47,99));
         aisleDownPatches.add(mall.getPatch(53,99));
-        aisleDownPatches.add(mall.getPatch(47,111));
-        aisleDownPatches.add(mall.getPatch(53,111));
         StoreAisleMapper.draw(aisleDownPatches, "DOWN");
 
-        List<Patch> aisleRightPatches = new ArrayList<>();
+        List<Patch> aisleRightPatches = new ArrayList<>(); // 27 - 47
         aisleRightPatches.add(mall.getPatch(16,10));
         aisleRightPatches.add(mall.getPatch(16,13));
         aisleRightPatches.add(mall.getPatch(16,16));
@@ -353,39 +350,42 @@ public class MallScreenController extends ScreenController {
         aisleRightPatches.add(mall.getPatch(8,90));
         aisleRightPatches.add(mall.getPatch(8,98));
         aisleRightPatches.add(mall.getPatch(8,107));
-        aisleRightPatches.add(mall.getPatch(8,109));
-        aisleRightPatches.add(mall.getPatch(8,118));
         aisleRightPatches.add(mall.getPatch(47,96));
         aisleRightPatches.add(mall.getPatch(47,105));
-        aisleRightPatches.add(mall.getPatch(47,108));
-        aisleRightPatches.add(mall.getPatch(47,117));
         StoreAisleMapper.draw(aisleRightPatches, "RIGHT");
 
         List<Patch> mallGateExitPatches = new ArrayList<>();
+        mallGateExitPatches.add(mall.getPatch(16,0));
         mallGateExitPatches.add(mall.getPatch(24,0));
         MallGateMapper.draw(mallGateExitPatches, MallGate.MallGateMode.EXIT);
 
         List<Patch> mallGateEntrancePatches = new ArrayList<>();
         mallGateEntrancePatches.add(mall.getPatch(32,0));
+        mallGateEntrancePatches.add(mall.getPatch(40,0));
         MallGateMapper.draw(mallGateEntrancePatches, MallGate.MallGateMode.ENTRANCE);
 
         List<Patch> securityPatches = new ArrayList<>();
         securityPatches.add(mall.getPatch(32,2));
+        securityPatches.add(mall.getPatch(40,2));
         SecurityMapper.draw(securityPatches);
 
         List<Patch> digitalPatches = new ArrayList<>();
-        digitalPatches.add(mall.getPatch(27,10));
         digitalPatches.add(mall.getPatch(27,94));
         DigitalMapper.draw(digitalPatches);
 
+        List<Patch> conciergePatches = new ArrayList<>();
+        conciergePatches.add(mall.getPatch(27,10));
+        ConciergeMapper.draw(conciergePatches);
+
         List<Patch> kioskPatches = new ArrayList<>();
+        kioskPatches.add(mall.getPatch(26,97));
+        kioskPatches.add(mall.getPatch(28,28));
         kioskPatches.add(mall.getPatch(21,53));
         kioskPatches.add(mall.getPatch(21,70));
         kioskPatches.add(mall.getPatch(21,87));
         kioskPatches.add(mall.getPatch(32,53));
         kioskPatches.add(mall.getPatch(32,70));
         kioskPatches.add(mall.getPatch(32,87));
-        kioskPatches.add(mall.getPatch(26,97));
         KioskMapper.draw(kioskPatches);
 
         List<Patch> tableUpPatches = new ArrayList<>();
@@ -536,6 +536,18 @@ public class MallScreenController extends ScreenController {
         toiletPatches.add(mall.getPatch(59, 23));
         toiletPatches.add(mall.getPatch(59, 25));
         toiletPatches.add(mall.getPatch(59, 27));
+        toiletPatches.add(mall.getPatch(2, 109));
+        toiletPatches.add(mall.getPatch(4, 109));
+        toiletPatches.add(mall.getPatch(6, 109));
+        toiletPatches.add(mall.getPatch(8, 109));
+        toiletPatches.add(mall.getPatch(10, 109));
+        toiletPatches.add(mall.getPatch(12, 109));
+        toiletPatches.add(mall.getPatch(47, 108));
+        toiletPatches.add(mall.getPatch(49, 108));
+        toiletPatches.add(mall.getPatch(51, 108));
+        toiletPatches.add(mall.getPatch(53, 108));
+        toiletPatches.add(mall.getPatch(55, 108));
+        toiletPatches.add(mall.getPatch(57, 108));
         ToiletMapper.draw(toiletPatches);
 
         List<Patch> sinkPatches = new ArrayList<>();
@@ -555,6 +567,18 @@ public class MallScreenController extends ScreenController {
         sinkPatches.add(mall.getPatch(6, 23));
         sinkPatches.add(mall.getPatch(6, 25));
         sinkPatches.add(mall.getPatch(6, 27));
+        sinkPatches.add(mall.getPatch(2, 118));
+        sinkPatches.add(mall.getPatch(4, 118));
+        sinkPatches.add(mall.getPatch(6, 118));
+        sinkPatches.add(mall.getPatch(8, 118));
+        sinkPatches.add(mall.getPatch(10, 118));
+        sinkPatches.add(mall.getPatch(12, 118));
+        sinkPatches.add(mall.getPatch(47, 117));
+        sinkPatches.add(mall.getPatch(49, 117));
+        sinkPatches.add(mall.getPatch(51, 117));
+        sinkPatches.add(mall.getPatch(53, 117));
+        sinkPatches.add(mall.getPatch(55, 117));
+        sinkPatches.add(mall.getPatch(57, 117));
         SinkMapper.draw(sinkPatches);
     }
 
@@ -602,6 +626,9 @@ public class MallScreenController extends ScreenController {
         currentPatronStaffRestoCount.setText(String.valueOf(MallSimulator.currentPatronStaffRestoCount));
         currentPatronStaffKioskCount.setText(String.valueOf(MallSimulator.currentPatronStaffKioskCount));
         currentPatronGuardCount.setText(String.valueOf(MallSimulator.currentPatronGuardCount));
+        currentPatronConciergerCount.setText(String.valueOf(MallSimulator.currentPatronConciergerCount));
+        currentPatronJanitorCount.setText(String.valueOf(MallSimulator.currentPatronJanitorCount));
+        currentJanitorJanitorCount.setText(String.valueOf(MallSimulator.currentJanitorJanitorCount));
         currentStaffStoreStaffStoreCount.setText(String.valueOf(MallSimulator.currentStaffStoreStaffStoreCount));
         currentStaffRestoStaffRestoCount.setText(String.valueOf(MallSimulator.currentStaffRestoStaffRestoCount));
     }

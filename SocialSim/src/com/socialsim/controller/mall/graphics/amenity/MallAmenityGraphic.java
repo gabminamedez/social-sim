@@ -67,6 +67,14 @@ public class MallAmenityGraphic extends Graphic {
         storeAisleGraphic.add(new AmenityGraphicLocation(13, 2));
         storeAisleGraphic.add(new AmenityGraphicLocation(14, 0));
         AMENITY_GRAPHICS.put(StoreAisle.class, storeAisleGraphic);
+
+        final List<AmenityGraphicLocation> conciergeGraphic = new ArrayList<>();
+        conciergeGraphic.add(new AmenityGraphicLocation(0, 2));
+        AMENITY_GRAPHICS.put(Concierge.class, conciergeGraphic);
+
+        final List<AmenityGraphicLocation> restoCounterGraphic = new ArrayList<>();
+        restoCounterGraphic.add(new AmenityGraphicLocation(4, 0));
+        AMENITY_GRAPHICS.put(RestoCounter.class, restoCounterGraphic);
     }
 
     protected final Amenity amenity;

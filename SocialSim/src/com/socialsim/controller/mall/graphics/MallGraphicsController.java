@@ -34,6 +34,7 @@ public class MallGraphicsController extends Controller {
     private static final Image AMENITY_SPRITES = new Image(MallAmenityGraphic.AMENITY_SPRITE_SHEET_URL);
     private static final Image AMENITY_SPRITES2 = new Image(MallAmenityGraphic.AMENITY_SPRITE_SHEET_URL2);
     private static final Image AGENT_SPRITES = new Image(MallAgentGraphic.AGENTS_URL);
+    private static final Image AGENT_SPRITES1 = new Image(MallAgentGraphic.AGENTS_URL1);
     public static List<Amenity.AmenityBlock> firstPortalAmenityBlocks;
     public static double tileSize;
     public static boolean willPeek;
@@ -207,13 +208,24 @@ public class MallGraphicsController extends Controller {
                     MallAgent mallAgent = (MallAgent) agent;
                     AgentGraphicLocation agentGraphicLocation = mallAgent.getAgentGraphic().getGraphicLocation();
 
-                    foregroundGraphicsContext.drawImage(
-                            AGENT_SPRITES,
-                            agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
-                            agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
-                            getScaledAgentCoordinates(mallAgent).getX() * tileSize,
-                            getScaledAgentCoordinates(mallAgent).getY() * tileSize,
-                            tileSize * 0.7, tileSize * 0.7);
+                    if (((MallAgent) agent).getType() == MallAgent.Type.JANITOR || ((MallAgent) agent).getType() == MallAgent.Type.CONCIERGER) {
+                        foregroundGraphicsContext.drawImage(
+                                AGENT_SPRITES1,
+                                agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
+                                agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
+                                getScaledAgentCoordinates(mallAgent).getX() * tileSize,
+                                getScaledAgentCoordinates(mallAgent).getY() * tileSize,
+                                tileSize * 0.7, tileSize * 0.7);
+                    }
+                    else {
+                        foregroundGraphicsContext.drawImage(
+                                AGENT_SPRITES,
+                                agentGraphicLocation.getSourceX(), agentGraphicLocation.getSourceY(),
+                                agentGraphicLocation.getSourceWidth(), agentGraphicLocation.getSourceHeight(),
+                                getScaledAgentCoordinates(mallAgent).getX() * tileSize,
+                                getScaledAgentCoordinates(mallAgent).getY() * tileSize,
+                                tileSize * 0.7, tileSize * 0.7);
+                    }
                 }
             }
         }
