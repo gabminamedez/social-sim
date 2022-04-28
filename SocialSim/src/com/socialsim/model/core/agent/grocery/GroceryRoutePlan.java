@@ -1,5 +1,7 @@
 package com.socialsim.model.core.agent.grocery;
 
+import com.socialsim.model.core.agent.university.UniversityAction;
+import com.socialsim.model.core.agent.university.UniversityState;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.simulator.Simulator;
@@ -40,6 +42,11 @@ public class GroceryRoutePlan {
             routePlan.add(new GroceryState(GroceryState.Name.GUARD_EXIT, this, agent, actions));
         }
         else if (agent.getPersona() == GroceryAgent.Persona.STAFF_AISLE){
+            actions = new ArrayList<>();
+            actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
+            actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
+            actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, 12));
+            routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM, this, agent, actions));
             actions = new ArrayList<>();
             actions.add(new GroceryAction(GroceryAction.Name.STAFF_AISLE_ORGANIZE, 60, 120));
             routePlan.add(new GroceryState(GroceryState.Name.STAFF_AISLE, this, agent, actions));
