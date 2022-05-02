@@ -410,6 +410,9 @@ public class University extends Environment {
         else if (amenityClass == Trash.class) {
             return this.getTrashes();
         }
+        else if (amenityClass == Cabinet.class){
+            return this.getCabinets();
+        }
         else {
             return null;
         }
