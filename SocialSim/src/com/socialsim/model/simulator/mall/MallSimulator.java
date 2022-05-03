@@ -500,10 +500,19 @@ public class MallSimulator extends Simulator {
                         }
                     }
                     else if (state.getName() == MallState.Name.WANDERING_AROUND) {
-                        if (action.getName() == MallAction.Name.FIND_BENCH || action.getName() == MallAction.Name.FIND_DIRECTORY) {
+                        if (action.getName() == MallAction.Name.FIND_BENCH || action.getName() == MallAction.Name.FIND_DIRECTORY || action.getName() == MallAction.Name.GO_CONCIERGE) {
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (action.getName() == MallAction.Name.FIND_BENCH) {
                                     if (!agentMovement.chooseGoal(Bench.class)) {
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                        agentMovement.setActionIndex(0);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.resetGoal();
+                                    }
+                                }
+                                else if(action.getName() == MallAction.Name.GO_CONCIERGE){
+                                    if (!agentMovement.chooseGoal(Concierge.class)) {
                                         agentMovement.setNextState(agentMovement.getStateIndex());
                                         agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                         agentMovement.setActionIndex(0);
@@ -545,7 +554,7 @@ public class MallSimulator extends Simulator {
                                 }
                             }
                         }
-                        else if (action.getName() == MallAction.Name.SIT_ON_BENCH || action.getName() == MallAction.Name.VIEW_DIRECTORY) {
+                        else if (action.getName() == MallAction.Name.SIT_ON_BENCH || action.getName() == MallAction.Name.VIEW_DIRECTORY || action.getName() == MallAction.Name.ASK_CONCIERGE) {
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setNextState(agentMovement.getStateIndex());

@@ -415,6 +415,9 @@ public class Office extends Environment {
         else if (amenityClass == Door.class) {
             return this.getDoors();
         }
+        else if(amenityClass == Fridge.class){
+            return this.getFridges();
+        }
         else if (amenityClass == MeetingDesk.class) {
             return this.getMeetingDesks();
         }
@@ -441,6 +444,9 @@ public class Office extends Environment {
         }
         else if (amenityClass == Toilet.class) {
             return this.getToilets();
+        }
+        else if(amenityClass == WaterDispenser.class){
+            return this.getWaterDispensers();
         }
         else {
             return null;
