@@ -2267,7 +2267,7 @@ public class OfficeSimulator extends Simulator {
             }
         }
 
-        /*if (agentMovement.isInteracting()) {
+        if (agentMovement.isInteracting()) {
             if (agentMovement.getDuration() == 0) {
                 agentMovement.setInteracting(false);
                 agentMovement.setInteractionType(null);
@@ -2312,7 +2312,7 @@ public class OfficeSimulator extends Simulator {
                 if (agentMovement.isInteracting())
                     break;
             }
-        }*/
+        }
         agent.getAgentGraphic().change();
     }
 
