@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class UniversityAgentMovement extends AgentMovement {
 
-    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalMean = 1;
     public static int defaultNonverbalStdDev = 1;
     public static int defaultCooperativeMean = 24;
     public static int defaultCooperativeStdDev = 12;
@@ -1371,10 +1371,17 @@ public class UniversityAgentMovement extends AgentMovement {
     }
 
     public void rollAgentInteraction(UniversityAgent agent){
+        double CLASS_MULTIPLER_1 = 1, CLASS_MULTIPLIER_2 = 1;
+        if (this.currentState.getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT || this.currentState.getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR){
+            CLASS_MULTIPLER_1 = UniversityRoutePlan.CHANCE_NEED_CLASS_MULTIPLIER;
+        }
+        if (agent.getAgentMovement().getCurrentState().getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT || agent.getAgentMovement().getCurrentState().getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR){
+            CLASS_MULTIPLIER_2 = UniversityRoutePlan.CHANCE_NEED_CLASS_MULTIPLIER;
+        }
         double IOS1 = university.getIOS().get(this.getParent().getId()).get(agent.getId());
         double IOS2 = university.getIOS().get(agent.getId()).get(this.getParent().getId());
-        double CHANCE1 = Simulator.roll();
-        double CHANCE2 = Simulator.roll();
+        double CHANCE1 = Simulator.roll() * CLASS_MULTIPLER_1;
+        double CHANCE2 = Simulator.roll() * CLASS_MULTIPLIER_2;
         double interactionStdDeviation, interactionMean;
         if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
             CHANCE1 = Simulator.roll() * IOS1;

@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MallAgentMovement extends AgentMovement {
 
-    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalMean = 1;
     public static int defaultNonverbalStdDev = 1;
     public static int defaultCooperativeMean = 24;
     public static int defaultCooperativeStdDev = 12;

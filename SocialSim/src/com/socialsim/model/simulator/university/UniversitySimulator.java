@@ -2315,6 +2315,7 @@ public class UniversitySimulator extends Simulator {
         }
         else {
             List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
+            UniversityAgent agent2 = null;
             for (Patch patch: patches) {
                 for (Agent otherAgent: patch.getAgents()) {
                     UniversityAgent universityAgent = (UniversityAgent) otherAgent;
@@ -2323,6 +2324,7 @@ public class UniversitySimulator extends Simulator {
                             if (Coordinates.isWithinFieldOfView(universityAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), universityAgent.getAgentMovement().getProposedHeading(), universityAgent.getAgentMovement().getFieldOfViewAngle())){
                                 agentMovement.rollAgentInteraction(universityAgent);
                                 if (agentMovement.isInteracting()) {
+                                    agent2 = universityAgent;
                                     currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
                                     currentPatchCount[universityAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][universityAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
                                 }
@@ -2342,6 +2344,7 @@ public class UniversitySimulator extends Simulator {
                             if (Coordinates.isWithinFieldOfView(universityAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), universityAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
                                 agentMovement.rollAgentInteraction(universityAgent);
                                 if (agentMovement.isInteracting()) {
+                                    agent2 = universityAgent;
                                     currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
                                     currentPatchCount[universityAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][universityAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
                                 }
@@ -2352,6 +2355,14 @@ public class UniversitySimulator extends Simulator {
 
                 if (agentMovement.isInteracting())
                     break;
+            }
+            if (agentMovement.isInteracting() && agentMovement.getInteractionDuration() == 0) {
+                agentMovement.setInteracting(false);
+                agentMovement.setInteractionType(null);
+            }
+            if (agent2 != null && agent2.getAgentMovement().isInteracting() && agent2.getAgentMovement().getInteractionDuration() == 0){
+                agent2.getAgentMovement().setInteracting(false);
+                agent2.getAgentMovement().setInteractionType(null);
             }
         }
         agent.getAgentGraphic().change();

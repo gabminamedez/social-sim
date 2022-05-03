@@ -1128,57 +1128,63 @@ public class GrocerySimulator extends Simulator {
             }
         }
 
-//        if (agentMovement.isInteracting()) {
-//            if (agentMovement.getDuration() == 0) {
-//                agentMovement.setInteracting(false);
-//                agentMovement.setInteractionType(null);
-//            }
-//            else {
-//                agentMovement.interact();
-//            }
-//        }
-//        else {
-//            List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
-//            for (Patch patch: patches) {
-//                for (Agent otherAgent: patch.getAgents()) {
-//                    GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
-//                    if (!groceryAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
-//                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), groceryAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
-//                            if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), groceryAgent.getAgentMovement().getFieldOfViewAngle())){
-//                                agentMovement.rollAgentInteraction(groceryAgent);
-//                                if (agentMovement.isInteracting()){
-//                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
-//                                    currentPatchCount[groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
-//                                }
-//                            }
-//                    if (agentMovement.isInteracting())
-//                        break;
-//                }
-//                if (agentMovement.isInteracting())
-//                    break;
-//            }
-//            patches = agentMovement.get3x3Field(agentMovement.getHeading(), true, Math.toRadians(270));
-//            for (Patch patch: patches) {
-//                for (Agent otherAgent: patch.getAgents()) {
-//                    GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
-//                    if (!groceryAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
-//                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), groceryAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
-//                            if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
-//                                agentMovement.rollAgentInteraction(groceryAgent);
-//                                if (agentMovement.isInteracting()) {
-//                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
-//                                    currentPatchCount[groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
-//                                }
-//                            }
-//                    if (agentMovement.isInteracting())
-//                        break;
-//                }
-//
-//                if (agentMovement.isInteracting())
-//                    break;
-//            }
-//        }
-//        agent.getAgentGraphic().change();
+        if (agentMovement.isInteracting()) {
+            agentMovement.interact();
+        }
+        else {
+            List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
+            GroceryAgent agent2 = null;
+            for (Patch patch: patches) {
+                for (Agent otherAgent: patch.getAgents()) {
+                    GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
+                    if (!groceryAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
+                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), groceryAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
+                            if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), groceryAgent.getAgentMovement().getFieldOfViewAngle())){
+                                agentMovement.rollAgentInteraction(groceryAgent);
+                                if (agentMovement.isInteracting()){
+                                    agent2 = groceryAgent;
+                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                    currentPatchCount[groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                }
+                            }
+                    if (agentMovement.isInteracting())
+                        break;
+                }
+                if (agentMovement.isInteracting())
+                    break;
+            }
+            patches = agentMovement.get3x3Field(agentMovement.getHeading(), true, Math.toRadians(270));
+            for (Patch patch: patches) {
+                for (Agent otherAgent: patch.getAgents()) {
+                    GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
+                    if (!groceryAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
+                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), groceryAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
+                            if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
+                                agentMovement.rollAgentInteraction(groceryAgent);
+                                if (agentMovement.isInteracting()) {
+                                    agent2 = groceryAgent;
+                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                    currentPatchCount[groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                }
+                            }
+                    if (agentMovement.isInteracting())
+                        break;
+                }
+
+                if (agentMovement.isInteracting())
+                    break;
+            }
+            if (agentMovement.isInteracting() && agentMovement.getInteractionDuration() == 0) {
+                agentMovement.setInteracting(false);
+                agentMovement.setInteractionType(null);
+            }
+            if (agent2 != null && agent2.getAgentMovement().isInteracting() && agent2.getAgentMovement().getInteractionDuration() == 0){
+                agent2.getAgentMovement().setInteracting(false);
+                agent2.getAgentMovement().setInteractionType(null);
+            }
+        }
+
+        agent.getAgentGraphic().change();
     }
 
     private void spawnAgent(Grocery grocery, long currentTick) {
