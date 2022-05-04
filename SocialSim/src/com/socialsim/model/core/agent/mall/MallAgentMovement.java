@@ -1764,6 +1764,8 @@ public class MallAgentMovement extends AgentMovement {
                 }
             }
             this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+            if (this.interactionDuration < 0)
+                this.interactionDuration = 0;
             agent.getAgentMovement().setInteractionDuration(this.interactionDuration);
             if (agent.getAgentMovement().getInteractionType() == MallAgentMovement.InteractionType.NON_VERBAL)
                 MallSimulator.averageNonverbalDuration = (MallSimulator.averageNonverbalDuration * (MallSimulator.currentNonverbalCount - 1) + this.interactionDuration) / MallSimulator.currentNonverbalCount;

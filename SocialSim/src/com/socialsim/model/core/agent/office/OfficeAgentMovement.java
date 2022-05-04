@@ -1628,6 +1628,9 @@ public class OfficeAgentMovement extends AgentMovement {
                 }
             }
             this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+            if (this.interactionDuration < 0)
+                this.interactionDuration = 0;
+            agent.getAgentMovement().setInteractionDuration(this.interactionDuration);
             if (agent.getAgentMovement().getInteractionType() == OfficeAgentMovement.InteractionType.NON_VERBAL)
                 OfficeSimulator.averageNonverbalDuration = (OfficeSimulator.averageNonverbalDuration * (OfficeSimulator.currentNonverbalCount - 1) + this.interactionDuration) / OfficeSimulator.currentNonverbalCount;
             else if (agent.getAgentMovement().getInteractionType() == OfficeAgentMovement.InteractionType.COOPERATIVE)

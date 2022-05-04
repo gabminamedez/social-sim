@@ -1747,6 +1747,9 @@ public class GroceryAgentMovement extends AgentMovement {
                 }
             }
             this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+            if (this.interactionDuration < 0)
+                this.interactionDuration = 0;
+            agent.getAgentMovement().setInteractionDuration(this.interactionDuration);
             if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.NON_VERBAL)
                 GrocerySimulator.averageNonverbalDuration = (GrocerySimulator.averageNonverbalDuration * (GrocerySimulator.currentNonverbalCount - 1) + this.interactionDuration) / GrocerySimulator.currentNonverbalCount;
             else if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.COOPERATIVE)
