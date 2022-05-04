@@ -32,9 +32,9 @@ public class GroceryAgentMovement extends AgentMovement {
     public static int defaultNonverbalMean = 1;
     public static int defaultNonverbalStdDev = 1;
     public static int defaultCooperativeMean = 24;
-    public static int defaultCooperativeStdDev = 12;
+    public static int defaultCooperativeStdDev = 6;
     public static int defaultExchangeMean = 24;
-    public static int defaultExchangeStdDev = 12;
+    public static int defaultExchangeStdDev = 6;
     public static int defaultFieldOfView = 30;
 
     private final GroceryAgent parent;
