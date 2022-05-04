@@ -12,6 +12,7 @@ import com.socialsim.model.core.environment.office.patchfield.*;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.office.OfficeSimulator;
+import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +37,7 @@ public class OfficeScreenController extends ScreenController {
     @FXML private Canvas markingsCanvas;
     @FXML private Text elapsedTimeText;
     @FXML private ToggleButton playButton;
+    @FXML private Button resetButton;
     @FXML private Slider speedSlider;
     @FXML private Button resetToDefaultButton;
     @FXML private TextField nonverbalMean;
@@ -143,6 +145,8 @@ public class OfficeScreenController extends ScreenController {
     @FXML private Label currentGuardSecretaryCount;
     @FXML private Label currentReceptionistSecretaryCount;
     @FXML private Label currentSecretarySecretaryCount;
+    @FXML private Button exportToCSVButton;
+    @FXML private Button exportHeatMapButton;
 
     private final double CANVAS_SCALE = 0.5;
 
@@ -186,6 +190,9 @@ public class OfficeScreenController extends ScreenController {
             office.convertIOSToChances();
             setElements();
             playButton.setDisable(false);
+            exportToCSVButton.setDisable(true);
+            exportHeatMapButton.setDisable(true);
+            Main.grocerySimulator.replenishStaticVars();
             disableEdits();
         }
     }
@@ -570,6 +577,15 @@ public class OfficeScreenController extends ScreenController {
         requestUpdateInterfaceSimulationElements();
     }
 
+    public void exportHeatMap() {
+        try {
+            OfficeSimulator.exportHeatMap();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void requestUpdateInterfaceSimulationElements() {
         Platform.runLater(this::updateSimulationTime);
         Platform.runLater(this::updateStatistics);
@@ -701,10 +717,14 @@ public class OfficeScreenController extends ScreenController {
             Main.officeSimulator.setRunning(true);
             Main.officeSimulator.getPlaySemaphore().release();
             playButton.setText("Pause");
+            exportToCSVButton.setDisable(true);
+            exportHeatMapButton.setDisable(true);
         }
         else {
             Main.officeSimulator.setRunning(false);
             playButton.setText("Play");
+            exportToCSVButton.setDisable(false);
+            exportHeatMapButton.setDisable(false);
         }
     }
 
@@ -770,6 +790,15 @@ public class OfficeScreenController extends ScreenController {
             stage.setTitle("Edit Interaction Type Chances");
             stage.setScene(new Scene(root));
             stage.show();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void exportToCSV(){
+        try {
+            OfficeSimulator.exportToCSV();
         }
         catch(Exception e) {
             e.printStackTrace();

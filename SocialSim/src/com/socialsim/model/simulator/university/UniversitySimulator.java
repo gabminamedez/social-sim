@@ -12,6 +12,8 @@ import com.socialsim.model.core.environment.university.patchobject.passable.gate
 import com.socialsim.model.core.environment.university.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
+
+import java.io.PrintWriter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -49,6 +51,26 @@ public class UniversitySimulator extends Simulator {
     public static int currentGuardJanitorCount = 0;
     public static int currentJanitorJanitorCount = 0;
     public static int currentStaffStaffCount = 0;
+    public static int[] compiledCurrentProfessorCount;
+    public static int[] compiledCurrentStudentCount;
+    public static int[] compiledCurrentNonverbalCount;
+    public static int[] compiledCurrentCooperativeCount;
+    public static int[] compiledCurrentExchangeCount;
+    public static float[] compiledAverageNonverbalDuration;
+    public static float[] compiledAverageCooperativeDuration;
+    public static float[] compiledAverageExchangeDuration;
+    public static int[] compiledCurrentStudentStudentCount;
+    public static int[] compiledCurrentStudentProfCount;
+    public static int[] compiledCurrentStudentGuardCount;
+    public static int[] compiledCurrentStudentJanitorCount;
+    public static int[] compiledCurrentStudentStaffCount;
+    public static int[] compiledCurrentProfProfCount;
+    public static int[] compiledCurrentProfGuardCount;
+    public static int[] compiledCurrentProfJanitorCount;
+    public static int[] compiledCurrentProfStaffCount;
+    public static int[] compiledCurrentGuardJanitorCount;
+    public static int[] compiledCurrentJanitorJanitorCount;
+    public static int[] compiledCurrentStaffStaffCount;
     public static int[][] currentPatchCount;
 
     public UniversitySimulator() {
@@ -93,7 +115,6 @@ public class UniversitySimulator extends Simulator {
         UniversityAgent.clearUniversityAgentCounts();
         this.time.reset();
         this.running.set(false);
-        currentPatchCount = new int[university.getRows()][university.getColumns()];
     }
 
     public void spawnInitialAgents(University university) {
@@ -175,6 +196,26 @@ public class UniversitySimulator extends Simulator {
 
     public static void updateAgentsInUniversity(University university, long currentTick) throws InterruptedException {
         moveAll(university,currentTick);
+        compiledCurrentProfessorCount[(int) currentTick] = currentProfessorCount;
+        compiledCurrentStudentCount[(int) currentTick] = currentStudentCount;
+        compiledCurrentNonverbalCount[(int) currentTick] = currentNonverbalCount;
+        compiledCurrentCooperativeCount[(int) currentTick] = currentCooperativeCount;
+        compiledCurrentExchangeCount[(int) currentTick] = currentExchangeCount;
+        compiledAverageNonverbalDuration[(int) currentTick] = averageNonverbalDuration;
+        compiledAverageCooperativeDuration[(int) currentTick] = averageCooperativeDuration;
+        compiledAverageExchangeDuration[(int) currentTick] = averageExchangeDuration;
+        compiledCurrentStudentStudentCount[(int) currentTick] = currentStudentStudentCount;
+        compiledCurrentStudentProfCount[(int) currentTick] = currentStudentProfCount;
+        compiledCurrentStudentGuardCount[(int) currentTick] = currentStudentGuardCount;
+        compiledCurrentStudentJanitorCount[(int) currentTick] = currentStudentJanitorCount;
+        compiledCurrentStudentStaffCount[(int) currentTick] = currentStudentStaffCount;
+        compiledCurrentProfProfCount[(int) currentTick] = currentProfProfCount;
+        compiledCurrentProfGuardCount[(int) currentTick] = currentProfGuardCount;
+        compiledCurrentProfJanitorCount[(int) currentTick] = currentProfJanitorCount;
+        compiledCurrentProfStaffCount[(int) currentTick] = currentProfStaffCount;
+        compiledCurrentGuardJanitorCount[(int) currentTick] = currentGuardJanitorCount;
+        compiledCurrentJanitorJanitorCount[(int) currentTick] = currentJanitorJanitorCount;
+        compiledCurrentStaffStaffCount[(int) currentTick] = currentStaffStaffCount;
     }
 
     private static void moveAll(University university,long currentTick) {
@@ -2360,6 +2401,133 @@ public class UniversitySimulator extends Simulator {
         currentStudentStaffCount = 0;
         currentProfStaffCount = 0;
         currentStaffStaffCount = 0;
+        currentPatchCount = new int[university.getRows()][university.getColumns()];
+        compiledCurrentProfessorCount = new int[9001];
+        compiledCurrentStudentCount = new int[9001];
+        compiledCurrentNonverbalCount = new int[9001];
+        compiledCurrentCooperativeCount = new int[9001];
+        compiledCurrentExchangeCount = new int[9001];
+        compiledAverageNonverbalDuration = new float[9001];
+        compiledAverageCooperativeDuration = new float[9001];
+        compiledAverageExchangeDuration = new float[9001];
+        compiledCurrentStudentStudentCount = new int[9001];
+        compiledCurrentStudentProfCount = new int[9001];
+        compiledCurrentStudentGuardCount = new int[9001];
+        compiledCurrentStudentJanitorCount = new int[9001];
+        compiledCurrentStudentStaffCount = new int[9001];
+        compiledCurrentProfProfCount = new int[9001];
+        compiledCurrentProfGuardCount = new int[9001];
+        compiledCurrentProfJanitorCount = new int[9001];
+        compiledCurrentProfStaffCount = new int[9001];
+        compiledCurrentGuardJanitorCount = new int[9001];
+        compiledCurrentJanitorJanitorCount = new int[9001];
+        compiledCurrentStaffStaffCount = new int[9001];
     }
 
+    public static void exportToCSV() throws Exception{
+        PrintWriter writer = new PrintWriter("University SocialSim Statistics.csv");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Current Professor Count");
+        sb.append(",");
+        sb.append("Current Student Count");
+        sb.append(",");
+        sb.append("Current Nonverbal Count");
+        sb.append(",");
+        sb.append("Current Cooperative Count");
+        sb.append(",");
+        sb.append("Current Exchange Count");
+        sb.append(",");
+        sb.append("Average Nonverbal Duration");
+        sb.append(",");
+        sb.append("Average Cooperative Duration");
+        sb.append(",");
+        sb.append("Average Exchange Duration");
+        sb.append(",");
+        sb.append("Current Student Student Count");
+        sb.append(",");
+        sb.append("Current Student Prof Count");
+        sb.append(",");
+        sb.append("Current Student Guard Count");
+        sb.append(",");
+        sb.append("Current Student Janitor Count");
+        sb.append(",");
+        sb.append("Current Prof Prof Count");
+        sb.append(",");
+        sb.append("Current Prof Guard Count");
+        sb.append(",");
+        sb.append("Current Prof Janitor Count");
+        sb.append(",");
+        sb.append("Current Guard Janitor Count");
+        sb.append(",");
+        sb.append("Current Janitor Janitor Count");
+        sb.append(",");
+        sb.append("Current Student Staff Count");
+        sb.append(",");
+        sb.append("Current Prof Staff Count");
+        sb.append(",");
+        sb.append("Current Staff Staff Count");
+        sb.append("\n");
+        for (int i = 0; i < 9001; i++){
+            sb.append(compiledCurrentProfessorCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStudentCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentNonverbalCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentCooperativeCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentExchangeCount[i]);
+            sb.append(",");
+            sb.append(compiledAverageNonverbalDuration[i]);
+            sb.append(",");
+            sb.append(compiledAverageCooperativeDuration[i]);
+            sb.append(",");
+            sb.append(compiledAverageExchangeDuration[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStudentStudentCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStudentProfCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStudentGuardCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStudentJanitorCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStudentStaffCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentProfProfCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentProfGuardCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentProfJanitorCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentProfStaffCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentGuardJanitorCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentJanitorJanitorCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStaffStaffCount[i]);
+            sb.append("\n");
+        }
+        writer.write(sb.toString());
+        writer.flush();
+        writer.close();
+    }
+
+    public static void exportHeatMap() throws Exception {
+        PrintWriter writer = new PrintWriter("University SocialSim Heat Map.csv");
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < currentPatchCount.length; i++){
+            for (int j = 0 ; j < currentPatchCount[i].length; j++){
+                sb.append(currentPatchCount[i][j]);
+                if (j != currentPatchCount[i].length - 1)
+                    sb.append(",");
+            }
+            sb.append("\n");
+        }
+        writer.write(sb.toString());
+        writer.flush();
+        writer.close();
+    }
 }

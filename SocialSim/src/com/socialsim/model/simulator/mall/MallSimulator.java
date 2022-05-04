@@ -12,6 +12,7 @@ import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallG
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
+import java.io.PrintWriter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -57,6 +58,34 @@ public class MallSimulator extends Simulator {
     public static int currentStaffRestoGuardCount = 0;
     public static int currentStaffKioskStaffKioskCount = 0;
     public static int currentStaffKioskGuardCount = 0;
+    public static int[] compiledCurrentPatronCount;
+    public static int[] compiledCurrentNonverbalCount;
+    public static int[] compiledCurrentCooperativeCount;
+    public static int[] compiledCurrentExchangeCount;
+    public static int[] compiledTotalFamilyCount;
+    public static int[] compiledTotalFriendsCount;
+    public static int[] compiledTotalAloneCount;
+    public static int[] compiledTotalCoupleCount;
+    public static float[] compiledAverageNonverbalDuration;
+    public static float[] compiledAverageCooperativeDuration;
+    public static float[] compiledAverageExchangeDuration;
+    public static int[] compiledCurrentPatronPatronCount;
+    public static int[] compiledCurrentPatronStaffStoreCount;
+    public static int[] compiledCurrentPatronStaffRestoCount;
+    public static int[] compiledCurrentPatronStaffKioskCount;
+    public static int[] compiledCurrentPatronGuardCount;
+    public static int[] compiledCurrentPatronConciergerCount;
+    public static int[] compiledCurrentPatronJanitorCount;
+    public static int[] compiledCurrentJanitorJanitorCount;
+    public static int[] compiledCurrentStaffStoreStaffStoreCount;
+    public static int[] compiledCurrentStaffStoreStaffRestoCount;
+    public static int[] compiledCurrentStaffStoreStaffKioskCount;
+    public static int[] compiledCurrentStaffStoreGuardCount;
+    public static int[] compiledCurrentStaffRestoStaffRestoCount;
+    public static int[] compiledCurrentStaffRestoStaffKioskCount;
+    public static int[] compiledCurrentStaffRestoGuardCount;
+    public static int[] compiledCurrentStaffKioskStaffKioskCount;
+    public static int[] compiledCurrentStaffKioskGuardCount;
     public static int[][] currentPatchCount;
 
     public MallSimulator() {
@@ -101,7 +130,6 @@ public class MallSimulator extends Simulator {
         MallAgent.clearMallAgentCounts();
         this.time.reset();
         this.running.set(false);
-        currentPatchCount = new int[mall.getRows()][mall.getColumns()];
     }
 
     public void spawnInitialAgents(Mall mall) {
@@ -326,7 +354,7 @@ public class MallSimulator extends Simulator {
                     while (this.isRunning()) {
                         long currentTick = this.time.getStartTime().until(this.time.getTime(), ChronoUnit.SECONDS) / 5;
                         try {
-                            updateAgentsInMall(mall);
+                            updateAgentsInMall(mall, currentTick);
                             spawnAgent(mall, currentTick);
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -349,8 +377,36 @@ public class MallSimulator extends Simulator {
         }).start();
     }
 
-    public static void updateAgentsInMall(Mall mall) throws InterruptedException {
+    public static void updateAgentsInMall(Mall mall, long currentTick) throws InterruptedException {
         moveAll(mall);
+        compiledCurrentPatronCount[(int) currentTick] = currentPatronCount;
+        compiledCurrentNonverbalCount[(int) currentTick] = currentNonverbalCount;
+        compiledCurrentCooperativeCount[(int) currentTick] = currentCooperativeCount;
+        compiledCurrentExchangeCount[(int) currentTick] = currentExchangeCount;
+        compiledTotalFamilyCount[(int) currentTick] = totalFamilyCount;
+        compiledTotalFriendsCount[(int) currentTick] = totalFriendsCount;
+        compiledTotalAloneCount[(int) currentTick] = totalAloneCount;
+        compiledTotalCoupleCount[(int) currentTick] = totalCoupleCount;
+        compiledAverageNonverbalDuration[(int) currentTick] = averageNonverbalDuration;
+        compiledAverageCooperativeDuration[(int) currentTick] = averageCooperativeDuration;
+        compiledAverageExchangeDuration[(int) currentTick] = averageExchangeDuration;
+        compiledCurrentPatronPatronCount[(int) currentTick] = currentPatronPatronCount;
+        compiledCurrentPatronStaffStoreCount[(int) currentTick] = currentPatronStaffStoreCount;
+        compiledCurrentPatronStaffRestoCount[(int) currentTick] = currentPatronStaffRestoCount;
+        compiledCurrentPatronStaffKioskCount[(int) currentTick] = currentPatronStaffKioskCount;
+        compiledCurrentPatronGuardCount[(int) currentTick] = currentPatronGuardCount;
+        compiledCurrentPatronConciergerCount[(int) currentTick] = currentPatronConciergerCount;
+        compiledCurrentPatronJanitorCount[(int) currentTick] = currentPatronJanitorCount;
+        compiledCurrentJanitorJanitorCount[(int) currentTick] = currentJanitorJanitorCount;
+        compiledCurrentStaffStoreStaffStoreCount[(int) currentTick] = currentStaffStoreStaffStoreCount;
+        compiledCurrentStaffStoreStaffRestoCount[(int) currentTick] = currentStaffStoreStaffRestoCount;
+        compiledCurrentStaffStoreStaffKioskCount[(int) currentTick] = currentStaffStoreStaffKioskCount;
+        compiledCurrentStaffStoreGuardCount[(int) currentTick] = currentStaffStoreGuardCount;
+        compiledCurrentStaffRestoStaffRestoCount[(int) currentTick] = currentStaffRestoStaffRestoCount;
+        compiledCurrentStaffRestoStaffKioskCount[(int) currentTick] = currentStaffRestoStaffKioskCount;
+        compiledCurrentStaffRestoGuardCount[(int) currentTick] = currentStaffRestoGuardCount;
+        compiledCurrentStaffKioskStaffKioskCount[(int) currentTick] = currentStaffKioskStaffKioskCount;
+        compiledCurrentStaffKioskGuardCount[(int) currentTick] = currentStaffKioskGuardCount;
     }
 
     private static void moveAll(Mall mall) {
@@ -1227,6 +1283,173 @@ public class MallSimulator extends Simulator {
         currentStaffRestoGuardCount = 0;
         currentStaffKioskStaffKioskCount = 0;
         currentStaffKioskGuardCount = 0;
+        currentPatchCount = new int[mall.getRows()][mall.getColumns()];
+        compiledCurrentPatronCount = new int[8641];
+        compiledCurrentNonverbalCount = new int[8641];
+        compiledCurrentCooperativeCount = new int[8641];
+        compiledCurrentExchangeCount = new int[8641];
+        compiledTotalFamilyCount = new int[8641];
+        compiledTotalFriendsCount = new int[8641];
+        compiledTotalAloneCount = new int[8641];
+        compiledTotalCoupleCount = new int[8641];
+        compiledAverageNonverbalDuration = new float[8641];
+        compiledAverageCooperativeDuration = new float[8641];
+        compiledAverageExchangeDuration = new float[8641];
+        compiledCurrentPatronPatronCount = new int[8641];
+        compiledCurrentPatronStaffStoreCount = new int[8641];
+        compiledCurrentPatronStaffRestoCount = new int[8641];
+        compiledCurrentPatronStaffKioskCount = new int[8641];
+        compiledCurrentPatronGuardCount = new int[8641];
+        compiledCurrentPatronConciergerCount = new int[8641];
+        compiledCurrentPatronJanitorCount = new int[8641];
+        compiledCurrentJanitorJanitorCount = new int[8641];
+        compiledCurrentStaffStoreStaffStoreCount = new int[8641];
+        compiledCurrentStaffStoreStaffRestoCount = new int[8641];
+        compiledCurrentStaffStoreStaffKioskCount = new int[8641];
+        compiledCurrentStaffStoreGuardCount = new int[8641];
+        compiledCurrentStaffRestoStaffRestoCount = new int[8641];
+        compiledCurrentStaffRestoStaffKioskCount = new int[8641];
+        compiledCurrentStaffRestoGuardCount = new int[8641];
+        compiledCurrentStaffKioskStaffKioskCount = new int[8641];
+        compiledCurrentStaffKioskGuardCount = new int[8641];
     }
 
+    public static void exportToCSV() throws Exception{
+        PrintWriter writer = new PrintWriter("Mall SocialSim Statistics.csv");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Current Patron Count");
+        sb.append(",");
+        sb.append("Current Nonverbal Count");
+        sb.append(",");
+        sb.append("Current Cooperative Count");
+        sb.append(",");
+        sb.append("Current Exchange Count");
+        sb.append(",");
+        sb.append("Total Family Count");
+        sb.append(",");
+        sb.append("Total Friends Count");
+        sb.append(",");
+        sb.append("Total Alone Count");
+        sb.append(",");
+        sb.append("Total Couple Count");
+        sb.append(",");
+        sb.append("Average Nonverbal Duration");
+        sb.append(",");
+        sb.append("Average Cooperative Duration");
+        sb.append(",");
+        sb.append("Average Exchange Duration");
+        sb.append(",");
+        sb.append("Current Patron Patron Count");
+        sb.append(",");
+        sb.append("Current Patron StaffStore Count");
+        sb.append(",");
+        sb.append("Current Patron StaffResto Count");
+        sb.append(",");
+        sb.append("Current Patron StaffKiosk Count");
+        sb.append(",");
+        sb.append("Current Patron Guard Count");
+        sb.append(",");
+        sb.append("Current Patron Concierger Count");
+        sb.append(",");
+        sb.append("Current Patron Janitor Count");
+        sb.append(",");
+        sb.append("Current Janitor Janitor Count");
+        sb.append(",");
+        sb.append("Current StaffStore StaffStore Count");
+        sb.append(",");
+        sb.append("Current StaffStore StaffResto Count");
+        sb.append(",");
+        sb.append("Current StaffStore StaffKiosk Count");
+        sb.append(",");
+        sb.append("Current StaffStore Guard Count");
+        sb.append(",");
+        sb.append("Current StaffResto StaffResto Count");
+        sb.append(",");
+        sb.append("Current StaffResto StaffKiosk Count");
+        sb.append(",");
+        sb.append("Current StaffResto Guard Count");
+        sb.append(",");
+        sb.append("Current StaffKiosk StaffKiosk Count");
+        sb.append(",");
+        sb.append("Current StaffKiosk Guard Count");
+        sb.append("\n");
+        for (int i = 0; i < 8641; i++){
+            sb.append(compiledCurrentPatronCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentNonverbalCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentCooperativeCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentExchangeCount[i]);
+            sb.append(",");
+            sb.append(compiledTotalFamilyCount[i]);
+            sb.append(",");
+            sb.append(compiledTotalFriendsCount[i]);
+            sb.append(",");
+            sb.append(compiledTotalAloneCount[i]);
+            sb.append(",");
+            sb.append(compiledTotalCoupleCount[i]);
+            sb.append(",");
+            sb.append(compiledAverageNonverbalDuration[i]);
+            sb.append(",");
+            sb.append(compiledAverageCooperativeDuration[i]);
+            sb.append(",");
+            sb.append(compiledAverageExchangeDuration[i]);
+            sb.append(",");
+            sb.append(compiledCurrentPatronPatronCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentPatronStaffStoreCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentPatronStaffRestoCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentPatronStaffKioskCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentPatronGuardCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentPatronConciergerCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentPatronJanitorCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentJanitorJanitorCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStaffStoreStaffStoreCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStaffStoreStaffRestoCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStaffStoreStaffKioskCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStaffStoreGuardCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStaffRestoStaffRestoCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStaffRestoStaffKioskCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStaffRestoGuardCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStaffKioskStaffKioskCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentStaffKioskGuardCount[i]);
+            sb.append("\n");
+        }
+        writer.write(sb.toString());
+        writer.flush();
+        writer.close();
+    }
+
+    public static void exportHeatMap() throws Exception {
+        PrintWriter writer = new PrintWriter("Mall SocialSim Heat Map.csv");
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < currentPatchCount.length; i++){
+            for (int j = 0 ; j < currentPatchCount[i].length; j++){
+                sb.append(currentPatchCount[i][j]);
+                if (j != currentPatchCount[i].length - 1)
+                    sb.append(",");
+            }
+            sb.append("\n");
+        }
+        writer.write(sb.toString());
+        writer.flush();
+        writer.close();
+    }
 }
