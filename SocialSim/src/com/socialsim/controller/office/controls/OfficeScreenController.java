@@ -192,7 +192,7 @@ public class OfficeScreenController extends ScreenController {
             playButton.setDisable(false);
             exportToCSVButton.setDisable(true);
             exportHeatMapButton.setDisable(true);
-            Main.grocerySimulator.replenishStaticVars();
+            Main.officeSimulator.replenishStaticVars();
             disableEdits();
         }
     }
