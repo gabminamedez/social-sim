@@ -172,6 +172,18 @@ public class OfficeRoutePlan {
             routePlan.add(new OfficeState(OfficeState.Name.SECRETARY, this, agent, actions));
 
             actions = new ArrayList<>();
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, office.getChairs().get(3).getAttractors().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.EAT_LUNCH, 180, 360));
+            actions.add(new OfficeAction(OfficeAction.Name.EXIT_LUNCH, office.getDoors().get(1).getAttractors().get(1).getPatch()));
+            this.LUNCH_INSTANCE = routePlan.get(routePlan.size()-1);
+
+            actions = new ArrayList<>();
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getChairs().get(3).getAttractors().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_STAY_PUT, office.getChairs().get(3).getAttractors().get(0).getPatch(), 360, 720));
+            actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_CHECK_CABINET, 12, 36));
+            routePlan.add(new OfficeState(OfficeState.Name.SECRETARY, this, agent, actions));
+
+            actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.LEAVE_OFFICE, office.getOfficeGates().get(0).getAmenityBlocks().get(0).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.GOING_HOME, this, agent, actions));
         }
@@ -388,11 +400,6 @@ public class OfficeRoutePlan {
                 actions = new ArrayList<>();
                 actions.add(new OfficeAction(OfficeAction.Name.GOING_FRIDGE));
                 actions.add(new OfficeAction(OfficeAction.Name.GETTING_FOOD, 2, 10));
-                officeState = new OfficeState(OfficeState.Name.REFRIGERATOR, this, agent, actions);
-            }
-            case "DESK" -> {
-                actions = new ArrayList<>();
-                actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, getAgentCubicle().getAttractors().get(0).getPatch(), 12, 60));
                 officeState = new OfficeState(OfficeState.Name.REFRIGERATOR, this, agent, actions);
             }
             case "BREAK" -> {
