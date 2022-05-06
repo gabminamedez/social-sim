@@ -43,6 +43,7 @@ public class UniversityAgentMovement extends AgentMovement {
     private Amenity currentAmenity;
     private PatchField currentPatchField;
     private Patch goalPatch;
+    private Patch waitPatch;
     private Amenity.AmenityBlock goalAttractor;
     private Amenity goalAmenity;
     private PatchField goalPatchField;
@@ -76,6 +77,7 @@ public class UniversityAgentMovement extends AgentMovement {
     private boolean isSimultaneousInteractionAllowed;
     private int interactionDuration;
     private InteractionType interactionType;
+
 
     public enum InteractionType {
         NON_VERBAL, COOPERATIVE, EXCHANGE
@@ -405,6 +407,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
     public void resetGoal() {
         this.goalPatch = null;
+        this.waitPatch = null;
         this.goalAmenity = null;
         this.goalAttractor = null;
         this.goalPatchField = null;
@@ -547,8 +550,51 @@ public class UniversityAgentMovement extends AgentMovement {
 
         return true;
     }
+    public boolean chooseWaitPatch(int classKey){
+        if (classKey == 0){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 26; i < 28; i++){
+                for (int j = 5; j < 17; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 1){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 26; i < 28; i++){
+                for (int j = 5; j < 17; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 2){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 26; i < 28; i++){
+                for (int j = 5; j < 17; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 3){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 26; i < 28; i++){
+                for (int j = 5; j < 17; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
 
-    public void chooseStaffroomGoal(Class<? extends Amenity> nextAmenityClass, int classKey) {
+        return false;
+    }
+    public void chooseStaffroomGoal(Class<? extends Amenity> nextAmenityClass) {
         if (this.goalAmenity == null) {
             List<? extends Amenity> amenityListInFloor = this.university.getAmenityList(nextAmenityClass);
             Amenity chosenAmenity = null;
@@ -592,7 +638,8 @@ public class UniversityAgentMovement extends AgentMovement {
         }
     }
 
-    public void chooseClassroomGoal(Class<? extends Amenity> nextAmenityClass, int classKey) {
+    public boolean chooseClassroomGoal(Class<? extends Amenity> nextAmenityClass, int classKey) {
+        boolean allChairsReserved = true;
         if (this.goalAmenity == null) {
             List<? extends Amenity> amenityListInFloor = this.university.getAmenityList(nextAmenityClass);
             Amenity chosenAmenity = null;
@@ -627,6 +674,7 @@ public class UniversityAgentMovement extends AgentMovement {
                     chosenAmenity = candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
                     candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
+                    allChairsReserved = false;
                     break;
                 }
             }
@@ -634,6 +682,7 @@ public class UniversityAgentMovement extends AgentMovement {
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
         }
+        return allChairsReserved;
     }
 
     public boolean chooseBathroomGoal(Class<? extends Amenity> nextAmenityClass) {
@@ -1224,13 +1273,16 @@ public class UniversityAgentMovement extends AgentMovement {
         if (this.currentPath == null || this.isStuck && this.noNewPatchesSeenCounter > recomputeThreshold) {
             AgentPath agentPath = null;
 
-            if (goalQueueingPatchField == null) {
+            if (goalQueueingPatchField == null && this.waitPatch == null) {
                 agentPath = computePath(this.currentPatch, this.goalAttractor.getPatch(), true, true);
             }
-            else {
-                agentPath = computePath(this.currentPatch, this.goalQueueingPatchField.getLastQueuePatch(), true, true);
+            else if (this.waitPatch != null){
+                agentPath = computePath(this.currentPatch,this.waitPatch , true, true);
             }
-
+            else{
+                agentPath = computePath(this.currentPatch,this.goalQueueingPatchField.getLastQueuePatch(), true, true);
+            }
+//TODO: check
             if (agentPath != null) {
                 this.currentPath = new AgentPath(agentPath);
                 wasPathJustGenerated = true;
