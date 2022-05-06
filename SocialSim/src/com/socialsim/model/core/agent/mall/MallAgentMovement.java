@@ -18,6 +18,7 @@ import com.socialsim.model.core.environment.mall.patchfield.*;
 import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
+import com.socialsim.model.simulator.grocery.GrocerySimulator;
 import com.socialsim.model.simulator.mall.MallSimulator;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -1417,6 +1418,7 @@ public class MallAgentMovement extends AgentMovement {
             SortedSet<Patch> currentPatchSet = this.getMall().getAgentPatchSet();
             if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
                 currentPatchSet.remove(this.currentPatch);
+                MallSimulator.currentPatronCount--;
             }
         }
     }

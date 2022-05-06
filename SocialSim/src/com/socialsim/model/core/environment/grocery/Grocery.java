@@ -779,7 +779,7 @@ public class Grocery extends Environment {
                     switch (persona2){
                         case GUARD_ENTRANCE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         case GUARD_EXIT -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
-                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                        case STAFF_AISLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(3, 4, 5)));
                         case BUTCHER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         case CASHIER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         case BAGGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
@@ -1007,7 +1007,7 @@ public class Grocery extends Environment {
                             case GUARD_CHECK_GROCERIES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_FOOD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_FOOD_SERVE_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case STAFF_AISLE_ORGANIZE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                             case STAFF_AISLE_ANSWER_CUSTOMER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
