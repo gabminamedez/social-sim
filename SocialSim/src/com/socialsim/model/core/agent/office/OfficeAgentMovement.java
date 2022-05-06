@@ -3,6 +3,7 @@ package com.socialsim.model.core.agent.office;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentMovement;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
+import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
@@ -520,7 +521,7 @@ public class OfficeAgentMovement extends AgentMovement {
     }
 
     public boolean chooseGoal(Class<? extends Amenity> nextAmenityClass) {
-        if (this.goalAmenity == null) {
+        if (this.goalAmenity == null && this.office.getAmenityList(nextAmenityClass) != null) {
             List<? extends Amenity> amenityListInFloor = this.office.getAmenityList(nextAmenityClass);
             HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
 
@@ -786,6 +787,69 @@ public class OfficeAgentMovement extends AgentMovement {
                 }
             }
         }
+    }
+
+    public boolean chooseBathroomGoal(Class<? extends Amenity> nextAmenityClass){
+        if(this.goalAmenity == null){
+            List<? extends Amenity> amenityListInFloor = this.office.getAmenityList(nextAmenityClass);
+            Amenity chosenAmenity = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+
+            for (Amenity amenity : amenityListInFloor) {
+                if (parent.getGender() == OfficeAgent.Gender.MALE) {
+                    if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == 2) {
+                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) {
+                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                            distancesToAttractors.put(attractor, distanceToAttractor);
+                        }
+                    }
+                }
+                else {
+                    if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == 1) {
+                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) {
+                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                            distancesToAttractors.put(attractor, distanceToAttractor);
+                        }
+                    }
+                }
+            }
+
+            List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                sortedDistances.put(aa.getKey(), aa.getValue());
+            }
+
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) {
+                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                if (!candidateAttractor.getPatch().getAmenityBlock().getIsReserved()) {
+                    chosenAmenity = candidateAttractor.getParent();
+                    chosenAttractor = candidateAttractor;
+                    candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
+                    break;
+                }
+            }
+
+            if (chosenAmenity != null) {
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        return false;
     }
 
     private Coordinates getFuturePosition(double walkingDistance) {
