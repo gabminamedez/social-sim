@@ -36,6 +36,7 @@ public class UniversityScreenController extends ScreenController {
     @FXML private Canvas markingsCanvas;
     @FXML private Text elapsedTimeText;
     @FXML private ToggleButton playButton;
+    @FXML private Button resetButton;
     @FXML private Slider speedSlider;
     @FXML private Button resetToDefaultButton;
     @FXML private TextField nonverbalMean;
@@ -70,6 +71,8 @@ public class UniversityScreenController extends ScreenController {
     @FXML private Label currentStaffStaffCount;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
+    @FXML private Button exportToCSVButton;
+    @FXML private Button exportHeatMapButton;
 
     private final double CANVAS_SCALE = 0.5;
 
@@ -113,6 +116,9 @@ public class UniversityScreenController extends ScreenController {
             university.convertIOSToChances();
             setElements();
             playButton.setDisable(false);
+            exportToCSVButton.setDisable(true);
+            exportHeatMapButton.setDisable(true);
+            Main.universitySimulator.replenishStaticVars();
             disableEdits();
         }
     }
@@ -598,6 +604,15 @@ public class UniversityScreenController extends ScreenController {
         }
     }
 
+    public void exportHeatMap() {
+        try {
+            UniversitySimulator.exportHeatMap();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void requestUpdateInterfaceSimulationElements() {
         Platform.runLater(this::updateSimulationTime);
         Platform.runLater(this::updateStatistics);
@@ -659,10 +674,14 @@ public class UniversityScreenController extends ScreenController {
             Main.universitySimulator.setRunning(true);
             Main.universitySimulator.getPlaySemaphore().release();
             playButton.setText("Pause");
+            exportToCSVButton.setDisable(true);
+            exportHeatMapButton.setDisable(true);
         }
         else {
             Main.universitySimulator.setRunning(false);
             playButton.setText("Play");
+            exportToCSVButton.setDisable(false);
+            exportHeatMapButton.setDisable(false);
         }
     }
 
@@ -724,6 +743,15 @@ public class UniversityScreenController extends ScreenController {
             stage.setTitle("Edit Interaction Type Chances");
             stage.setScene(new Scene(root));
             stage.show();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void exportToCSV(){
+        try {
+            UniversitySimulator.exportToCSV();
         }
         catch(Exception e) {
             e.printStackTrace();

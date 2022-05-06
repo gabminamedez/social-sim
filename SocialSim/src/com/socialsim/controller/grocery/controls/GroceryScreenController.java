@@ -12,6 +12,7 @@ import com.socialsim.model.core.environment.grocery.patchfield.BathroomField;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.grocery.GrocerySimulator;
+import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,6 +38,7 @@ public class GroceryScreenController extends ScreenController {
     @FXML private Canvas markingsCanvas;
     @FXML private Text elapsedTimeText;
     @FXML private ToggleButton playButton;
+    @FXML private Button resetButton;
     @FXML private Slider speedSlider;
     @FXML private Button resetToDefaultButton;
     @FXML private TextField nonverbalMean;
@@ -73,6 +75,8 @@ public class GroceryScreenController extends ScreenController {
     @FXML private Label currentCustomerFoodCount;
     @FXML private Label currentAisleAisleCount;
     @FXML private Label currentCashierBaggerCount;
+    @FXML private Button exportToCSVButton;
+    @FXML private Button exportHeatMapButton;
 
     private final double CANVAS_SCALE = 0.5;
 
@@ -117,6 +121,9 @@ public class GroceryScreenController extends ScreenController {
             grocery.convertIOSToChances();
             setElements();
             playButton.setDisable(false);
+            exportToCSVButton.setDisable(true);
+            exportHeatMapButton.setDisable(true);
+            Main.grocerySimulator.replenishStaticVars();
             disableEdits();
         }
     }
@@ -385,6 +392,15 @@ public class GroceryScreenController extends ScreenController {
         requestUpdateInterfaceSimulationElements();
     }
 
+    public void exportHeatMap() {
+        try {
+            GrocerySimulator.exportHeatMap();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void requestUpdateInterfaceSimulationElements() {
         Platform.runLater(this::updateSimulationTime);
         Platform.runLater(this::updateStatistics);
@@ -448,10 +464,14 @@ public class GroceryScreenController extends ScreenController {
             Main.grocerySimulator.setRunning(true);
             Main.grocerySimulator.getPlaySemaphore().release();
             playButton.setText("Pause");
+            exportToCSVButton.setDisable(true);
+            exportHeatMapButton.setDisable(true);
         }
         else {
             Main.grocerySimulator.setRunning(false);
             playButton.setText("Play");
+            exportToCSVButton.setDisable(false);
+            exportHeatMapButton.setDisable(false);
         }
     }
 
@@ -514,6 +534,15 @@ public class GroceryScreenController extends ScreenController {
             stage.setTitle("Edit Interaction Type Chances");
             stage.setScene(new Scene(root));
             stage.show();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void exportToCSV(){
+        try {
+            GrocerySimulator.exportToCSV();
         }
         catch(Exception e) {
             e.printStackTrace();
