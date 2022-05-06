@@ -769,6 +769,7 @@ public class GrocerySimulator extends Simulator {
                         }
                         else if (action.getName() == GroceryAction.Name.EATING_FOOD) {
                             if (agentMovement.getGoalAmenity() != null) {
+                                agentMovement.setSimultaneousInteractionAllowed(true);
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
                                     agentMovement.setNextState(agentMovement.getStateIndex());
@@ -776,6 +777,7 @@ public class GrocerySimulator extends Simulator {
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
+                                    agentMovement.setSimultaneousInteractionAllowed(false);
                                 }
                             }
                         }

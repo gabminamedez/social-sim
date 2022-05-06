@@ -787,7 +787,7 @@ public class MallSimulator extends Simulator {
                                 if (agentMovement.getLeaderAgent() == null && !agentMovement.isStationInteracting()) {
                                     agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_RESTO);
                                 }
-
+                                agentMovement.setSimultaneousInteractionAllowed(true);
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
                                     if (agentMovement.getLeaderAgent() == null) {
@@ -800,6 +800,7 @@ public class MallSimulator extends Simulator {
                                     agentMovement.getGoalAmenity().getAttractors().get(0).setIsReserved(false);
                                     agentMovement.resetGoal();
                                     agentMovement.setStationInteracting(false);
+                                    agentMovement.setSimultaneousInteractionAllowed(false);
                                 }
                             }
                         }
@@ -879,6 +880,7 @@ public class MallSimulator extends Simulator {
                         }
                         else if (action.getName() == MallAction.Name.DINING_AREA_STAY_PUT) {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setNextState(agentMovement.getStateIndex());
@@ -886,6 +888,7 @@ public class MallSimulator extends Simulator {
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
+                                agentMovement.setSimultaneousInteractionAllowed(false);
                             }
                         }
                     }
@@ -928,6 +931,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.IN_STORE) {
                         if (action.getName() == MallAction.Name.CHECK_AISLE) {
+                            agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setNextState(agentMovement.getStateIndex());
@@ -935,6 +939,7 @@ public class MallSimulator extends Simulator {
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
+                                agentMovement.setSimultaneousInteractionAllowed(false);
                             }
                             else {
                                 int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);

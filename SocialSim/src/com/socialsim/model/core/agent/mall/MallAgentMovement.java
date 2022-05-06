@@ -1755,7 +1755,6 @@ public class MallAgentMovement extends AgentMovement {
                     case STAFF_KIOSK -> MallSimulator.currentPatronStaffKioskCount++;
                     case GUARD -> MallSimulator.currentPatronGuardCount++;
                     case PATRON -> MallSimulator.currentPatronPatronCount++;
-
                     case CONCIERGER -> MallSimulator.currentPatronConciergerCount++;
                     case JANITOR -> MallSimulator.currentPatronJanitorCount++;
                 }
