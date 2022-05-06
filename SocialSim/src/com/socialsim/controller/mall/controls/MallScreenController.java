@@ -12,6 +12,7 @@ import com.socialsim.model.core.environment.mall.patchfield.*;
 import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.mall.MallSimulator;
+import com.socialsim.model.simulator.university.UniversitySimulator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +37,7 @@ public class MallScreenController extends ScreenController {
     @FXML private Canvas markingsCanvas;
     @FXML private Text elapsedTimeText;
     @FXML private ToggleButton playButton;
+    @FXML private Button resetButton;
     @FXML private Slider speedSlider;
     @FXML private Button resetToDefaultButton;
     @FXML private TextField nonverbalMean;
@@ -72,6 +74,8 @@ public class MallScreenController extends ScreenController {
     @FXML private Label currentJanitorJanitorCount;
     @FXML private Label currentStaffStoreStaffStoreCount;
     @FXML private Label currentStaffRestoStaffRestoCount;
+    @FXML private Button exportToCSVButton;
+    @FXML private Button exportHeatMapButton;
 
     private final double CANVAS_SCALE = 0.5;
 
@@ -115,6 +119,9 @@ public class MallScreenController extends ScreenController {
             mall.convertIOSToChances();
             setElements();
             playButton.setDisable(false);
+            exportToCSVButton.setDisable(true);
+            exportHeatMapButton.setDisable(true);
+            Main.mallSimulator.replenishStaticVars();
             disableEdits();
         }
     }
@@ -596,6 +603,15 @@ public class MallScreenController extends ScreenController {
         requestUpdateInterfaceSimulationElements();
     }
 
+    public void exportHeatMap() {
+        try {
+            MallSimulator.exportHeatMap();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void requestUpdateInterfaceSimulationElements() {
         Platform.runLater(this::updateSimulationTime);
         Platform.runLater(this::updateStatistics);
@@ -659,10 +675,14 @@ public class MallScreenController extends ScreenController {
             Main.mallSimulator.setRunning(true);
             Main.mallSimulator.getPlaySemaphore().release();
             playButton.setText("Pause");
+            exportToCSVButton.setDisable(true);
+            exportHeatMapButton.setDisable(true);
         }
         else {
             Main.mallSimulator.setRunning(false);
             playButton.setText("Play");
+            exportToCSVButton.setDisable(false);
+            exportHeatMapButton.setDisable(false);
         }
     }
 
@@ -726,6 +746,15 @@ public class MallScreenController extends ScreenController {
             stage.setTitle("Edit Interaction Type Chances");
             stage.setScene(new Scene(root));
             stage.show();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void exportToCSV(){
+        try {
+            MallSimulator.exportToCSV();
         }
         catch(Exception e) {
             e.printStackTrace();

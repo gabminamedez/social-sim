@@ -11,7 +11,7 @@ public class OfficeRoutePlan {
 
     private OfficeState currentState;
     private ArrayList<OfficeState> routePlan;
-    private boolean fromBathPM, fromBathAM;
+    private boolean fromBathPM, fromBathAM, isAtDesk;
     private int lastDuration = -1;
     private int canUrgent = 2;
     private long collaborationEnd = 0, meetingStart = -1, meetingEnd, meetingRoom;
@@ -19,7 +19,10 @@ public class OfficeRoutePlan {
     private int BATH_AM = 2, BATH_PM = 2, BATH_LUNCH = 1;
     private int PRINT_BUSINESS = 5, PRINT_RESEARCH = 2;
     private int TECHNICAL_PRINTER_COUNT = 0, TECHNICAL_CUBICLE_COUNT = 0;
-    private int COLLABORATE_COUNT = 0;
+    private int COLLABORATE_COUNT = 0, BREAK_COUNT = 0;
+    private int DISPENSER_LUNCH = 1, DISPENSER_PM = 1;
+    private int REFRIGERATOR_LUNCH = 1, REFRIGERATOR_PM = 1;
+    private Cubicle agentCubicle;
 
     private Amenity.AmenityBlock lunchAttractor;
     private Amenity lunchAmenity;
@@ -33,7 +36,9 @@ public class OfficeRoutePlan {
     public static final double EXT_BUSINESS_COOPERATE = 0.9;
     public static final double INT_RESEARCHER_COOPERATE = 0.6;
     public static final double EXT_RESEARCHER_COOPERATE = 0.9;
-    public static final double BATH_CHANCE = 0.15, PRINT_CHANCE = 0.1, TECHNICAL_CUBICLE_CHANCE = 0.1, TECHNICAL_PRINTER_CHANCE = 0.1;
+    public static final double BATH_CHANCE = 0.15, PRINT_CHANCE = 0.1,
+                               TECHNICAL_CUBICLE_CHANCE = 0.1, TECHNICAL_PRINTER_CHANCE = 0.1,
+                               DISPENSER_CHANCE = 0.1, REFRIGERATOR_CHANCE = 0.3, BREAK_CHANCE = 0.1;
 
     public static ArrayList<ArrayList<Long>> meetingTimes = new ArrayList<>();
 
@@ -167,12 +172,25 @@ public class OfficeRoutePlan {
             routePlan.add(new OfficeState(OfficeState.Name.SECRETARY, this, agent, actions));
 
             actions = new ArrayList<>();
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH, office.getChairs().get(3).getAttractors().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.EAT_LUNCH, 180, 360));
+            actions.add(new OfficeAction(OfficeAction.Name.EXIT_LUNCH, office.getDoors().get(1).getAttractors().get(1).getPatch()));
+            this.LUNCH_INSTANCE = routePlan.get(routePlan.size()-1);
+
+            actions = new ArrayList<>();
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_OFFICE_ROOM, office.getChairs().get(3).getAttractors().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_STAY_PUT, office.getChairs().get(3).getAttractors().get(0).getPatch(), 360, 720));
+            actions.add(new OfficeAction(OfficeAction.Name.SECRETARY_CHECK_CABINET, 12, 36));
+            routePlan.add(new OfficeState(OfficeState.Name.SECRETARY, this, agent, actions));
+
+            actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.LEAVE_OFFICE, office.getOfficeGates().get(0).getAmenityBlocks().get(0).getPatch()));
             routePlan.add(new OfficeState(OfficeState.Name.GOING_HOME, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.PROFESSIONAL_BOSS || agent.getPersona() == OfficeAgent.Persona.APPROACHABLE_BOSS) {
             setFromBathAM(false);
             setFromBathPM(false);
+            setAtDesk(false);
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GOING_TO_SECURITY_QUEUE));
@@ -204,6 +222,8 @@ public class OfficeRoutePlan {
             setFromBathAM(false);
             setFromBathPM(false);
             setCOLLABORATE_COUNT(2);
+            setAtDesk(false);
+            setAgentCubicle(assignedCubicle);
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GOING_TO_SECURITY_QUEUE));
@@ -233,6 +253,8 @@ public class OfficeRoutePlan {
             setFromBathPM(false);
             setTECHNICAL_PRINTER_COUNT(-1);
             setTECHNICAL_CUBICLE_COUNT(-1);
+            setAtDesk(false);
+            setAgentCubicle(assignedCubicle);
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GOING_TO_SECURITY_QUEUE));
@@ -261,6 +283,8 @@ public class OfficeRoutePlan {
             setFromBathAM(false);
             setFromBathPM(false);
             setCOLLABORATE_COUNT(2);
+            setAtDesk(false);
+            setAgentCubicle(assignedCubicle);
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.GOING_TO_SECURITY_QUEUE));
@@ -306,6 +330,14 @@ public class OfficeRoutePlan {
 
     public OfficeState getCurrentState() {
         return currentState;
+    }
+
+    public Cubicle getAgentCubicle() {
+        return agentCubicle;
+    }
+
+    public void setAgentCubicle(Cubicle agentCubicle) {
+        this.agentCubicle = agentCubicle;
     }
 
     public OfficeState addUrgentRoute(String s, OfficeAgent agent){
@@ -357,6 +389,24 @@ public class OfficeRoutePlan {
                 actions.add(new OfficeAction(OfficeAction.Name.TECHNICAL_GO_PRINTER, 12, 120));
                 actions.add(new OfficeAction(OfficeAction.Name.FIX_PRINTER));
                 officeState = new OfficeState(OfficeState.Name.NEEDS_FIX_PRINTER, this, agent, actions);
+            }
+            case "DISPENSER" -> {
+                actions = new ArrayList<>();
+                actions.add(new OfficeAction(OfficeAction.Name.GOING_DISPENSER));
+                actions.add(new OfficeAction(OfficeAction.Name.GETTING_WATER, 2, 8));
+                officeState = new OfficeState(OfficeState.Name.DISPENSER, this, agent, actions);
+            }
+            case "REFRIGERATOR" -> {
+                actions = new ArrayList<>();
+                actions.add(new OfficeAction(OfficeAction.Name.GOING_FRIDGE));
+                actions.add(new OfficeAction(OfficeAction.Name.GETTING_FOOD, 2, 10));
+                officeState = new OfficeState(OfficeState.Name.REFRIGERATOR, this, agent, actions);
+            }
+            case "BREAK" -> {
+                actions = new ArrayList<>();
+                actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH));
+                actions.add(new OfficeAction(OfficeAction.Name.TAKING_BREAK, getAgentCubicle().getAttractors().get(0).getPatch(), 120, 240));
+                officeState = new OfficeState(OfficeState.Name.BREAK_TIME, this, agent, actions);
             }
             default -> {
                 actions = new ArrayList<>();
@@ -434,6 +484,30 @@ public class OfficeRoutePlan {
 
     public void setPRINT_RESEARCH() {
         this.PRINT_RESEARCH -= 1;
+    }
+
+    public int getDISPENSER_LUNCH(){return this.DISPENSER_LUNCH;}
+
+    public int getDISPENSER_PM(){return this.DISPENSER_PM;}
+
+    public int getREFRIGERATOR_LUNCH(){return this.REFRIGERATOR_LUNCH;}
+
+    public int getREFRIGERATOR_PM(){return this.REFRIGERATOR_PM;}
+
+    public void setDISPENSER_LUNCH(int DISPENSER_LUNCH) {
+        this.DISPENSER_LUNCH = DISPENSER_LUNCH;
+    }
+
+    public void setDISPENSER_PM(int DISPENSER_PM) {
+        this.DISPENSER_PM = DISPENSER_PM;
+    }
+
+    public void setREFRIGERATOR_LUNCH(int REFRIGERATOR_LUNCH) {
+        this.REFRIGERATOR_LUNCH = REFRIGERATOR_LUNCH;
+    }
+
+    public void setREFRIGERATOR_PM(int REFRIGERATOR_PM) {
+        this.REFRIGERATOR_PM = REFRIGERATOR_PM;
     }
 
     public int getLastDuration() {
@@ -516,6 +590,22 @@ public class OfficeRoutePlan {
 
     public OfficeState getLUNCH_INSTANCE() {
         return LUNCH_INSTANCE;
+    }
+
+    public boolean isAtDesk() {
+        return isAtDesk;
+    }
+
+    public void setAtDesk(boolean atDesk) {
+        isAtDesk = atDesk;
+    }
+
+    public int getBREAK_COUNT() {
+        return BREAK_COUNT;
+    }
+
+    public void setBREAK_COUNT(int BREAK_COUNT) {
+        this.BREAK_COUNT -= BREAK_COUNT;
     }
 
     public double getCooperate(OfficeAgent.Persona persona){

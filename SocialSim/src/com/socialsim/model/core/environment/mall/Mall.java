@@ -991,6 +991,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 70, 30)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case STAFF_STORE_CASHIER -> {
@@ -1029,6 +1031,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case STAFF_RESTO -> {
@@ -1067,6 +1071,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case GUARD -> {
@@ -1105,6 +1111,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case STAFF_KIOSK -> {
@@ -1143,6 +1151,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case FAMILY -> {
@@ -1181,6 +1191,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                         }
                     }
                     case FRIENDS -> {
@@ -1219,6 +1231,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                         }
                     }
                     case ALONE -> {
@@ -1257,6 +1271,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                         }
                     }
                     case COUPLE -> {
@@ -1295,6 +1311,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                         }
                     }
                     case CONCIERGER -> {
@@ -1333,6 +1351,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                         }
                     }
                     case JANITOR -> {
@@ -1371,6 +1391,8 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                 }

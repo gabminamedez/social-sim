@@ -415,6 +415,9 @@ public class Office extends Environment {
         else if (amenityClass == Door.class) {
             return this.getDoors();
         }
+        else if(amenityClass == Fridge.class){
+            return this.getFridges();
+        }
         else if (amenityClass == MeetingDesk.class) {
             return this.getMeetingDesks();
         }
@@ -441,6 +444,9 @@ public class Office extends Environment {
         }
         else if (amenityClass == Toilet.class) {
             return this.getToilets();
+        }
+        else if(amenityClass == WaterDispenser.class){
+            return this.getWaterDispensers();
         }
         else {
             return null;
@@ -1137,6 +1143,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
                         }
                     }
                     case APPROACHABLE_BOSS -> {
@@ -1189,6 +1200,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
                         }
                     }
                     case MANAGER -> {
@@ -1253,6 +1269,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 40, 50)));
                         }
                     }
                     case INT_WORKER -> {
@@ -1305,6 +1326,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
                         }
                     }
                     case EXT_WORKER -> {
@@ -1357,6 +1383,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                         }
                     }
                     case INT_TECHNICAL -> {
@@ -1409,6 +1440,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
                         }
                     }
                     case EXT_TECHNICAL -> {
@@ -1461,6 +1497,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                         }
                     }
                     case JANITOR -> {
@@ -1513,6 +1554,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case CLIENT -> {
@@ -1565,6 +1611,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case DRIVER -> {
@@ -1617,6 +1668,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case VISITOR -> {
@@ -1669,6 +1725,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case GUARD -> {
@@ -1721,6 +1782,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case RECEPTIONIST -> {
@@ -1773,6 +1839,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case SECRETARY -> {
@@ -1825,6 +1896,11 @@ public class Office extends Environment {
                             case GO_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case MEETING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GOING_DISPENSER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GETTING_WATER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GOING_FRIDGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case GETTING_FOOD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
+                            case TAKING_BREAK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
                         }
                     }
                 }

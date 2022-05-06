@@ -317,13 +317,13 @@ public class MallRoutePlan {
         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
         if (x < WANDERING_CHANCE) {
             for (int i = 0; i < 5; i++) {
-                boolean isWander = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-                if (isWander) {
+                double isWander = Simulator.roll();
+                if (isWander < 0.3) {
                     boolean isBench = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
                     if (isBench) {
                         actions = new ArrayList<>();
                         actions.add(new MallAction(MallAction.Name.FIND_BENCH));
-                        actions.add(new MallAction(MallAction.Name.SIT_ON_BENCH, 120, 360));
+                        actions.add(new MallAction(MallAction.Name.SIT_ON_BENCH, 120, 240));
                         routePlan.add(new MallState(MallState.Name.WANDERING_AROUND, this, agent, actions));
                     }
                     else {
@@ -675,10 +675,18 @@ public class MallRoutePlan {
                         routePlan.add(new MallState(MallState.Name.WANDERING_AROUND, this, agent, actions));
                     }
                     else {
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.FIND_DIRECTORY));
-                        actions.add(new MallAction(MallAction.Name.VIEW_DIRECTORY, 24, 48));
-                        routePlan.add(new MallState(MallState.Name.WANDERING_AROUND, this, agent, actions));
+                        boolean isConcierge = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
+                        if(isConcierge){
+                            actions = new ArrayList<>();
+                            actions.add(new MallAction(MallAction.Name.GO_CONCIERGE));
+                            actions.add(new MallAction(MallAction.Name.ASK_CONCIERGE, 24, 48));
+                            routePlan.add(new MallState(MallState.Name.WANDERING_AROUND, this, agent, actions));
+                        }else{
+                            actions = new ArrayList<>();
+                            actions.add(new MallAction(MallAction.Name.FIND_DIRECTORY));
+                            actions.add(new MallAction(MallAction.Name.VIEW_DIRECTORY, 24, 48));
+                            routePlan.add(new MallState(MallState.Name.WANDERING_AROUND, this, agent, actions));
+                        }
                     }
                 }
                 else {
