@@ -28,12 +28,12 @@ import java.util.stream.Stream;
 
 public class OfficeAgentMovement extends AgentMovement {
 
-    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalMean = 1;
     public static int defaultNonverbalStdDev = 1;
     public static int defaultCooperativeMean = 24;
-    public static int defaultCooperativeStdDev = 12;
+    public static int defaultCooperativeStdDev = 6;
     public static int defaultExchangeMean = 24;
-    public static int defaultExchangeStdDev = 12;
+    public static int defaultExchangeStdDev = 6;
     public static int defaultFieldOfView = 30;
 
     private final OfficeAgent parent;
@@ -1627,7 +1627,10 @@ public class OfficeAgentMovement extends AgentMovement {
                     case SECRETARY -> OfficeSimulator.currentSecretarySecretaryCount++;
                 }
             }
-            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+            this.interactionDuration = (int) (Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean));
+            if (this.interactionDuration < 0)
+                this.interactionDuration = 0;
+            agent.getAgentMovement().setInteractionDuration(this.interactionDuration);
             if (agent.getAgentMovement().getInteractionType() == OfficeAgentMovement.InteractionType.NON_VERBAL)
                 OfficeSimulator.averageNonverbalDuration = (OfficeSimulator.averageNonverbalDuration * (OfficeSimulator.currentNonverbalCount - 1) + this.interactionDuration) / OfficeSimulator.currentNonverbalCount;
             else if (agent.getAgentMovement().getInteractionType() == OfficeAgentMovement.InteractionType.COOPERATIVE)

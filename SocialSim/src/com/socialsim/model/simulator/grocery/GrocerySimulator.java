@@ -11,6 +11,8 @@ import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Ga
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
+import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Sink;
+import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Toilet;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 import java.time.temporal.ChronoUnit;
@@ -408,6 +410,193 @@ public class GrocerySimulator extends Simulator {
                             }
                         }
                     }
+                    else if (state.getName() == GroceryState.Name.NEEDS_BATHROOM) {
+                        if (action.getName() == GroceryAction.Name.GO_TO_BATHROOM) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
+                            if (agentMovement.getGoalAmenity() == null) {
+                                if (!agentMovement.chooseBathroomGoal(Toilet.class)) {
+//                                    if (agentMovement.getRoutePlan().isFromStudying()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex() - 1);
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex());
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromStudying(false);
+//                                    }
+//                                    else if (agentMovement.getRoutePlan().isFromClass()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex() - 1);
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex());
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromClass(false);
+//                                    }
+//                                    else if (agentMovement.getRoutePlan().isFromLunch()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex() - 1);
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex());
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromLunch(false);
+//                                    }
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                        agentMovement.setActionIndex(0);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.resetGoal();
+                                }
+                            }
+                            else {
+                                if (agentMovement.chooseNextPatchInPath()) {
+                                    agentMovement.faceNextPosition();
+                                    agentMovement.moveSocialForce();
+                                    if (agentMovement.hasReachedNextPatchInPath()) {
+                                        agentMovement.reachPatchInPath();
+                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (action.getName() == GroceryAction.Name.RELIEVE_IN_CUBICLE) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
+                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
+                            if (agentMovement.getDuration() <= 0) {
+                                agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                                if(agentMovement.getGoalAttractor()!=null){
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                }
+                                agentMovement.resetGoal();
+                            }
+                        }
+                        else if (action.getName() == GroceryAction.Name.WASH_IN_SINK) {
+                            agentMovement.setSimultaneousInteractionAllowed(true);
+                            if (agentMovement.getGoalAmenity() == null) {
+                                if (!agentMovement.chooseBathroomGoal(Sink.class)) {
+//                                    if (agentMovement.getRoutePlan().isFromStudying()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromStudying(false);
+//                                    }
+//                                    else if (agentMovement.getRoutePlan().isFromClass()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromClass(false);
+//                                    }
+//                                    else if (agentMovement.getRoutePlan().isFromLunch()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromLunch(false);
+//                                    }
+//                                    else {
+//                                        agentMovement.setNextState(agentMovement.getStateIndex());
+//                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                    }
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                                else {
+                                    agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                }
+                            }
+                            else {
+                                if (agentMovement.chooseNextPatchInPath()) {
+                                    agentMovement.faceNextPosition();
+                                    agentMovement.moveSocialForce();
+                                    if (agentMovement.hasReachedNextPatchInPath()) {
+                                        agentMovement.reachPatchInPath();
+                                    }
+                                }
+                                else {
+                                    agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                    agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                    if (agentMovement.getDuration() <= 0) {
+//                                        if (agentMovement.getRoutePlan().isFromStudying()) {
+//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                            agentMovement.setActionIndex(0);
+//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                            if(agentMovement.getGoalAttractor()!=null){
+//                                                agentMovement.getGoalAttractor().setIsReserved(false);
+//                                            }
+//                                            agentMovement.resetGoal();
+//                                            agentMovement.getRoutePlan().setFromStudying(false);
+//                                        }
+//                                        else if (agentMovement.getRoutePlan().isFromClass()) {
+//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                            agentMovement.setActionIndex(0);
+//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                            if (agentMovement.getGoalAttractor()!=null) {
+//                                                agentMovement.getGoalAttractor().setIsReserved(false);
+//                                            }
+//                                            agentMovement.resetGoal();
+//                                            agentMovement.getRoutePlan().setFromClass(false);
+//                                        }
+//                                        else if (agentMovement.getRoutePlan().isFromLunch()) {
+//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                            agentMovement.setActionIndex(0);
+//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                            if (agentMovement.getGoalAttractor()!=null) {
+//                                                agentMovement.getGoalAttractor().setIsReserved(false);
+//                                            }
+//                                            agentMovement.resetGoal();
+//                                            agentMovement.getRoutePlan().setFromLunch(false);
+//                                        }
+//                                        else {
+//                                            agentMovement.setNextState(agentMovement.getStateIndex());
+//                                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+//                                            agentMovement.setActionIndex(0);
+//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                            if(agentMovement.getGoalAttractor()!=null){
+//                                                agentMovement.getGoalAttractor().setIsReserved(false);
+//                                            }
+//                                            agentMovement.resetGoal();
+//                                        }
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                        agentMovement.setActionIndex(0);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        if(agentMovement.getGoalAttractor()!=null){
+                                            agentMovement.getGoalAttractor().setIsReserved(false);
+                                        }
+                                        agentMovement.resetGoal();
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     break;
 
@@ -747,22 +936,204 @@ public class GrocerySimulator extends Simulator {
                             }
                         }
                     }
+                    else if (state.getName() == GroceryState.Name.NEEDS_BATHROOM) {
+                        if (action.getName() == GroceryAction.Name.GO_TO_BATHROOM) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
+                            if (agentMovement.getGoalAmenity() == null) {
+                                if (!agentMovement.chooseBathroomGoal(Toilet.class)) {
+//                                    if (agentMovement.getRoutePlan().isFromStudying()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex() - 1);
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex());
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromStudying(false);
+//                                    }
+//                                    else if (agentMovement.getRoutePlan().isFromClass()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex() - 1);
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex());
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromClass(false);
+//                                    }
+//                                    else if (agentMovement.getRoutePlan().isFromLunch()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex() - 1);
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex());
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromLunch(false);
+//                                    }
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                            }
+                            else {
+                                if (agentMovement.chooseNextPatchInPath()) {
+                                    agentMovement.faceNextPosition();
+                                    agentMovement.moveSocialForce();
+                                    if (agentMovement.hasReachedNextPatchInPath()) {
+                                        agentMovement.reachPatchInPath();
+                                        if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                            agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                            agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (action.getName() == GroceryAction.Name.RELIEVE_IN_CUBICLE) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
+                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            agentMovement.setDuration(agentMovement.getDuration() - 1);
+                            if (agentMovement.getDuration() <= 0) {
+                                agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.setDuration(agent.getAgentMovement().getDuration());
+                                if(agentMovement.getGoalAttractor()!=null){
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                }
+                                agentMovement.resetGoal();
+                            }
+                        }
+                        else if (action.getName() == GroceryAction.Name.WASH_IN_SINK) {
+                            agentMovement.setSimultaneousInteractionAllowed(true);
+                            if (agentMovement.getGoalAmenity() == null) {
+                                if (!agentMovement.chooseBathroomGoal(Sink.class)) {
+//                                    if (agentMovement.getRoutePlan().isFromStudying()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromStudying(false);
+//                                    }
+//                                    else if (agentMovement.getRoutePlan().isFromClass()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromClass(false);
+//                                    }
+//                                    else if (agentMovement.getRoutePlan().isFromLunch()) {
+//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                        agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                        agentMovement.getRoutePlan().setFromLunch(false);
+//                                    }
+//                                    else {
+//                                        agentMovement.setNextState(agentMovement.getStateIndex());
+//                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
+//                                    }
+                                    agentMovement.setNextState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.resetGoal();
+                                }
+                                else {
+                                    agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                }
+                            }
+                            else {
+                                if (agentMovement.chooseNextPatchInPath()) {
+                                    agentMovement.faceNextPosition();
+                                    agentMovement.moveSocialForce();
+                                    if (agentMovement.hasReachedNextPatchInPath()) {
+                                        agentMovement.reachPatchInPath();
+                                    }
+                                }
+                                else {
+                                    agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                                    agentMovement.setDuration(agentMovement.getDuration() - 1);
+                                    if (agentMovement.getDuration() <= 0) {
+//                                        if (agentMovement.getRoutePlan().isFromStudying()) {
+//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                            agentMovement.setActionIndex(0);
+//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                            if(agentMovement.getGoalAttractor()!=null){
+//                                                agentMovement.getGoalAttractor().setIsReserved(false);
+//                                            }
+//                                            agentMovement.resetGoal();
+//                                            agentMovement.getRoutePlan().setFromStudying(false);
+//                                        }
+//                                        else if (agentMovement.getRoutePlan().isFromClass()) {
+//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                            agentMovement.setActionIndex(0);
+//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                            if (agentMovement.getGoalAttractor()!=null) {
+//                                                agentMovement.getGoalAttractor().setIsReserved(false);
+//                                            }
+//                                            agentMovement.resetGoal();
+//                                            agentMovement.getRoutePlan().setFromClass(false);
+//                                        }
+//                                        else if (agentMovement.getRoutePlan().isFromLunch()) {
+//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
+//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
+//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
+//                                            agentMovement.setActionIndex(0);
+//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                            if (agentMovement.getGoalAttractor()!=null) {
+//                                                agentMovement.getGoalAttractor().setIsReserved(false);
+//                                            }
+//                                            agentMovement.resetGoal();
+//                                            agentMovement.getRoutePlan().setFromLunch(false);
+//                                        }
+//                                        else {
+//                                            agentMovement.setNextState(agentMovement.getStateIndex());
+//                                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+//                                            agentMovement.setActionIndex(0);
+//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                            if(agentMovement.getGoalAttractor()!=null){
+//                                                agentMovement.getGoalAttractor().setIsReserved(false);
+//                                            }
+//                                            agentMovement.resetGoal();
+//                                        }
+                                        agentMovement.setNextState(agentMovement.getStateIndex());
+                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                        agentMovement.setActionIndex(0);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        if(agentMovement.getGoalAttractor()!=null){
+                                            agentMovement.getGoalAttractor().setIsReserved(false);
+                                        }
+                                        agentMovement.resetGoal();
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     break;
             }
         }
 
         if (agentMovement.isInteracting()) {
-            if (agentMovement.getDuration() == 0) {
-                agentMovement.setInteracting(false);
-                agentMovement.setInteractionType(null);
-            }
-            else {
-                agentMovement.interact();
-            }
+            agentMovement.interact();
         }
         else {
             List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
+            GroceryAgent agent2 = null;
             for (Patch patch: patches) {
                 for (Agent otherAgent: patch.getAgents()) {
                     GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
@@ -771,6 +1142,7 @@ public class GrocerySimulator extends Simulator {
                             if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), groceryAgent.getAgentMovement().getFieldOfViewAngle())){
                                 agentMovement.rollAgentInteraction(groceryAgent);
                                 if (agentMovement.isInteracting()){
+                                    agent2 = groceryAgent;
                                     currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
                                     currentPatchCount[groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
                                 }
@@ -790,6 +1162,7 @@ public class GrocerySimulator extends Simulator {
                             if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
                                 agentMovement.rollAgentInteraction(groceryAgent);
                                 if (agentMovement.isInteracting()) {
+                                    agent2 = groceryAgent;
                                     currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
                                     currentPatchCount[groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
                                 }
@@ -801,7 +1174,16 @@ public class GrocerySimulator extends Simulator {
                 if (agentMovement.isInteracting())
                     break;
             }
+            if (agentMovement.isInteracting() && agentMovement.getInteractionDuration() == 0) {
+                agentMovement.setInteracting(false);
+                agentMovement.setInteractionType(null);
+            }
+            if (agent2 != null && agent2.getAgentMovement().isInteracting() && agent2.getAgentMovement().getInteractionDuration() == 0){
+                agent2.getAgentMovement().setInteracting(false);
+                agent2.getAgentMovement().setInteractionType(null);
+            }
         }
+
         agent.getAgentGraphic().change();
     }
 

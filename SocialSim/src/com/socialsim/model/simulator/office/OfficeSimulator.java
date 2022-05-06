@@ -1825,24 +1825,24 @@ public class OfficeSimulator extends Simulator {
         }
 
         if (agentMovement.isInteracting()) {
-            if (agentMovement.getDuration() == 0) {
-                agentMovement.setInteracting(false);
-                agentMovement.setInteractionType(null);
-            }
-            else {
-                agentMovement.interact();
-            }
-
+            agentMovement.interact();
         }
         else {
             List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
+            OfficeAgent agent2 = null;
             for (Patch patch: patches) {
                 for (Agent otherAgent: patch.getAgents()) {
                     OfficeAgent officeAgent = (OfficeAgent) otherAgent;
                     if (!officeAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
                         if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), officeAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
-                            if (Coordinates.isWithinFieldOfView(officeAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), officeAgent.getAgentMovement().getProposedHeading(), officeAgent.getAgentMovement().getFieldOfViewAngle()))
+                            if (Coordinates.isWithinFieldOfView(officeAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), officeAgent.getAgentMovement().getProposedHeading(), officeAgent.getAgentMovement().getFieldOfViewAngle())){
                                 agentMovement.rollAgentInteraction(officeAgent);
+                                if (agentMovement.isInteracting()) {
+                                    agent2 = officeAgent;
+                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                    currentPatchCount[officeAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][officeAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                }
+                            }
                     if (agentMovement.isInteracting())
                         break;
                 }
@@ -1857,7 +1857,8 @@ public class OfficeSimulator extends Simulator {
                         if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), officeAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
                             if (Coordinates.isWithinFieldOfView(officeAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), officeAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
                                 agentMovement.rollAgentInteraction(officeAgent);
-                                if (agentMovement.isInteracting()){
+                                if (agentMovement.isInteracting()) {
+                                    agent2 = officeAgent;
                                     currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
                                     currentPatchCount[officeAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][officeAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
                                 }
@@ -1868,6 +1869,14 @@ public class OfficeSimulator extends Simulator {
 
                 if (agentMovement.isInteracting())
                     break;
+            }
+            if (agentMovement.isInteracting() && agentMovement.getInteractionDuration() == 0) {
+                agentMovement.setInteracting(false);
+                agentMovement.setInteractionType(null);
+            }
+            if (agent2 != null && agent2.getAgentMovement().isInteracting() && agent2.getAgentMovement().getInteractionDuration() == 0){
+                agent2.getAgentMovement().setInteracting(false);
+                agent2.getAgentMovement().setInteractionType(null);
             }
         }
         agent.getAgentGraphic().change();

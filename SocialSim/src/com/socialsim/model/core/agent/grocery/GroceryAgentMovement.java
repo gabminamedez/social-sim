@@ -3,6 +3,7 @@ package com.socialsim.model.core.agent.grocery;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentMovement;
 import com.socialsim.model.core.agent.generic.pathfinding.AgentPath;
+import com.socialsim.model.core.agent.university.UniversityAgent;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchfield.PatchField;
 import com.socialsim.model.core.environment.generic.patchfield.QueueingPatchField;
@@ -28,12 +29,12 @@ import java.util.stream.Stream;
 
 public class GroceryAgentMovement extends AgentMovement {
 
-    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalMean = 1;
     public static int defaultNonverbalStdDev = 1;
     public static int defaultCooperativeMean = 24;
-    public static int defaultCooperativeStdDev = 12;
+    public static int defaultCooperativeStdDev = 6;
     public static int defaultExchangeMean = 24;
-    public static int defaultExchangeStdDev = 12;
+    public static int defaultExchangeStdDev = 6;
     public static int defaultFieldOfView = 30;
 
     private final GroceryAgent parent;
@@ -572,6 +573,68 @@ public class GroceryAgentMovement extends AgentMovement {
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
         }
+    }
+    public boolean chooseBathroomGoal(Class<? extends Amenity> nextAmenityClass) {
+        if (this.goalAmenity == null) {
+            List<? extends Amenity> amenityListInFloor = this.grocery.getAmenityList(nextAmenityClass);
+            Amenity chosenAmenity = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+
+            for (Amenity amenity : amenityListInFloor) {
+                if (parent.getGender() == GroceryAgent.Gender.MALE) {
+                    if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == 2) {
+                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) {
+                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                            distancesToAttractors.put(attractor, distanceToAttractor);
+                        }
+                    }
+                }
+                else {
+                    if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getValue() == 1) {
+                        for (Amenity.AmenityBlock attractor : amenity.getAttractors()) {
+                            double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                            distancesToAttractors.put(attractor, distanceToAttractor);
+                        }
+                    }
+                }
+            }
+
+            List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                sortedDistances.put(aa.getKey(), aa.getValue());
+            }
+
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) {
+                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                if (!candidateAttractor.getPatch().getAmenityBlock().getIsReserved()) {
+                    chosenAmenity = candidateAttractor.getParent();
+                    chosenAttractor = candidateAttractor;
+                    candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
+                    break;
+                }
+            }
+
+            if (chosenAmenity != null) {
+                this.goalAmenity = chosenAmenity;
+                this.goalAttractor = chosenAttractor;
+
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void chooseRandomAisle() {
@@ -1683,7 +1746,10 @@ public class GroceryAgentMovement extends AgentMovement {
                     case STAFF_FOOD -> GrocerySimulator.currentFoodFoodCount++;
                 }
             }
-            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+            this.interactionDuration = (int) (Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean));
+            if (this.interactionDuration < 0)
+                this.interactionDuration = 0;
+            agent.getAgentMovement().setInteractionDuration(this.interactionDuration);
             if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.NON_VERBAL)
                 GrocerySimulator.averageNonverbalDuration = (GrocerySimulator.averageNonverbalDuration * (GrocerySimulator.currentNonverbalCount - 1) + this.interactionDuration) / GrocerySimulator.currentNonverbalCount;
             else if (agent.getAgentMovement().getInteractionType() == GroceryAgentMovement.InteractionType.COOPERATIVE)

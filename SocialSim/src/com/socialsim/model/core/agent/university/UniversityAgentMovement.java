@@ -23,12 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class UniversityAgentMovement extends AgentMovement {
 
-    public static int defaultNonverbalMean = 2;
+    public static int defaultNonverbalMean = 1;
     public static int defaultNonverbalStdDev = 1;
     public static int defaultCooperativeMean = 24;
-    public static int defaultCooperativeStdDev = 12;
+    public static int defaultCooperativeStdDev = 6;
     public static int defaultExchangeMean = 24;
-    public static int defaultExchangeStdDev = 12;
+    public static int defaultExchangeStdDev = 6;
     public static int defaultFieldOfView = 30;
 
     private final UniversityAgent parent;
@@ -546,6 +546,50 @@ public class UniversityAgentMovement extends AgentMovement {
         }
 
         return true;
+    }
+
+    public void chooseStaffroomGoal(Class<? extends Amenity> nextAmenityClass, int classKey) {
+        if (this.goalAmenity == null) {
+            List<? extends Amenity> amenityListInFloor = this.university.getAmenityList(nextAmenityClass);
+            Amenity chosenAmenity = null;
+            Amenity.AmenityBlock chosenAttractor = null;
+            HashMap<Amenity.AmenityBlock, Double> distancesToAttractors = new HashMap<>();
+
+            for (Amenity amenity : amenityListInFloor) {
+                if (amenity.getAmenityBlocks().get(0).getPatch().getPatchField().getKey().getClass() == StaffOffice.class) {
+                    for (Amenity.AmenityBlock attractor : amenity.getAttractors()) {
+                        double distanceToAttractor = Coordinates.distance(this.currentPatch, attractor.getPatch());
+                        distancesToAttractors.put(attractor, distanceToAttractor);
+                    }
+                }
+            }
+
+            List<Map.Entry<Amenity.AmenityBlock, Double> > list = new LinkedList<Map.Entry<Amenity.AmenityBlock, Double> >(distancesToAttractors.entrySet());
+
+            Collections.sort(list, new Comparator<Map.Entry<Amenity.AmenityBlock, Double> >() {
+                public int compare(Map.Entry<Amenity.AmenityBlock, Double> o1, Map.Entry<Amenity.AmenityBlock, Double> o2) {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            HashMap<Amenity.AmenityBlock, Double> sortedDistances = new LinkedHashMap<Amenity.AmenityBlock, Double>();
+            for (Map.Entry<Amenity.AmenityBlock, Double> aa : list) {
+                sortedDistances.put(aa.getKey(), aa.getValue());
+            }
+
+            for (Map.Entry<Amenity.AmenityBlock, Double> distancesToAttractorEntry : sortedDistances.entrySet()) {
+                Amenity.AmenityBlock candidateAttractor = distancesToAttractorEntry.getKey();
+                if (!candidateAttractor.getPatch().getAmenityBlock().getIsReserved()) {
+                    chosenAmenity = candidateAttractor.getParent();
+                    chosenAttractor = candidateAttractor;
+                    candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
+                    break;
+                }
+            }
+
+            this.goalAmenity = chosenAmenity;
+            this.goalAttractor = chosenAttractor;
+        }
     }
 
     public void chooseClassroomGoal(Class<? extends Amenity> nextAmenityClass, int classKey) {
@@ -1327,10 +1371,17 @@ public class UniversityAgentMovement extends AgentMovement {
     }
 
     public void rollAgentInteraction(UniversityAgent agent){
+        double CLASS_MULTIPLER_1 = 1, CLASS_MULTIPLIER_2 = 1;
+        if (this.currentState.getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT || this.currentState.getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR){
+            CLASS_MULTIPLER_1 = UniversityRoutePlan.CHANCE_NEED_CLASS_MULTIPLIER;
+        }
+        if (agent.getAgentMovement().getCurrentState().getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT || agent.getAgentMovement().getCurrentState().getName() == UniversityState.Name.GOING_TO_CLASS_PROFESSOR){
+            CLASS_MULTIPLIER_2 = UniversityRoutePlan.CHANCE_NEED_CLASS_MULTIPLIER;
+        }
         double IOS1 = university.getIOS().get(this.getParent().getId()).get(agent.getId());
         double IOS2 = university.getIOS().get(agent.getId()).get(this.getParent().getId());
-        double CHANCE1 = Simulator.roll();
-        double CHANCE2 = Simulator.roll();
+        double CHANCE1 = Simulator.roll() * CLASS_MULTIPLER_1;
+        double CHANCE2 = Simulator.roll() * CLASS_MULTIPLIER_2;
         double interactionStdDeviation, interactionMean;
         if (CHANCE1 < IOS1 && CHANCE2 < IOS2){
             CHANCE1 = Simulator.roll() * IOS1;
@@ -1405,7 +1456,9 @@ public class UniversityAgentMovement extends AgentMovement {
                     case JANITOR -> UniversitySimulator.currentJanitorJanitorCount++;
                 }
             }
-            this.interactionDuration = (int) (Math.floor((Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean) * (CHANCE1 + CHANCE2) / 2));
+            this.interactionDuration = (int) (Math.floor(Simulator.RANDOM_NUMBER_GENERATOR.nextGaussian() * interactionStdDeviation + interactionMean));
+            if (this.interactionDuration < 0)
+                this.interactionDuration = 0;
             agent.getAgentMovement().setInteractionDuration(this.interactionDuration);
             if (agent.getAgentMovement().getInteractionType() == InteractionType.NON_VERBAL)
                 UniversitySimulator.averageNonverbalDuration = (UniversitySimulator.averageNonverbalDuration * (UniversitySimulator.currentNonverbalCount - 1) + this.interactionDuration) / UniversitySimulator.currentNonverbalCount;

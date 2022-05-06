@@ -993,23 +993,24 @@ public class MallSimulator extends Simulator {
         }
 
         if (agentMovement.isInteracting()) {
-            if (agentMovement.getDuration() == 0) {
-                agentMovement.setInteracting(false);
-                agentMovement.setInteractionType(null);
-            }
-            else {
-                agentMovement.interact();
-            }
+            agentMovement.interact();
         }
         else {
             List<Patch> patches = agentMovement.get7x7Field(agentMovement.getHeading(), true, agentMovement.getFieldOfViewAngle());
+            MallAgent agent2 = null;
             for (Patch patch: patches) {
                 for (Agent otherAgent: patch.getAgents()) {
                     MallAgent mallAgent = (MallAgent) otherAgent;
                     if (!mallAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
                         if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), mallAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), agentMovement.getFieldOfViewAngle()))
-                            if (Coordinates.isWithinFieldOfView(mallAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), mallAgent.getAgentMovement().getProposedHeading(), mallAgent.getAgentMovement().getFieldOfViewAngle()))
+                            if (Coordinates.isWithinFieldOfView(mallAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), mallAgent.getAgentMovement().getProposedHeading(), mallAgent.getAgentMovement().getFieldOfViewAngle())){
                                 agentMovement.rollAgentInteraction(mallAgent);
+                                if (agentMovement.isInteracting()) {
+                                    agent2 = mallAgent;
+                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                    currentPatchCount[mallAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][mallAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+                                }
+                            }
                     if (agentMovement.isInteracting())
                         break;
                 }
@@ -1025,6 +1026,7 @@ public class MallSimulator extends Simulator {
                             if (Coordinates.isWithinFieldOfView(mallAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), mallAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
                                 agentMovement.rollAgentInteraction(mallAgent);
                                 if (agentMovement.isInteracting()) {
+                                    agent2 = mallAgent;
                                     currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
                                     currentPatchCount[mallAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][mallAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
                                 }
@@ -1035,6 +1037,14 @@ public class MallSimulator extends Simulator {
 
                 if (agentMovement.isInteracting())
                     break;
+            }
+            if (agentMovement.isInteracting() && agentMovement.getInteractionDuration() == 0) {
+                agentMovement.setInteracting(false);
+                agentMovement.setInteractionType(null);
+            }
+            if (agent2 != null && agent2.getAgentMovement().isInteracting() && agent2.getAgentMovement().getInteractionDuration() == 0){
+                agent2.getAgentMovement().setInteracting(false);
+                agent2.getAgentMovement().setInteractionType(null);
             }
         }
         agent.getAgentGraphic().change();

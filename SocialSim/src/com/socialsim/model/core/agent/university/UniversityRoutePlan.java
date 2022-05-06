@@ -37,7 +37,7 @@ public class UniversityRoutePlan {
             PROF_NEED_BATHROOM_NO_CLASSES = 0.05, PROF_NEEDS_DRINK_NO_CLASSES = 0,
             PROF_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, PROF_CHANCE_NEEDS_DRINK_STUDYING = 0.05,
             PROF_CHANCE_SNACKS = 0.40;
-    public static final double THROW_CHANCE = 0.02;
+    public static final double THROW_CHANCE = 0.02, CHANCE_NEED_CLASS_MULTIPLIER = 0.3;
     public static final int CHANCE_INT_GUARD_INTERACT = 10, CHANCE_EXT_GUARD_INTERACT = 30, CHANCE_INTORG_GUARD_INTERACT = 20, CHANCE_EXTORG_GUARD_INTERACT = 40, CHANCE_SPROF_GUARD_INTERACT = 20, CHANCE_APROF_GUARD_INTERACT = 50, CHANCE_GUARD_VERBAL = 10;
     public static final int CHANCE_INT_ASK = 0, CHANCE_EXT_ASK = 10, CHANCE_INTORG_ASK = 5, CHANCE_EXTORG_ASK = 15;
 
@@ -70,7 +70,11 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.GOING_TO_SECURITY_QUEUE));
             actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2));
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
-
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CABINET));
+            actions.add(new UniversityAction(UniversityAction.Name.CHECK_CABINET, 5));
+            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
+            //TODO: need help in setting the amenity to be able to use it for chooseGoal method
             int CALCULATED_CLASSES, LUNCH_TIME;
             ArrayList<Integer> classes = new ArrayList<>();
             if (tickEntered < 720) {

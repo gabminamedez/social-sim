@@ -21,7 +21,8 @@ public class GroceryAction {
         SERVICE_STATION(), SERVICE_SERVE_CUSTOMER(),
         GREET_PERSON(), GUARD_STATION(), GUARD_CHECK_GROCERIES(),
         STAFF_FOOD_STATION(), STAFF_FOOD_SERVE_CUSTOMER(),
-        STAFF_AISLE_ORGANIZE(), STAFF_AISLE_ANSWER_CUSTOMER();
+        STAFF_AISLE_ORGANIZE(), STAFF_AISLE_ANSWER_CUSTOMER(),
+        GO_TO_BATHROOM(),RELIEVE_IN_CUBICLE(),WASH_IN_SINK();
 
         final int ID;
 
@@ -62,6 +63,10 @@ public class GroceryAction {
     public GroceryAction (Name name, Patch destination, int duration) {
         this.name = name;
         this.destination = destination;
+        this.duration = duration;
+    }
+    public GroceryAction (Name name, int duration) {
+        this.name = name;
         this.duration = duration;
     }
 
