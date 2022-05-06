@@ -90,6 +90,8 @@ public class UniversityScreenController extends ScreenController {
         });
         resetToDefault();
         playButton.setDisable(true);
+        exportToCSVButton.setDisable(true);
+        exportHeatMapButton.setDisable(true);
 
         int width = 60;
         int length = 120;
