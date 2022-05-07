@@ -362,6 +362,9 @@ public class University extends Environment {
         if (amenityClass == UniversityGate.class) {
             return this.getUniversityGates();
         }
+        else if (amenityClass == OfficeTable.class) {
+            return this.getOfficeTables();
+        }
         else if (amenityClass == Bench.class) {
             return this.getBenches();
         }

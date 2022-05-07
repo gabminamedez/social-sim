@@ -60,13 +60,14 @@ public class UniversityRoutePlan {
             routePlan.add(new UniversityState(UniversityState.Name.MAINTENANCE_FOUNTAIN, this, agent, actions));
         }
         else if (agent.getPersona() == UniversityAgent.Persona.STAFF){
-            actions = new ArrayList<>();
-            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CABINET));
-            actions.add(new UniversityAction(UniversityAction.Name.CHECK_CABINET, 5));
-            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
+            //TODO: Tentative durations
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_TABLE));
-            actions.add(new UniversityAction(UniversityAction.Name.CHECK_TABLE, 10));
+            actions.add(new UniversityAction(UniversityAction.Name.CHECK_TABLE, 20,150));
+            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
+            actions = new ArrayList<>();
+            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CABINET));
+            actions.add(new UniversityAction(UniversityAction.Name.CHECK_CABINET, 20,150));
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
         }
         else {
@@ -77,19 +78,11 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.GOING_TO_SECURITY_QUEUE));
             actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2));
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
-//            actions = new ArrayList<>();
-//            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_TABLE));
-//            actions.add(new UniversityAction(UniversityAction.Name.CHECK_TABLE, 10));
-//            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
-//            actions = new ArrayList<>();
-//            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CABINET));
-//            actions.add(new UniversityAction(UniversityAction.Name.CHECK_CABINET, 5));
-//            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
+            //TODO: Where to place the go to chair action in the routeplan
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
-            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 10));
+            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 50));
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
-            //TODO: need help in setting the amenity to be able to use it for chooseGoal method
             int CALCULATED_CLASSES, LUNCH_TIME;
             ArrayList<Integer> classes = new ArrayList<>();
             if (tickEntered < 720) {

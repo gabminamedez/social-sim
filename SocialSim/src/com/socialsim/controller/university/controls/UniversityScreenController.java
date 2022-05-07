@@ -509,19 +509,6 @@ public class UniversityScreenController extends ScreenController {
         officeTablePatches.add(university.getPatch(11, 86));
         officeTablePatches.add(university.getPatch(11, 88));
 
-
-        officeTablePatches.add(university.getPatch(7, 77));
-        officeTablePatches.add(university.getPatch(8, 77));
-        officeTablePatches.add(university.getPatch(7, 79));
-        officeTablePatches.add(university.getPatch(8, 79));
-        officeTablePatches.add(university.getPatch(7, 81));
-        officeTablePatches.add(university.getPatch(8, 81));
-        officeTablePatches.add(university.getPatch(7, 85));
-        officeTablePatches.add(university.getPatch(8, 85));
-        officeTablePatches.add(university.getPatch(7, 87));
-        officeTablePatches.add(university.getPatch(8, 87));
-        officeTablePatches.add(university.getPatch(7, 89));
-        officeTablePatches.add(university.getPatch(8, 89));
         OfficeTableMapper.draw(officeTablePatches, "DOWN");
 
         List<Patch> cabinetPatches = new ArrayList<>();

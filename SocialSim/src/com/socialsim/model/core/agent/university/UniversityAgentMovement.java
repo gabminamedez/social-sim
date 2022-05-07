@@ -551,6 +551,7 @@ public class UniversityAgentMovement extends AgentMovement {
         return true;
     }
     public boolean chooseWaitPatch(int classKey){
+        //TODO: Create each door wait patch
         if (classKey == 0){
             ArrayList<Patch> patchesToConsider = new ArrayList<>();
             for (int i = 26; i < 28; i++){
@@ -594,7 +595,8 @@ public class UniversityAgentMovement extends AgentMovement {
 
         return false;
     }
-    public void chooseStaffroomGoal(Class<? extends Amenity> nextAmenityClass) {
+    public boolean chooseStaffroomGoal(Class<? extends Amenity> nextAmenityClass) {
+        boolean isNotReserved = false;
         if (this.goalAmenity == null) {
             List<? extends Amenity> amenityListInFloor = this.university.getAmenityList(nextAmenityClass);
             Amenity chosenAmenity = null;
@@ -629,6 +631,7 @@ public class UniversityAgentMovement extends AgentMovement {
                     chosenAmenity = candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
                     candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
+                    isNotReserved = true;
                     break;
                 }
             }
@@ -636,6 +639,7 @@ public class UniversityAgentMovement extends AgentMovement {
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
         }
+        return isNotReserved;
     }
 
     public boolean chooseClassroomGoal(Class<? extends Amenity> nextAmenityClass, int classKey) {
