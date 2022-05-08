@@ -1672,8 +1672,11 @@ public class UniversitySimulator extends Simulator {
                     else if(state.getName() == UniversityState.Name.WAIT_INFRONT_OF_CLASS){
                         if (action.getName() == UniversityAction.Name.GO_TO_WAIT_AREA) {
                             agentMovement.setSimultaneousInteractionAllowed(false);
-                            if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.chooseWaitPatch(agentMovement.getCurrentState().getClassroomID());
+                            if (agentMovement.getWaitPatch() == null) {
+                                if(!agentMovement.chooseWaitPatch(agentMovement.getCurrentState().getClassroomID())){
+                                    System.out.println("False wait patch");
+                                    //TODO: Fix
+                                }
                             }
                             else {
                                 if (agentMovement.chooseNextPatchInPath()) {
@@ -2731,7 +2734,9 @@ public class UniversitySimulator extends Simulator {
                         if (action.getName() == UniversityAction.Name.GO_TO_WAIT_AREA) {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
-                                agentMovement.chooseWaitPatch(agentMovement.getCurrentState().getClassroomID());
+                                if(!agentMovement.chooseWaitPatch(agentMovement.getCurrentState().getClassroomID())){
+                                    System.out.println("False wait patch");
+                                }
                             }
                             else {
                                 if (agentMovement.chooseNextPatchInPath()) {

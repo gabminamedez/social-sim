@@ -272,6 +272,9 @@ public class UniversityAgentMovement extends AgentMovement {
     public Patch getGoalPatch() {
         return goalPatch;
     }
+    public Patch getWaitPatch() {
+        return waitPatch;
+    }
 
     public Amenity.AmenityBlock getGoalAttractor() {
         return goalAttractor;
@@ -460,6 +463,7 @@ public class UniversityAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
+                //TODO: Consider patches that are not goal amenity?
                 if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Chair.class || goalAmenity.getClass() == Door.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == UniversityGate.class || goalAmenity.getClass() == StudyTable.class || goalAmenity.getClass() == EatTable.class || goalAmenity.getClass() == LabTable.class) {
                     path.push(goalPatch);
                 }
