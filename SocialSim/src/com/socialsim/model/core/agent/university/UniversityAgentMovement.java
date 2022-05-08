@@ -551,7 +551,6 @@ public class UniversityAgentMovement extends AgentMovement {
         return true;
     }
     public boolean chooseWaitPatch(int classKey){
-        //TODO: Create each door wait patch
         if (classKey == 0){
             ArrayList<Patch> patchesToConsider = new ArrayList<>();
             for (int i = 26; i < 28; i++){
@@ -565,7 +564,7 @@ public class UniversityAgentMovement extends AgentMovement {
         else if(classKey == 1){
             ArrayList<Patch> patchesToConsider = new ArrayList<>();
             for (int i = 26; i < 28; i++){
-                for (int j = 5; j < 17; j++){
+                for (int j = 25; j < 41; j++){
                     patchesToConsider.add(university.getPatch(i, j));
                 }
             }
@@ -574,8 +573,8 @@ public class UniversityAgentMovement extends AgentMovement {
         }
         else if(classKey == 2){
             ArrayList<Patch> patchesToConsider = new ArrayList<>();
-            for (int i = 26; i < 28; i++){
-                for (int j = 5; j < 17; j++){
+            for (int i = 32; i < 34; i++){
+                for (int j = 23; j < 35; j++){
                     patchesToConsider.add(university.getPatch(i, j));
                 }
             }
@@ -584,8 +583,28 @@ public class UniversityAgentMovement extends AgentMovement {
         }
         else if(classKey == 3){
             ArrayList<Patch> patchesToConsider = new ArrayList<>();
-            for (int i = 26; i < 28; i++){
-                for (int j = 5; j < 17; j++){
+            for (int i = 32; i < 34; i++){
+                for (int j = 42; j < 54; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 4){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 32; i < 34; i++){
+                for (int j = 61; j < 73; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 5){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 32; i < 34; i++){
+                for (int j = 80; j < 92; j++){
                     patchesToConsider.add(university.getPatch(i, j));
                 }
             }
