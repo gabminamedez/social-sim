@@ -463,8 +463,10 @@ public class UniversityAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                //TODO: Consider patches that are not goal amenity?
-                if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Chair.class || goalAmenity.getClass() == Door.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == UniversityGate.class || goalAmenity.getClass() == StudyTable.class || goalAmenity.getClass() == EatTable.class || goalAmenity.getClass() == LabTable.class) {
+                if(getWaitPatch()!=null){
+                    path.push(goalPatch);
+                }
+                else if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Chair.class || goalAmenity.getClass() == Door.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == UniversityGate.class || goalAmenity.getClass() == StudyTable.class || goalAmenity.getClass() == EatTable.class || goalAmenity.getClass() == LabTable.class) {
                     path.push(goalPatch);
                 }
                 double length = 0.0;
@@ -826,19 +828,31 @@ public class UniversityAgentMovement extends AgentMovement {
         double distance;
 
         Amenity.AmenityBlock nearestAttractor = null;
-
-        for (Amenity.AmenityBlock attractor : goal.getAttractors()) {
-            distance = Coordinates.distance(this.position, attractor.getPatch().getPatchCenterCoordinates());
-            if (distance < minimumDistance) {
-                minimumDistance = distance;
-                nearestAttractor = attractor;
+        if(getWaitPatch()!=null){
+            distance = Coordinates.distance(this.position,getWaitPatch().getPatchCenterCoordinates());
+            minimumDistance = distance;
+        }
+        else if(goal.getAttractors()!=null){
+            for (Amenity.AmenityBlock attractor : goal.getAttractors()) {
+                distance = Coordinates.distance(this.position, attractor.getPatch().getPatchCenterCoordinates());
+                if (distance < minimumDistance) {
+                    minimumDistance = distance;
+                    nearestAttractor = attractor;
+                }
             }
         }
+
 
         assert nearestAttractor != null;
 
         if (minimumDistance < walkingDistance) {
-            return new Coordinates(nearestAttractor.getPatch().getPatchCenterCoordinates().getX(), nearestAttractor.getPatch().getPatchCenterCoordinates().getY());
+            if(getWaitPatch()!=null){
+                return new Coordinates(getWaitPatch().getPatchCenterCoordinates().getX(), getWaitPatch().getPatchCenterCoordinates().getY());
+            }
+            else{
+                return new Coordinates(nearestAttractor.getPatch().getPatchCenterCoordinates().getX(), nearestAttractor.getPatch().getPatchCenterCoordinates().getY());
+            }
+
         }
         else {
             Coordinates futurePosition = this.getFuturePosition(this.position, heading, walkingDistance);
@@ -889,10 +903,15 @@ public class UniversityAgentMovement extends AgentMovement {
 
         final double distanceSlowdownStart = 5.0;
         final double speedDecreaseFactor = 0.5;
-
-        double distanceToGoal = Coordinates.distance(this.currentPatch, this.getGoalAmenity().getAttractors().get(0).getPatch());
-        if (distanceToGoal < distanceSlowdownStart && this.hasClearLineOfSight(this.position, this.goalAmenity.getAttractors().get(0).getPatch().getPatchCenterCoordinates(), true)) {
-            this.preferredWalkingDistance *= speedDecreaseFactor;
+        double distanceToGoal;
+        if(getWaitPatch()!=null){
+            distanceToGoal = Coordinates.distance(this.currentPatch, getWaitPatch());
+        }
+        else{
+            distanceToGoal = Coordinates.distance(this.currentPatch, this.getGoalAmenity().getAttractors().get(0).getPatch());
+            if (distanceToGoal < distanceSlowdownStart && this.hasClearLineOfSight(this.position, this.goalAmenity.getAttractors().get(0).getPatch().getPatchCenterCoordinates(), true)) {
+                this.preferredWalkingDistance *= speedDecreaseFactor;
+            }
         }
 
         if (this.isStuck || this.noNewPatchesSeenCounter > noNewPatchesSeenTicksThreshold) {
@@ -1309,7 +1328,6 @@ public class UniversityAgentMovement extends AgentMovement {
             else{
                 agentPath = computePath(this.currentPatch,this.goalQueueingPatchField.getLastQueuePatch(), true, true);
             }
-//TODO: check
             if (agentPath != null) {
                 this.currentPath = new AgentPath(agentPath);
                 wasPathJustGenerated = true;

@@ -81,7 +81,7 @@ public class UniversityRoutePlan {
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_WAIT_AREA));
             actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_CLASS,12,40));
-            routePlan.add(new UniversityState(UniversityState.Name.WAIT_INFRONT_OF_CLASS,this,agent,720,0,actions));
+            routePlan.add(new UniversityState(UniversityState.Name.WAIT_INFRONT_OF_CLASS,this,agent,720,Simulator.rollIntIN(5),actions));
 //            TODO: Where to place the go to chair action in the routeplan
 //            actions = new ArrayList<>();
 //            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
