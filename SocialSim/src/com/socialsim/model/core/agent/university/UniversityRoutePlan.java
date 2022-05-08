@@ -78,11 +78,15 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.GOING_TO_SECURITY_QUEUE));
             actions.add(new UniversityAction(UniversityAction.Name.GO_THROUGH_SCANNER, 2));
             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_SECURITY, this, agent, actions));
-            //TODO: Where to place the go to chair action in the routeplan
-            actions = new ArrayList<>();
-            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
-            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 50));
-            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
+//            actions = new ArrayList<>();
+//            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_WAIT_AREA));
+//            actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_CLASS,12,40));
+//            routePlan.add(new UniversityState(UniversityState.Name.WAIT_INFRONT_OF_CLASS,this,agent,720,0,actions));
+//            TODO: Where to place the go to chair action in the routeplan
+//            actions = new ArrayList<>();
+//            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
+//            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 50));
+//            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
             int CALCULATED_CLASSES, LUNCH_TIME;
             ArrayList<Integer> classes = new ArrayList<>();
             if (tickEntered < 720) {
@@ -622,6 +626,14 @@ public class UniversityRoutePlan {
             actions.add(new UniversityAction(UniversityAction.Name.DRINK_FOUNTAIN, 6,12));
             return new UniversityState(UniversityState.Name.NEEDS_DRINK,this,agent,actions);
         }
+    }
+
+    public UniversityState addWaitingRoute(int classKey, int classTickStart,UniversityAgent agent){
+        ArrayList<UniversityAction> actions;
+        actions = new ArrayList<>();
+        actions.add(new UniversityAction(UniversityAction.Name.GO_TO_WAIT_AREA));
+        actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_CLASS,12,40));
+        return new UniversityState(UniversityState.Name.WAIT_INFRONT_OF_CLASS,this,agent,classTickStart,classKey,actions);
     }
 
 }
