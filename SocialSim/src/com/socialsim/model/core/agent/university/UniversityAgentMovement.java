@@ -617,6 +617,16 @@ public class UniversityAgentMovement extends AgentMovement {
             this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
             return true;
         }
+        else if(classKey == 6){ // 6 for bathroom specifically
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 0; i < 17; i++){
+                for (int j = 63; j < 65; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
 
         return false;
     }
@@ -906,6 +916,9 @@ public class UniversityAgentMovement extends AgentMovement {
         double distanceToGoal;
         if(getWaitPatch()!=null){
             distanceToGoal = Coordinates.distance(this.currentPatch, getWaitPatch());
+            if (distanceToGoal < distanceSlowdownStart && this.hasClearLineOfSight(this.position, getWaitPatch().getPatchCenterCoordinates(), true)) {
+                this.preferredWalkingDistance *= speedDecreaseFactor;
+            }
         }
         else{
             distanceToGoal = Coordinates.distance(this.currentPatch, this.getGoalAmenity().getAttractors().get(0).getPatch());

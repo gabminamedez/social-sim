@@ -632,7 +632,7 @@ public class UniversityRoutePlan {
         ArrayList<UniversityAction> actions;
         actions = new ArrayList<>();
         actions.add(new UniversityAction(UniversityAction.Name.GO_TO_WAIT_AREA));
-        actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_CLASS,12,40));
+        actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_CLASS,5,20));
         return new UniversityState(UniversityState.Name.WAIT_INFRONT_OF_CLASS,this,agent,classTickStart,classKey,actions);
     }
 
