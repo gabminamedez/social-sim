@@ -22,9 +22,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class UniversitySimulator extends Simulator {
 
     public static int defaultMaxStudents = 500;
-    public static int defaultMaxProfessors = 6;
+    public static int defaultMaxProfessors = 50;
     public static int defaultMaxCurrentStudents = 250;
-    public static int defaultMaxCurrentProfessors = 6;
+    public static int defaultMaxCurrentProfessors = 20;
 
     private University university;
     private final AtomicBoolean running;
