@@ -37,6 +37,7 @@ public class UniversityRoutePlan {
             PROF_NEED_BATHROOM_NO_CLASSES = 0.05, PROF_NEEDS_DRINK_NO_CLASSES = 0,
             PROF_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, PROF_CHANCE_NEEDS_DRINK_STUDYING = 0.05,
             PROF_CHANCE_SNACKS = 0.40;
+    public static final double CHANCE_STAFF_ROOM = 0.05;
     public static final double THROW_CHANCE = 0.02, CHANCE_NEED_CLASS_MULTIPLIER = 0.3;
     public static final int CHANCE_INT_GUARD_INTERACT = 10, CHANCE_EXT_GUARD_INTERACT = 30, CHANCE_INTORG_GUARD_INTERACT = 20, CHANCE_EXTORG_GUARD_INTERACT = 40, CHANCE_SPROF_GUARD_INTERACT = 20, CHANCE_APROF_GUARD_INTERACT = 50, CHANCE_GUARD_VERBAL = 10;
     public static final int CHANCE_INT_ASK = 0, CHANCE_EXT_ASK = 10, CHANCE_INTORG_ASK = 5, CHANCE_EXTORG_ASK = 15;
@@ -81,12 +82,7 @@ public class UniversityRoutePlan {
             actions = new ArrayList<>();
             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_WAIT_AREA));
             actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_CLASS,12,40));
-            routePlan.add(new UniversityState(UniversityState.Name.WAIT_INFRONT_OF_CLASS,this,agent,720,Simulator.rollIntIN(5),actions));
-//            TODO: Where to place the go to chair action in the routeplan
-//            actions = new ArrayList<>();
-//            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
-//            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 50));
-//            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
+            routePlan.add(new UniversityState(UniversityState.Name.WAIT_INFRONT_OF_CLASS,this,agent,720,Simulator.rollIntIN(6),actions));
             int CALCULATED_CLASSES, LUNCH_TIME;
             ArrayList<Integer> classes = new ArrayList<>();
             if (tickEntered < 720) {
@@ -177,6 +173,12 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.VIEW_BULLETIN,3,12));
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
                         }
+                        else if (x < CHANCE_STAFF_ROOM) {
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
+                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 30));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
+                        }
                         else if (x < INT_CHANCE_WANDERING_AROUND + INT_CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
@@ -253,6 +255,12 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_BENCH));
                             actions.add(new UniversityAction(UniversityAction.Name.SIT_ON_BENCH,120,360));
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
+                        }
+                        else if (x < CHANCE_STAFF_ROOM) {
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
+                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 30));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
                         }
                         else if (x < INT_ORG_CHANCE_WANDERING_AROUND + INT_ORG_CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
@@ -331,6 +339,12 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.SIT_ON_BENCH,120,360));
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
                         }
+                        else if (x < CHANCE_STAFF_ROOM) {
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
+                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 30));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
+                        }
                         else if (x < EXT_CHANCE_WANDERING_AROUND + EXT_CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
@@ -408,6 +422,12 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.VIEW_BULLETIN,3,12));
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
                         }
+                        else if (x < CHANCE_STAFF_ROOM) {
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
+                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 30));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
+                        }
                         else if (x < EXT_ORG_CHANCE_WANDERING_AROUND + EXT_ORG_CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
                             actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STUDY_ROOM));
@@ -484,6 +504,12 @@ public class UniversityRoutePlan {
                             actions.add(new UniversityAction(UniversityAction.Name.FIND_BENCH));
                             actions.add(new UniversityAction(UniversityAction.Name.SIT_ON_BENCH,120,360));
                             routePlan.add(new UniversityState(UniversityState.Name.WANDERING_AROUND, this, agent, actions));
+                        }
+                        else if (x < CHANCE_STAFF_ROOM) {
+                            actions = new ArrayList<>();
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
+                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 30));
+                            routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
                         }
                         else if (x < PROF_CHANCE_WANDERING_AROUND + PROF_CHANCE_GOING_TO_STUDY) {
                             actions = new ArrayList<>();
