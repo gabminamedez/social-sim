@@ -326,17 +326,6 @@ public class MallSimulator extends Simulator {
         mall.getAgentPatchSet().add(concierger.getAgentMovement().getCurrentPatch());
         MallAgent.conciergerCount++;
         MallAgent.agentCount++;
-
-        MallAgent janitor1 = mall.getAgents().get(37);
-        janitor1.setAgentMovement(new MallAgentMovement(mall.getPatch(8, 6), janitor1, null, 1.27, mall.getPatch(8, 6).getPatchCenterCoordinates(), -1, janitor1.getTeam()));
-        mall.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
-        MallAgent.janitorCount++;
-        MallAgent.agentCount++;
-        MallAgent janitor2 = mall.getAgents().get(38);
-        janitor2.setAgentMovement(new MallAgentMovement(mall.getPatch(51, 6), janitor2, null, 1.27, mall.getPatch(51, 6).getPatchCenterCoordinates(), -1, janitor2.getTeam()));
-        mall.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
-        MallAgent.janitorCount++;
-        MallAgent.agentCount++;
     }
 
     public void reset() {
@@ -887,7 +876,9 @@ public class MallSimulator extends Simulator {
                                 agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.getGoalAmenity().getAttractors().get(0).setIsReserved(false);
                                 agentMovement.resetGoal();
+                                agentMovement.setStationInteracting(false);
                                 agentMovement.setSimultaneousInteractionAllowed(false);
                             }
                         }
