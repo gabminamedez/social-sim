@@ -15,6 +15,8 @@ public class UniversityRoutePlan {
     private double UrgentCtr = -2;
     public int MAX_CLASS_ASKS = 2;
 
+    private int[] CLASS_SCHEDULES;
+
     public static final double INT_CHANCE_WANDERING_AROUND = 0.21, INT_CHANCE_GOING_TO_STUDY = 0.53,
             INT_NEED_BATHROOM_NO_CLASSES = 0.05, INT_NEEDS_DRINK_NO_CLASSES = 0.05,
             INT_CHANCE_NEEDS_BATHROOM_STUDYING = 0.05, INT_CHANCE_NEEDS_DRINK_STUDYING = 0.05,
@@ -41,6 +43,7 @@ public class UniversityRoutePlan {
 
     public UniversityRoutePlan(UniversityAgent agent, University university, Patch spawnPatch, int tickEntered) {
         this.routePlan = new ArrayList<>();
+        this.CLASS_SCHEDULES = new int[]{};
         ArrayList<UniversityAction> actions;
 
         if (agent.getPersona() == UniversityAgent.Persona.GUARD) {
@@ -176,9 +179,9 @@ public class UniversityRoutePlan {
                     ctrClasses--;
                 }
             }
-
+            Collections.sort(classes);
+            CLASS_SCHEDULES = classes.stream().mapToInt(Integer::intValue).toArray();
             if (agent.getPersona() == UniversityAgent.Persona.INT_Y1_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y2_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y3_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y4_STUDENT) {
-                Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
@@ -247,7 +250,6 @@ public class UniversityRoutePlan {
                 }
             }
             else if (agent.getPersona() == UniversityAgent.Persona.INT_Y1_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y2_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y3_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.INT_Y4_ORG_STUDENT) {
-                Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
@@ -316,7 +318,6 @@ public class UniversityRoutePlan {
                 }
             }
             else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_STUDENT) {
-                Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
@@ -385,7 +386,6 @@ public class UniversityRoutePlan {
                 }
             }
             else if (agent.getPersona() == UniversityAgent.Persona.EXT_Y1_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y2_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y3_ORG_STUDENT || agent.getPersona() == UniversityAgent.Persona.EXT_Y4_ORG_STUDENT) {
-                Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
@@ -454,7 +454,6 @@ public class UniversityRoutePlan {
                 }
             }
             else {
-                Collections.sort(classes);
                 for (int i = 0; i < CALCULATED_CLASSES; i++) {
                     for (int j = 0; j < 8; j++) {
                         double x = Simulator.roll();
@@ -602,7 +601,11 @@ public class UniversityRoutePlan {
         }
     }
 
-    public UniversityState addWaitingRoute(int classKey, int classTickStart,UniversityAgent agent){
+    public int[] getCLASS_SCHEDULES() {
+        return CLASS_SCHEDULES;
+    }
+
+    public UniversityState addWaitingRoute(int classKey, int classTickStart, UniversityAgent agent){
         ArrayList<UniversityAction> actions;
         actions = new ArrayList<>();
         actions.add(new UniversityAction(UniversityAction.Name.GO_TO_WAIT_AREA));

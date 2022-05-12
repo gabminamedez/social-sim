@@ -15,9 +15,11 @@ import com.socialsim.model.simulator.Simulator;
 
 import java.io.PrintWriter;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.IntStream;
 
 public class UniversitySimulator extends Simulator {
 
@@ -428,7 +430,7 @@ public class UniversitySimulator extends Simulator {
                                     i++;
                                 }
                             }
-                            else if (currentTick >= 720 && currentTick < 1800){
+                            else if (currentTick >= 720 && currentTick < 1800 && IntStream.of(agent.getAgentMovement().getRoutePlan().getCLASS_SCHEDULES()).anyMatch(x -> x == 0)){
                                 while (i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && !hasClass) {
                                     if (agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 720) {
                                         hasClass = true;
@@ -441,7 +443,7 @@ public class UniversitySimulator extends Simulator {
                                     i++;
                                 }
                             }
-                            else if (currentTick >= 1980 && currentTick < 3060){
+                            else if (currentTick >= 1980 && currentTick < 3060 && IntStream.of(agent.getAgentMovement().getRoutePlan().getCLASS_SCHEDULES()).anyMatch(x -> x == 1)){
                                 while (i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && !hasClass) {
                                     if (agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 1980) {
                                         hasClass = true;
@@ -454,7 +456,7 @@ public class UniversitySimulator extends Simulator {
                                     i++;
                                 }
                             }
-                            else if (currentTick >= 3240 && currentTick < 4320){
+                            else if (currentTick >= 3240 && currentTick < 4320 && IntStream.of(agent.getAgentMovement().getRoutePlan().getCLASS_SCHEDULES()).anyMatch(x -> x == 2)){
                                 while (i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && !hasClass) {
                                     if (agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 3240) {
                                         hasClass = true;
@@ -467,7 +469,7 @@ public class UniversitySimulator extends Simulator {
                                     i++;
                                 }
                             }
-                            else if (currentTick >= 4500 && currentTick < 5580){
+                            else if (currentTick >= 4500 && currentTick < 5580 && IntStream.of(agent.getAgentMovement().getRoutePlan().getCLASS_SCHEDULES()).anyMatch(x -> x == 3)){
                                 while (i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && !hasClass) {
                                     if (agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 4500) {
                                         hasClass = true;
@@ -480,7 +482,7 @@ public class UniversitySimulator extends Simulator {
                                     i++;
                                 }
                             }
-                            else if (currentTick >= 5760 && currentTick < 6840){
+                            else if (currentTick >= 5760 && currentTick < 6840 && IntStream.of(agent.getAgentMovement().getRoutePlan().getCLASS_SCHEDULES()).anyMatch(x -> x == 4)){
                                 while (i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && !hasClass) {
                                     if (agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 5760) {
                                         hasClass = true;
@@ -493,7 +495,7 @@ public class UniversitySimulator extends Simulator {
                                     i++;
                                 }
                             }
-                            else if (currentTick >= 7020 && currentTick < 8100){
+                            else if (currentTick >= 7020 && currentTick < 8100 && IntStream.of(agent.getAgentMovement().getRoutePlan().getCLASS_SCHEDULES()).anyMatch(x -> x == 5)){
                                 while (i < agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().size() && !hasClass) {
                                     if (agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getName() == UniversityState.Name.GOING_TO_CLASS_STUDENT && agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().get(i).getTickClassStart() == 7020) {
                                         hasClass = true;
