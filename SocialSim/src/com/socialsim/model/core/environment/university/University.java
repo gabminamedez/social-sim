@@ -1107,13 +1107,14 @@ public class University extends Environment {
                             case JANITOR_CHECK_FOUNTAIN  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_FOR_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case TALK_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CLASS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case JANITOR -> {
@@ -1163,13 +1164,14 @@ public class University extends Environment {
                             case JANITOR_CHECK_FOUNTAIN  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 100, 0)));
                             case WAIT_FOR_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case TALK_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CLASS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case INT_STUDENT -> {
@@ -1219,13 +1221,14 @@ public class University extends Environment {
                             case JANITOR_CHECK_FOUNTAIN  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_FOR_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                             case GO_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
-                            case TALK_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                             case STAFF_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case WAIT_FOR_CLASS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                         }
                     }
                     case INT_ORG_STUDENT -> {
@@ -1275,13 +1278,14 @@ public class University extends Environment {
                             case JANITOR_CHECK_FOUNTAIN  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_FOR_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                             case GO_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
-                            case TALK_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                             case STAFF_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case WAIT_FOR_CLASS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
                         }
                     }
                     case EXT_STUDENT -> {
@@ -1331,13 +1335,14 @@ public class University extends Environment {
                             case JANITOR_CHECK_FOUNTAIN  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_FOR_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                             case GO_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
-                            case TALK_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                             case STAFF_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case WAIT_FOR_CLASS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                         }
                     }
                     case EXT_ORG_STUDENT -> {
@@ -1387,13 +1392,14 @@ public class University extends Environment {
                             case JANITOR_CHECK_FOUNTAIN  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_FOR_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                             case GO_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
-                            case TALK_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                             case STAFF_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case WAIT_FOR_CLASS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
                         }
                     }
                     case STRICT_PROFESSOR -> {
@@ -1443,13 +1449,14 @@ public class University extends Environment {
                             case JANITOR_CHECK_FOUNTAIN  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_FOR_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(75, 0, 25)));
                             case GO_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(75, 0, 25)));
-                            case TALK_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(75, 0, 25)));
                             case STAFF_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(75, 0, 25)));
+                            case WAIT_FOR_CLASS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(75, 0, 25)));
                         }
                     }
                     case APPROACHABLE_PROFESSOR -> {
@@ -1499,13 +1506,14 @@ public class University extends Environment {
                             case JANITOR_CHECK_FOUNTAIN  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_FOR_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(65, 0, 35)));
                             case GO_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(65, 0, 35)));
-                            case TALK_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
                             case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(65, 0, 35)));
                             case STAFF_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECK_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(65, 0, 35)));
+                            case WAIT_FOR_CLASS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(65, 0, 35)));
                         }
                     }
                     case STAFF -> {
@@ -1555,13 +1563,14 @@ public class University extends Environment {
                             case JANITOR_CHECK_FOUNTAIN  -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WAIT_FOR_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case TALK_TO_STAFF -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 70, 30)));
                             case LEAVE_OFFICE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                             case GO_TO_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                             case CHECK_CABINET -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                             case GO_TO_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
                             case CHECK_TABLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 40, 40)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_CLASS -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                 }

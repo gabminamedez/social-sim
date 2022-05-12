@@ -190,8 +190,8 @@ public class UniversityRoutePlan {
                         }
                         else if (x < INT_CHANCE_WANDERING_AROUND + CHANCE_STAFF_ROOM) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
-                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 30));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STAFF));
+                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_STAFF, 30));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
                         }
                         else if (x < INT_CHANCE_WANDERING_AROUND + CHANCE_STAFF_ROOM + INT_CHANCE_GOING_TO_STUDY) {
@@ -259,8 +259,8 @@ public class UniversityRoutePlan {
                         }
                         else if (x < INT_ORG_CHANCE_WANDERING_AROUND + CHANCE_STAFF_ROOM) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
-                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 30));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STAFF));
+                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_STAFF, 30));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
                         }
                         else if (x < INT_ORG_CHANCE_WANDERING_AROUND + CHANCE_STAFF_ROOM + INT_ORG_CHANCE_GOING_TO_STUDY) {
@@ -328,8 +328,8 @@ public class UniversityRoutePlan {
                         }
                         else if (x < EXT_CHANCE_WANDERING_AROUND + CHANCE_STAFF_ROOM) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
-                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 30));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STAFF));
+                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_STAFF, 30));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
                         }
                         else if (x < EXT_CHANCE_WANDERING_AROUND + CHANCE_STAFF_ROOM + EXT_CHANCE_GOING_TO_STUDY) {
@@ -397,8 +397,8 @@ public class UniversityRoutePlan {
                         }
                         else if (x < EXT_ORG_CHANCE_WANDERING_AROUND + CHANCE_STAFF_ROOM) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
-                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 30));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STAFF));
+                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_STAFF, 30));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
                         }
                         else if (x < EXT_ORG_CHANCE_WANDERING_AROUND + CHANCE_STAFF_ROOM + EXT_ORG_CHANCE_GOING_TO_STUDY) {
@@ -466,8 +466,8 @@ public class UniversityRoutePlan {
                         }
                         else if (x < PROF_CHANCE_WANDERING_AROUND + CHANCE_STAFF_ROOM) {
                             actions = new ArrayList<>();
-                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_CHAIR));
-                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_ON_CHAIR, 30));
+                            actions.add(new UniversityAction(UniversityAction.Name.GO_TO_STAFF));
+                            actions.add(new UniversityAction(UniversityAction.Name.WAIT_FOR_STAFF, 30));
                             routePlan.add(new UniversityState(UniversityState.Name.GOING_TO_STAFF, this, agent, actions));
                         }
                         else if (x < PROF_CHANCE_WANDERING_AROUND + CHANCE_STAFF_ROOM + PROF_CHANCE_GOING_TO_STUDY) {
