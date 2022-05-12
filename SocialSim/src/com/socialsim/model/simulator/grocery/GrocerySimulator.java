@@ -4,8 +4,6 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.grocery.controls.GroceryScreenController;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.grocery.*;
-import com.socialsim.model.core.agent.grocery.GroceryAgent;
-import com.socialsim.model.core.agent.grocery.GroceryRoutePlan;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
@@ -509,6 +507,15 @@ public class GrocerySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (!agentMovement.chooseBathroomGoal(Toilet.class)) {
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() - 1, agentMovement.getRoutePlan().addWaitingRoute(agent));
+                                    agentMovement.setPreviousState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() -1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    if(agentMovement.getGoalAttractor() != null) {
+                                        agentMovement.getGoalAttractor().setIsReserved(false);
+                                    }
+                                    agentMovement.resetGoal();
 //                                    if (agentMovement.getRoutePlan().isFromStudying()) {
 //                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
 //                                        agentMovement.setNextState(agentMovement.getReturnIndex() - 1);
@@ -536,11 +543,11 @@ public class GrocerySimulator extends Simulator {
 //                                        agentMovement.resetGoal();
 //                                        agentMovement.getRoutePlan().setFromLunch(false);
 //                                    }
-                                        agentMovement.setNextState(agentMovement.getStateIndex());
-                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                                        agentMovement.setActionIndex(0);
-                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                        agentMovement.resetGoal();
+//                                        agentMovement.setNextState(agentMovement.getStateIndex());
+//                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+//                                        agentMovement.setActionIndex(0);
+//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                        agentMovement.resetGoal();
                                 }
                             }
                             else {
@@ -1035,6 +1042,15 @@ public class GrocerySimulator extends Simulator {
                             agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (!agentMovement.chooseBathroomGoal(Toilet.class)) {
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() - 1, agentMovement.getRoutePlan().addWaitingRoute(agent));
+                                    agentMovement.setPreviousState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() -1);
+                                    agentMovement.setActionIndex(0);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    if(agentMovement.getGoalAttractor() != null) {
+                                        agentMovement.getGoalAttractor().setIsReserved(false);
+                                    }
+                                    agentMovement.resetGoal();
 //                                    if (agentMovement.getRoutePlan().isFromStudying()) {
 //                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
 //                                        agentMovement.setNextState(agentMovement.getReturnIndex() - 1);
@@ -1062,11 +1078,11 @@ public class GrocerySimulator extends Simulator {
 //                                        agentMovement.resetGoal();
 //                                        agentMovement.getRoutePlan().setFromLunch(false);
 //                                    }
-                                    agentMovement.setNextState(agentMovement.getStateIndex());
-                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                                    agentMovement.setActionIndex(0);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
+//                                    agentMovement.setNextState(agentMovement.getStateIndex());
+//                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+//                                    agentMovement.setActionIndex(0);
+//                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                    agentMovement.resetGoal();
                                 }
                             }
                             else {
@@ -1217,6 +1233,47 @@ public class GrocerySimulator extends Simulator {
                             }
                         }
                     }
+                    else if(state.getName() == GroceryState.Name.WAIT_INFRONT_OF_BATHROOM){
+                        if (action.getName() == GroceryAction.Name.GO_TO_WAIT_AREA) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
+                            if (agentMovement.getGoalAmenity() == null) {
+                                if(!agentMovement.chooseWaitPatch()){
+                                    System.out.println("False wait patch");
+                                }
+                            }
+                            else {
+                                if (agentMovement.chooseNextPatchInPath()) {
+                                    agentMovement.faceNextPosition();
+                                    agentMovement.moveSocialForce();
+                                    if (agentMovement.hasReachedNextPatchInPath()) {
+                                        agentMovement.reachPatchInPath();
+                                    }
+                                }
+                                else{
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                }
+                            }
+                        }
+                        else if(action.getName() == GroceryAction.Name.WAIT_FOR_VACANT){
+                            agentMovement.setSimultaneousInteractionAllowed(true);
+//                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                if (agentMovement.getGoalAttractor() != null) {
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                }
+                                agentMovement.resetGoal();
+                            }
+                            else {
+                                agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                            }
+                        }
+                    }
 
                     break;
             }
@@ -1247,27 +1304,27 @@ public class GrocerySimulator extends Simulator {
                 if (agentMovement.isInteracting())
                     break;
             }
-            patches = agentMovement.get3x3Field(agentMovement.getHeading(), true, Math.toRadians(270));
-            for (Patch patch: patches) {
-                for (Agent otherAgent: patch.getAgents()) {
-                    GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
-                    if (!groceryAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
-                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), groceryAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
-                            if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
-                                agentMovement.rollAgentInteraction(groceryAgent);
-                                if (agentMovement.isInteracting()) {
-                                    agent2 = groceryAgent;
-                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
-                                    currentPatchCount[groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
-                                }
-                            }
-                    if (agentMovement.isInteracting())
-                        break;
-                }
-
-                if (agentMovement.isInteracting())
-                    break;
-            }
+//            patches = agentMovement.get3x3Field(agentMovement.getHeading(), true, Math.toRadians(270));
+//            for (Patch patch: patches) {
+//                for (Agent otherAgent: patch.getAgents()) {
+//                    GroceryAgent groceryAgent = (GroceryAgent) otherAgent;
+//                    if (!groceryAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
+//                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), groceryAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
+//                            if (Coordinates.isWithinFieldOfView(groceryAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), groceryAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
+//                                agentMovement.rollAgentInteraction(groceryAgent);
+//                                if (agentMovement.isInteracting()) {
+//                                    agent2 = groceryAgent;
+//                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+//                                    currentPatchCount[groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][groceryAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+//                                }
+//                            }
+//                    if (agentMovement.isInteracting())
+//                        break;
+//                }
+//
+//                if (agentMovement.isInteracting())
+//                    break;
+//            }
             if (agentMovement.isInteracting() && agentMovement.getInteractionDuration() == 0) {
                 agentMovement.setInteracting(false);
                 agentMovement.setInteractionType(null);
