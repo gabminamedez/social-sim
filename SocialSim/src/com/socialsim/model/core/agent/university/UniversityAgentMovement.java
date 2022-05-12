@@ -619,7 +619,7 @@ public class UniversityAgentMovement extends AgentMovement {
         }
         else if(classKey == 6){ // 6 for bathroom specifically
             ArrayList<Patch> patchesToConsider = new ArrayList<>();
-            for (int i = 0; i < 17; i++){
+            for (int i = 1; i < 18; i++){
                 for (int j = 63; j < 65; j++){
                     patchesToConsider.add(university.getPatch(i, j));
                 }
