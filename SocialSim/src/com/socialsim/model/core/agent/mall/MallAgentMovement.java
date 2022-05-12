@@ -579,29 +579,28 @@ public class MallAgentMovement extends AgentMovement {
 
     public boolean chooseWaitPatch(){
         ArrayList<Patch> patchesToConsider = new ArrayList<>();
-        //TODO: Change according to available patchesToConsider for Bathrooms
-        //fBathroom1
-        for (int i = 1; i < 8; i++) {
-            for (int j = 8; j < 10; j++) {
-                patchesToConsider.add(mall.getPatch(i, j));
+        if (this.getParent().getGender() == MallAgent.Gender.MALE){
+            for (int i = 52; i < 59; i++) {
+                for (int j = 8; j < 10; j++) {
+                    patchesToConsider.add(mall.getPatch(i, j));
+                }
+            }
+            for (int i = 45; i < 59; i++) {
+                for (int j = 106; j < 108; j++) {
+                    patchesToConsider.add(mall.getPatch(i, j));
+                }
             }
         }
-        //mBathroom1
-        for (int i = 52; i < 59; i++) {
-            for (int j = 8; j < 10; j++) {
-                patchesToConsider.add(mall.getPatch(i, j));
+        else{
+            for (int i = 1; i < 8; i++) {
+                for (int j = 8; j < 10; j++) {
+                    patchesToConsider.add(mall.getPatch(i, j));
+                }
             }
-        }
-        //fBathroom2
-        for (int i = 1; i < 15; i++) {
-            for (int j = 119; j < 121; j++) {
-                patchesToConsider.add(mall.getPatch(i, j));
-            }
-        }
-        //mBathroom2
-        for (int i = 45; i < 59; i++) {
-            for (int j = 106; j < 108; j++) {
-                patchesToConsider.add(mall.getPatch(i, j));
+            for (int i = 1; i < 15; i++) {
+                for (int j = 119; j < 121; j++) {
+                    patchesToConsider.add(mall.getPatch(i, j));
+                }
             }
         }
         this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
