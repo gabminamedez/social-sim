@@ -24,6 +24,11 @@ public class University extends Environment {
     private final SortedSet<Patch> amenityPatchSet;
     private final SortedSet<Patch> agentPatchSet;
 
+    private int[][] CLASSROOM_SIZES_STUDENT = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
+    private int[][] CLASSROOM_SIZES_PROF = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
+
+    private UniversityAgent[][] PROFS_PER_SCHEDULE = new UniversityAgent[6][6];
+
     private int nonverbalMean;
     private int nonverbalStdDev;
     private int cooperativeMean;
@@ -115,6 +120,36 @@ public class University extends Environment {
         this.studyAreas = Collections.synchronizedList(new ArrayList<>());
         this.staffOffices = Collections.synchronizedList(new ArrayList<>());
         this.walls = Collections.synchronizedList(new ArrayList<>());
+    }
+
+    public int[][] getClassroomSizesStudent() {
+        return CLASSROOM_SIZES_STUDENT;
+    }
+
+    public int[][] getClassroomSizesProf() {
+        return CLASSROOM_SIZES_PROF;
+    }
+
+    public UniversityAgent[][] getProfsPerSchedule() {
+        return PROFS_PER_SCHEDULE;
+    }
+
+    public void resetClassroomSizes() {
+        CLASSROOM_SIZES_STUDENT = new int[][]{{40 ,48, 40, 40, 40, 40},{40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}, {40 ,48, 40, 40, 40, 40}};
+        CLASSROOM_SIZES_PROF = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
+        PROFS_PER_SCHEDULE = new UniversityAgent[6][6];
+    }
+
+
+    public boolean allBathroomsOccupied(){
+        List<? extends Amenity> amenityListInFloor = this.getAmenityList(Toilet.class);
+        boolean allOccupied = true;
+        for (Amenity amenity : amenityListInFloor)
+            if (!amenity.getAmenityBlocks().get(0).getIsReserved()) {
+                allOccupied = false;
+                break;
+            }
+        return allOccupied;
     }
 
     public CopyOnWriteArrayList<UniversityAgent> getAgents() {

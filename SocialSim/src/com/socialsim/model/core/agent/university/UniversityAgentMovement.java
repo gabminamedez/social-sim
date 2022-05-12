@@ -787,6 +787,7 @@ public class UniversityAgentMovement extends AgentMovement {
         return true;
     }
 
+
     public void chooseStall() {
         if (this.goalAmenity == null) {
             List<StallField> stallFields = this.university.getStallFields();

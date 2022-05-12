@@ -151,18 +151,18 @@ public class UniversityScreenController extends ScreenController {
         Main.universitySimulator.getUniversity().getWalls().add(Wall.wallFactory.create(wallPatches, 1));
 
         List<Patch> fBathroomPatches = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
             for (int j = 50; j < 62; j++) {
-                if (j != 61 || i >= 2 && i <= 5)
+                if (j != 61 || i >= 3 && i <= 6)
                     fBathroomPatches.add(university.getPatch(i, j));
             }
         }
         Main.universitySimulator.getUniversity().getBathrooms().add(Bathroom.bathroomFactory.create(fBathroomPatches, 1));
 
         List<Patch> mBathroomPatches = new ArrayList<>();
-        for (int i = 9; i < 17; i++) {
+        for (int i = 10; i < 18; i++) {
             for (int j = 50; j < 62; j++) {
-                if (j != 61 || i >= 11  && i <= 14)
+                if (j != 61 || i >= 12 && i <= 15)
                     mBathroomPatches.add(university.getPatch(i, j));
             }
         }
@@ -398,8 +398,8 @@ public class UniversityScreenController extends ScreenController {
         DoorMapper.draw(doorUpPatches, "UP");
 
         List<Patch> doorRightPatches = new ArrayList<>();
-        doorRightPatches.add(university.getPatch(11, 61));
-        doorRightPatches.add(university.getPatch(2, 61));
+        doorRightPatches.add(university.getPatch(12, 61));
+        doorRightPatches.add(university.getPatch(3, 61));
         DoorMapper.draw(doorRightPatches, "RIGHT");
 
         List<Patch> eatTablePatches = new ArrayList<>();
@@ -415,27 +415,27 @@ public class UniversityScreenController extends ScreenController {
         EatTableMapper.draw(eatTablePatches);    
 
         List<Patch> toiletPatches = new ArrayList<>();
-        toiletPatches.add(university.getPatch(0,50));
-        toiletPatches.add(university.getPatch(0,52));
-        toiletPatches.add(university.getPatch(0,54));
-        toiletPatches.add(university.getPatch(7,50));
-        toiletPatches.add(university.getPatch(7,52));
-        toiletPatches.add(university.getPatch(7,54));
-        toiletPatches.add(university.getPatch(9,50));
-        toiletPatches.add(university.getPatch(9,52));
-        toiletPatches.add(university.getPatch(9,54));
-        toiletPatches.add(university.getPatch(16,50));
-        toiletPatches.add(university.getPatch(16,52));
-        toiletPatches.add(university.getPatch(16,54));
+        toiletPatches.add(university.getPatch(1,50));
+        toiletPatches.add(university.getPatch(1,52));
+        toiletPatches.add(university.getPatch(1,54));
+        toiletPatches.add(university.getPatch(8,50));
+        toiletPatches.add(university.getPatch(8,52));
+        toiletPatches.add(university.getPatch(8,54));
+        toiletPatches.add(university.getPatch(10,50));
+        toiletPatches.add(university.getPatch(10,52));
+        toiletPatches.add(university.getPatch(10,54));
+        toiletPatches.add(university.getPatch(17,50));
+        toiletPatches.add(university.getPatch(17,52));
+        toiletPatches.add(university.getPatch(17,54));
         ToiletMapper.draw(toiletPatches);
       
         List<Patch> sinkPatches = new ArrayList<>();
-        sinkPatches.add(university.getPatch(0,56));
-        sinkPatches.add(university.getPatch(0,58));
-        sinkPatches.add(university.getPatch(0,60));
-        sinkPatches.add(university.getPatch(9,56));
-        sinkPatches.add(university.getPatch(9,58));
-        sinkPatches.add(university.getPatch(9,60));
+        sinkPatches.add(university.getPatch(1,56));
+        sinkPatches.add(university.getPatch(1,58));
+        sinkPatches.add(university.getPatch(1,60));
+        sinkPatches.add(university.getPatch(10,56));
+        sinkPatches.add(university.getPatch(10,58));
+        sinkPatches.add(university.getPatch(10,60));
         SinkMapper.draw(sinkPatches);
 
         List<Patch> profTableRightPatches = new ArrayList<>();
