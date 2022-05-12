@@ -650,9 +650,8 @@ public class GroceryAgentMovement extends AgentMovement {
 
     public boolean chooseWaitPatch(){
         ArrayList<Patch> patchesToConsider = new ArrayList<>();
-        //TODO: Change according to available patchesToConsider for Bathrooms
-        for (int i = 1; i < 18; i++){
-            for (int j = 63; j < 65; j++){
+        for (int i = 46; i < 59; i++){
+            for (int j = 16; j < 18; j++){
                 patchesToConsider.add(grocery.getPatch(i, j));
             }
         }
