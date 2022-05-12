@@ -902,5 +902,12 @@ public class GroceryRoutePlan {
 
         return routePlan;
     }
+    public GroceryState addWaitingRoute(GroceryAgent agent){
+        ArrayList<GroceryAction> actions;
+        actions = new ArrayList<>();
+        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_WAIT_AREA));
+        actions.add(new GroceryAction(GroceryAction.Name.WAIT_FOR_VACANT,5,20));
+        return new GroceryState(GroceryState.Name.WAIT_INFRONT_OF_BATHROOM,this, agent, actions);
+    }
 
 }

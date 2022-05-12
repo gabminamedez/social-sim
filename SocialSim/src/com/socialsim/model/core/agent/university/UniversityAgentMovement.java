@@ -43,6 +43,7 @@ public class UniversityAgentMovement extends AgentMovement {
     private Amenity currentAmenity;
     private PatchField currentPatchField;
     private Patch goalPatch;
+    private Patch waitPatch;
     private Amenity.AmenityBlock goalAttractor;
     private Amenity goalAmenity;
     private PatchField goalPatchField;
@@ -76,6 +77,7 @@ public class UniversityAgentMovement extends AgentMovement {
     private boolean isSimultaneousInteractionAllowed;
     private int interactionDuration;
     private InteractionType interactionType;
+
 
     public enum InteractionType {
         NON_VERBAL, COOPERATIVE, EXCHANGE
@@ -270,6 +272,9 @@ public class UniversityAgentMovement extends AgentMovement {
     public Patch getGoalPatch() {
         return goalPatch;
     }
+    public Patch getWaitPatch() {
+        return waitPatch;
+    }
 
     public Amenity.AmenityBlock getGoalAttractor() {
         return goalAttractor;
@@ -405,6 +410,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
     public void resetGoal() {
         this.goalPatch = null;
+        this.waitPatch = null;
         this.goalAmenity = null;
         this.goalAttractor = null;
         this.goalPatchField = null;
@@ -457,7 +463,10 @@ public class UniversityAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Chair.class || goalAmenity.getClass() == Door.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == UniversityGate.class || goalAmenity.getClass() == StudyTable.class || goalAmenity.getClass() == EatTable.class || goalAmenity.getClass() == LabTable.class) {
+                if(getWaitPatch() != null){
+                    path.push(goalPatch);
+                }
+                else if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Chair.class || goalAmenity.getClass() == Door.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == UniversityGate.class || goalAmenity.getClass() == StudyTable.class || goalAmenity.getClass() == EatTable.class || goalAmenity.getClass() == LabTable.class) {
                     path.push(goalPatch);
                 }
                 double length = 0.0;
@@ -547,8 +556,82 @@ public class UniversityAgentMovement extends AgentMovement {
 
         return true;
     }
+    public boolean chooseWaitPatch(int classKey){
+        if (classKey == 0){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 26; i < 28; i++){
+                for (int j = 5; j < 17; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 1){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 26; i < 28; i++){
+                for (int j = 25; j < 41; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 2){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 32; i < 34; i++){
+                for (int j = 23; j < 35; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 3){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 32; i < 34; i++){
+                for (int j = 42; j < 54; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 4){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 32; i < 34; i++){
+                for (int j = 61; j < 73; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 5){
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 32; i < 34; i++){
+                for (int j = 80; j < 92; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
+        else if(classKey == 6){ // 6 for bathroom specifically
+            ArrayList<Patch> patchesToConsider = new ArrayList<>();
+            for (int i = 1; i < 18; i++){
+                for (int j = 63; j < 65; j++){
+                    patchesToConsider.add(university.getPatch(i, j));
+                }
+            }
+            this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+            return true;
+        }
 
-    public void chooseStaffroomGoal(Class<? extends Amenity> nextAmenityClass, int classKey) {
+        return false;
+    }
+    public boolean chooseStaffroomGoal(Class<? extends Amenity> nextAmenityClass) {
+        boolean isNotReserved = false;
         if (this.goalAmenity == null) {
             List<? extends Amenity> amenityListInFloor = this.university.getAmenityList(nextAmenityClass);
             Amenity chosenAmenity = null;
@@ -583,6 +666,7 @@ public class UniversityAgentMovement extends AgentMovement {
                     chosenAmenity = candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
                     candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
+                    isNotReserved = true;
                     break;
                 }
             }
@@ -590,9 +674,11 @@ public class UniversityAgentMovement extends AgentMovement {
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
         }
+        return isNotReserved;
     }
 
-    public void chooseClassroomGoal(Class<? extends Amenity> nextAmenityClass, int classKey) {
+    public boolean chooseClassroomGoal(Class<? extends Amenity> nextAmenityClass, int classKey) {
+        boolean allChairsReserved = true;
         if (this.goalAmenity == null) {
             List<? extends Amenity> amenityListInFloor = this.university.getAmenityList(nextAmenityClass);
             Amenity chosenAmenity = null;
@@ -627,6 +713,7 @@ public class UniversityAgentMovement extends AgentMovement {
                     chosenAmenity = candidateAttractor.getParent();
                     chosenAttractor = candidateAttractor;
                     candidateAttractor.getPatch().getAmenityBlock().setIsReserved(true);
+                    allChairsReserved = false;
                     break;
                 }
             }
@@ -634,6 +721,7 @@ public class UniversityAgentMovement extends AgentMovement {
             this.goalAmenity = chosenAmenity;
             this.goalAttractor = chosenAttractor;
         }
+        return allChairsReserved;
     }
 
     public boolean chooseBathroomGoal(Class<? extends Amenity> nextAmenityClass) {
@@ -699,6 +787,7 @@ public class UniversityAgentMovement extends AgentMovement {
         return true;
     }
 
+
     public void chooseStall() {
         if (this.goalAmenity == null) {
             List<StallField> stallFields = this.university.getStallFields();
@@ -750,19 +839,31 @@ public class UniversityAgentMovement extends AgentMovement {
         double distance;
 
         Amenity.AmenityBlock nearestAttractor = null;
-
-        for (Amenity.AmenityBlock attractor : goal.getAttractors()) {
-            distance = Coordinates.distance(this.position, attractor.getPatch().getPatchCenterCoordinates());
-            if (distance < minimumDistance) {
-                minimumDistance = distance;
-                nearestAttractor = attractor;
+        if(getWaitPatch() != null){
+            distance = Coordinates.distance(this.position,getWaitPatch().getPatchCenterCoordinates());
+            minimumDistance = distance;
+        }
+        else if (goal.getAttractors() != null){
+            for (Amenity.AmenityBlock attractor : goal.getAttractors()) {
+                distance = Coordinates.distance(this.position, attractor.getPatch().getPatchCenterCoordinates());
+                if (distance < minimumDistance) {
+                    minimumDistance = distance;
+                    nearestAttractor = attractor;
+                }
             }
         }
+
 
         assert nearestAttractor != null;
 
         if (minimumDistance < walkingDistance) {
-            return new Coordinates(nearestAttractor.getPatch().getPatchCenterCoordinates().getX(), nearestAttractor.getPatch().getPatchCenterCoordinates().getY());
+            if(getWaitPatch() != null){
+                return new Coordinates(getWaitPatch().getPatchCenterCoordinates().getX(), getWaitPatch().getPatchCenterCoordinates().getY());
+            }
+            else{
+                return new Coordinates(nearestAttractor.getPatch().getPatchCenterCoordinates().getX(), nearestAttractor.getPatch().getPatchCenterCoordinates().getY());
+            }
+
         }
         else {
             Coordinates futurePosition = this.getFuturePosition(this.position, heading, walkingDistance);
@@ -813,10 +914,18 @@ public class UniversityAgentMovement extends AgentMovement {
 
         final double distanceSlowdownStart = 5.0;
         final double speedDecreaseFactor = 0.5;
-
-        double distanceToGoal = Coordinates.distance(this.currentPatch, this.getGoalAmenity().getAttractors().get(0).getPatch());
-        if (distanceToGoal < distanceSlowdownStart && this.hasClearLineOfSight(this.position, this.goalAmenity.getAttractors().get(0).getPatch().getPatchCenterCoordinates(), true)) {
-            this.preferredWalkingDistance *= speedDecreaseFactor;
+        double distanceToGoal;
+        if(getWaitPatch() != null){
+            distanceToGoal = Coordinates.distance(this.currentPatch, getWaitPatch());
+            if (distanceToGoal < distanceSlowdownStart && this.hasClearLineOfSight(this.position, getWaitPatch().getPatchCenterCoordinates(), true)) {
+                this.preferredWalkingDistance *= speedDecreaseFactor;
+            }
+        }
+        else{
+            distanceToGoal = Coordinates.distance(this.currentPatch, this.getGoalAmenity().getAttractors().get(0).getPatch());
+            if (distanceToGoal < distanceSlowdownStart && this.hasClearLineOfSight(this.position, this.goalAmenity.getAttractors().get(0).getPatch().getPatchCenterCoordinates(), true)) {
+                this.preferredWalkingDistance *= speedDecreaseFactor;
+            }
         }
 
         if (this.isStuck || this.noNewPatchesSeenCounter > noNewPatchesSeenTicksThreshold) {
@@ -1224,13 +1333,15 @@ public class UniversityAgentMovement extends AgentMovement {
         if (this.currentPath == null || this.isStuck && this.noNewPatchesSeenCounter > recomputeThreshold) {
             AgentPath agentPath = null;
 
-            if (goalQueueingPatchField == null) {
+            if (goalQueueingPatchField == null && waitPatch == null) {
                 agentPath = computePath(this.currentPatch, this.goalAttractor.getPatch(), true, true);
             }
-            else {
-                agentPath = computePath(this.currentPatch, this.goalQueueingPatchField.getLastQueuePatch(), true, true);
+            else if (this.waitPatch != null){
+                agentPath = computePath(this.currentPatch,this.waitPatch , true, true);
             }
-
+            else{
+                agentPath = computePath(this.currentPatch,this.goalQueueingPatchField.getLastQueuePatch(), true, true);
+            }
             if (agentPath != null) {
                 this.currentPath = new AgentPath(agentPath);
                 wasPathJustGenerated = true;

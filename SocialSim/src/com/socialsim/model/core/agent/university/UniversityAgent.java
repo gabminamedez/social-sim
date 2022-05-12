@@ -195,7 +195,6 @@ public class UniversityAgent extends Agent {
         professorCount = 0;
         studentCount = 0;
         staffCount = 0;
-        UniversityRoutePlan.resetClassroomSizes();
     }
 
     @Override
