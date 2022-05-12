@@ -750,5 +750,12 @@ public class MallRoutePlan {
 
         return routePlan;
     }
+    public MallState addWaitingRoute(MallAgent agent){
+        ArrayList<MallAction> actions;
+        actions = new ArrayList<>();
+        actions.add(new MallAction(MallAction.Name.GO_TO_WAIT_AREA));
+        actions.add(new MallAction(MallAction.Name.WAIT_FOR_VACANT,5,20));
+        return new MallState(MallState.Name.WAIT_INFRONT_OF_BATHROOM,this, agent, actions);
+    }
 
 }

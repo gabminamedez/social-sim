@@ -623,5 +623,12 @@ public class OfficeRoutePlan {
 
         return chance;
     }
+    public OfficeState addWaitingRoute(OfficeAgent agent){
+        ArrayList<OfficeAction> actions;
+        actions = new ArrayList<>();
+        actions.add(new OfficeAction(OfficeAction.Name.GO_TO_WAIT_AREA));
+        actions.add(new OfficeAction(OfficeAction.Name.WAIT_FOR_VACANT,5,20));
+        return new OfficeState(OfficeState.Name.WAIT_INFRONT_OF_BATHROOM,this, agent, actions);
+    }
 
 }
