@@ -1,7 +1,5 @@
 package com.socialsim.model.core.agent.grocery;
 
-import com.socialsim.model.core.agent.university.UniversityAction;
-import com.socialsim.model.core.agent.university.UniversityState;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.simulator.Simulator;
@@ -809,6 +807,13 @@ public class GroceryRoutePlan {
         }
 
         return routePlan;
+    }
+    public GroceryState addWaitingRoute(GroceryAgent agent){
+        ArrayList<GroceryAction> actions;
+        actions = new ArrayList<>();
+        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_WAIT_AREA));
+        actions.add(new GroceryAction(GroceryAction.Name.WAIT_FOR_VACANT,5,20));
+        return new GroceryState(GroceryState.Name.WAIT_INFRONT_OF_BATHROOM,this, agent, actions);
     }
 
 }

@@ -18,4 +18,6 @@ public abstract class Simulator {
         return RANDOM_NUMBER_GENERATOR.nextInt(100);
     }
 
+    public static int rollIntIN(int num) {return RANDOM_NUMBER_GENERATOR.nextInt(num);}
+
 }
