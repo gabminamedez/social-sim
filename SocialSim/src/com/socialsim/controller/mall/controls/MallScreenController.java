@@ -162,7 +162,7 @@ public class MallScreenController extends ScreenController {
         Main.mallSimulator.getMall().getWalls().add(Wall.wallFactory.create(wallPatches, 1));
 
         List<Patch> fBathroomPatches = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 1; i < 8; i++) {
             for (int j = 10; j < 30; j++) {
                 fBathroomPatches.add(mall.getPatch(i, j));
             }
@@ -170,7 +170,7 @@ public class MallScreenController extends ScreenController {
         Main.mallSimulator.getMall().getBathrooms().add(Bathroom.bathroomFactory.create(fBathroomPatches, 1));
 
         List<Patch> mBathroomPatches = new ArrayList<>();
-        for (int i = 53; i < 60; i++) {
+        for (int i = 52; i < 59; i++) {
             for (int j = 10; j < 30; j++) {
                 mBathroomPatches.add(mall.getPatch(i, j));
             }
@@ -274,7 +274,7 @@ public class MallScreenController extends ScreenController {
         Main.mallSimulator.getMall().getStores().add(Store.storeFactory.create(store10Patches, 10));
 
         List<Patch> fBathroomPatches2 = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 1; i < 15; i++) {
             for (int j = 109; j < 119; j++) {
                 fBathroomPatches2.add(mall.getPatch(i, j));
             }
@@ -282,7 +282,7 @@ public class MallScreenController extends ScreenController {
         Main.mallSimulator.getMall().getBathrooms().add(Bathroom.bathroomFactory.create(fBathroomPatches2, 1));
 
         List<Patch> mBathroomPatches2 = new ArrayList<>();
-        for (int i = 45; i < 60; i++) {
+        for (int i = 45; i < 59; i++) {
             for (int j = 108; j < 118; j++) {
                 mBathroomPatches2.add(mall.getPatch(i, j));
             }
@@ -529,22 +529,22 @@ public class MallScreenController extends ScreenController {
         BenchMapper.draw(benchRightPatches, "RIGHT");
 
         List<Patch> toiletPatches = new ArrayList<>();
-        toiletPatches.add(mall.getPatch(0, 12));
-        toiletPatches.add(mall.getPatch(0, 14));
-        toiletPatches.add(mall.getPatch(0, 16));
-        toiletPatches.add(mall.getPatch(0, 18));
-        toiletPatches.add(mall.getPatch(0, 21));
-        toiletPatches.add(mall.getPatch(0, 23));
-        toiletPatches.add(mall.getPatch(0, 25));
-        toiletPatches.add(mall.getPatch(0, 27));
-        toiletPatches.add(mall.getPatch(59, 12));
-        toiletPatches.add(mall.getPatch(59, 14));
-        toiletPatches.add(mall.getPatch(59, 16));
-        toiletPatches.add(mall.getPatch(59, 18));
-        toiletPatches.add(mall.getPatch(59, 21));
-        toiletPatches.add(mall.getPatch(59, 23));
-        toiletPatches.add(mall.getPatch(59, 25));
-        toiletPatches.add(mall.getPatch(59, 27));
+        toiletPatches.add(mall.getPatch(1, 12));
+        toiletPatches.add(mall.getPatch(1, 14));
+        toiletPatches.add(mall.getPatch(1, 16));
+        toiletPatches.add(mall.getPatch(1, 18));
+        toiletPatches.add(mall.getPatch(1, 21));
+        toiletPatches.add(mall.getPatch(1, 23));
+        toiletPatches.add(mall.getPatch(1, 25));
+        toiletPatches.add(mall.getPatch(1, 27));
+        toiletPatches.add(mall.getPatch(58, 12));
+        toiletPatches.add(mall.getPatch(58, 14));
+        toiletPatches.add(mall.getPatch(58, 16));
+        toiletPatches.add(mall.getPatch(58, 18));
+        toiletPatches.add(mall.getPatch(58, 21));
+        toiletPatches.add(mall.getPatch(58, 23));
+        toiletPatches.add(mall.getPatch(58, 25));
+        toiletPatches.add(mall.getPatch(58, 27));
         toiletPatches.add(mall.getPatch(2, 109));
         toiletPatches.add(mall.getPatch(4, 109));
         toiletPatches.add(mall.getPatch(6, 109));
@@ -560,22 +560,22 @@ public class MallScreenController extends ScreenController {
         ToiletMapper.draw(toiletPatches);
 
         List<Patch> sinkPatches = new ArrayList<>();
-        sinkPatches.add(mall.getPatch(53, 12));
-        sinkPatches.add(mall.getPatch(53, 14));
-        sinkPatches.add(mall.getPatch(53, 16));
-        sinkPatches.add(mall.getPatch(53, 18));
-        sinkPatches.add(mall.getPatch(53, 21));
-        sinkPatches.add(mall.getPatch(53, 23));
-        sinkPatches.add(mall.getPatch(53, 25));
-        sinkPatches.add(mall.getPatch(53, 27));
-        sinkPatches.add(mall.getPatch(6, 12));
-        sinkPatches.add(mall.getPatch(6, 14));
-        sinkPatches.add(mall.getPatch(6, 16));
-        sinkPatches.add(mall.getPatch(6, 18));
-        sinkPatches.add(mall.getPatch(6, 21));
-        sinkPatches.add(mall.getPatch(6, 23));
-        sinkPatches.add(mall.getPatch(6, 25));
-        sinkPatches.add(mall.getPatch(6, 27));
+        sinkPatches.add(mall.getPatch(52, 12));
+        sinkPatches.add(mall.getPatch(52, 14));
+        sinkPatches.add(mall.getPatch(52, 16));
+        sinkPatches.add(mall.getPatch(52, 18));
+        sinkPatches.add(mall.getPatch(52, 21));
+        sinkPatches.add(mall.getPatch(52, 23));
+        sinkPatches.add(mall.getPatch(52, 25));
+        sinkPatches.add(mall.getPatch(52, 27));
+        sinkPatches.add(mall.getPatch(7, 12));
+        sinkPatches.add(mall.getPatch(7, 14));
+        sinkPatches.add(mall.getPatch(7, 16));
+        sinkPatches.add(mall.getPatch(7, 18));
+        sinkPatches.add(mall.getPatch(7, 21));
+        sinkPatches.add(mall.getPatch(7, 23));
+        sinkPatches.add(mall.getPatch(7, 25));
+        sinkPatches.add(mall.getPatch(7, 27));
         sinkPatches.add(mall.getPatch(2, 118));
         sinkPatches.add(mall.getPatch(4, 118));
         sinkPatches.add(mall.getPatch(6, 118));

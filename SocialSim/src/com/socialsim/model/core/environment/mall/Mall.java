@@ -379,6 +379,9 @@ public class Mall extends Environment {
         else if (amenityClass == Sink.class) {
             return this.getSinks();
         }
+        else if (amenityClass == Concierge.class) {
+            return this.getConcierges();
+        }
         else {
             return null;
         }
@@ -464,11 +467,6 @@ public class Mall extends Environment {
 
         MallAgent concierger = MallAgent.MallAgentFactory.create(MallAgent.Type.CONCIERGER, MallAgent.Persona.CONCIERGER, null, null, false, true, 0);
         this.getAgents().add(concierger);
-
-        MallAgent janitor1 = MallAgent.MallAgentFactory.create(MallAgent.Type.JANITOR, MallAgent.Persona.JANITOR, null, null, false, true, 0);
-        this.getAgents().add(janitor1);
-        MallAgent janitor2 = MallAgent.MallAgentFactory.create(MallAgent.Type.JANITOR, MallAgent.Persona.JANITOR, null, null, false, true, 0);
-        this.getAgents().add(janitor2);
 
         int ctr = 0;
 
@@ -988,11 +986,13 @@ public class Mall extends Environment {
                             case STAFF_KIOSK_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_RESTO_SERVE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_RESTO_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 70, 30)));
+                            case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 80, 20)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case STAFF_STORE_CASHIER -> {
@@ -1033,6 +1033,8 @@ public class Mall extends Environment {
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case STAFF_RESTO -> {
@@ -1066,13 +1068,15 @@ public class Mall extends Environment {
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_KIOSK_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_KIOSK_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case STAFF_RESTO_SERVE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 70, 30)));
+                            case STAFF_RESTO_SERVE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 80, 20)));
                             case STAFF_RESTO_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case GUARD -> {
@@ -1113,6 +1117,8 @@ public class Mall extends Environment {
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case STAFF_KIOSK -> {
@@ -1153,35 +1159,37 @@ public class Mall extends Environment {
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case FAMILY -> {
                         switch(action){
-                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
-                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case FIND_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
-                            case VIEW_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 30, 60)));
-                            case FIND_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
-                            case SIT_ON_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
-                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
+                            case FIND_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case VIEW_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 40, 60)));
+                            case FIND_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(30, 5, 65)));
+                            case SIT_ON_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(30, 0, 70)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
                             case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
-                            case GO_TO_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
-                            case CHECK_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
+                            case GO_TO_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
+                            case CHECK_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
                             case ASK_STAFF_SALES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECKOUT_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
-                            case QUEUE_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
+                            case GO_TO_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
+                            case QUEUE_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECKOUT_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_RESTAURANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
+                            case GO_TO_RESTAURANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
                             case ASK_STAFF_RESTO -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case RESTAURANT_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
-                            case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
-                            case DINING_AREA_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
-                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
+                            case RESTAURANT_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DINING_AREA_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_KIOSK_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -1192,36 +1200,38 @@ public class Mall extends Environment {
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
-                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
                         }
                     }
                     case FRIENDS -> {
                         switch(action){
-                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
-                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case FIND_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
-                            case VIEW_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 30, 60)));
-                            case FIND_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
-                            case SIT_ON_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 0, 90)));
-                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
+                            case FIND_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case VIEW_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 40, 60)));
+                            case FIND_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(30, 5, 65)));
+                            case SIT_ON_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(30, 0, 70)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
                             case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(30, 5, 65)));
-                            case GO_TO_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
-                            case CHECK_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case GO_TO_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
+                            case CHECK_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
                             case ASK_STAFF_SALES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECKOUT_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
-                            case QUEUE_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case GO_TO_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
+                            case QUEUE_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECKOUT_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_RESTAURANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case GO_TO_RESTAURANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
                             case ASK_STAFF_RESTO -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case RESTAURANT_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
-                            case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case DINING_AREA_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
-                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_KIOSK_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -1232,36 +1242,38 @@ public class Mall extends Environment {
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
-                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
                         }
                     }
                     case ALONE -> {
                         switch(action){
-                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
-                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case FIND_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
-                            case VIEW_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 30, 30)));
-                            case FIND_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
-                            case SIT_ON_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 0, 60)));
-                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
+                            case FIND_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 30, 10)));
+                            case VIEW_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 40, 0)));
+                            case FIND_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 30, 10)));
+                            case SIT_ON_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 5, 15)));
                             case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 5, 45)));
-                            case GO_TO_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
-                            case CHECK_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(60, 20, 20)));
+                            case GO_TO_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 5, 15)));
+                            case CHECK_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 5, 15)));
                             case ASK_STAFF_SALES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECKOUT_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
-                            case QUEUE_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
+                            case GO_TO_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 5, 15)));
+                            case QUEUE_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECKOUT_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_RESTAURANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
+                            case GO_TO_RESTAURANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 5, 15)));
                             case ASK_STAFF_RESTO -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case RESTAURANT_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 0, 60)));
-                            case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
-                            case DINING_AREA_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 0, 60)));
-                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(40, 10, 50)));
+                            case RESTAURANT_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DINING_AREA_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_KIOSK_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -1271,37 +1283,39 @@ public class Mall extends Environment {
                             case STAFF_STORE_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
-                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 5, 15)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 5, 15)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 5, 15)));
                         }
                     }
                     case COUPLE -> {
                         switch(action){
-                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(30, 0, 70)));
-                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(25, 0, 75)));
+                            case GOING_TO_SECURITY_QUEUE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_THROUGH_SCANNER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_GUARD -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case FIND_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
-                            case VIEW_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 30, 50)));
-                            case FIND_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
-                            case SIT_ON_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
-                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case FIND_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case VIEW_DIRECTORY -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 40, 60)));
+                            case FIND_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 5, 45)));
+                            case SIT_ON_BENCH -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case GO_TO_BATHROOM -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(10, 5, 85)));
                             case RELIEVE_IN_CUBICLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(30, 5, 65)));
-                            case GO_TO_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
-                            case CHECK_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case WASH_IN_SINK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 20, 10)));
+                            case GO_TO_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
+                            case CHECK_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
                             case ASK_STAFF_SALES -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case GO_TO_AISLE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECKOUT_STORE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case TALK_TO_CASHIER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
-                            case QUEUE_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case GO_TO_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
+                            case QUEUE_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case CHECKOUT_KIOSK -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case GO_TO_RESTAURANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
+                            case GO_TO_RESTAURANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(70, 5, 25)));
                             case ASK_STAFF_RESTO -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case RESTAURANT_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
-                            case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 5, 75)));
-                            case DINING_AREA_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
-                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(20, 0, 80)));
+                            case RESTAURANT_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case GO_TO_DINING_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case DINING_AREA_STAY_PUT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(50, 0, 50)));
+                            case LEAVE_BUILDING -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GUARD_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GREET_PERSON -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_KIOSK_STATION -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
@@ -1312,7 +1326,9 @@ public class Mall extends Environment {
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
-                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 50, 50)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 5, 15)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(80, 5, 15)));
                         }
                     }
                     case CONCIERGER -> {
@@ -1352,7 +1368,9 @@ public class Mall extends Environment {
                             case STAFF_SALES_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
-                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 20, 80)));
+                            case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                     case JANITOR -> {
@@ -1393,6 +1411,8 @@ public class Mall extends Environment {
                             case STAFF_CASHIER_ANSWER -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case GO_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                             case ASK_CONCIERGE -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case GO_TO_WAIT_AREA -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
+                            case WAIT_FOR_VACANT -> interactionChances.add(new CopyOnWriteArrayList<>(List.of(0, 0, 0)));
                         }
                     }
                 }

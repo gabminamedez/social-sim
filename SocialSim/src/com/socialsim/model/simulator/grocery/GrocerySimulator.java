@@ -9,8 +9,7 @@ import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Ga
 import com.socialsim.model.core.environment.generic.position.Coordinates;
 import com.socialsim.model.core.environment.grocery.Grocery;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
-import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Sink;
-import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Toilet;
+import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.SimulationTime;
 import com.socialsim.model.simulator.Simulator;
 import java.io.PrintWriter;
@@ -268,17 +267,17 @@ public class GrocerySimulator extends Simulator {
         GroceryAgent.agentCount++;
 
         GroceryAgent service1 = grocery.getAgents().get(18);
-        service1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,4), service1, null, 1.27, grocery.getPatch(44,4).getPatchCenterCoordinates(), -1));
+        service1.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(52,23), service1, null, 1.27, grocery.getPatch(52,23).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(service1.getAgentMovement().getCurrentPatch());
         GroceryAgent.customerServiceCount++;
         GroceryAgent.agentCount++;
         GroceryAgent service2 = grocery.getAgents().get(19);
-        service2.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,8), service2, null, 1.27, grocery.getPatch(44,8).getPatchCenterCoordinates(), -1));
+        service2.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(52,27), service2, null, 1.27, grocery.getPatch(52,27).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(service2.getAgentMovement().getCurrentPatch());
         GroceryAgent.customerServiceCount++;
         GroceryAgent.agentCount++;
         GroceryAgent service3 = grocery.getAgents().get(20);
-        service3.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(44,12), service3, null, 1.27, grocery.getPatch(44,12).getPatchCenterCoordinates(), -1));
+        service3.setAgentMovement(new GroceryAgentMovement(grocery.getPatch(52,31), service3, null, 1.27, grocery.getPatch(52,31).getPatchCenterCoordinates(), -1));
         grocery.getAgentPatchSet().add(service3.getAgentMovement().getCurrentPatch());
         GroceryAgent.customerServiceCount++;
         GroceryAgent.agentCount++;
@@ -964,6 +963,7 @@ public class GrocerySimulator extends Simulator {
                         }
                         else if (action.getName() == GroceryAction.Name.EATING_FOOD) {
                             if (agentMovement.getGoalAmenity() != null) {
+                                agentMovement.setSimultaneousInteractionAllowed(true);
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
                                     agentMovement.setNextState(agentMovement.getStateIndex());
@@ -971,6 +971,7 @@ public class GrocerySimulator extends Simulator {
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                     agentMovement.resetGoal();
+                                    agentMovement.setSimultaneousInteractionAllowed(false);
                                 }
                             }
                         }
@@ -1039,7 +1040,6 @@ public class GrocerySimulator extends Simulator {
                     }
                     else if (state.getName() == GroceryState.Name.NEEDS_BATHROOM) {
                         if (action.getName() == GroceryAction.Name.GO_TO_BATHROOM) {
-                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (!agentMovement.chooseBathroomGoal(Toilet.class)) {
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() - 1, agentMovement.getRoutePlan().addWaitingRoute(agent));
@@ -1101,57 +1101,18 @@ public class GrocerySimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == GroceryAction.Name.RELIEVE_IN_CUBICLE) {
-                            agentMovement.setSimultaneousInteractionAllowed(false);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.setDuration(agent.getAgentMovement().getDuration());
-                                if(agentMovement.getGoalAttractor()!=null){
-                                    agentMovement.getGoalAttractor().setIsReserved(false);
-                                }
                                 agentMovement.resetGoal();
                             }
                         }
                         else if (action.getName() == GroceryAction.Name.WASH_IN_SINK) {
-                            agentMovement.setSimultaneousInteractionAllowed(true);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (!agentMovement.chooseBathroomGoal(Sink.class)) {
-//                                    if (agentMovement.getRoutePlan().isFromStudying()) {
-//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
-//                                        agentMovement.setNextState(agentMovement.getReturnIndex());
-//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
-//                                        agentMovement.setActionIndex(0);
-//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                        agentMovement.resetGoal();
-//                                        agentMovement.getRoutePlan().setFromStudying(false);
-//                                    }
-//                                    else if (agentMovement.getRoutePlan().isFromClass()) {
-//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
-//                                        agentMovement.setNextState(agentMovement.getReturnIndex());
-//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
-//                                        agentMovement.setActionIndex(0);
-//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                        agentMovement.resetGoal();
-//                                        agentMovement.getRoutePlan().setFromClass(false);
-//                                    }
-//                                    else if (agentMovement.getRoutePlan().isFromLunch()) {
-//                                        agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
-//                                        agentMovement.setNextState(agentMovement.getReturnIndex());
-//                                        agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
-//                                        agentMovement.setActionIndex(0);
-//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                        agentMovement.resetGoal();
-//                                        agentMovement.getRoutePlan().setFromLunch(false);
-//                                    }
-//                                    else {
-//                                        agentMovement.setNextState(agentMovement.getStateIndex());
-//                                        agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-//                                        agentMovement.setActionIndex(0);
-//                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                        agentMovement.resetGoal();
-//                                    }
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
@@ -1174,59 +1135,11 @@ public class GrocerySimulator extends Simulator {
                                     agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                                     agentMovement.setDuration(agentMovement.getDuration() - 1);
                                     if (agentMovement.getDuration() <= 0) {
-//                                        if (agentMovement.getRoutePlan().isFromStudying()) {
-//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
-//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
-//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
-//                                            agentMovement.setActionIndex(0);
-//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                            if(agentMovement.getGoalAttractor()!=null){
-//                                                agentMovement.getGoalAttractor().setIsReserved(false);
-//                                            }
-//                                            agentMovement.resetGoal();
-//                                            agentMovement.getRoutePlan().setFromStudying(false);
-//                                        }
-//                                        else if (agentMovement.getRoutePlan().isFromClass()) {
-//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
-//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
-//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
-//                                            agentMovement.setActionIndex(0);
-//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                            if (agentMovement.getGoalAttractor()!=null) {
-//                                                agentMovement.getGoalAttractor().setIsReserved(false);
-//                                            }
-//                                            agentMovement.resetGoal();
-//                                            agentMovement.getRoutePlan().setFromClass(false);
-//                                        }
-//                                        else if (agentMovement.getRoutePlan().isFromLunch()) {
-//                                            agentMovement.getRoutePlan().getCurrentRoutePlan().remove(agentMovement.getStateIndex());
-//                                            agentMovement.setNextState(agentMovement.getReturnIndex());
-//                                            agentMovement.setStateIndex(agentMovement.getReturnIndex() + 1);
-//                                            agentMovement.setActionIndex(0);
-//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                            if (agentMovement.getGoalAttractor()!=null) {
-//                                                agentMovement.getGoalAttractor().setIsReserved(false);
-//                                            }
-//                                            agentMovement.resetGoal();
-//                                            agentMovement.getRoutePlan().setFromLunch(false);
-//                                        }
-//                                        else {
-//                                            agentMovement.setNextState(agentMovement.getStateIndex());
-//                                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-//                                            agentMovement.setActionIndex(0);
-//                                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                            if(agentMovement.getGoalAttractor()!=null){
-//                                                agentMovement.getGoalAttractor().setIsReserved(false);
-//                                            }
-//                                            agentMovement.resetGoal();
-//                                        }
                                         agentMovement.setNextState(agentMovement.getStateIndex());
                                         agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                         agentMovement.setActionIndex(0);
                                         agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                        if(agentMovement.getGoalAttractor()!=null){
-                                            agentMovement.getGoalAttractor().setIsReserved(false);
-                                        }
+                                        agentMovement.getGoalAttractor().setIsReserved(false);
                                         agentMovement.resetGoal();
                                     }
                                 }

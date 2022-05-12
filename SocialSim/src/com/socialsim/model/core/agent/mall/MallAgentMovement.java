@@ -18,6 +18,7 @@ import com.socialsim.model.core.environment.mall.patchfield.*;
 import com.socialsim.model.core.environment.mall.patchobject.passable.gate.MallGate;
 import com.socialsim.model.core.environment.mall.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
+import com.socialsim.model.simulator.grocery.GrocerySimulator;
 import com.socialsim.model.simulator.mall.MallSimulator;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,6 +51,7 @@ public class MallAgentMovement extends AgentMovement {
     private Amenity currentAmenity;
     private PatchField currentPatchField;
     private Patch goalPatch;
+    private Patch waitPatch;
     private Amenity.AmenityBlock goalAttractor;
     private Amenity goalAmenity;
     private PatchField goalPatchField;
@@ -201,6 +203,9 @@ public class MallAgentMovement extends AgentMovement {
 
     public Mall getMall() {
         return mall;
+    }
+    public Patch getWaitPatch() {
+        return waitPatch;
     }
 
     public double getCurrentWalkingDistance() {
@@ -477,6 +482,7 @@ public class MallAgentMovement extends AgentMovement {
 
     public void resetGoal() {
         this.goalPatch = null;
+        this.waitPatch = null;
         this.goalAmenity = null;
         this.goalAttractor = null;
         this.goalPatchField = null;
@@ -529,7 +535,10 @@ public class MallAgentMovement extends AgentMovement {
             patchToExplore = patchWithMinimumDistance;
             if (patchToExplore.equals(goalPatch)) {
                 Stack<Patch> path = new Stack<>();
-                if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == MallGate.class || goalAmenity.getClass() == Table.class) {
+                if(getWaitPatch() != null){
+                    path.push(goalPatch);
+                }
+                else if(goalAmenity.getClass() == Bench.class || goalAmenity.getClass() == Toilet.class || goalAmenity.getClass() == MallGate.class || goalAmenity.getClass() == Table.class) {
                     path.push(goalPatch);
                 }
                 double length = 0.0;
@@ -566,6 +575,36 @@ public class MallAgentMovement extends AgentMovement {
         }
 
         return null;
+    }
+
+    public boolean chooseWaitPatch(){
+        ArrayList<Patch> patchesToConsider = new ArrayList<>();
+        if (this.getParent().getGender() == MallAgent.Gender.MALE){
+            for (int i = 52; i < 59; i++) {
+                for (int j = 8; j < 10; j++) {
+                    patchesToConsider.add(mall.getPatch(i, j));
+                }
+            }
+            for (int i = 45; i < 59; i++) {
+                for (int j = 106; j < 108; j++) {
+                    patchesToConsider.add(mall.getPatch(i, j));
+                }
+            }
+        }
+        else{
+            for (int i = 1; i < 8; i++) {
+                for (int j = 8; j < 10; j++) {
+                    patchesToConsider.add(mall.getPatch(i, j));
+                }
+            }
+            for (int i = 1; i < 15; i++) {
+                for (int j = 119; j < 121; j++) {
+                    patchesToConsider.add(mall.getPatch(i, j));
+                }
+            }
+        }
+        this.waitPatch = patchesToConsider.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(patchesToConsider.size()));
+        return true;
     }
 
     public boolean chooseGoal(Class<? extends Amenity> nextAmenityClass) {
@@ -962,19 +1001,29 @@ public class MallAgentMovement extends AgentMovement {
         double distance;
 
         Amenity.AmenityBlock nearestAttractor = null;
-
-        for (Amenity.AmenityBlock attractor : goal.getAttractors()) {
-            distance = Coordinates.distance(this.position, attractor.getPatch().getPatchCenterCoordinates());
-            if (distance < minimumDistance) {
-                minimumDistance = distance;
-                nearestAttractor = attractor;
+        if(getWaitPatch() != null){
+            distance = Coordinates.distance(this.position,getWaitPatch().getPatchCenterCoordinates());
+            minimumDistance = distance;
+        }
+        else {
+            for (Amenity.AmenityBlock attractor : goal.getAttractors()) {
+                distance = Coordinates.distance(this.position, attractor.getPatch().getPatchCenterCoordinates());
+                if (distance < minimumDistance) {
+                    minimumDistance = distance;
+                    nearestAttractor = attractor;
+                }
             }
         }
 
         assert nearestAttractor != null;
 
         if (minimumDistance < walkingDistance) {
-            return new Coordinates(nearestAttractor.getPatch().getPatchCenterCoordinates().getX(), nearestAttractor.getPatch().getPatchCenterCoordinates().getY());
+            if(getWaitPatch() != null){
+                return new Coordinates(getWaitPatch().getPatchCenterCoordinates().getX(), getWaitPatch().getPatchCenterCoordinates().getY());
+            }
+            else{
+                return new Coordinates(nearestAttractor.getPatch().getPatchCenterCoordinates().getX(), nearestAttractor.getPatch().getPatchCenterCoordinates().getY());
+            }
         }
         else {
             Coordinates futurePosition = this.getFuturePosition(this.position, heading, walkingDistance);
@@ -1026,9 +1075,18 @@ public class MallAgentMovement extends AgentMovement {
         final double distanceSlowdownStart = 5.0;
         final double speedDecreaseFactor = 0.5;
 
-        double distanceToGoal = Coordinates.distance(this.currentPatch, this.getGoalAmenity().getAttractors().get(0).getPatch());
-        if (distanceToGoal < distanceSlowdownStart && this.hasClearLineOfSight(this.position, this.goalAmenity.getAttractors().get(0).getPatch().getPatchCenterCoordinates(), true)) {
-            this.preferredWalkingDistance *= speedDecreaseFactor;
+        double distanceToGoal;
+        if(getWaitPatch() != null){
+            distanceToGoal = Coordinates.distance(this.currentPatch, getWaitPatch());
+            if (distanceToGoal < distanceSlowdownStart && this.hasClearLineOfSight(this.position, getWaitPatch().getPatchCenterCoordinates(), true)) {
+                this.preferredWalkingDistance *= speedDecreaseFactor;
+            }
+        }
+        else{
+            distanceToGoal = Coordinates.distance(this.currentPatch, this.getGoalAmenity().getAttractors().get(0).getPatch());
+            if (distanceToGoal < distanceSlowdownStart && this.hasClearLineOfSight(this.position, this.goalAmenity.getAttractors().get(0).getPatch().getPatchCenterCoordinates(), true)) {
+                this.preferredWalkingDistance *= speedDecreaseFactor;
+            }
         }
 
         if (this.isStuck || this.noNewPatchesSeenCounter > noNewPatchesSeenTicksThreshold) {
@@ -1417,6 +1475,7 @@ public class MallAgentMovement extends AgentMovement {
             SortedSet<Patch> currentPatchSet = this.getMall().getAgentPatchSet();
             if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
                 currentPatchSet.remove(this.currentPatch);
+                MallSimulator.currentPatronCount--;
             }
         }
     }
@@ -1441,8 +1500,11 @@ public class MallAgentMovement extends AgentMovement {
         if (this.currentPath == null || this.isStuck && this.noNewPatchesSeenCounter > recomputeThreshold) {
             AgentPath agentPath = null;
 
-            if (goalQueueingPatchField == null) {
+            if (goalQueueingPatchField == null && waitPatch == null) {
                 agentPath = computePath(this.currentPatch, this.goalAttractor.getPatch(), true, true);
+            }
+            else if (this.waitPatch != null){
+                agentPath = computePath(this.currentPatch,this.waitPatch , true, true);
             }
             else {
                 agentPath = computePath(this.currentPatch, this.goalQueueingPatchField.getLastQueuePatch(), true, true);
@@ -1753,7 +1815,6 @@ public class MallAgentMovement extends AgentMovement {
                     case STAFF_KIOSK -> MallSimulator.currentPatronStaffKioskCount++;
                     case GUARD -> MallSimulator.currentPatronGuardCount++;
                     case PATRON -> MallSimulator.currentPatronPatronCount++;
-
                     case CONCIERGER -> MallSimulator.currentPatronConciergerCount++;
                     case JANITOR -> MallSimulator.currentPatronJanitorCount++;
                 }

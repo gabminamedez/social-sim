@@ -10,6 +10,7 @@ public class GroceryRoutePlan {
 
     private ArrayList<GroceryState> routePlan;
     private GroceryState currentState;
+    private int MAX_BATHROOM = 2;
     public int MAX_AISLE_HELP = 1;
 
     private static final int MAX_BUTCHER_STATION = 10;
@@ -24,6 +25,7 @@ public class GroceryRoutePlan {
     public static final int DUO_FAMILY_ALL_AISLE_CHANCE = 50, DUO_FAMILY_CHANCE_SERVICE = 20, DUO_FAMILY_CHANCE_FOOD = 45, DUO_FAMILY_CHANCE_EAT_TABLE = 50;
     public static final int AISLE_HELP_CHANCE_STTP = 2, AISLE_HELP_CHANCE_MODERATE = 6, AISLE_HELP_CHANCE_COMPLETE = 10, AISLE_HELP_CHANCE_HELP = 10, AISLE_HELP_CHANCE_DUO = 8;
     public static final int CHANCE_BAGGER_INTERACT = 30, CHANCE_GUARD_INTERACT = 50, CHANCE_GUARD_VERBAL = 10;
+    public static final int BATHROOM_CHANCE = 10;
 
     public GroceryRoutePlan(GroceryAgent agent, GroceryAgent leaderAgent, Grocery grocery, Patch spawnPatch) {
         this.routePlan = new ArrayList<>();
@@ -40,11 +42,6 @@ public class GroceryRoutePlan {
             routePlan.add(new GroceryState(GroceryState.Name.GUARD_EXIT, this, agent, actions));
         }
         else if (agent.getPersona() == GroceryAgent.Persona.STAFF_AISLE){
-            actions = new ArrayList<>();
-            actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
-            actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
-            actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, 12));
-            routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM, this, agent, actions));
             actions = new ArrayList<>();
             actions.add(new GroceryAction(GroceryAction.Name.STAFF_AISLE_ORGANIZE, 60, 120));
             routePlan.add(new GroceryState(GroceryState.Name.STAFF_AISLE, this, agent, actions));
@@ -87,6 +84,17 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE, 24, 48));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SERVICE, this, agent, actions));
                 }
+
+                int y = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                if (y < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                    actions = new ArrayList<>();
+                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
+                    actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                    actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, (GroceryAgent) null, 12));
+                    routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM,this, agent, actions));
+                    MAX_BATHROOM -= 1;
+                }
+
                 x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                 if (x < STTP_CHANCE_FOOD) {
                     actions = new ArrayList<>();
@@ -117,6 +125,17 @@ public class GroceryRoutePlan {
                     actions.add(new GroceryAction(GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE, 24, 48));
                     routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SERVICE, this, agent, actions));
                 }
+
+                int y = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                if (y < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                    actions = new ArrayList<>();
+                    actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
+                    actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                    actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, (GroceryAgent) null, 12));
+                    routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM,this, agent, actions));
+                    MAX_BATHROOM -= 1;
+                }
+
                 x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                 if (x < MODERATE_CHANCE_FOOD) {
                     actions = new ArrayList<>();
@@ -148,6 +167,17 @@ public class GroceryRoutePlan {
                         actions.add(new GroceryAction(GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE, 24, 48));
                         routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SERVICE, this, agent, actions));
                     }
+
+                    int y = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                    if (y < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                        actions = new ArrayList<>();
+                        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
+                        actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                        actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, (GroceryAgent) null, 12));
+                        routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM,this, agent, actions));
+                        MAX_BATHROOM -= 1;
+                    }
+
                     x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                     if (x < COMPLETE_FAMILY_CHANCE_FOOD) {
                         actions = new ArrayList<>();
@@ -183,6 +213,17 @@ public class GroceryRoutePlan {
                         actions.add(new GroceryAction(GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE, 24, 48));
                         routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SERVICE, this, agent, actions));
                     }
+
+                    int y = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                    if (y < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                        actions = new ArrayList<>();
+                        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
+                        actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                        actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, (GroceryAgent) null, 12));
+                        routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM,this, agent, actions));
+                        MAX_BATHROOM -= 1;
+                    }
+
                     x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                     if (x < HELP_FAMILY_CHANCE_FOOD) {
                         actions = new ArrayList<>();
@@ -218,6 +259,17 @@ public class GroceryRoutePlan {
                         actions.add(new GroceryAction(GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE, 24, 48));
                         routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SERVICE, this, agent, actions));
                     }
+
+                    int y = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+                    if (y < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                        actions = new ArrayList<>();
+                        actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
+                        actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                        actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, (GroceryAgent) null, 12));
+                        routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM,this, agent, actions));
+                        MAX_BATHROOM -= 1;
+                    }
+
                     x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
                     if (x < DUO_FAMILY_CHANCE_FOOD) {
                         actions = new ArrayList<>();
@@ -280,6 +332,17 @@ public class GroceryRoutePlan {
         actions.add(new GroceryAction(GroceryAction.Name.GOING_TO_SECURITY_QUEUE));
         actions.add(new GroceryAction(GroceryAction.Name.GO_THROUGH_SCANNER, (GroceryAgent) null, 2));
         routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SECURITY, this, agent, actions));
+
+        int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+        if (x < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+            actions = new ArrayList<>();
+            actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
+            actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE,12,36));
+            actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, (GroceryAgent) null, 12));
+            routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM,this, agent, actions));
+            MAX_BATHROOM -= 1;
+        }
+
         int numProducts = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(MAX_PRODUCTS - MIN_PRODUCTS) + MIN_PRODUCTS;
         actions = new ArrayList<>();
         if (numProducts >= CART_THRESHOLD) {
@@ -466,6 +529,16 @@ public class GroceryRoutePlan {
                 }
             }
             numProducts--;
+
+            x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            if (x < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                actions = new ArrayList<>();
+                actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
+                actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, (GroceryAgent) null, 12));
+                routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM,this, agent, actions));
+                MAX_BATHROOM -= 1;
+            }
         }
 
         actions = new ArrayList<>();
@@ -483,6 +556,17 @@ public class GroceryRoutePlan {
         actions.add(new GroceryAction(GroceryAction.Name.GOING_TO_SECURITY_QUEUE));
         actions.add(new GroceryAction(GroceryAction.Name.GO_THROUGH_SCANNER, (GroceryAgent) null, 2));
         routePlan.add(new GroceryState(GroceryState.Name.GOING_TO_SECURITY, this, agent, actions));
+
+        int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+        if (x < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+            actions = new ArrayList<>();
+            actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
+            actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE,12,36));
+            actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, (GroceryAgent) null, 12));
+            routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM,this, agent, actions));
+            MAX_BATHROOM -= 1;
+        }
+
         int routeIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3);
         int routeIndexFinal = routeIndex;
         GroceryState.AisleCluster[] route = GroceryState.createRoute(routeIndex);
@@ -787,6 +871,16 @@ public class GroceryRoutePlan {
             }
 
             routeIndex++;
+
+            x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
+            if (x < BATHROOM_CHANCE && MAX_BATHROOM != 0) {
+                actions = new ArrayList<>();
+                actions.add(new GroceryAction(GroceryAction.Name.GO_TO_BATHROOM));
+                actions.add(new GroceryAction(GroceryAction.Name.RELIEVE_IN_CUBICLE,12,36));
+                actions.add(new GroceryAction(GroceryAction.Name.WASH_IN_SINK, (GroceryAgent) null, 12));
+                routePlan.add(new GroceryState(GroceryState.Name.NEEDS_BATHROOM,this, agent, actions));
+                MAX_BATHROOM -= 1;
+            }
         }
 
         actions = new ArrayList<>();

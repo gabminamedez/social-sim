@@ -18,9 +18,9 @@ import com.socialsim.model.core.environment.grocery.patchfield.ServiceCounterFie
 import com.socialsim.model.core.environment.grocery.patchfield.StallField;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.gate.GroceryGate;
 import com.socialsim.model.core.environment.grocery.patchobject.passable.goal.*;
+import com.socialsim.model.core.environment.mall.patchfield.Bathroom;
 import com.socialsim.model.simulator.Simulator;
 import com.socialsim.model.simulator.grocery.GrocerySimulator;
-import com.socialsim.model.simulator.mall.MallSimulator;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -521,7 +521,9 @@ public class GroceryAgentMovement extends AgentMovement {
 
             List<Patch> patchToExploreNeighbors = patchToExplore.getNeighbors();
             for (Patch patchToExploreNeighbor : patchToExploreNeighbors) {
-                if (patchToExploreNeighbor.getAmenityBlock() == null || patchToExploreNeighbor.getPatchField() == null
+                if ((patchToExploreNeighbor.getAmenityBlock() == null && patchToExploreNeighbor.getPatchField() == null)
+                        || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getPatchField() == null && patchToExploreNeighbor.getAmenityBlock().getParent() == goalAmenity)
+                        || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getPatchField() != null && patchToExploreNeighbor.getAmenityBlock().getParent() == goalAmenity)
                         || (patchToExploreNeighbor.getAmenityBlock() != null && patchToExploreNeighbor.getAmenityBlock().getParent().getClass() == Security.class)
                         || (patchToExploreNeighbor.getPatchField() != null && patchToExploreNeighbor.getPatchField().getKey().getClass() != Wall.class)
                         || (!includeStartingPatch && patchToExplore.equals(startingPatch) || !includeGoalPatch && patchToExploreNeighbor.equals(goalPatch))) {
@@ -582,6 +584,7 @@ public class GroceryAgentMovement extends AgentMovement {
             this.goalAttractor = chosenAttractor;
         }
     }
+
     public boolean chooseBathroomGoal(Class<? extends Amenity> nextAmenityClass) {
         if (this.goalAmenity == null) {
             List<? extends Amenity> amenityListInFloor = this.grocery.getAmenityList(nextAmenityClass);
@@ -1003,7 +1006,8 @@ public class GroceryAgentMovement extends AgentMovement {
             if (this.currentState.getName() != GroceryState.Name.GOING_TO_SECURITY && this.currentState.getName() != GroceryState.Name.GOING_HOME
                     && this.currentAction.getName() != GroceryAction.Name.QUEUE_SERVICE && this.currentAction.getName() != GroceryAction.Name.WAIT_FOR_CUSTOMER_SERVICE
                     && this.currentAction.getName() != GroceryAction.Name.QUEUE_FOOD && this.currentAction.getName() != GroceryAction.Name.BUY_FOOD
-                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_CHECKOUT && this.currentAction.getName() != GroceryAction.Name.CHECKOUT) {
+                    && this.currentAction.getName() != GroceryAction.Name.QUEUE_CHECKOUT && this.currentAction.getName() != GroceryAction.Name.CHECKOUT
+                    && (this.currentPatch.getPatchField() != null && this.currentPatch.getPatchField().getKey().getClass() != Bathroom.class)) {
                 for (Agent otherAgent : patch.getAgents()) {
                     if (this.getLeaderAgent() == null && this.followers.contains(otherAgent)) {
                         continue;
@@ -1342,7 +1346,7 @@ public class GroceryAgentMovement extends AgentMovement {
             else {
                 break;
             }
-        } while (!this.currentPath.getPath().isEmpty() && nextPatch.getAmenityBlocksAround() == 0 && nextPatch.getWallsAround() == 0
+        } while (!this.currentPath.getPath().isEmpty() && nextPatch.getAmenityBlocksAround() == 0
                 && this.isOnOrCloseToPatch(nextPatch) && this.hasClearLineOfSight(this.position, nextPatch.getPatchCenterCoordinates(), true));
     }
 
@@ -1356,19 +1360,20 @@ public class GroceryAgentMovement extends AgentMovement {
 
     public void despawn() {
         if (this.currentPatch != null) {
-            this.currentPatch.getAgents().remove(this.parent);
-            this.getGrocery().getAgents().remove(this.parent);
-
-            SortedSet<Patch> currentPatchSet = this.getGrocery().getAgentPatchSet();
-            if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
-                currentPatchSet.remove(this.currentPatch);
-            }
             switch (this.getParent().getPersona()){
                 case COMPLETE_FAMILY_CUSTOMER, HELP_FAMILY_CUSTOMER, DUO_FAMILY_CUSTOMER -> {
                     if (this.getParent().isLeader())
                         GrocerySimulator.currentFamilyCount--;
                 }
                 case STTP_ALONE_CUSTOMER, MODERATE_ALONE_CUSTOMER -> GrocerySimulator.currentAloneCustomerCount--;
+            }
+
+            this.currentPatch.getAgents().remove(this.parent);
+            this.getGrocery().getAgents().remove(this.parent);
+
+            SortedSet<Patch> currentPatchSet = this.getGrocery().getAgentPatchSet();
+            if (currentPatchSet.contains(this.currentPatch) && hasNoAgent(this.currentPatch)) {
+                currentPatchSet.remove(this.currentPatch);
             }
         }
     }
@@ -1418,7 +1423,7 @@ public class GroceryAgentMovement extends AgentMovement {
 
             while (true) {
                 nextPatchInPath = this.currentPath.getPath().peek();
-                if (!(this.currentPath.getPath().size() > 1 && nextPatchInPath.getAmenityBlocksAround() == 0
+                if (!(this.currentPath.getPath().size() > 1
                         && this.isOnOrCloseToPatch(nextPatchInPath)
                         && this.hasClearLineOfSight(this.position, nextPatchInPath.getPatchCenterCoordinates(), true))) {
                     break;
@@ -1439,7 +1444,7 @@ public class GroceryAgentMovement extends AgentMovement {
             return true;
         }
         else if (patch.getAmenityBlock() != null && !patch.getAmenityBlock().getParent().equals(amenity)) {
-            if (patch.getAmenityBlock().getParent().getClass() == Security.class) {
+            if (patch.getAmenityBlock().getParent().getClass() == Security.class || patch.getAmenityBlock().getParent().getClass() == Toilet.class) {
                 return false;
             }
             else {
@@ -1558,13 +1563,13 @@ public class GroceryAgentMovement extends AgentMovement {
         }
         else if (agentPersona == GroceryAgent.Persona.CUSTOMER_SERVICE) {
             if (goalAmenity == grocery.getServiceCounters().get(0)) {
-                GrocerySimulator.currentPatchCount[44][4]++;
+                GrocerySimulator.currentPatchCount[52][23]++;
             }
             else if (goalAmenity == grocery.getServiceCounters().get(1)) {
-                GrocerySimulator.currentPatchCount[44][8]++;
+                GrocerySimulator.currentPatchCount[52][27]++;
             }
             else if (goalAmenity == grocery.getServiceCounters().get(2)) {
-                GrocerySimulator.currentPatchCount[44][12]++;
+                GrocerySimulator.currentPatchCount[52][31]++;
             }
             GrocerySimulator.currentCustomerServiceCount++;
             this.heading = 90;
@@ -1628,8 +1633,8 @@ public class GroceryAgentMovement extends AgentMovement {
         }
 
         if (agentPersona != GroceryAgent.Persona.GUARD_ENTRANCE) {
-            MallSimulator.currentCooperativeCount++;
-            MallSimulator.averageCooperativeDuration = (MallSimulator.averageCooperativeDuration * (MallSimulator.currentCooperativeCount - 1) + this.interactionDuration) / MallSimulator.currentCooperativeCount;
+            GrocerySimulator.currentCooperativeCount++;
+            GrocerySimulator.averageCooperativeDuration = (GrocerySimulator.averageCooperativeDuration * (GrocerySimulator.currentCooperativeCount - 1) + this.interactionDuration) / GrocerySimulator.currentCooperativeCount;
         }
         else {
             int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
@@ -1703,6 +1708,12 @@ public class GroceryAgentMovement extends AgentMovement {
                     case BUTCHER -> GrocerySimulator.currentCustomerButcherCount++;
                     case CUSTOMER_SERVICE -> GrocerySimulator.currentCustomerServiceCount++;
                     case STAFF_FOOD -> GrocerySimulator.currentCustomerFoodCount++;
+                }
+                if (this.parent.isLeader() && agent.getAgentMovement().getLeaderAgent() == this.parent) {
+                    GrocerySimulator.currentFamilyToFamilyCount++;
+                }
+                else if (!this.parent.isLeader() && agent.getAgentMovement().getLeaderAgent() == this.parent.getAgentMovement().getLeaderAgent()) {
+                    GrocerySimulator.currentFamilyToFamilyCount++;
                 }
             }
             else if (this.parent.getType() == GroceryAgent.Type.STAFF_AISLE) {

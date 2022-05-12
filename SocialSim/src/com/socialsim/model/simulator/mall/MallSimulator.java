@@ -326,17 +326,6 @@ public class MallSimulator extends Simulator {
         mall.getAgentPatchSet().add(concierger.getAgentMovement().getCurrentPatch());
         MallAgent.conciergerCount++;
         MallAgent.agentCount++;
-
-        MallAgent janitor1 = mall.getAgents().get(37);
-        janitor1.setAgentMovement(new MallAgentMovement(mall.getPatch(8, 6), janitor1, null, 1.27, mall.getPatch(8, 6).getPatchCenterCoordinates(), -1, janitor1.getTeam()));
-        mall.getAgentPatchSet().add(janitor1.getAgentMovement().getCurrentPatch());
-        MallAgent.janitorCount++;
-        MallAgent.agentCount++;
-        MallAgent janitor2 = mall.getAgents().get(38);
-        janitor2.setAgentMovement(new MallAgentMovement(mall.getPatch(51, 6), janitor2, null, 1.27, mall.getPatch(51, 6).getPatchCenterCoordinates(), -1, janitor2.getTeam()));
-        mall.getAgentPatchSet().add(janitor2.getAgentMovement().getCurrentPatch());
-        MallAgent.janitorCount++;
-        MallAgent.agentCount++;
     }
 
     public void reset() {
@@ -626,11 +615,20 @@ public class MallSimulator extends Simulator {
                         if (action.getName() == MallAction.Name.GO_TO_BATHROOM) {
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (!agentMovement.chooseBathroomGoal(Toilet.class)) {
-                                    agentMovement.setNextState(agentMovement.getStateIndex());
-                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() - 1, agentMovement.getRoutePlan().addWaitingRoute(agent));
+                                    agentMovement.setPreviousState(agentMovement.getStateIndex());
+                                    agentMovement.setStateIndex(agentMovement.getStateIndex() -1);
                                     agentMovement.setActionIndex(0);
                                     agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    if(agentMovement.getGoalAttractor() != null) {
+                                        agentMovement.getGoalAttractor().setIsReserved(false);
+                                    }
                                     agentMovement.resetGoal();
+//                                    agentMovement.setNextState(agentMovement.getStateIndex());
+//                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+//                                    agentMovement.setActionIndex(0);
+//                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+//                                    agentMovement.resetGoal();
                                 }
                             }
                             else {
@@ -787,7 +785,7 @@ public class MallSimulator extends Simulator {
                                 if (agentMovement.getLeaderAgent() == null && !agentMovement.isStationInteracting()) {
                                     agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_RESTO);
                                 }
-
+                                agentMovement.setSimultaneousInteractionAllowed(true);
                                 agentMovement.setDuration(agentMovement.getDuration() - 1);
                                 if (agentMovement.getDuration() <= 0) {
                                     if (agentMovement.getLeaderAgent() == null) {
@@ -800,6 +798,7 @@ public class MallSimulator extends Simulator {
                                     agentMovement.getGoalAmenity().getAttractors().get(0).setIsReserved(false);
                                     agentMovement.resetGoal();
                                     agentMovement.setStationInteracting(false);
+                                    agentMovement.setSimultaneousInteractionAllowed(false);
                                 }
                             }
                         }
@@ -879,13 +878,17 @@ public class MallSimulator extends Simulator {
                         }
                         else if (action.getName() == MallAction.Name.DINING_AREA_STAY_PUT) {
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setNextState(agentMovement.getStateIndex());
                                 agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.getGoalAmenity().getAttractors().get(0).setIsReserved(false);
                                 agentMovement.resetGoal();
+                                agentMovement.setStationInteracting(false);
+                                agentMovement.setSimultaneousInteractionAllowed(false);
                             }
                         }
                     }
@@ -928,6 +931,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.IN_STORE) {
                         if (action.getName() == MallAction.Name.CHECK_AISLE) {
+                            agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setNextState(agentMovement.getStateIndex());
@@ -935,6 +939,7 @@ public class MallSimulator extends Simulator {
                                 agentMovement.setActionIndex(0);
                                 agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                                 agentMovement.resetGoal();
+                                agentMovement.setSimultaneousInteractionAllowed(false);
                             }
                             else {
                                 int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
@@ -1052,6 +1057,47 @@ public class MallSimulator extends Simulator {
                             }
                         }
                     }
+                    else if(state.getName() == MallState.Name.WAIT_INFRONT_OF_BATHROOM){
+                        if (action.getName() == MallAction.Name.GO_TO_WAIT_AREA) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
+                            if (agentMovement.getGoalAmenity() == null) {
+                                if(!agentMovement.chooseWaitPatch()){
+                                    System.out.println("False wait patch");
+                                }
+                            }
+                            else {
+                                if (agentMovement.chooseNextPatchInPath()) {
+                                    agentMovement.faceNextPosition();
+                                    agentMovement.moveSocialForce();
+                                    if (agentMovement.hasReachedNextPatchInPath()) {
+                                        agentMovement.reachPatchInPath();
+                                    }
+                                }
+                                else{
+                                    agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                    agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                }
+                            }
+                        }
+                        else if(action.getName() == MallAction.Name.WAIT_FOR_VACANT){
+                            agentMovement.setSimultaneousInteractionAllowed(true);
+//                            agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                            if (agentMovement.getCurrentAction().getDuration() <= 0) {
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                if (agentMovement.getGoalAttractor() != null) {
+                                    agentMovement.getGoalAttractor().setIsReserved(false);
+                                }
+                                agentMovement.resetGoal();
+                            }
+                            else {
+                                agentMovement.getCurrentAction().setDuration(agentMovement.getCurrentAction().getDuration() - 1);
+                            }
+                        }
+                    }
 
                     break;
             }
@@ -1082,27 +1128,27 @@ public class MallSimulator extends Simulator {
                 if (agentMovement.isInteracting())
                     break;
             }
-            patches = agentMovement.get3x3Field(agentMovement.getHeading(), true, Math.toRadians(270));
-            for (Patch patch: patches) {
-                for (Agent otherAgent: patch.getAgents()) {
-                    MallAgent mallAgent = (MallAgent) otherAgent;
-                    if (!mallAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
-                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), mallAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
-                            if (Coordinates.isWithinFieldOfView(mallAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), mallAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
-                                agentMovement.rollAgentInteraction(mallAgent);
-                                if (agentMovement.isInteracting()) {
-                                    agent2 = mallAgent;
-                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
-                                    currentPatchCount[mallAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][mallAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
-                                }
-                            }
-                    if (agentMovement.isInteracting())
-                        break;
-                }
-
-                if (agentMovement.isInteracting())
-                    break;
-            }
+//            patches = agentMovement.get3x3Field(agentMovement.getHeading(), true, Math.toRadians(270));
+//            for (Patch patch: patches) {
+//                for (Agent otherAgent: patch.getAgents()) {
+//                    MallAgent mallAgent = (MallAgent) otherAgent;
+//                    if (!mallAgent.getAgentMovement().isInteracting() && !agentMovement.isInteracting())
+//                        if (Coordinates.isWithinFieldOfView(agentMovement.getPosition(), mallAgent.getAgentMovement().getPosition(), agentMovement.getProposedHeading(), Math.toRadians(270)))
+//                            if (Coordinates.isWithinFieldOfView(mallAgent.getAgentMovement().getPosition(), agentMovement.getPosition(), mallAgent.getAgentMovement().getProposedHeading(), Math.toRadians(270))){
+//                                agentMovement.rollAgentInteraction(mallAgent);
+//                                if (agentMovement.isInteracting()) {
+//                                    agent2 = mallAgent;
+//                                    currentPatchCount[agentMovement.getCurrentPatch().getMatrixPosition().getRow()][agentMovement.getCurrentPatch().getMatrixPosition().getColumn()]++;
+//                                    currentPatchCount[mallAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getRow()][mallAgent.getAgentMovement().getCurrentPatch().getMatrixPosition().getColumn()]++;
+//                                }
+//                            }
+//                    if (agentMovement.isInteracting())
+//                        break;
+//                }
+//
+//                if (agentMovement.isInteracting())
+//                    break;
+//            }
             if (agentMovement.isInteracting() && agentMovement.getInteractionDuration() == 0) {
                 agentMovement.setInteracting(false);
                 agentMovement.setInteractionType(null);
