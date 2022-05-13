@@ -20,8 +20,6 @@ public class OfficeRoutePlan {
     private int PRINT_BUSINESS = 5, PRINT_RESEARCH = 2;
     private int TECHNICAL_PRINTER_COUNT = 0, TECHNICAL_CUBICLE_COUNT = 0;
     private int COLLABORATE_COUNT = 0, BREAK_COUNT = 0;
-    private int DISPENSER_LUNCH = 1, DISPENSER_PM = 1;
-    private int REFRIGERATOR_LUNCH = 1, REFRIGERATOR_PM = 1;
     private Cubicle agentCubicle;
 
     private Amenity.AmenityBlock lunchAttractor;
@@ -37,8 +35,7 @@ public class OfficeRoutePlan {
     public static final double INT_RESEARCHER_COOPERATE = 0.6;
     public static final double EXT_RESEARCHER_COOPERATE = 0.9;
     public static final double BATH_CHANCE = 0.15, PRINT_CHANCE = 0.1,
-                               TECHNICAL_CUBICLE_CHANCE = 0.1, TECHNICAL_PRINTER_CHANCE = 0.1,
-                               DISPENSER_CHANCE = 0.1, REFRIGERATOR_CHANCE = 0.3, BREAK_CHANCE = 0.1;
+                               TECHNICAL_CUBICLE_CHANCE = 0.1, TECHNICAL_PRINTER_CHANCE = 0.1, BREAK_CHANCE = 0.1;
 
     public static ArrayList<ArrayList<Long>> meetingTimes = new ArrayList<>();
 
@@ -393,18 +390,6 @@ public class OfficeRoutePlan {
                 actions.add(new OfficeAction(OfficeAction.Name.FIX_PRINTER));
                 officeState = new OfficeState(OfficeState.Name.NEEDS_FIX_PRINTER, this, agent, actions);
             }
-            case "DISPENSER" -> {
-                actions = new ArrayList<>();
-                actions.add(new OfficeAction(OfficeAction.Name.GOING_DISPENSER));
-                actions.add(new OfficeAction(OfficeAction.Name.GETTING_WATER, 2, 8));
-                officeState = new OfficeState(OfficeState.Name.DISPENSER, this, agent, actions);
-            }
-            case "REFRIGERATOR" -> {
-                actions = new ArrayList<>();
-                actions.add(new OfficeAction(OfficeAction.Name.GOING_FRIDGE));
-                actions.add(new OfficeAction(OfficeAction.Name.GETTING_FOOD, 2, 10));
-                officeState = new OfficeState(OfficeState.Name.REFRIGERATOR, this, agent, actions);
-            }
             case "BREAK" -> {
                 actions = new ArrayList<>();
                 actions.add(new OfficeAction(OfficeAction.Name.GO_TO_LUNCH));
@@ -487,30 +472,6 @@ public class OfficeRoutePlan {
 
     public void setPRINT_RESEARCH() {
         this.PRINT_RESEARCH -= 1;
-    }
-
-    public int getDISPENSER_LUNCH(){return this.DISPENSER_LUNCH;}
-
-    public int getDISPENSER_PM(){return this.DISPENSER_PM;}
-
-    public int getREFRIGERATOR_LUNCH(){return this.REFRIGERATOR_LUNCH;}
-
-    public int getREFRIGERATOR_PM(){return this.REFRIGERATOR_PM;}
-
-    public void setDISPENSER_LUNCH(int DISPENSER_LUNCH) {
-        this.DISPENSER_LUNCH = DISPENSER_LUNCH;
-    }
-
-    public void setDISPENSER_PM(int DISPENSER_PM) {
-        this.DISPENSER_PM = DISPENSER_PM;
-    }
-
-    public void setREFRIGERATOR_LUNCH(int REFRIGERATOR_LUNCH) {
-        this.REFRIGERATOR_LUNCH = REFRIGERATOR_LUNCH;
-    }
-
-    public void setREFRIGERATOR_PM(int REFRIGERATOR_PM) {
-        this.REFRIGERATOR_PM = REFRIGERATOR_PM;
     }
 
     public int getLastDuration() {
