@@ -1750,18 +1750,18 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.getGoalAttractor().setIsReserved(false);
                                 }
                                 agentMovement.resetGoal();
-//                                isFull = true;
-//                                agentMovement.setNextState(agentMovement.getStateIndex());
-//                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-//                                agentMovement.setActionIndex(0);
-//                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                agentMovement.resetGoal();
-//                                if (agentMovement.getRoutePlan().isFromBathAM()) {
-//                                    agentMovement.getRoutePlan().setFromBathAM(false);
-//                                }
-//                                else if (agentMovement.getRoutePlan().isFromBathPM()) {
-//                                    agentMovement.getRoutePlan().setFromBathPM(false);
-//                                }
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                                if (agentMovement.getRoutePlan().isFromBathAM()) {
+                                    agentMovement.getRoutePlan().setFromBathAM(false);
+                                }
+                                else if (agentMovement.getRoutePlan().isFromBathPM()) {
+                                    agentMovement.getRoutePlan().setFromBathPM(false);
+                                }
                             }
                             else {
                                 agentMovement.getRoutePlan().setAtDesk(false);
