@@ -4,6 +4,7 @@ import com.socialsim.controller.Main;
 import com.socialsim.controller.grocery.controls.GroceryScreenController;
 import com.socialsim.model.core.agent.Agent;
 import com.socialsim.model.core.agent.grocery.*;
+import com.socialsim.model.core.agent.grocery.GroceryState;
 import com.socialsim.model.core.environment.generic.Patch;
 import com.socialsim.model.core.environment.generic.patchobject.passable.gate.Gate;
 import com.socialsim.model.core.environment.generic.position.Coordinates;
@@ -458,6 +459,21 @@ public class GrocerySimulator extends Simulator {
     private static void moveAll(Grocery grocery) {
         for (GroceryAgent agent : grocery.getMovableAgents()) {
             try {
+                if (agent.getAgentMovement().getCurrentState().getName() == GroceryState.Name.WAIT_INFRONT_OF_BATHROOM){
+                    if (!grocery.allBathroomsOccupied()){
+                        if (!agent.getAgentMovement().chooseBathroomGoal(com.socialsim.model.core.environment.grocery.patchobject.passable.goal.Toilet.class)) {
+                            agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().add(agent.getAgentMovement().getStateIndex() - 1, agent.getAgentMovement().getRoutePlan().addWaitingRoute(agent));
+                            agent.getAgentMovement().setPreviousState(agent.getAgentMovement().getStateIndex());
+                            agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() - 1);
+                            agent.getAgentMovement().setActionIndex(0);
+                            agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(agent.getAgentMovement().getActionIndex()));
+                            if(agent.getAgentMovement().getGoalAttractor() != null) {
+                                agent.getAgentMovement().getGoalAttractor().setIsReserved(false);
+                            }
+                            agent.getAgentMovement().resetGoal();
+                        }
+                    }
+                }
                 moveOne(agent);
             } catch (Throwable ex) {
                 ex.printStackTrace();
