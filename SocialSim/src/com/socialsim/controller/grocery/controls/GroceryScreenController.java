@@ -331,11 +331,13 @@ public class GroceryScreenController extends ScreenController {
 //        stallPatches.add(grocery.getPatch(58,35));
 //        stallPatches.add(grocery.getPatch(58,63));
 //        stallPatches.add(grocery.getPatch(58,72));
-        stallPatches.add(grocery.getPatch(58,83));
+
+//        stallPatches.add(grocery.getPatch(58,83));
         stallPatches.add(grocery.getPatch(58,86));
-        stallPatches.add(grocery.getPatch(58,89));
+//        stallPatches.add(grocery.getPatch(58,89));
         stallPatches.add(grocery.getPatch(58,92));
-        stallPatches.add(grocery.getPatch(58,95));
+//        stallPatches.add(grocery.getPatch(58,95));
+
 //        stallPatches.add(grocery.getPatch(58,90));
         StallMapper.draw(stallPatches);
 

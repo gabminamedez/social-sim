@@ -437,12 +437,12 @@ public class Grocery extends Environment {
         this.getAgents().add(food1);
         GroceryAgent food2 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
         this.getAgents().add(food2);
-        GroceryAgent food3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
-        this.getAgents().add(food3);
-        GroceryAgent food4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
-        this.getAgents().add(food4);
-        GroceryAgent food5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
-        this.getAgents().add(food5);
+//        GroceryAgent food3 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
+//        this.getAgents().add(food3);
+//        GroceryAgent food4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
+//        this.getAgents().add(food4);
+//        GroceryAgent food5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.STAFF_FOOD, GroceryAgent.Persona.STAFF_FOOD, null, null, false, true);
+//        this.getAgents().add(food5);
 
         GroceryAgent butcher1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BUTCHER, GroceryAgent.Persona.BUTCHER, null, null, false, true);
         this.getAgents().add(butcher1);

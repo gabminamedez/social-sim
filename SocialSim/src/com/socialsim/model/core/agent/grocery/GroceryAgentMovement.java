@@ -1576,20 +1576,20 @@ public class GroceryAgentMovement extends AgentMovement {
         }
         else if (agentPersona == GroceryAgent.Persona.STAFF_FOOD) {
             if (goalAmenity == grocery.getStalls().get(0)) {
-                GrocerySimulator.currentPatchCount[58][84]++;
-            }
-            else if (goalAmenity == grocery.getStalls().get(1)) {
                 GrocerySimulator.currentPatchCount[58][87]++;
             }
-            else if (goalAmenity == grocery.getStalls().get(2)) {
-                GrocerySimulator.currentPatchCount[58][90]++;
-            }
-            else if (goalAmenity == grocery.getStalls().get(3)) {
+            else if (goalAmenity == grocery.getStalls().get(1)) {
                 GrocerySimulator.currentPatchCount[58][93]++;
             }
-            else if (goalAmenity == grocery.getStalls().get(4)) {
-                GrocerySimulator.currentPatchCount[58][96]++;
-            }
+//            else if (goalAmenity == grocery.getStalls().get(2)) {
+//                GrocerySimulator.currentPatchCount[58][90]++;
+//            }
+//            else if (goalAmenity == grocery.getStalls().get(3)) {
+//                GrocerySimulator.currentPatchCount[58][93]++;
+//            }
+//            else if (goalAmenity == grocery.getStalls().get(4)) {
+//                GrocerySimulator.currentPatchCount[58][96]++;
+//            }
             GrocerySimulator.currentCustomerFoodCount++;
             this.heading = 270;
             this.interactionDuration = this.duration;
