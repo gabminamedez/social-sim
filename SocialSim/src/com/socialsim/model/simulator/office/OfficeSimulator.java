@@ -1224,24 +1224,7 @@ public class OfficeSimulator extends Simulator {
                                 }
                             }
                             else {
-                                int left = 0;
-                                if (persona == OfficeAgent.Persona.EXT_BUSINESS || persona == OfficeAgent.Persona.INT_BUSINESS) {
-                                    left = agentMovement.getRoutePlan().getPRINT_BUSINESS();
-                                }
-                                else if (persona == OfficeAgent.Persona.EXT_RESEARCHER || persona == OfficeAgent.Persona.INT_RESEARCHER) {
-                                    left = agentMovement.getRoutePlan().getPRINT_RESEARCH();
-                                }
-
-                                if (CHANCE < OfficeRoutePlan.BATH_CHANCE + OfficeRoutePlan.PRINT_CHANCE && left > 0) {
-                                    agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
-                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("PRINT", agent));
-                                    agentMovement.setNextState(agentMovement.getStateIndex());
-                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                                    agentMovement.setActionIndex(0);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
-                                }
-                                else if(CHANCE < OfficeRoutePlan.BATH_CHANCE + OfficeRoutePlan.PRINT_CHANCE + OfficeRoutePlan.BREAK_CHANCE && agentMovement.getRoutePlan().getBREAK_COUNT() > 0){
+                                if(CHANCE < OfficeRoutePlan.BATH_CHANCE + OfficeRoutePlan.BREAK_CHANCE && agentMovement.getRoutePlan().getBREAK_COUNT() > 0){
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("BREAK", agent));
                                     agentMovement.setNextState(agentMovement.getStateIndex());
@@ -1251,18 +1234,9 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.resetGoal();
                                 }
 
-                                if (CHANCE < OfficeRoutePlan.BATH_CHANCE + OfficeRoutePlan.PRINT_CHANCE + OfficeRoutePlan.TECHNICAL_CUBICLE_CHANCE && agentMovement.getRoutePlan().getTECHNICAL_CUBICLE_COUNT() > 0) {
+                                if (CHANCE < OfficeRoutePlan.BATH_CHANCE + OfficeRoutePlan.BREAK_CHANCE + OfficeRoutePlan.TECHNICAL_CUBICLE_CHANCE && agentMovement.getRoutePlan().getTECHNICAL_CUBICLE_COUNT() > 0) {
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute(agent, officeInstance));
-                                    agentMovement.setNextState(agentMovement.getStateIndex());
-                                    agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                                    agentMovement.setActionIndex(0);
-                                    agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                    agentMovement.resetGoal();
-                                }
-                                else if (CHANCE < OfficeRoutePlan.TECHNICAL_PRINTER_CHANCE + OfficeRoutePlan.BATH_CHANCE + OfficeRoutePlan.PRINT_CHANCE + OfficeRoutePlan.TECHNICAL_CUBICLE_CHANCE && agentMovement.getRoutePlan().getTECHNICAL_PRINTER_COUNT() > 0) {
-                                    agentMovement.setStateIndex(agentMovement.getStateIndex() - 1);
-                                    agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() + 1, agentMovement.getRoutePlan().addUrgentRoute("TECHNICAL_PRINTER", agent));
                                     agentMovement.setNextState(agentMovement.getStateIndex());
                                     agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
                                     agentMovement.setActionIndex(0);
@@ -1272,9 +1246,8 @@ public class OfficeSimulator extends Simulator {
                                 else if ((currentTick < 1660 || (currentTick < 5260 && currentTick > 2520)) &&
                                         agentMovement.getRoutePlan().getCOLLABORATE_COUNT() > 0 &&
                                         agentMovement.getRoutePlan().getCanUrgent() <= 0 &&
-                                        CHANCE < agentMovement.getRoutePlan().getCooperate(persona) +
-                                        OfficeRoutePlan.TECHNICAL_PRINTER_CHANCE + OfficeRoutePlan.BATH_CHANCE +
-                                        OfficeRoutePlan.PRINT_CHANCE + OfficeRoutePlan.TECHNICAL_CUBICLE_CHANCE) {
+                                        CHANCE < agentMovement.getRoutePlan().getCooperate(persona) + OfficeRoutePlan.BATH_CHANCE +
+                                        OfficeRoutePlan.BREAK_CHANCE + OfficeRoutePlan.TECHNICAL_CUBICLE_CHANCE) {
                                     ArrayList<OfficeAgent> agents = officeInstance.getTeamMembers(agent.getTeam());
                                     for(OfficeAgent agent1 : agents) {
                                         if (agent1.getAgentMovement().getCurrentAction() != null && agent1.getAgentMovement().getCurrentAction().getName() == OfficeAction.Name.GO_TO_STATION) {
@@ -1418,62 +1391,6 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.getGoalAttractor().setIsReserved(false);
                             agentMovement.resetGoal();
                             agentMovement.getRoutePlan().setCanUrgent(-1);
-                        }
-                    }
-                }
-                else if (state.getName() == OfficeState.Name.NEEDS_PRINT) {
-                    if (action.getName() == OfficeAction.Name.GO_TO_PRINTER) {
-                        agentMovement.setSimultaneousInteractionAllowed(false);
-                        if (agentMovement.getGoalAmenity() == null) {
-                            if (!agentMovement.chooseGoal(Printer.class)) {
-                                isFull = true;
-                                agentMovement.setNextState(agentMovement.getStateIndex());
-                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                            }
-                            else {
-                                agentMovement.getRoutePlan().resetCanUrgent();
-                                agentMovement.getRoutePlan().setAtDesk(false);
-                            }
-                        }
-                        if (isFull) {
-                            isFull = false;
-                        }
-                        else {
-                            //System.out.println(agent.getId() + " Patch: " + agentMovement.getCurrentPatch());
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath();
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                        if (persona == OfficeAgent.Persona.EXT_BUSINESS || persona == OfficeAgent.Persona.INT_BUSINESS) {
-                                            agentMovement.getRoutePlan().setPRINT_BUSINESS();
-                                        } else if (persona == OfficeAgent.Persona.EXT_RESEARCHER || persona == OfficeAgent.Persona.INT_RESEARCHER) {
-                                            agentMovement.getRoutePlan().setPRINT_RESEARCH();
-                                        }
-                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else if (action.getName() == OfficeAction.Name.PRINTING) {
-                        agentMovement.setSimultaneousInteractionAllowed(false);
-                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                        agentMovement.setDuration(agentMovement.getDuration() - 1);
-
-                        if (agentMovement.getDuration() <= 0) {
-                            agentMovement.setNextState(agentMovement.getStateIndex());
-                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                            agentMovement.setActionIndex(0);
-                            agentMovement.getGoalAttractor().setIsReserved(false);
-                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                            agentMovement.resetGoal();
                         }
                     }
                 }
@@ -1750,18 +1667,18 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.getGoalAttractor().setIsReserved(false);
                                 }
                                 agentMovement.resetGoal();
-//                                isFull = true;
-//                                agentMovement.setNextState(agentMovement.getStateIndex());
-//                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-//                                agentMovement.setActionIndex(0);
-//                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                agentMovement.resetGoal();
-//                                if (agentMovement.getRoutePlan().isFromBathAM()) {
-//                                    agentMovement.getRoutePlan().setFromBathAM(false);
-//                                }
-//                                else if (agentMovement.getRoutePlan().isFromBathPM()) {
-//                                    agentMovement.getRoutePlan().setFromBathPM(false);
-//                                }
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                                if (agentMovement.getRoutePlan().isFromBathAM()) {
+                                    agentMovement.getRoutePlan().setFromBathAM(false);
+                                }
+                                else if (agentMovement.getRoutePlan().isFromBathPM()) {
+                                    agentMovement.getRoutePlan().setFromBathPM(false);
+                                }
                             }
                             else {
                                 agentMovement.getRoutePlan().setAtDesk(false);
@@ -1844,57 +1761,6 @@ public class OfficeSimulator extends Simulator {
                         }
                     }
                     else if (action.getName() == OfficeAction.Name.WASH_IN_SINK) {
-                        agentMovement.setSimultaneousInteractionAllowed(false);
-                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
-                        agentMovement.setDuration(agentMovement.getDuration() - 1);
-                        if (agentMovement.getDuration() <= 0) {
-                            agentMovement.setNextState(agentMovement.getStateIndex());
-                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                            agentMovement.setActionIndex(0);
-                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                            agentMovement.getGoalAttractor().setIsReserved(false);
-                            agentMovement.resetGoal();
-                        }
-                    }
-                }
-                else if (state.getName() == OfficeState.Name.NEEDS_FIX_PRINTER) {
-                    if (action.getName() == OfficeAction.Name.TECHNICAL_GO_PRINTER) {
-                        agentMovement.setSimultaneousInteractionAllowed(false);
-                        if (agentMovement.getGoalAmenity() == null) {
-                            if (!agentMovement.chooseGoal(Printer.class)) {
-                                isFull = true;
-                                agentMovement.setNextState(agentMovement.getStateIndex());
-                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-                                agentMovement.setActionIndex(0);
-                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-                                agentMovement.resetGoal();
-                            }
-                            else {
-                                agentMovement.getRoutePlan().setAtDesk(false);
-                                agentMovement.getRoutePlan().resetCanUrgent();
-                                agentMovement.getRoutePlan().setTECHNICAL_PRINTER_COUNT(1);
-                            }
-                        }
-                        if (isFull) {
-                            isFull = false;
-                        }
-                        else {
-                            if (agentMovement.chooseNextPatchInPath()) {
-                                agentMovement.faceNextPosition();
-                                agentMovement.moveSocialForce();
-                                if (agentMovement.hasReachedNextPatchInPath()) {
-                                    agentMovement.reachPatchInPath();
-                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
-                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
-                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions()
-                                                .get(agentMovement.getActionIndex()));
-                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else if (action.getName() == OfficeAction.Name.FIX_PRINTER) {
                         agentMovement.setSimultaneousInteractionAllowed(false);
                         agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                         agentMovement.setDuration(agentMovement.getDuration() - 1);
@@ -3116,7 +2982,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     public static void exportToCSV() throws Exception{
-        PrintWriter writer = new PrintWriter("Office SA16 Run3.csv"); //TODO Office SocialSim Statistics.csv
+        PrintWriter writer = new PrintWriter("Office SocialSim Statistics.csv");
         StringBuilder sb = new StringBuilder();
         sb.append("Current Manager Count");
         sb.append(",");
@@ -3506,7 +3372,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     public static void exportHeatMap() throws Exception {
-        PrintWriter writer = new PrintWriter("Office SocialSim Heat Map.csv");
+        PrintWriter writer = new PrintWriter("Office SocialSim HeatMap.csv");
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < currentPatchCount.length; i++){

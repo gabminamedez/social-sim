@@ -17,8 +17,7 @@ public class OfficeRoutePlan {
     private long collaborationEnd = 0, meetingStart = -1, meetingEnd, meetingRoom;
 
     private int BATH_AM = 2, BATH_PM = 2, BATH_LUNCH = 1;
-    private int PRINT_BUSINESS = 5, PRINT_RESEARCH = 2;
-    private int TECHNICAL_PRINTER_COUNT = 0, TECHNICAL_CUBICLE_COUNT = 0;
+    private int TECHNICAL_CUBICLE_COUNT = 0;
     private int COLLABORATE_COUNT = 0, BREAK_COUNT = 0;
     private int DISPENSER_LUNCH = 1, DISPENSER_PM = 1;
     private int REFRIGERATOR_LUNCH = 1, REFRIGERATOR_PM = 1;
@@ -36,8 +35,8 @@ public class OfficeRoutePlan {
     public static final double EXT_BUSINESS_COOPERATE = 0.9;
     public static final double INT_RESEARCHER_COOPERATE = 0.6;
     public static final double EXT_RESEARCHER_COOPERATE = 0.9;
-    public static final double BATH_CHANCE = 0.15, PRINT_CHANCE = 0.1,
-                               TECHNICAL_CUBICLE_CHANCE = 0.1, TECHNICAL_PRINTER_CHANCE = 0.1,
+    public static final double BATH_CHANCE = 0.15,
+                               TECHNICAL_CUBICLE_CHANCE = 0.1,
                                DISPENSER_CHANCE = 0.1, REFRIGERATOR_CHANCE = 0.3, BREAK_CHANCE = 0.1;
 
     public static ArrayList<ArrayList<Long>> meetingTimes = new ArrayList<>();
@@ -252,7 +251,6 @@ public class OfficeRoutePlan {
         else if (agent.getPersona() == OfficeAgent.Persona.INT_TECHNICAL || agent.getPersona() == OfficeAgent.Persona.EXT_TECHNICAL) {
             setFromBathAM(false);
             setFromBathPM(false);
-            setTECHNICAL_PRINTER_COUNT(-1);
             setTECHNICAL_CUBICLE_COUNT(-1);
             setAtDesk(false);
             setAgentCubicle(assignedCubicle);
@@ -362,13 +360,6 @@ public class OfficeRoutePlan {
                 actions.add(new OfficeAction(OfficeAction.Name.COLLABORATE, 60, 300));
                 officeState = new OfficeState(OfficeState.Name.NEEDS_COLLAB, this, agent, actions);
             }
-            case "PRINT" -> {
-                actions = new ArrayList<>();
-                actions.add(new OfficeAction(OfficeAction.Name.GO_TO_PRINTER));
-                //actions.add(new OfficeAction(OfficeAction.Name.QUEUE_PRINTER));
-                actions.add(new OfficeAction(OfficeAction.Name.PRINTING, 4, 36));
-                officeState = new OfficeState(OfficeState.Name.NEEDS_PRINT, this, agent, actions);
-            }
             case "INQUIRE_BOSS" -> {
                 actions = new ArrayList<>();
                 actions.add(new OfficeAction(OfficeAction.Name.GO_BOSS));
@@ -386,12 +377,6 @@ public class OfficeRoutePlan {
                 actions.add(new OfficeAction(OfficeAction.Name.GO_MANAGER));
                 actions.add(new OfficeAction(OfficeAction.Name.ASK_MANAGER));
                 officeState = new OfficeState(OfficeState.Name.INQUIRE_MANAGER, this, agent, actions);
-            }
-            case "TECHNICAL_PRINTER" -> {
-                actions = new ArrayList<>();
-                actions.add(new OfficeAction(OfficeAction.Name.TECHNICAL_GO_PRINTER, 12, 120));
-                actions.add(new OfficeAction(OfficeAction.Name.FIX_PRINTER));
-                officeState = new OfficeState(OfficeState.Name.NEEDS_FIX_PRINTER, this, agent, actions);
             }
             case "DISPENSER" -> {
                 actions = new ArrayList<>();
@@ -473,22 +458,6 @@ public class OfficeRoutePlan {
         this.BATH_LUNCH -= BATH_LUNCH;
     }
 
-    public int getPRINT_BUSINESS() {
-        return PRINT_BUSINESS;
-    }
-
-    public void setPRINT_BUSINESS() {
-        this.PRINT_BUSINESS -= 1;
-    }
-
-    public int getPRINT_RESEARCH() {
-        return PRINT_RESEARCH;
-    }
-
-    public void setPRINT_RESEARCH() {
-        this.PRINT_RESEARCH -= 1;
-    }
-
     public int getDISPENSER_LUNCH(){return this.DISPENSER_LUNCH;}
 
     public int getDISPENSER_PM(){return this.DISPENSER_PM;}
@@ -530,14 +499,6 @@ public class OfficeRoutePlan {
     }
 
     public void resetCanUrgent(){this.canUrgent = 2;}
-
-    public int getTECHNICAL_PRINTER_COUNT() {
-        return TECHNICAL_PRINTER_COUNT;
-    }
-
-    public void setTECHNICAL_PRINTER_COUNT(int num) {
-        this.TECHNICAL_PRINTER_COUNT -= num;
-    }
 
     public int getTECHNICAL_CUBICLE_COUNT() {
         return TECHNICAL_CUBICLE_COUNT;
