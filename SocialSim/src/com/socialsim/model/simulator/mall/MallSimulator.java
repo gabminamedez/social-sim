@@ -421,6 +421,7 @@ public class MallSimulator extends Simulator {
                 case STAFF_RESTO:
                     if (state.getName() == MallState.Name.STAFF_RESTO) {
                         if (action.getName() == MallAction.Name.STAFF_RESTO_SERVE) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.chooseRandomTable();
                                 agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
@@ -455,6 +456,7 @@ public class MallSimulator extends Simulator {
                 case STAFF_STORE_SALES:
                     if (state.getName() == MallState.Name.STAFF_STORE_SALES) {
                         if (action.getName() == MallAction.Name.STAFF_STORE_STATION) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.chooseRandomAisle();
                                 agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
@@ -489,6 +491,7 @@ public class MallSimulator extends Simulator {
                 case PATRON:
                     if (state.getName() == MallState.Name.GOING_TO_SECURITY) {
                         if (action.getName() == MallAction.Name.GOING_TO_SECURITY_QUEUE) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalQueueingPatchField() == null) {
                                 if (agentMovement.getIsGate1()) {
                                     agentMovement.setGoalQueueingPatchField(Main.mallSimulator.getMall().getSecurities().get(0).getAmenityBlocks().get(1).getPatch().getQueueingPatchField().getKey());
@@ -513,6 +516,7 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.GO_THROUGH_SCANNER) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();
                                 agentMovement.moveSocialForce();
@@ -546,6 +550,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.WANDERING_AROUND) {
                         if (action.getName() == MallAction.Name.FIND_BENCH || action.getName() == MallAction.Name.FIND_DIRECTORY || action.getName() == MallAction.Name.GO_CONCIERGE) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (action.getName() == MallAction.Name.FIND_BENCH) {
                                     if (!agentMovement.chooseGoal(Bench.class)) {
@@ -600,6 +605,7 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.SIT_ON_BENCH || action.getName() == MallAction.Name.VIEW_DIRECTORY || action.getName() == MallAction.Name.ASK_CONCIERGE) {
+                            agentMovement.setSimultaneousInteractionAllowed(true);
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
                                 agentMovement.setNextState(agentMovement.getStateIndex());
@@ -613,6 +619,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.NEEDS_BATHROOM) {
                         if (action.getName() == MallAction.Name.GO_TO_BATHROOM) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (!agentMovement.chooseBathroomGoal(Toilet.class)) {
                                     agentMovement.getRoutePlan().getCurrentRoutePlan().add(agentMovement.getStateIndex() - 1, agentMovement.getRoutePlan().addWaitingRoute(agent));
@@ -647,6 +654,7 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.RELIEVE_IN_CUBICLE) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
                             agentMovement.setDuration(agentMovement.getDuration() - 1);
                             if (agentMovement.getDuration() <= 0) {
@@ -660,6 +668,7 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.WASH_IN_SINK) {
+                            agentMovement.setSimultaneousInteractionAllowed(true);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if (!agentMovement.chooseBathroomGoal(Sink.class)) {
                                     agentMovement.setNextState(agentMovement.getStateIndex());
@@ -697,6 +706,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.GOING_TO_SHOWCASE) {
                         if (action.getName() == MallAction.Name.GO_TO_KIOSK) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalQueueingPatchField() == null) {
                                 agentMovement.chooseKiosk();
                             }
@@ -720,6 +730,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.IN_SHOWCASE) {
                         if (action.getName() == MallAction.Name.QUEUE_KIOSK) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();
                                 agentMovement.moveSocialForce();
@@ -734,6 +745,7 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.CHECKOUT_KIOSK) {
+                            agentMovement.setSimultaneousInteractionAllowed(true);
                             if (agentMovement.getLeaderAgent() == null && !agentMovement.isStationInteracting()) {
                                 agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_KIOSK);
                             }
@@ -753,6 +765,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.GOING_TO_RESTO) {
                         if (action.getName() == MallAction.Name.GO_TO_RESTAURANT) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.chooseRandomTablePatron("RESTO");
                             }
@@ -784,6 +797,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.IN_RESTO) {
                         if (action.getName() == MallAction.Name.RESTAURANT_STAY_PUT) {
+                            agentMovement.setSimultaneousInteractionAllowed(true);
                             if (agentMovement.getGoalAmenity() != null) {
                                 if (agentMovement.getLeaderAgent() == null && !agentMovement.isStationInteracting()) {
                                     agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_RESTO);
@@ -808,6 +822,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.GOING_TO_DINING) {
                         if (action.getName() == MallAction.Name.GO_TO_KIOSK) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalQueueingPatchField() == null) {
                                 agentMovement.setGoalQueueingPatchField(Main.mallSimulator.getMall().getKioskFields().get(0));
                                 agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getKiosks().get(0));
@@ -828,6 +843,7 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.QUEUE_KIOSK) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.chooseNextPatchInPath()) {
                                 agentMovement.faceNextPosition();
                                 agentMovement.moveSocialForce();
@@ -842,6 +858,7 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.CHECKOUT_KIOSK) {
+                            agentMovement.setSimultaneousInteractionAllowed(true);
                             if (agentMovement.getLeaderAgent() == null && !agentMovement.isStationInteracting()) {
                                 agentMovement.forceStationedInteraction(MallAgent.Persona.STAFF_KIOSK);
                             }
@@ -861,6 +878,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.IN_DINING) {
                         if (action.getName() == MallAction.Name.GO_TO_DINING_AREA) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.chooseRandomTablePatron("DINING");
                             }
@@ -898,6 +916,7 @@ public class MallSimulator extends Simulator {
                     else if (state.getName() == MallState.Name.GOING_TO_STORE) {
                         agentMovement.getRoutePlan().MAX_STORE_HELP = 1;
                         if (action.getName() == MallAction.Name.GO_TO_STORE) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                                 if (agentMovement.getLeaderAgent() == null) {
@@ -963,6 +982,7 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.GO_TO_AISLE) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.setGoalAmenity(agentMovement.getCurrentAction().getDestination().getAmenityBlock().getParent());
                                 if (agentMovement.getLeaderAgent() == null) {
@@ -995,6 +1015,7 @@ public class MallSimulator extends Simulator {
                             }
                         }
                         else if (action.getName() == MallAction.Name.CHECKOUT_STORE) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 agentMovement.setGoalAmenity(Main.mallSimulator.getMall().getStoreCounters().get(agentMovement.getCurrentState().getStoreNum()));
                                 agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(agentMovement.getGoalAmenity().getAttractors().size())));
@@ -1037,6 +1058,7 @@ public class MallSimulator extends Simulator {
                     }
                     else if (state.getName() == MallState.Name.GOING_HOME) {
                         if (action.getName() == MallAction.Name.LEAVE_BUILDING) {
+                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 boolean isGate1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
                                 if (isGate1) {
