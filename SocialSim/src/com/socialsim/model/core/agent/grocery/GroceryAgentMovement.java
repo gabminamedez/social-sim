@@ -1504,29 +1504,29 @@ public class GroceryAgentMovement extends AgentMovement {
         GrocerySimulator.currentPatchCount[currentPatch.getMatrixPosition().getRow()][currentPatch.getMatrixPosition().getColumn()]++;
         if (agentPersona == GroceryAgent.Persona.CASHIER) {
             if (goalAmenity == grocery.getCashierCounters().get(0)) {
-                GrocerySimulator.currentPatchCount[44][20]++;
-            }
-            else if (goalAmenity == grocery.getCashierCounters().get(1)) {
                 GrocerySimulator.currentPatchCount[44][26]++;
             }
-            else if (goalAmenity == grocery.getCashierCounters().get(2)) {
-                GrocerySimulator.currentPatchCount[44][32]++;
-            }
-            else if (goalAmenity == grocery.getCashierCounters().get(3)) {
+            else if (goalAmenity == grocery.getCashierCounters().get(1)) {
                 GrocerySimulator.currentPatchCount[44][38]++;
             }
-            else if (goalAmenity == grocery.getCashierCounters().get(4)) {
-                GrocerySimulator.currentPatchCount[44][44]++;
-            }
-            else if (goalAmenity == grocery.getCashierCounters().get(5)) {
+            else if (goalAmenity == grocery.getCashierCounters().get(2)) {
                 GrocerySimulator.currentPatchCount[44][50]++;
             }
-            else if (goalAmenity == grocery.getCashierCounters().get(6)) {
-                GrocerySimulator.currentPatchCount[44][56]++;
-            }
-            else if (goalAmenity == grocery.getCashierCounters().get(7)) {
+            else if (goalAmenity == grocery.getCashierCounters().get(3)) {
                 GrocerySimulator.currentPatchCount[44][62]++;
             }
+//            else if (goalAmenity == grocery.getCashierCounters().get(4)) {
+//                GrocerySimulator.currentPatchCount[44][44]++;
+//            }
+//            else if (goalAmenity == grocery.getCashierCounters().get(5)) {
+//                GrocerySimulator.currentPatchCount[44][50]++;
+//            }
+//            else if (goalAmenity == grocery.getCashierCounters().get(6)) {
+//                GrocerySimulator.currentPatchCount[44][56]++;
+//            }
+//            else if (goalAmenity == grocery.getCashierCounters().get(7)) {
+//                GrocerySimulator.currentPatchCount[44][62]++;
+//            }
             GrocerySimulator.currentCustomerCashierCount++;
             this.heading = 0;
             this.interactionDuration = this.duration * 2 / 3;
