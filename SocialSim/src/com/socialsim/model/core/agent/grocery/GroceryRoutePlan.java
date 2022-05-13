@@ -350,8 +350,8 @@ public class GroceryRoutePlan {
             actions.add(new GroceryAction(GroceryAction.Name.GET_CART, randomCart, 2));
             routePlan.add(new GroceryState(GroceryState.Name.GOING_CART, this, agent, actions));
         }
+        int newCluster = 0;
         while (numProducts > 0) {
-            int newCluster = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(GroceryState.NUM_CLUSTERS);
             switch (newCluster) {
                 case 0 -> {
                     Patch randomWall0 = grocery.getProductWalls().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(4) + 10).getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(8)).getPatch();
@@ -528,6 +528,7 @@ public class GroceryRoutePlan {
                     routePlan.add(new GroceryState(GroceryState.Name.IN_PRODUCTS_MEAT, this, agent, actions, GroceryState.AisleCluster.MEAT_CLUSTER));
                 }
             }
+            newCluster++;
             numProducts--;
 
             x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
@@ -567,7 +568,7 @@ public class GroceryRoutePlan {
             MAX_BATHROOM -= 1;
         }
 
-        int routeIndex = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3);
+        int routeIndex = 0;
         int routeIndexFinal = routeIndex;
         GroceryState.AisleCluster[] route = GroceryState.createRoute(routeIndex);
         routeIndex = 0;
