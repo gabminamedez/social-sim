@@ -2849,7 +2849,6 @@ public class UniversitySimulator extends Simulator {
                         }
                         else if (action.getName() == UniversityAction.Name.GO_TO_STAFF) {
                             agentMovement.setSimultaneousInteractionAllowed(false);
-                            agentMovement.setSimultaneousInteractionAllowed(false);
                             if (agentMovement.getGoalAmenity() == null) {
                                 if(!agentMovement.chooseStaffroomGoal(Chair.class)){
                                     agentMovement.setNextState(agentMovement.getStateIndex());
