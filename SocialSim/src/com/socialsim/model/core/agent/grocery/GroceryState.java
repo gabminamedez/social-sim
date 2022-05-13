@@ -126,9 +126,6 @@ public class GroceryState {
                 AisleCluster.AISLE_3_4_CLUSTER,
                 AisleCluster.AISLE_4_FRONT_CLUSTER,
                 AisleCluster.FROZEN_1_CLUSTER,
-                AisleCluster.FROZEN_2_CLUSTER,
-                AisleCluster.FROZEN_3_AISLE_CLUSTER,
-                AisleCluster.MEAT_AISLE_1_CLUSTER,
                 AisleCluster.MEAT_AISLE_FRONT_CLUSTER,
                 AisleCluster.MEAT_CLUSTER};
     }
@@ -142,9 +139,6 @@ public class GroceryState {
                 AisleCluster.RIGHT_WALL_CLUSTER,
                 AisleCluster.TOP_WALL_CLUSTER,
                 AisleCluster.FROZEN_1_CLUSTER,
-                AisleCluster.FROZEN_2_CLUSTER,
-                AisleCluster.FROZEN_3_AISLE_CLUSTER,
-                AisleCluster.MEAT_AISLE_1_CLUSTER,
                 AisleCluster.MEAT_AISLE_FRONT_CLUSTER,
                 AisleCluster.MEAT_CLUSTER};
     }
@@ -153,15 +147,12 @@ public class GroceryState {
         return new GroceryState.AisleCluster[] {
                 AisleCluster.AISLE_4_FRONT_CLUSTER,
                 AisleCluster.MEAT_AISLE_FRONT_CLUSTER,
-                AisleCluster.MEAT_AISLE_1_CLUSTER,
                 AisleCluster.AISLE_3_4_CLUSTER,
                 AisleCluster.AISLE_2_3_CLUSTER,
                 AisleCluster.AISLE_1_2_CLUSTER,
                 AisleCluster.RIGHT_WALL_CLUSTER,
                 AisleCluster.TOP_WALL_CLUSTER,
                 AisleCluster.FROZEN_1_CLUSTER,
-                AisleCluster.FROZEN_2_CLUSTER,
-                AisleCluster.FROZEN_3_AISLE_CLUSTER,
                 AisleCluster.MEAT_CLUSTER};
     }
 
