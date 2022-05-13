@@ -304,13 +304,13 @@ public class GroceryScreenController extends ScreenController {
         TableMapper.draw(tablePatches);
 
         List<Patch> cashierCounterPatches = new ArrayList<>();
-        cashierCounterPatches.add(grocery.getPatch(43,19));
+//        cashierCounterPatches.add(grocery.getPatch(43,19));
         cashierCounterPatches.add(grocery.getPatch(43,25));
-        cashierCounterPatches.add(grocery.getPatch(43,31));
+//        cashierCounterPatches.add(grocery.getPatch(43,31));
         cashierCounterPatches.add(grocery.getPatch(43,37));
-        cashierCounterPatches.add(grocery.getPatch(43,43));
+//        cashierCounterPatches.add(grocery.getPatch(43,43));
         cashierCounterPatches.add(grocery.getPatch(43,49));
-        cashierCounterPatches.add(grocery.getPatch(43,55));
+//        cashierCounterPatches.add(grocery.getPatch(43,55));
         cashierCounterPatches.add(grocery.getPatch(43,61));
         CashierCounterMapper.draw(cashierCounterPatches);
 

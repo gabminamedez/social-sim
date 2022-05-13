@@ -400,14 +400,14 @@ public class Grocery extends Environment {
         this.getAgents().add(cashier3);
         GroceryAgent cashier4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
         this.getAgents().add(cashier4);
-        GroceryAgent cashier5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
-        this.getAgents().add(cashier5);
-        GroceryAgent cashier6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
-        this.getAgents().add(cashier6);
-        GroceryAgent cashier7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
-        this.getAgents().add(cashier7);
-        GroceryAgent cashier8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
-        this.getAgents().add(cashier8);
+//        GroceryAgent cashier5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
+//        this.getAgents().add(cashier5);
+//        GroceryAgent cashier6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
+//        this.getAgents().add(cashier6);
+//        GroceryAgent cashier7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
+//        this.getAgents().add(cashier7);
+//        GroceryAgent cashier8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CASHIER, GroceryAgent.Persona.CASHIER, null, null, false, true);
+//        this.getAgents().add(cashier8);
 
         GroceryAgent bagger1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger1);
@@ -417,14 +417,14 @@ public class Grocery extends Environment {
         this.getAgents().add(bagger3);
         GroceryAgent bagger4 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
         this.getAgents().add(bagger4);
-        GroceryAgent bagger5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
-        this.getAgents().add(bagger5);
-        GroceryAgent bagger6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
-        this.getAgents().add(bagger6);
-        GroceryAgent bagger7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
-        this.getAgents().add(bagger7);
-        GroceryAgent bagger8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
-        this.getAgents().add(bagger8);
+//        GroceryAgent bagger5 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
+//        this.getAgents().add(bagger5);
+//        GroceryAgent bagger6 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
+//        this.getAgents().add(bagger6);
+//        GroceryAgent bagger7 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
+//        this.getAgents().add(bagger7);
+//        GroceryAgent bagger8 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.BAGGER, GroceryAgent.Persona.BAGGER, null, null, false, true);
+//        this.getAgents().add(bagger8);
 
         GroceryAgent service1 = GroceryAgent.GroceryAgentFactory.create(GroceryAgent.Type.CUSTOMER_SERVICE, GroceryAgent.Persona.CUSTOMER_SERVICE, null, null, false, true);
         this.getAgents().add(service1);
