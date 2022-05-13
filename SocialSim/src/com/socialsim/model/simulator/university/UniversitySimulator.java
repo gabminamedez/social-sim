@@ -526,7 +526,7 @@ public class UniversitySimulator extends Simulator {
                             if (!agent.getAgentMovement().chooseBathroomGoal(Toilet.class)) {
                                 agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().add(agent.getAgentMovement().getStateIndex() - 1, agent.getAgentMovement().getRoutePlan().addWaitingRoute(6,0,agent));
                                 agent.getAgentMovement().setPreviousState(agent.getAgentMovement().getStateIndex());
-                                agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() -1);
+                                agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() - 1);
                                 agent.getAgentMovement().setActionIndex(0);
                                 agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(agent.getAgentMovement().getActionIndex()));
                                 if(agent.getAgentMovement().getGoalAttractor() != null) {

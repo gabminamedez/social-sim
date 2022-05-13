@@ -1457,6 +1457,17 @@ public class Mall extends Environment {
         }
     }
 
+    public boolean allBathroomsOccupied(){
+        List<? extends Amenity> amenityListInFloor = this.getAmenityList(Toilet.class);
+        boolean allOccupied = true;
+        for (Amenity amenity : amenityListInFloor)
+            if (!amenity.getAmenityBlocks().get(0).getIsReserved()) {
+                allOccupied = false;
+                break;
+            }
+        return allOccupied;
+    }
+
     public static class MallFactory extends BaseObject.ObjectFactory {
         public static Mall create(int rows, int columns) {
             return new Mall(rows, columns);

@@ -11,7 +11,6 @@ import com.socialsim.model.core.environment.office.patchfield.*;
 import com.socialsim.model.core.environment.office.patchobject.passable.gate.OfficeGate;
 import com.socialsim.model.core.environment.office.patchobject.passable.goal.*;
 import com.socialsim.model.simulator.Simulator;
-import com.socialsim.model.simulator.office.OfficeSimulator;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import static com.socialsim.model.core.agent.office.OfficeAgent.*;
@@ -1971,6 +1970,17 @@ public class Office extends Environment {
                 }
             }
         }
+    }
+    
+    public boolean allBathroomsOccupied(){
+        List<? extends Amenity> amenityListInFloor = this.getAmenityList(Toilet.class);
+        boolean allOccupied = true;
+        for (Amenity amenity : amenityListInFloor)
+            if (!amenity.getAmenityBlocks().get(0).getIsReserved()) {
+                allOccupied = false;
+                break;
+            }
+        return allOccupied;
     }
 
     public static class OfficeFactory extends BaseObject.ObjectFactory {
