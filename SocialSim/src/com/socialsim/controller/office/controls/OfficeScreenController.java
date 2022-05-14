@@ -531,32 +531,31 @@ public class OfficeScreenController extends ScreenController {
         TableMapper.draw(tableRightPatches, "RIGHT");
 
         List<Patch> toiletPatches = new ArrayList<>();
-        toiletPatches.add(office.getPatch(3,8));
+        //toiletPatches.add(office.getPatch(3,8));
         toiletPatches.add(office.getPatch(3,10));
-        toiletPatches.add(office.getPatch(3,12));
+        //toiletPatches.add(office.getPatch(3,12));
         toiletPatches.add(office.getPatch(3,14));
-        toiletPatches.add(office.getPatch(3,16));
+        //toiletPatches.add(office.getPatch(3,16));
         toiletPatches.add(office.getPatch(3,18));
-        toiletPatches.add(office.getPatch(12,8));
+        //toiletPatches.add(office.getPatch(12,8));
         toiletPatches.add(office.getPatch(12,10));
-        toiletPatches.add(office.getPatch(12,12));
+        //toiletPatches.add(office.getPatch(12,12));
         toiletPatches.add(office.getPatch(12,14));
-        toiletPatches.add(office.getPatch(12,16));
+        //toiletPatches.add(office.getPatch(12,16));
         toiletPatches.add(office.getPatch(12,18));
         ToiletMapper.draw(toiletPatches);
 
         List<Patch> sinkPatches = new ArrayList<>();
         sinkPatches.add(office.getPatch(8,8));
-        sinkPatches.add(office.getPatch(8,10));
-        sinkPatches.add(office.getPatch(8,12));
+        //sinkPatches.add(office.getPatch(8,12));
         sinkPatches.add(office.getPatch(8,14));
-        sinkPatches.add(office.getPatch(8,16));
+        //sinkPatches.add(office.getPatch(8,16));
         sinkPatches.add(office.getPatch(8,18));
-        sinkPatches.add(office.getPatch(17,8));
+        //sinkPatches.add(office.getPatch(17,8));
         sinkPatches.add(office.getPatch(17,10));
-        sinkPatches.add(office.getPatch(17,12));
+        //sinkPatches.add(office.getPatch(17,12));
         sinkPatches.add(office.getPatch(17,14));
-        sinkPatches.add(office.getPatch(17,16));
+        //sinkPatches.add(office.getPatch(17,16));
         sinkPatches.add(office.getPatch(17,18));
         SinkMapper.draw(sinkPatches);
 
