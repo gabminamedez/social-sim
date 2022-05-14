@@ -39,20 +39,20 @@ public class OfficeSimulator extends Simulator {
     private final int MAX_SECRETARIES = 1;
     public static List<Integer> MANAGERS_1 = new LinkedList<Integer>(List.of(11));
     public static List<Integer> MANAGERS_2 = new LinkedList<Integer>(List.of(19));
-    public static List<Integer> MANAGERS_3 = new LinkedList<Integer>(List.of(27));
-    public static List<Integer> MANAGERS_4 = new LinkedList<Integer>(List.of(35));
+//    public static List<Integer> MANAGERS_3 = new LinkedList<Integer>(List.of(27));
+//    public static List<Integer> MANAGERS_4 = new LinkedList<Integer>(List.of(35));
     public static List<Integer> BUSINESS_1 = new LinkedList<Integer>(List.of(0, 1, 2, 3, 4));
     public static List<Integer> BUSINESS_2 = new LinkedList<Integer>(List.of(36, 37, 38, 39, 40, 41, 42));
-    public static List<Integer> BUSINESS_3 = new LinkedList<Integer>(List.of(44, 45, 46, 47, 48, 49, 50));
-    public static List<Integer> BUSINESS_4 = new LinkedList<Integer>(List.of(52, 53, 54, 55, 56, 57, 58));
+//    public static List<Integer> BUSINESS_3 = new LinkedList<Integer>(List.of(44, 45, 46, 47, 48, 49, 50));
+//    public static List<Integer> BUSINESS_4 = new LinkedList<Integer>(List.of(52, 53, 54, 55, 56, 57, 58));
     public static List<Integer> RESEARCH_1 = new LinkedList<Integer>(List.of(5, 6, 7, 8, 9));
     public static List<Integer> RESEARCH_2 = new LinkedList<Integer>(List.of(12, 13, 14, 15, 16, 17, 18));
-    public static List<Integer> RESEARCH_3 = new LinkedList<Integer>(List.of(20, 21, 22, 23, 24, 25, 26));
-    public static List<Integer> RESEARCH_4 = new LinkedList<Integer>(List.of(28, 29, 30, 31, 32, 33, 34));
+//    public static List<Integer> RESEARCH_3 = new LinkedList<Integer>(List.of(20, 21, 22, 23, 24, 25, 26));
+//    public static List<Integer> RESEARCH_4 = new LinkedList<Integer>(List.of(28, 29, 30, 31, 32, 33, 34));
     public static List<Integer> TECHNICAL_1 = new LinkedList<Integer>(List.of(10));
     public static List<Integer> TECHNICAL_2 = new LinkedList<Integer>(List.of(43));
-    public static List<Integer> TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
-    public static List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
+//    public static List<Integer> TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
+//    public static List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
 
     public static int currentManagerCount = 0;
     public static int currentBusinessCount = 0;
@@ -2899,7 +2899,7 @@ public class OfficeSimulator extends Simulator {
                         OfficeAgent.technicalCount++;
                         OfficeAgent.agentCount++;
                     }
-                    else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 3 && MANAGERS_3.size() != 0) {
+                    /*else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 3 && MANAGERS_3.size() != 0) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_3.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
                         MANAGERS_3.remove(0);
@@ -2970,7 +2970,7 @@ public class OfficeSimulator extends Simulator {
                         currentTeam4Count++;
                         OfficeAgent.technicalCount++;
                         OfficeAgent.agentCount++;
-                    }
+                    }*/
                     else if (agent.getType() == OfficeAgent.Type.SECRETARY && OfficeAgent.secretaryCount != MAX_SECRETARIES) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
@@ -3012,20 +3012,20 @@ public class OfficeSimulator extends Simulator {
     public void replenishStaticVars() {
         MANAGERS_1 = new LinkedList<Integer>(List.of(11));
         MANAGERS_2 = new LinkedList<Integer>(List.of(19));
-        MANAGERS_3 = new LinkedList<Integer>(List.of(27));
-        MANAGERS_4 = new LinkedList<Integer>(List.of(35));
+//        MANAGERS_3 = new LinkedList<Integer>(List.of(27));
+//        MANAGERS_4 = new LinkedList<Integer>(List.of(35));
         BUSINESS_1 = new LinkedList<Integer>(List.of(0, 1, 2, 3, 4));
         BUSINESS_2 = new LinkedList<Integer>(List.of(36, 37, 38, 39, 40, 41, 42));
-        BUSINESS_3 = new LinkedList<Integer>(List.of(44, 45, 46, 47, 48, 49, 50));
-        BUSINESS_4 = new LinkedList<Integer>(List.of(52, 53, 54, 55, 56, 57, 58));
+//        BUSINESS_3 = new LinkedList<Integer>(List.of(44, 45, 46, 47, 48, 49, 50));
+//        BUSINESS_4 = new LinkedList<Integer>(List.of(52, 53, 54, 55, 56, 57, 58));
         RESEARCH_1 = new LinkedList<Integer>(List.of(5, 6, 7, 8, 9));
         RESEARCH_2 = new LinkedList<Integer>(List.of(12, 13, 14, 15, 16, 17, 18));
-        RESEARCH_3 = new LinkedList<Integer>(List.of(20, 21, 22, 23, 24, 25, 26));
-        RESEARCH_4 = new LinkedList<Integer>(List.of(28, 29, 30, 31, 32, 33, 34));
+//        RESEARCH_3 = new LinkedList<Integer>(List.of(20, 21, 22, 23, 24, 25, 26));
+//        RESEARCH_4 = new LinkedList<Integer>(List.of(28, 29, 30, 31, 32, 33, 34));
         TECHNICAL_1 = new LinkedList<Integer>(List.of(10));
         TECHNICAL_2 = new LinkedList<Integer>(List.of(43));
-        TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
-        TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
+//        TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
+//        TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
         currentManagerCount = 0;
         currentBusinessCount = 0;
         currentResearchCount = 0;
@@ -3220,7 +3220,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     public static void exportToCSV() throws Exception{
-        PrintWriter writer = new PrintWriter("Office SocialSim Statistics.csv");
+        PrintWriter writer = new PrintWriter("stat3.csv");
         StringBuilder sb = new StringBuilder();
         sb.append("Current Manager Count");
         sb.append(",");
@@ -3610,7 +3610,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     public static void exportHeatMap() throws Exception {
-        PrintWriter writer = new PrintWriter("Office SocialSim Heat Map.csv");
+        PrintWriter writer = new PrintWriter("hm3.csv");
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < currentPatchCount.length; i++){
