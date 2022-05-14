@@ -1460,15 +1460,15 @@ public class Grocery extends Environment {
             }
         }
     }
-    public boolean allBathroomsOccupied(){
-        List<? extends Amenity> amenityListInFloor = this.getAmenityList(Toilet.class);
-        boolean allOccupied = true;
+    public int numBathroomsFree(){
+        List<? extends Amenity> amenityListInFloor = this.getAmenityList(com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet.class);
+        int ctr = 0;
         for (Amenity amenity : amenityListInFloor)
             if (!amenity.getAmenityBlocks().get(0).getIsReserved()) {
-                allOccupied = false;
+                ctr++;
                 break;
             }
-        return allOccupied;
+        return ctr;
     }
 
     public static class GroceryFactory extends BaseObject.ObjectFactory {

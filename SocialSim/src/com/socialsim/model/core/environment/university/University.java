@@ -141,15 +141,15 @@ public class University extends Environment {
     }
 
 
-    public boolean allBathroomsOccupied(){
+    public int numBathroomsFree(){
         List<? extends Amenity> amenityListInFloor = this.getAmenityList(Toilet.class);
-        boolean allOccupied = true;
+        int ctr = 0;
         for (Amenity amenity : amenityListInFloor)
             if (!amenity.getAmenityBlocks().get(0).getIsReserved()) {
-                allOccupied = false;
+                ctr++;
                 break;
             }
-        return allOccupied;
+        return ctr;
     }
 
     public CopyOnWriteArrayList<UniversityAgent> getAgents() {

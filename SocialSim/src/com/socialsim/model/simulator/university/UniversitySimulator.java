@@ -222,6 +222,7 @@ public class UniversitySimulator extends Simulator {
     }
 
     private static void moveAll(University university,long currentTick) {
+        int bathroomReserves = university.numBathroomsFree();
         for (UniversityAgent agent : university.getMovableAgents()) {
             int randomizerTick = Simulator.rollIntIN(50);
             //TODO: Ask what range of the randomizer would be
@@ -522,18 +523,16 @@ public class UniversitySimulator extends Simulator {
                     }
                     // Logic for Bathroom Wait
                     if (agent.getAgentMovement().getCurrentState().getName() == UniversityState.Name.WAIT_INFRONT_OF_CLASS && agent.getAgentMovement().getCurrentState().getClassroomID() == 6){
-                        if (!university.allBathroomsOccupied()){
-                            if (!agent.getAgentMovement().chooseBathroomGoal(Toilet.class)) {
-                                agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().add(agent.getAgentMovement().getStateIndex() - 1, agent.getAgentMovement().getRoutePlan().addWaitingRoute(6,0,agent));
-                                agent.getAgentMovement().setPreviousState(agent.getAgentMovement().getStateIndex());
-                                agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() -1);
-                                agent.getAgentMovement().setActionIndex(0);
-                                agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(agent.getAgentMovement().getActionIndex()));
-                                if(agent.getAgentMovement().getGoalAttractor() != null) {
-                                    agent.getAgentMovement().getGoalAttractor().setIsReserved(false);
-                                }
-                                agent.getAgentMovement().resetGoal();
+                        if (bathroomReserves > 0){
+                            agent.getAgentMovement().setNextState(agent.getAgentMovement().getStateIndex());
+                            agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
+                            agent.getAgentMovement().setActionIndex(0);
+                            agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(agent.getAgentMovement().getActionIndex()));
+                            if (agent.getAgentMovement().getGoalAttractor() != null) {
+                                agent.getAgentMovement().getGoalAttractor().setIsReserved(false);
                             }
+                            agent.getAgentMovement().resetGoal();
+                            bathroomReserves--;
                         }
                     }
                 }
