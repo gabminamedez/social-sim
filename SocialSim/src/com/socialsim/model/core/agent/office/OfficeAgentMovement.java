@@ -688,10 +688,10 @@ public class OfficeAgentMovement extends AgentMovement {
                     }
                 }
 
-                for (int i = start1; i < start1 + 51; i += 10) {
+                for (int i = start1; i < start1 + 51; i += 20) {
                     temp.add(this.office.getChairs().get(i));
                 }
-                for (int i = start2; i < start2 + 51; i += 10) {
+                for (int i = start2; i < start2 + 51; i += 20) {
                     temp.add(this.office.getChairs().get(i));
                 }
 
