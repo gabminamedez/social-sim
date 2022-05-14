@@ -449,6 +449,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     private static void moveAll(Office office, long currentTick) {
+        int bathroomReserves = office.numBathroomsFree();
         for (OfficeAgent agent : office.getMovableAgents()) {
             try {
                 if (currentTick == 2160 && agent.getAgentMovement().getRoutePlan().getLUNCH_INSTANCE() != null) {
@@ -493,18 +494,16 @@ public class OfficeSimulator extends Simulator {
                     agent.getAgentMovement().resetGoal();
                 }
                 if (agent.getAgentMovement().getCurrentState().getName() == OfficeState.Name.WAIT_INFRONT_OF_BATHROOM){
-                    if (!office.allBathroomsOccupied()){
-                        if (!agent.getAgentMovement().chooseBathroomGoal(com.socialsim.model.core.environment.office.patchobject.passable.goal.Toilet.class)) {
-                            agent.getAgentMovement().getRoutePlan().getCurrentRoutePlan().add(agent.getAgentMovement().getStateIndex() - 1, agent.getAgentMovement().getRoutePlan().addWaitingRoute(agent));
-                            agent.getAgentMovement().setPreviousState(agent.getAgentMovement().getStateIndex());
-                            agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() - 1);
-                            agent.getAgentMovement().setActionIndex(0);
-                            agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(agent.getAgentMovement().getActionIndex()));
-                            if(agent.getAgentMovement().getGoalAttractor() != null) {
-                                agent.getAgentMovement().getGoalAttractor().setIsReserved(false);
-                            }
-                            agent.getAgentMovement().resetGoal();
+                    if (bathroomReserves > 0){
+                        agent.getAgentMovement().setNextState(agent.getAgentMovement().getStateIndex());
+                        agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
+                        agent.getAgentMovement().setActionIndex(0);
+                        agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(agent.getAgentMovement().getActionIndex()));
+                        if (agent.getAgentMovement().getGoalAttractor() != null) {
+                            agent.getAgentMovement().getGoalAttractor().setIsReserved(false);
                         }
+                        agent.getAgentMovement().resetGoal();
+                        bathroomReserves--;
                     }
                 }
 
