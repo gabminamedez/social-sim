@@ -41,7 +41,7 @@ public class OfficeSimulator extends Simulator {
     public static List<Integer> MANAGERS_2 = new LinkedList<Integer>(List.of(19));
     public static List<Integer> MANAGERS_3 = new LinkedList<Integer>(List.of(27));
     public static List<Integer> MANAGERS_4 = new LinkedList<Integer>(List.of(35));
-    public static List<Integer> BUSINESS_1 = new LinkedList<Integer>(List.of(0, 1, 2, 3, 4));
+    /*public static List<Integer> BUSINESS_1 = new LinkedList<Integer>(List.of(0, 1, 2, 3, 4));
     public static List<Integer> BUSINESS_2 = new LinkedList<Integer>(List.of(36, 37, 38, 39, 40, 41, 42));
     public static List<Integer> BUSINESS_3 = new LinkedList<Integer>(List.of(44, 45, 46, 47, 48, 49, 50));
     public static List<Integer> BUSINESS_4 = new LinkedList<Integer>(List.of(52, 53, 54, 55, 56, 57, 58));
@@ -52,7 +52,7 @@ public class OfficeSimulator extends Simulator {
     public static List<Integer> TECHNICAL_1 = new LinkedList<Integer>(List.of(10));
     public static List<Integer> TECHNICAL_2 = new LinkedList<Integer>(List.of(43));
     public static List<Integer> TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
-    public static List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
+    public static List<Integer> TECHNICAL_4 = new LinkedList<Integer>(List.of(59));*/
 
     public static int currentManagerCount = 0;
     public static int currentBusinessCount = 0;
@@ -2835,7 +2835,7 @@ public class OfficeSimulator extends Simulator {
                         currentTeam1Count++;
                         OfficeAgent.managerCount++;
                         OfficeAgent.agentCount++;
-                    }
+                    }/*
                     else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 1 && BUSINESS_1.size() != 0) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_1.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
@@ -2862,7 +2862,7 @@ public class OfficeSimulator extends Simulator {
                         currentTeam1Count++;
                         OfficeAgent.technicalCount++;
                         OfficeAgent.agentCount++;
-                    }
+                    }*/
                     else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 2 && MANAGERS_2.size() != 0) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_2.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
@@ -2871,7 +2871,7 @@ public class OfficeSimulator extends Simulator {
                         currentTeam2Count++;
                         OfficeAgent.managerCount++;
                         OfficeAgent.agentCount++;
-                    }
+                    }/*
                     else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 2 && BUSINESS_2.size() != 0) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_2.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
@@ -2898,7 +2898,7 @@ public class OfficeSimulator extends Simulator {
                         currentTeam2Count++;
                         OfficeAgent.technicalCount++;
                         OfficeAgent.agentCount++;
-                    }
+                    }*/
                     else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 3 && MANAGERS_3.size() != 0) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_3.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
@@ -2907,7 +2907,7 @@ public class OfficeSimulator extends Simulator {
                         currentTeam3Count++;
                         OfficeAgent.managerCount++;
                         OfficeAgent.agentCount++;
-                    }
+                    }/*
                     else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 3 && BUSINESS_3.size() != 0) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_3.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
@@ -2934,7 +2934,7 @@ public class OfficeSimulator extends Simulator {
                         currentTeam3Count++;
                         OfficeAgent.technicalCount++;
                         OfficeAgent.agentCount++;
-                    }
+                    }*/
                     else if (agent.getType() == OfficeAgent.Type.MANAGER && team == 4 && MANAGERS_4.size() != 0) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(MANAGERS_4.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
@@ -2943,7 +2943,7 @@ public class OfficeSimulator extends Simulator {
                         currentTeam4Count++;
                         OfficeAgent.managerCount++;
                         OfficeAgent.agentCount++;
-                    }
+                    }/*
                     else if (agent.getType() == OfficeAgent.Type.BUSINESS && team == 4 && BUSINESS_4.size() != 0) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, team, office.getCubicles().get(BUSINESS_4.get(0))));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
@@ -2970,7 +2970,7 @@ public class OfficeSimulator extends Simulator {
                         currentTeam4Count++;
                         OfficeAgent.technicalCount++;
                         OfficeAgent.agentCount++;
-                    }
+                    }*/
                     else if (agent.getType() == OfficeAgent.Type.SECRETARY && OfficeAgent.secretaryCount != MAX_SECRETARIES) {
                         agent.setAgentMovement(new OfficeAgentMovement(spawner.getPatch(), agent, 1.27, spawner.getPatch().getPatchCenterCoordinates(), currentTick, 0, null));
                         office.getAgentPatchSet().add(agent.getAgentMovement().getCurrentPatch());
@@ -3014,7 +3014,7 @@ public class OfficeSimulator extends Simulator {
         MANAGERS_2 = new LinkedList<Integer>(List.of(19));
         MANAGERS_3 = new LinkedList<Integer>(List.of(27));
         MANAGERS_4 = new LinkedList<Integer>(List.of(35));
-        BUSINESS_1 = new LinkedList<Integer>(List.of(0, 1, 2, 3, 4));
+        /*BUSINESS_1 = new LinkedList<Integer>(List.of(0, 1, 2, 3, 4));
         BUSINESS_2 = new LinkedList<Integer>(List.of(36, 37, 38, 39, 40, 41, 42));
         BUSINESS_3 = new LinkedList<Integer>(List.of(44, 45, 46, 47, 48, 49, 50));
         BUSINESS_4 = new LinkedList<Integer>(List.of(52, 53, 54, 55, 56, 57, 58));
@@ -3025,7 +3025,7 @@ public class OfficeSimulator extends Simulator {
         TECHNICAL_1 = new LinkedList<Integer>(List.of(10));
         TECHNICAL_2 = new LinkedList<Integer>(List.of(43));
         TECHNICAL_3 = new LinkedList<Integer>(List.of(51));
-        TECHNICAL_4 = new LinkedList<Integer>(List.of(59));
+        TECHNICAL_4 = new LinkedList<Integer>(List.of(59));*/
         currentManagerCount = 0;
         currentBusinessCount = 0;
         currentResearchCount = 0;
@@ -3220,7 +3220,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     public static void exportToCSV() throws Exception{
-        PrintWriter writer = new PrintWriter("Office SocialSim Statistics.csv");
+        PrintWriter writer = new PrintWriter("stat3.csv");
         StringBuilder sb = new StringBuilder();
         sb.append("Current Manager Count");
         sb.append(",");
@@ -3610,7 +3610,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     public static void exportHeatMap() throws Exception {
-        PrintWriter writer = new PrintWriter("Office SocialSim Heat Map.csv");
+        PrintWriter writer = new PrintWriter("hm3.csv");
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < currentPatchCount.length; i++){

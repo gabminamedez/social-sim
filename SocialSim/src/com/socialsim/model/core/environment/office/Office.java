@@ -469,7 +469,7 @@ public class Office extends Environment {
         OfficeAgent manager_1 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 1);
         this.getAgents().add(manager_1);
 
-        OfficeAgent technical_1 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 1);
+        /*OfficeAgent technical_1 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 1);
         this.getAgents().add(technical_1);
 
         for (int i = 0; i < 4; i++){
@@ -480,12 +480,12 @@ public class Office extends Environment {
         for (int i = 0; i < 4; i++){
             OfficeAgent researcher_1 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true, 1);
             this.getAgents().add(researcher_1);
-        }
+        }*/
 
         OfficeAgent manager_2 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 2);
         this.getAgents().add(manager_2);
 
-        OfficeAgent technical_2 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 2);
+        /*OfficeAgent technical_2 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 2);
         this.getAgents().add(technical_2);
 
         for (int i = 0; i < 4; i++){
@@ -496,12 +496,12 @@ public class Office extends Environment {
         for (int i = 0; i < 4; i++){
             OfficeAgent researcher_2 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true, 2);
             this.getAgents().add(researcher_2);
-        }
+        }*/
 
         OfficeAgent manager_3 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 3);
         this.getAgents().add(manager_3);
 
-        OfficeAgent technical_3 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 3);
+        /*OfficeAgent technical_3 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 3);
         this.getAgents().add(technical_3);
 
         for (int i = 0; i < 4; i++){
@@ -512,12 +512,12 @@ public class Office extends Environment {
         for (int i = 0; i < 4; i++){
             OfficeAgent researcher_3 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true, 3);
             this.getAgents().add(researcher_3);
-        }
+        }*/
 
         OfficeAgent manager_4 = OfficeAgent.OfficeAgentFactory.create(Type.MANAGER, true, 4);
         this.getAgents().add(manager_4);
 
-        OfficeAgent technical_4 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 4);
+        /*OfficeAgent technical_4 = OfficeAgent.OfficeAgentFactory.create(Type.TECHNICAL, true, 4);
         this.getAgents().add(technical_4);
 
         for (int i = 0; i < 7; i++){
@@ -528,7 +528,7 @@ public class Office extends Environment {
         for (int i = 0; i < 7; i++){
             OfficeAgent researcher_4 = OfficeAgent.OfficeAgentFactory.create(Type.RESEARCHER, true, 4);
             this.getAgents().add(researcher_4);
-        }
+        }*/
 
         OfficeAgent secretary = OfficeAgent.OfficeAgentFactory.create(Type.SECRETARY, true, 0);
         this.getAgents().add(secretary);
