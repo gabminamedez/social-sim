@@ -504,11 +504,11 @@ public class OfficeScreenController extends ScreenController {
 
         List<Patch> tableUpPatches = new ArrayList<>();
         tableUpPatches.add(office.getPatch(28,5));
-        tableUpPatches.add(office.getPatch(28,9));
+        //tableUpPatches.add(office.getPatch(28,9));
         tableUpPatches.add(office.getPatch(28,13));
-        tableUpPatches.add(office.getPatch(31,5));
+        //tableUpPatches.add(office.getPatch(31,5));
         tableUpPatches.add(office.getPatch(31,9));
-        tableUpPatches.add(office.getPatch(31,13));
+        //tableUpPatches.add(office.getPatch(31,13));
         tableUpPatches.add(office.getPatch(51,9));
         tableUpPatches.add(office.getPatch(52,9));
         tableUpPatches.add(office.getPatch(53,9));
@@ -521,12 +521,12 @@ public class OfficeScreenController extends ScreenController {
 
         List<Patch> tableRightPatches = new ArrayList<>();
         tableRightPatches.add(office.getPatch(36,2));
-        tableRightPatches.add(office.getPatch(36,6));
+        //tableRightPatches.add(office.getPatch(36,6));
         tableRightPatches.add(office.getPatch(36,10));
-        tableRightPatches.add(office.getPatch(36,14));
-        tableRightPatches.add(office.getPatch(40,2));
+        //tableRightPatches.add(office.getPatch(36,14));
+        //tableRightPatches.add(office.getPatch(40,2));
         tableRightPatches.add(office.getPatch(40,6));
-        tableRightPatches.add(office.getPatch(40,10));
+        //tableRightPatches.add(office.getPatch(40,10));
         tableRightPatches.add(office.getPatch(40,14));
         TableMapper.draw(tableRightPatches, "RIGHT");
 
