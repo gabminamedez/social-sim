@@ -1370,9 +1370,17 @@ public class OfficeSimulator extends Simulator {
                         agentMovement.setSimultaneousInteractionAllowed(false);
                         if (agentMovement.getGoalAmenity() == null) {
                             agentMovement.chooseMeetingGoal(agentMovement.getRoutePlan().getMeetingRoom());
+                            if(agentMovement.getGoalAmenity() == null){
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                                agentMovement.getRoutePlan().setCanUrgent(-1);
+                            }
                             agentMovement.getRoutePlan().setAtDesk(false);
                         }
-                        if (agentMovement.chooseNextPatchInPath()) {
+                        else if (agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {

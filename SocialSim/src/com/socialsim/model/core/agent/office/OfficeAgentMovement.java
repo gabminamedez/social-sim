@@ -688,10 +688,10 @@ public class OfficeAgentMovement extends AgentMovement {
                     }
                 }
 
-                for (int i = start1; i < start1 + 51; i += 10) {
+                for (int i = start1; i < start1 + 51; i += 20) {
                     temp.add(this.office.getChairs().get(i));
                 }
-                for (int i = start2; i < start2 + 51; i += 10) {
+                for (int i = start2; i < start2 + 51; i += 20) {
                     temp.add(this.office.getChairs().get(i));
                 }
 
@@ -747,28 +747,28 @@ public class OfficeAgentMovement extends AgentMovement {
             if(room == 1){
                 start1 = 6;
                 start2 = 7;
-                for(int i = 54; i<58; i++){
+                for(int i = 54; i<58; i+=2){
                     temp.add(this.office.getChairs().get(i));
                 }
             }else if(room == 2){
                 start1 = 8;
                 start2 = 9;
-                for(int i = 58; i<62; i++){
+                for(int i = 58; i<62; i+=2){
                     temp.add(this.office.getChairs().get(i));
                 }
             }else if(room == 3){
                 start1 = 10;
                 start2 = 11;
-                for(int i = 62; i<66; i++){
+                for(int i = 62; i<66; i+=2){
                     temp.add(this.office.getChairs().get(i));
                 }
             }
 
-            for(int i = start1; i < start1 + 43; i += 6){
+            for(int i = start1; i < start1 + 43; i += 12){
                 temp.add(this.office.getChairs().get(i));
             }
 
-            for(int i = start2; i < start2 + 43; i += 6){
+            for(int i = start2; i < start2 + 43; i += 12){
                 temp.add(this.office.getChairs().get(i));
             }
 
