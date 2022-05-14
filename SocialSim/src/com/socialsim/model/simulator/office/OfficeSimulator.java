@@ -3228,7 +3228,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     public static void exportToCSV() throws Exception{
-        PrintWriter writer = new PrintWriter("Office SocialSim Statistics.csv");
+        PrintWriter writer = new PrintWriter("stat3.csv");
         StringBuilder sb = new StringBuilder();
         sb.append("Current Manager Count");
         sb.append(",");
@@ -3618,7 +3618,7 @@ public class OfficeSimulator extends Simulator {
     }
 
     public static void exportHeatMap() throws Exception {
-        PrintWriter writer = new PrintWriter("Office SocialSim Heat Map.csv");
+        PrintWriter writer = new PrintWriter("hm3.csv");
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < currentPatchCount.length; i++){
