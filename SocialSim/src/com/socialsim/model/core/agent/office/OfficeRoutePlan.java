@@ -11,12 +11,11 @@ public class OfficeRoutePlan {
 
     private OfficeState currentState;
     private ArrayList<OfficeState> routePlan;
-    private boolean fromBathPM, fromBathAM, isAtDesk;
+    private boolean isAtDesk;
     private int lastDuration = -1;
     private int canUrgent = 2;
     private long collaborationEnd = 0, meetingStart = -1, meetingEnd, meetingRoom;
 
-    private int BATH_AM = 2, BATH_PM = 2, BATH_LUNCH = 1;
     private int PRINT_BUSINESS = 5, PRINT_RESEARCH = 2;
     private int TECHNICAL_PRINTER_COUNT = 0, TECHNICAL_CUBICLE_COUNT = 0;
     private int COLLABORATE_COUNT = 0, BREAK_COUNT = 0;
@@ -36,7 +35,7 @@ public class OfficeRoutePlan {
     public static final double EXT_BUSINESS_COOPERATE = 0.9;
     public static final double INT_RESEARCHER_COOPERATE = 0.6;
     public static final double EXT_RESEARCHER_COOPERATE = 0.9;
-    public static final double BATH_CHANCE = 0.15, PRINT_CHANCE = 0.1,
+    public static final double PRINT_CHANCE = 0.1,
                                TECHNICAL_CUBICLE_CHANCE = 0.1, TECHNICAL_PRINTER_CHANCE = 0.1,
                                DISPENSER_CHANCE = 0.1, REFRIGERATOR_CHANCE = 0.3, BREAK_CHANCE = 0.1;
 
@@ -90,13 +89,13 @@ public class OfficeRoutePlan {
         }
         else if (agent.getPersona() == OfficeAgent.Persona.JANITOR) {
             actions = new ArrayList<>();
-            Patch randomToilet = office.getToilets().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(3)).getAmenityBlocks().get(0).getPatch();
-            actions.add(new OfficeAction(OfficeAction.Name.JANITOR_CLEAN_TOILET, randomToilet, 10));
-            routePlan.add(new OfficeState(OfficeState.Name.MAINTENANCE_BATHROOM, this, agent, actions));
-            actions = new ArrayList<>();
             Patch randomPlant = office.getPlants().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(9)).getAmenityBlocks().get(0).getPatch();
             actions.add(new OfficeAction(OfficeAction.Name.JANITOR_WATER_PLANT, randomPlant, 10));
             routePlan.add(new OfficeState(OfficeState.Name.MAINTENANCE_PLANT, this, agent, actions));
+            actions = new ArrayList<>();
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_WAIT_AREA));
+            actions.add(new OfficeAction(OfficeAction.Name.WAIT_FOR_VACANT,5,20));
+            routePlan.add(new OfficeState(OfficeState.Name.WAIT_INFRONT_OF_BATHROOM,this, agent, actions));
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.LEAVE_OFFICE, office.getOfficeGates().get(0).getAmenityBlocks().get(0).getPatch()));
@@ -188,8 +187,6 @@ public class OfficeRoutePlan {
             routePlan.add(new OfficeState(OfficeState.Name.GOING_HOME, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.PROFESSIONAL_BOSS || agent.getPersona() == OfficeAgent.Persona.APPROACHABLE_BOSS) {
-            setFromBathAM(false);
-            setFromBathPM(false);
             setAtDesk(false);
 
             actions = new ArrayList<>();
@@ -219,8 +216,6 @@ public class OfficeRoutePlan {
         }
         else if (agent.getPersona() == OfficeAgent.Persona.INT_BUSINESS || agent.getPersona() == OfficeAgent.Persona.EXT_BUSINESS ||
                 agent.getPersona() == OfficeAgent.Persona.INT_RESEARCHER || agent.getPersona() == OfficeAgent.Persona.EXT_RESEARCHER) {
-            setFromBathAM(false);
-            setFromBathPM(false);
             setCOLLABORATE_COUNT(2);
             setAtDesk(false);
             setAgentCubicle(assignedCubicle);
@@ -250,8 +245,6 @@ public class OfficeRoutePlan {
             routePlan.add(new OfficeState(OfficeState.Name.GOING_HOME, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.INT_TECHNICAL || agent.getPersona() == OfficeAgent.Persona.EXT_TECHNICAL) {
-            setFromBathAM(false);
-            setFromBathPM(false);
             setTECHNICAL_PRINTER_COUNT(-1);
             setTECHNICAL_CUBICLE_COUNT(-1);
             setAtDesk(false);
@@ -282,8 +275,6 @@ public class OfficeRoutePlan {
             routePlan.add(new OfficeState(OfficeState.Name.GOING_HOME, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.MANAGER) {
-            setFromBathAM(false);
-            setFromBathPM(false);
             setCOLLABORATE_COUNT(2);
             setAtDesk(false);
             setAgentCubicle(assignedCubicle);
@@ -348,14 +339,6 @@ public class OfficeRoutePlan {
         OfficeState officeState;
 
         switch (s) {
-            case "BATHROOM" -> {
-                actions = new ArrayList<>();
-                actions.add(new OfficeAction(OfficeAction.Name.GO_TO_BATHROOM));
-                actions.add(new OfficeAction(OfficeAction.Name.RELIEVE_IN_CUBICLE, 12, 60));
-                actions.add(new OfficeAction(OfficeAction.Name.FIND_SINK));
-                actions.add(new OfficeAction(OfficeAction.Name.WASH_IN_SINK, 12));
-                officeState = new OfficeState(OfficeState.Name.NEEDS_BATHROOM, this, agent, actions);
-            }
             case "COLLABORATION" -> {
                 actions = new ArrayList<>();
                 actions.add(new OfficeAction(OfficeAction.Name.GO_TO_COLLAB, 60));
@@ -431,46 +414,6 @@ public class OfficeRoutePlan {
                 getAmenityBlocks().get(0).getPatch();
         actions.add(new OfficeAction(OfficeAction.Name.FIX_CUBICLE, randomCubicle, 120));
         return new OfficeState(OfficeState.Name.NEEDS_FIX_CUBICLE, this, agent, actions);
-    }
-
-    public boolean isFromBathPM() {
-        return fromBathPM;
-    }
-
-    public void setFromBathPM(boolean fromBathPM) {
-        this.fromBathPM = fromBathPM;
-    }
-
-    public boolean isFromBathAM() {
-        return fromBathAM;
-    }
-
-    public void setFromBathAM(boolean fromBathAM) {
-        this.fromBathAM = fromBathAM;
-    }
-
-    public int getBATH_AM() {
-        return BATH_AM;
-    }
-
-    public void setBATH_AM(int BATH_AM) {
-        this.BATH_AM -= BATH_AM;
-    }
-
-    public int getBATH_PM() {
-        return BATH_PM;
-    }
-
-    public void setBATH_PM(int BATH_PM) {
-        this.BATH_PM -= BATH_PM;
-    }
-
-    public int getBATH_LUNCH() {
-        return BATH_LUNCH;
-    }
-
-    public void setBATH_LUNCH(int BATH_LUNCH) {
-        this.BATH_LUNCH -= BATH_LUNCH;
     }
 
     public int getPRINT_BUSINESS() {
@@ -625,13 +568,6 @@ public class OfficeRoutePlan {
         }
 
         return chance;
-    }
-    public OfficeState addWaitingRoute(OfficeAgent agent){
-        ArrayList<OfficeAction> actions;
-        actions = new ArrayList<>();
-        actions.add(new OfficeAction(OfficeAction.Name.GO_TO_WAIT_AREA));
-        actions.add(new OfficeAction(OfficeAction.Name.WAIT_FOR_VACANT,5,20));
-        return new OfficeState(OfficeState.Name.WAIT_INFRONT_OF_BATHROOM,this, agent, actions);
     }
 
 }
