@@ -682,20 +682,14 @@ public class MallAgentMovement extends AgentMovement {
             ArrayList<Table> tables2 = new ArrayList<>();
 
             if (this.team == 1) {
-                for (int i = 0; i < 16; i++) {
-                    tables1.add(Main.mallSimulator.getMall().getTables().get(i));
-                }
-                for (int i = 35; i < 40; i++) {
+                for (int i = 2; i < 10; i++) {
                     tables1.add(Main.mallSimulator.getMall().getTables().get(i));
                 }
                 this.goalAmenity = tables1.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(tables1.size()));
                 this.goalAttractor = goalAmenity.getAttractors().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(goalAmenity.getAttractors().size()));
             }
             else {
-                for (int i = 16; i < 31; i++) {
-                    tables2.add(Main.mallSimulator.getMall().getTables().get(i));
-                }
-                for (int i = 40; i < 44; i++) {
+                for (int i = 10; i < 18; i++) {
                     tables2.add(Main.mallSimulator.getMall().getTables().get(i));
                 }
                 this.goalAmenity = tables2.get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(tables2.size()));
@@ -716,27 +710,27 @@ public class MallAgentMovement extends AgentMovement {
                     boolean isResto1 = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
 
                     if (isResto1) {
-                        for (int i = 0; i < 16; i++) {
+                        for (int i = 2; i < 10; i++) {
                             tables.add(Main.mallSimulator.getMall().getTables().get(i));
                         }
-                        for (int i = 35; i < 40; i++) {
+                        for (int i = 18; i < 20; i++) {
                             tables.add(Main.mallSimulator.getMall().getTables().get(i));
                         }
                     }
                     else {
-                        for (int i = 16; i < 32; i++) {
+                        for (int i = 10; i < 18; i++) {
                             tables.add(Main.mallSimulator.getMall().getTables().get(i));
                         }
-                        for (int i = 40; i < 45; i++) {
+                        for (int i = 20; i < 22; i++) {
                             tables.add(Main.mallSimulator.getMall().getTables().get(i));
                         }
                     }
                 }
                 else {
-                    for (int i = 32; i < 35; i++) {
+                    for (int i = 0; i < 2; i++) {
                         tables.add(Main.mallSimulator.getMall().getTables().get(i));
                     }
-                    for (int i = 45; i < 49; i++) {
+                    for (int i = 22; i < 24; i++) {
                         tables.add(Main.mallSimulator.getMall().getTables().get(i));
                     }
                 }

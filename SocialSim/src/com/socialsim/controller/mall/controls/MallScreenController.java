@@ -411,61 +411,67 @@ public class MallScreenController extends ScreenController {
 
         List<Patch> tableUpPatches = new ArrayList<>();
         tableUpPatches.add(mall.getPatch(47,52)); // 0
-        tableUpPatches.add(mall.getPatch(47,58)); // 1
-        tableUpPatches.add(mall.getPatch(47,64));
-        tableUpPatches.add(mall.getPatch(47,70));
-        tableUpPatches.add(mall.getPatch(50,52));
-        tableUpPatches.add(mall.getPatch(50,58));
-        tableUpPatches.add(mall.getPatch(50,64));
-        tableUpPatches.add(mall.getPatch(50,70));
-        tableUpPatches.add(mall.getPatch(53,52));
-        tableUpPatches.add(mall.getPatch(53,58));
-        tableUpPatches.add(mall.getPatch(53,64));
-        tableUpPatches.add(mall.getPatch(53,70));
-        tableUpPatches.add(mall.getPatch(56,52));
-        tableUpPatches.add(mall.getPatch(56,58));
-        tableUpPatches.add(mall.getPatch(56,64));
-        tableUpPatches.add(mall.getPatch(56,70)); // 15
+//        tableUpPatches.add(mall.getPatch(47,58));
+        tableUpPatches.add(mall.getPatch(47,64)); // 1
+//        tableUpPatches.add(mall.getPatch(47,70));
 
-        tableUpPatches.add(mall.getPatch(47,74)); // 16
-        tableUpPatches.add(mall.getPatch(47,80));
-        tableUpPatches.add(mall.getPatch(47,86));
-        tableUpPatches.add(mall.getPatch(47,92));
-        tableUpPatches.add(mall.getPatch(50,74));
-        tableUpPatches.add(mall.getPatch(50,80));
-        tableUpPatches.add(mall.getPatch(50,86));
-        tableUpPatches.add(mall.getPatch(50,92));
-        tableUpPatches.add(mall.getPatch(53,74));
-        tableUpPatches.add(mall.getPatch(53,80));
-        tableUpPatches.add(mall.getPatch(53,86));
-        tableUpPatches.add(mall.getPatch(53,92));
-        tableUpPatches.add(mall.getPatch(56,74));
-        tableUpPatches.add(mall.getPatch(56,80));
-        tableUpPatches.add(mall.getPatch(56,86));
-        tableUpPatches.add(mall.getPatch(56,92)); // 31
+//        tableUpPatches.add(mall.getPatch(50,52));
+        tableUpPatches.add(mall.getPatch(50,58)); // 2
+//        tableUpPatches.add(mall.getPatch(50,64));
+        tableUpPatches.add(mall.getPatch(50,70)); // 3
 
-        tableUpPatches.add(mall.getPatch(27,103)); // 32
-        tableUpPatches.add(mall.getPatch(27,107));
-        tableUpPatches.add(mall.getPatch(27,111)); // 34
+        tableUpPatches.add(mall.getPatch(53,52)); // 4
+//        tableUpPatches.add(mall.getPatch(53,58));
+        tableUpPatches.add(mall.getPatch(53,64)); // 5
+//        tableUpPatches.add(mall.getPatch(53,70));
+
+//        tableUpPatches.add(mall.getPatch(56,52));
+        tableUpPatches.add(mall.getPatch(56,58)); // 6
+//        tableUpPatches.add(mall.getPatch(56,64));
+        tableUpPatches.add(mall.getPatch(56,70)); // 7
+
+        tableUpPatches.add(mall.getPatch(47,74)); // 8
+//        tableUpPatches.add(mall.getPatch(47,80));
+        tableUpPatches.add(mall.getPatch(47,86)); // 9
+//        tableUpPatches.add(mall.getPatch(47,92));
+
+//        tableUpPatches.add(mall.getPatch(50,74));
+        tableUpPatches.add(mall.getPatch(50,80)); // 10
+//        tableUpPatches.add(mall.getPatch(50,86));
+        tableUpPatches.add(mall.getPatch(50,92)); // 11
+
+        tableUpPatches.add(mall.getPatch(53,74)); // 12
+//        tableUpPatches.add(mall.getPatch(53,80));
+        tableUpPatches.add(mall.getPatch(53,86)); // 13
+//        tableUpPatches.add(mall.getPatch(53,92));
+
+//        tableUpPatches.add(mall.getPatch(56,74));
+        tableUpPatches.add(mall.getPatch(56,80)); // 14
+//        tableUpPatches.add(mall.getPatch(56,86));
+        tableUpPatches.add(mall.getPatch(56,92)); // 15
+
+        tableUpPatches.add(mall.getPatch(27,103)); // 16
+//        tableUpPatches.add(mall.getPatch(27,107));
+        tableUpPatches.add(mall.getPatch(27,111)); // 17
         TableMapper.draw(tableUpPatches, "UP");
 
         List<Patch> tableRightPatches = new ArrayList<>();
-        tableRightPatches.add(mall.getPatch(42,54));
-        tableRightPatches.add(mall.getPatch(42,58));
-        tableRightPatches.add(mall.getPatch(42,62));
-        tableRightPatches.add(mall.getPatch(42,66));
-        tableRightPatches.add(mall.getPatch(42,70));
+//        tableRightPatches.add(mall.getPatch(42,54));
+        tableRightPatches.add(mall.getPatch(42,58)); // 18
+//        tableRightPatches.add(mall.getPatch(42,62));
+        tableRightPatches.add(mall.getPatch(42,66)); // 19
+//        tableRightPatches.add(mall.getPatch(42,70));
 
-        tableRightPatches.add(mall.getPatch(42,76));
-        tableRightPatches.add(mall.getPatch(42,80));
-        tableRightPatches.add(mall.getPatch(42,84));
-        tableRightPatches.add(mall.getPatch(42,88));
-        tableRightPatches.add(mall.getPatch(42,92));
+//        tableRightPatches.add(mall.getPatch(42,76));
+        tableRightPatches.add(mall.getPatch(42,80)); // 20
+//        tableRightPatches.add(mall.getPatch(42,84));
+        tableRightPatches.add(mall.getPatch(42,88)); // 21
+//        tableRightPatches.add(mall.getPatch(42,92));
 
-        tableRightPatches.add(mall.getPatch(31,103));
-        tableRightPatches.add(mall.getPatch(31,106));
-        tableRightPatches.add(mall.getPatch(31,109));
-        tableRightPatches.add(mall.getPatch(31,112));
+        tableRightPatches.add(mall.getPatch(31,103)); // 22
+//        tableRightPatches.add(mall.getPatch(31,106));
+        tableRightPatches.add(mall.getPatch(31,109)); // 23
+//        tableRightPatches.add(mall.getPatch(31,112));
         TableMapper.draw(tableRightPatches, "RIGHT");
 
         List<Patch> trashPatches = new ArrayList<>();
