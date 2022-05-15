@@ -316,7 +316,7 @@ public class MallRoutePlan {
 
         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
         if (x < WANDERING_CHANCE) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 3; i++) {
                 double isWander = Simulator.roll();
                 if (isWander < 0.3) {
                     boolean isBench = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
@@ -334,27 +334,15 @@ public class MallRoutePlan {
                     }
                 }
                 else {
-                    boolean isShowcase = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-                    if (isShowcase) {
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
-                        routePlan.add(new MallState(MallState.Name.GOING_TO_SHOWCASE, this, agent, actions));
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
-                        actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
-                        routePlan.add(new MallState(MallState.Name.IN_SHOWCASE, this, agent, actions));
-                    }
-                    else {
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
-                        actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
-                        actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
-                        routePlan.add(new MallState(MallState.Name.GOING_TO_DINING, this, agent, actions));
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.GO_TO_DINING_AREA));
-                        actions.add(new MallAction(MallAction.Name.DINING_AREA_STAY_PUT, 120, 360));
-                        routePlan.add(new MallState(MallState.Name.IN_DINING, this, agent, actions));
-                    }
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
+                    actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
+                    actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
+                    routePlan.add(new MallState(MallState.Name.GOING_TO_DINING, this, agent, actions));
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.GO_TO_DINING_AREA));
+                    actions.add(new MallAction(MallAction.Name.DINING_AREA_STAY_PUT, 120, 360));
+                    routePlan.add(new MallState(MallState.Name.IN_DINING, this, agent, actions));
                 }
 
                 x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
@@ -664,7 +652,7 @@ public class MallRoutePlan {
 
         int x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
         if (x < WANDERING_CHANCE) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 3; i++) {
                 boolean isWander = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
                 if (isWander) {
                     boolean isBench = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
@@ -690,27 +678,15 @@ public class MallRoutePlan {
                     }
                 }
                 else {
-                    boolean isShowcase = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
-                    if (isShowcase) {
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
-                        routePlan.add(new MallState(MallState.Name.GOING_TO_SHOWCASE, this, agent, actions));
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
-                        actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
-                        routePlan.add(new MallState(MallState.Name.IN_SHOWCASE, this, agent, actions));
-                    }
-                    else {
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
-                        actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
-                        actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
-                        routePlan.add(new MallState(MallState.Name.GOING_TO_DINING, this, agent, actions));
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.GO_TO_DINING_AREA));
-                        actions.add(new MallAction(MallAction.Name.DINING_AREA_STAY_PUT, 120, 360));
-                        routePlan.add(new MallState(MallState.Name.IN_DINING, this, agent, actions));
-                    }
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.GO_TO_KIOSK));
+                    actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
+                    actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
+                    routePlan.add(new MallState(MallState.Name.GOING_TO_DINING, this, agent, actions));
+                    actions = new ArrayList<>();
+                    actions.add(new MallAction(MallAction.Name.GO_TO_DINING_AREA));
+                    actions.add(new MallAction(MallAction.Name.DINING_AREA_STAY_PUT, 120, 360));
+                    routePlan.add(new MallState(MallState.Name.IN_DINING, this, agent, actions));
                 }
 
                 x = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
