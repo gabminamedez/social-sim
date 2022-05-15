@@ -3111,7 +3111,7 @@ public class UniversitySimulator extends Simulator {
             spawnChance = gate.getChancePerTick();
         }
         else{
-            spawnChance = gate.getChancePerTick() / 10; // 0.05
+            spawnChance = gate.getChancePerTick() / 10; // 0.03
         }
 //        double spawnChance = gate.getChancePerTick();
         UniversityAgent agent = null;
