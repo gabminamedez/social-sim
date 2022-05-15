@@ -24,6 +24,10 @@ public class MallSimulator extends Simulator {
     public static int defaultMaxFriends = 10;
     public static int defaultMaxCouple = 10;
     public static int defaultMaxAlone = 10;
+    public static int defaultMaxCurrentFamily = 10;
+    public static int defaultMaxCurrentFriends = 10;
+    public static int defaultMaxCurrentCouple = 10;
+    public static int defaultMaxCurrentAlone = 10;
 
     private Mall mall;
     private final AtomicBoolean running;
@@ -31,6 +35,12 @@ public class MallSimulator extends Simulator {
     private final Semaphore playSemaphore;
 
     public static int currentPatronCount = 0;
+
+    public static int currentFamilyCount = 0;
+    public static int currentFriendsCount = 0;
+    public static int currentCoupleCount = 0;
+    public static int currentAloneCount = 0;
+
     public static int currentNonverbalCount = 0;
     public static int currentCooperativeCount = 0;
     public static int currentExchangeCount = 0;
@@ -59,6 +69,12 @@ public class MallSimulator extends Simulator {
     public static int currentStaffKioskStaffKioskCount = 0;
     public static int currentStaffKioskGuardCount = 0;
     public static int[] compiledCurrentPatronCount;
+
+    public static int[] compiledCurrentFamilyCount;
+    public static int[] compiledCurrentFriendsCount;
+    public static int[] compiledCurrentCoupleCount;
+    public static int[] compiledCurrentAloneCount;
+
     public static int[] compiledCurrentNonverbalCount;
     public static int[] compiledCurrentCooperativeCount;
     public static int[] compiledCurrentExchangeCount;
@@ -1227,7 +1243,7 @@ public class MallSimulator extends Simulator {
         int type = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5);
 
         if (CHANCE > spawnChance) {
-            if (type == 0 && totalFamilyCount < getMall().getMAX_FAMILY()) {
+            if (type == 0 && totalFamilyCount < getMall().getMAX_FAMILY() && currentFamilyCount < mall.getMAX_CURRENT_FAMILY()) {
                 if (mall.getUnspawnedFamilyAgents().size() > 0){
                     int randNum = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(mall.getUnspawnedFamilyAgents().size());
                     MallAgent leaderAgent = mall.getUnspawnedFamilyAgents().get(randNum);
@@ -1272,9 +1288,10 @@ public class MallSimulator extends Simulator {
                     leaderAgent.getAgentMovement().getFollowers().add(agent4);
 
                     totalFamilyCount++;
+                    currentFamilyCount++;
                 }
             }
-            else if (type == 1 && totalFriendsCount < mall.getMAX_FRIENDS()) {
+            else if (type == 1 && totalFriendsCount < mall.getMAX_FRIENDS() && currentFriendsCount < mall.getMAX_CURRENT_FRIENDS()) {
                 if (mall.getUnspawnedFriendsAgents().size() > 0){
                     int randNum = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(mall.getUnspawnedFriendsAgents().size());
                     MallAgent leaderAgent = mall.getUnspawnedFriendsAgents().get(randNum);
@@ -1310,10 +1327,11 @@ public class MallSimulator extends Simulator {
                     leaderAgent.getAgentMovement().getFollowers().add(agent3);
 
                     totalFriendsCount++;
+                    currentFriendsCount++;
                 }
 
             }
-            else if (type == 2 && totalCoupleCount < getMall().getMAX_COUPLE()) {
+            else if (type == 2 && totalCoupleCount < getMall().getMAX_COUPLE() && currentCoupleCount < mall.getMAX_CURRENT_COUPLE()) {
                 if (mall.getUnspawnedCoupleAgents().size() > 0){
                     int randNum = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(mall.getUnspawnedCoupleAgents().size());
                     MallAgent leaderAgent = mall.getUnspawnedCoupleAgents().get(randNum);
@@ -1340,9 +1358,10 @@ public class MallSimulator extends Simulator {
                     leaderAgent.getAgentMovement().getFollowers().add(agent2);
 
                     totalCoupleCount++;
+                    currentCoupleCount++;
                 }
             }
-            else if (type == 3 && totalAloneCount < getMall().getMAX_ALONE()) {
+            else if (type == 3 && totalAloneCount < getMall().getMAX_ALONE() && currentAloneCount < mall.getMAX_CURRENT_ALONE()) {
                 if (mall.getUnspawnedAloneAgents().size() > 0){
                     MallAgent leaderAgent = mall.getUnspawnedAloneAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(mall.getUnspawnedAloneAgents().size()));
                     leaderAgent.setAgentMovement(new MallAgentMovement(spawner1.getPatch(), leaderAgent, null, 1.27, spawner1.getPatch().getPatchCenterCoordinates(), currentTick, leaderAgent.getTeam()));
@@ -1353,6 +1372,7 @@ public class MallSimulator extends Simulator {
                     MallAgent.agentCount++;
 
                     totalAloneCount++;
+                    currentAloneCount++;
                 }
             }
         }
@@ -1360,6 +1380,12 @@ public class MallSimulator extends Simulator {
 
     public void replenishStaticVars() {
         currentPatronCount = 0;
+
+        currentFamilyCount = 0;
+        currentFriendsCount = 0;
+        currentCoupleCount = 0;
+        currentAloneCount = 0;
+
         currentNonverbalCount = 0;
         currentCooperativeCount = 0;
         currentExchangeCount = 0;
@@ -1389,6 +1415,12 @@ public class MallSimulator extends Simulator {
         currentStaffKioskGuardCount = 0;
         currentPatchCount = new int[mall.getRows()][mall.getColumns()];
         compiledCurrentPatronCount = new int[8641];
+
+        compiledCurrentFamilyCount = new int[8641];
+        compiledCurrentFriendsCount = new int[8641];
+        compiledCurrentCoupleCount = new int[8641];
+        compiledCurrentAloneCount = new int[8641];
+
         compiledCurrentNonverbalCount = new int[8641];
         compiledCurrentCooperativeCount = new int[8641];
         compiledCurrentExchangeCount = new int[8641];
@@ -1423,6 +1455,16 @@ public class MallSimulator extends Simulator {
         StringBuilder sb = new StringBuilder();
         sb.append("Current Patron Count");
         sb.append(",");
+
+        sb.append("Current Family Count");
+        sb.append(",");
+        sb.append("Current Friends Count");
+        sb.append(",");
+        sb.append("Current Couple Count");
+        sb.append(",");
+        sb.append("Current Alone Count");
+        sb.append(",");
+
         sb.append("Current Nonverbal Count");
         sb.append(",");
         sb.append("Current Cooperative Count");
@@ -1480,6 +1522,16 @@ public class MallSimulator extends Simulator {
         for (int i = 0; i < 8641; i++){
             sb.append(compiledCurrentPatronCount[i]);
             sb.append(",");
+
+            sb.append(compiledCurrentFamilyCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentFriendsCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentCoupleCount[i]);
+            sb.append(",");
+            sb.append(compiledCurrentAloneCount[i]);
+            sb.append(",");
+
             sb.append(compiledCurrentNonverbalCount[i]);
             sb.append(",");
             sb.append(compiledCurrentCooperativeCount[i]);

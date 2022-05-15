@@ -1469,6 +1469,22 @@ public class MallAgentMovement extends AgentMovement {
 
     public void despawn() {
         if (this.currentPatch != null) {
+            switch (this.getParent().getPersona()) {
+                case LOITER_FAMILY, ERRAND_FAMILY -> {
+                    if (this.getParent().isLeader())
+                        MallSimulator.currentFamilyCount--;
+                }
+                case LOITER_FRIENDS, ERRAND_FRIENDS -> {
+                    if (this.getParent().isLeader())
+                        MallSimulator.currentFriendsCount--;
+                }
+                case LOITER_COUPLE -> {
+                    if (this.getParent().isLeader())
+                        MallSimulator.currentCoupleCount--;
+                }
+                case LOITER_ALONE, ERRAND_ALONE -> MallSimulator.currentAloneCount--;
+            }
+
             this.currentPatch.getAgents().remove(this.parent);
             this.getMall().getAgents().remove(this.parent);
 
