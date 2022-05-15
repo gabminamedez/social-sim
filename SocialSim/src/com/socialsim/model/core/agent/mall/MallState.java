@@ -103,13 +103,10 @@ public class MallState {
 
     public static Shop[] eatShopLeft() {
         return new Shop[] {
-                Shop.Store4,
                 Shop.Store3,
                 Shop.Store1,
                 Shop.Store2,
-                Shop.Store5,
                 Shop.Store6,
-                Shop.Store7,
                 Shop.Store8,
                 Shop.Store9
         };
@@ -119,11 +116,8 @@ public class MallState {
         return new Shop[] {
                 Shop.Store9,
                 Shop.Store8,
-                Shop.Store7,
                 Shop.Store6,
-                Shop.Store5,
                 Shop.Store2,
-                Shop.Store4,
                 Shop.Store3,
                 Shop.Store1
         };
@@ -133,12 +127,9 @@ public class MallState {
         return new Shop[] {
                 Shop.Store1,
                 Shop.Store2,
-                Shop.Store5,
                 Shop.Store6,
-                Shop.Store7,
                 Shop.Store8,
                 Shop.Store9,
-                Shop.Store4,
                 Shop.Store3
         };
     }
@@ -146,12 +137,9 @@ public class MallState {
     public static Shop[] shopEatDown() {
         return new Shop[]{
                 Shop.Store3,
-                Shop.Store4,
                 Shop.Store9,
                 Shop.Store8,
-                Shop.Store7,
                 Shop.Store6,
-                Shop.Store5,
                 Shop.Store2,
                 Shop.Store1
         };

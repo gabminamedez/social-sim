@@ -16,8 +16,8 @@ public class MallRoutePlan {
     public int MAX_STORE_HELP = 1;
 
     private static final int MIN_ERRAND_PRODUCTS = 1;
-    private static final int MIN_LOITER_PRODUCTS = 7;
-    private static final int MAX_PRODUCTS = 9;
+    private static final int MIN_LOITER_PRODUCTS = 4;
+    private static final int MAX_PRODUCTS = 6;
 
     public static final int EFAMILY_RESTO_CHANCE = 100, EFAMILY_WANDERING_CHANCE = 30;
     public static final int LFAMILY_RESTO_CHANCE = 100, LFAMILY_WANDERING_CHANCE = 100;
