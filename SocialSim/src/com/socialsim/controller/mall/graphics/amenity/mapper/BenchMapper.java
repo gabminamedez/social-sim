@@ -18,7 +18,7 @@ public class BenchMapper extends AmenityMapper {
             int origPatchCol = patch.getMatrixPosition().getColumn();
 
             Amenity.AmenityBlock.AmenityBlockFactory amenityBlockFactory = Bench.BenchBlock.benchBlockFactory;
-            Amenity.AmenityBlock amenityBlock = amenityBlockFactory.create(patch, true, true);
+            Amenity.AmenityBlock amenityBlock = amenityBlockFactory.create(patch, false, true);
             amenityBlocks.add(amenityBlock);
             patch.setAmenityBlock(amenityBlock);
 
@@ -29,12 +29,12 @@ public class BenchMapper extends AmenityMapper {
                 patch2.setAmenityBlock(amenityBlock2);
 
                 Patch patch3 = Main.mallSimulator.getMall().getPatch(origPatchRow, origPatchCol + 2);
-                Amenity.AmenityBlock amenityBlock3 = amenityBlockFactory.create(patch3, true, true);
+                Amenity.AmenityBlock amenityBlock3 = amenityBlockFactory.create(patch3, false, true);
                 amenityBlocks.add(amenityBlock3);
                 patch3.setAmenityBlock(amenityBlock3);
 
                 Patch patch4 = Main.mallSimulator.getMall().getPatch(origPatchRow, origPatchCol + 3);
-                Amenity.AmenityBlock amenityBlock4 = amenityBlockFactory.create(patch4, true, false);
+                Amenity.AmenityBlock amenityBlock4 = amenityBlockFactory.create(patch4, false, false);
                 amenityBlocks.add(amenityBlock4);
                 patch4.setAmenityBlock(amenityBlock4);
             }
@@ -45,12 +45,12 @@ public class BenchMapper extends AmenityMapper {
                 patch2.setAmenityBlock(amenityBlock2);
 
                 Patch patch3 = Main.mallSimulator.getMall().getPatch(origPatchRow + 2, origPatchCol);
-                Amenity.AmenityBlock amenityBlock3 = amenityBlockFactory.create(patch3, true, true);
+                Amenity.AmenityBlock amenityBlock3 = amenityBlockFactory.create(patch3, false, true);
                 amenityBlocks.add(amenityBlock3);
                 patch3.setAmenityBlock(amenityBlock3);
 
                 Patch patch4 = Main.mallSimulator.getMall().getPatch(origPatchRow + 3, origPatchCol);
-                Amenity.AmenityBlock amenityBlock4 = amenityBlockFactory.create(patch4, true, false);
+                Amenity.AmenityBlock amenityBlock4 = amenityBlockFactory.create(patch4, false, false);
                 amenityBlocks.add(amenityBlock4);
                 patch4.setAmenityBlock(amenityBlock4);
             }
