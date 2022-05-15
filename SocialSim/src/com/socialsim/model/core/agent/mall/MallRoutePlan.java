@@ -218,7 +218,7 @@ public class MallRoutePlan {
                 actions.add(new MallAction(MallAction.Name.GO_TO_RESTAURANT));
                 routePlan.add(new MallState(MallState.Name.GOING_TO_RESTO, this, agent, actions));
                 actions = new ArrayList<>();
-                actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 360, 1080));
+                actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 60, 180));
                 routePlan.add(new MallState(MallState.Name.IN_RESTO, this, agent, actions));
             }
 
@@ -350,10 +350,6 @@ public class MallRoutePlan {
                         actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
                         actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
                         routePlan.add(new MallState(MallState.Name.GOING_TO_DINING, this, agent, actions));
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.GO_TO_DINING_AREA));
-                        actions.add(new MallAction(MallAction.Name.DINING_AREA_STAY_PUT, 120, 360));
-                        routePlan.add(new MallState(MallState.Name.IN_DINING, this, agent, actions));
                     }
                 }
 
@@ -376,7 +372,7 @@ public class MallRoutePlan {
                 actions.add(new MallAction(MallAction.Name.GO_TO_RESTAURANT));
                 routePlan.add(new MallState(MallState.Name.GOING_TO_RESTO, this, agent, actions));
                 actions = new ArrayList<>();
-                actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 360, 1080));
+                actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 60, 180));
                 routePlan.add(new MallState(MallState.Name.IN_RESTO, this, agent, actions));
             }
         }
@@ -402,7 +398,7 @@ public class MallRoutePlan {
                 actions.add(new MallAction(MallAction.Name.GO_TO_RESTAURANT));
                 routePlan.add(new MallState(MallState.Name.GOING_TO_RESTO, this, agent, actions));
                 actions = new ArrayList<>();
-                actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 360, 1080));
+                actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 60, 180));
                 routePlan.add(new MallState(MallState.Name.IN_RESTO, this, agent, actions));
             }
 
@@ -706,10 +702,6 @@ public class MallRoutePlan {
                         actions.add(new MallAction(MallAction.Name.QUEUE_KIOSK));
                         actions.add(new MallAction(MallAction.Name.CHECKOUT_KIOSK, 12, 24));
                         routePlan.add(new MallState(MallState.Name.GOING_TO_DINING, this, agent, actions));
-                        actions = new ArrayList<>();
-                        actions.add(new MallAction(MallAction.Name.GO_TO_DINING_AREA));
-                        actions.add(new MallAction(MallAction.Name.DINING_AREA_STAY_PUT, 120, 360));
-                        routePlan.add(new MallState(MallState.Name.IN_DINING, this, agent, actions));
                     }
                 }
 
@@ -732,7 +724,7 @@ public class MallRoutePlan {
                 actions.add(new MallAction(MallAction.Name.GO_TO_RESTAURANT));
                 routePlan.add(new MallState(MallState.Name.GOING_TO_RESTO, this, agent, actions));
                 actions = new ArrayList<>();
-                actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 24, 48));
+                actions.add(new MallAction(MallAction.Name.RESTAURANT_STAY_PUT, 60, 180));
                 routePlan.add(new MallState(MallState.Name.IN_RESTO, this, agent, actions));
             }
         }
