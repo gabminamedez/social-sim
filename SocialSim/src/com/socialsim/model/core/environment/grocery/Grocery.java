@@ -1461,7 +1461,7 @@ public class Grocery extends Environment {
         }
     }
     public int numBathroomsFree(){
-        List<? extends Amenity> amenityListInFloor = this.getAmenityList(com.socialsim.model.core.environment.university.patchobject.passable.goal.Toilet.class);
+        List<? extends Amenity> amenityListInFloor = this.getAmenityList(Toilet.class);
         int ctr = 0;
         for (Amenity amenity : amenityListInFloor)
             if (!amenity.getAmenityBlocks().get(0).getIsReserved()) {
