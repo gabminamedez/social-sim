@@ -235,7 +235,7 @@
                                 </AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                     <children>
-                                        <Label prefHeight="26.0" prefWidth="150.0" text="Staff to Staff Interactions" />
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Student to Staff Interactions" />
                                         <Label fx:id="currentStudentStaffCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
                                     </children>
                                 </AnchorPane>
@@ -259,7 +259,7 @@
                                 </AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                     <children>
-                                        <Label prefHeight="26.0" prefWidth="150.0" text="Staff to Staff Interactions" />
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Professor to Staff Interactions" />
                                         <Label fx:id="currentProfStaffCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
                                     </children>
                                 </AnchorPane>
