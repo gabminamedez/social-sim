@@ -1460,6 +1460,16 @@ public class Grocery extends Environment {
             }
         }
     }
+    public int numBathroomsFree(){
+        List<? extends Amenity> amenityListInFloor = this.getAmenityList(Toilet.class);
+        int ctr = 0;
+        for (Amenity amenity : amenityListInFloor)
+            if (!amenity.getAmenityBlocks().get(0).getIsReserved()) {
+                ctr++;
+                break;
+            }
+        return ctr;
+    }
 
     public static class GroceryFactory extends BaseObject.ObjectFactory {
         public static Grocery create(int rows, int columns) {
