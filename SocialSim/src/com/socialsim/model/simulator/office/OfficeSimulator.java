@@ -2817,7 +2817,7 @@ public class OfficeSimulator extends Simulator {
             int spawnChance = (int) gate.getChancePerTick();
             int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
 
-            if (CHANCE > spawnChance) {
+            if (CHANCE < spawnChance) {
                 if (office.getUnspawnedWorkingAgents().size() > 0){
                     agent = office.getUnspawnedWorkingAgents().get(Simulator.RANDOM_NUMBER_GENERATOR.nextInt(office.getUnspawnedWorkingAgents().size()));
                     int team = agent.getTeam();
