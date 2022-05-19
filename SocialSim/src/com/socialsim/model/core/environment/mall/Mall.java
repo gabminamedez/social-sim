@@ -920,6 +920,7 @@ public class Mall extends Environment {
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
                             case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                     case JANITOR -> {
@@ -937,6 +938,7 @@ public class Mall extends Environment {
                             case LOITER_ALONE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             case LOITER_COUPLE -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                             case JANITOR -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2, 3)));
+                            case CONCIERGER -> personaIOS.add(new CopyOnWriteArrayList<>(List.of(1, 2)));
                         }
                     }
                 }
