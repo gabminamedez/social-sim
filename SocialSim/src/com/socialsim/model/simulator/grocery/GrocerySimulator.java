@@ -1253,7 +1253,7 @@ public class GrocerySimulator extends Simulator {
         int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
         boolean isFamily = Simulator.RANDOM_NUMBER_GENERATOR.nextBoolean();
 
-        if (CHANCE > spawnChance) {
+        if (CHANCE < spawnChance) {
             if (isFamily && totalAloneCustomerCount < grocery.getMAX_FAMILY() && currentFamilyCount < grocery.getMAX_CURRENT_FAMILY()) {
                 if (grocery.getUnspawnedFamilyAgents().size() > 0) {
                     int randNum = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(grocery.getUnspawnedFamilyAgents().size());

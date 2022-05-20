@@ -38,7 +38,7 @@ public class GroceryGateMapper extends AmenityMapper {
             amenityBlocks.add(amenityBlock4);
             patch4.setAmenityBlock(amenityBlock4);
 
-            GroceryGate groceryGateToAdd = GroceryGate.GroceryGateFactory.create(amenityBlocks, true, 95, ugMode);
+            GroceryGate groceryGateToAdd = GroceryGate.GroceryGateFactory.create(amenityBlocks, true, 4, ugMode);
             Main.grocerySimulator.getGrocery().getGroceryGates().add(groceryGateToAdd);
             amenityBlocks.forEach(ab -> ab.getPatch().getEnvironment().getAmenityPatchSet().add(ab.getPatch()));
 
