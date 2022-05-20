@@ -11,7 +11,7 @@ public class UniversityRoutePlan {
     private ArrayList<UniversityState> routePlan;
     private boolean fromStudying, fromClass, fromLunch;
     private static final int MAX_CLASSES = 6;
-    private static final int MAX_CLASSROOMS = 6;
+    private static final int MAX_CLASSROOMS = 3;
     private double UrgentCtr = -2;
     public int MAX_CLASS_ASKS = 2;
 
