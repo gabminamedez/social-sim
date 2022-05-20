@@ -1242,7 +1242,7 @@ public class MallSimulator extends Simulator {
         int CHANCE = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(100);
         int type = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(5);
 
-        if (CHANCE > spawnChance) {
+        if (CHANCE < spawnChance) {
             if (type == 0 && totalFamilyCount < getMall().getMAX_FAMILY() && currentFamilyCount < mall.getMAX_CURRENT_FAMILY()) {
                 if (mall.getUnspawnedFamilyAgents().size() > 0){
                     int randNum = Simulator.RANDOM_NUMBER_GENERATOR.nextInt(mall.getUnspawnedFamilyAgents().size());

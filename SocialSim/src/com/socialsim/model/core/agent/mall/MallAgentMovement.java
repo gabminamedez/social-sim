@@ -1131,7 +1131,7 @@ public class MallAgentMovement extends AgentMovement {
                         double distanceToOtherAgent = Coordinates.distance(this.position, mallAgent.getAgentMovement().getPosition());
 
                         if (distanceToOtherAgent <= slowdownStartDistance) {
-                            final int maximumAgentCountTolerated = 5;
+                            final int maximumAgentCountTolerated = 2;
 
                             final int minimumAgentCount = 1;
                             final double maximumDistance = 2.0;
@@ -1360,7 +1360,7 @@ public class MallAgentMovement extends AgentMovement {
 
     private Vector computeSocialForceFromAgent(MallAgent agent, final double distanceToOtherAgent, final double maximumDistance, final double minimumDistance, final double maximumMagnitude) {
         final double maximumRepulsionFactor = 1.0;
-        final double minimumRepulsionFactor = 0.0;
+        final double minimumRepulsionFactor = 0.2;
 
         Coordinates agentPosition = agent.getAgentMovement().getPosition();
 
