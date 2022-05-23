@@ -315,103 +315,79 @@ public class UniversityScreenController extends ScreenController {
         List<Patch> chairPatches = new ArrayList<>();
         for (int i = 5; i < 24; i++) {
             if (i == 5 || i == 9 || i == 16 || i == 20) {
-                for (int j = 10; j < 19; j++) {
-                    if (j % 2 == 0) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 10; j < 19; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
 
             if(i == 7 || i == 11 || i == 18 || i == 22){
-                for (int j = 10; j < 19; j++) {
-                    if (j % 2 == 1) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 11; j < 17; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
         }
-        for (int i = 5; i < 24; i++) {
+        for (int i = 5; i < 24; i++) { //30; j < 44
             if (i == 5 || i == 9 || i == 16 || i == 20) {
-                for (int j = 30; j < 44; j++) {
-                    if (j % 2 == 0) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 30; j < 41; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
 
             if(i == 7 || i == 11 || i == 18 || i == 22){
-                for (int j = 30; j < 44; j++) {
-                    if (j % 2 == 1) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 31; j < 40; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
         }
-        for (int i = 37; i < 55; i++) {
+        for (int i = 37; i < 55; i++) { //25; j < 34;
             if (i == 37 || i == 41 || i == 48 || i == 52) {
-                for (int j = 25; j < 34; j++) {
-                    if (j % 2 == 1) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 25; j < 34; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
 
             if (i == 39 || i == 43 || i == 50 || i == 54) {
-                for (int j = 25; j < 34; j++) {
-                    if (j % 2 == 0) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 26; j < 32; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
         }
-        for (int i = 37; i < 55; i++) {
+        for (int i = 37; i < 55; i++) {//44; j < 53
             if (i == 37 || i == 41 || i == 48 || i == 52) {
-                for (int j = 44; j < 53; j++) {
-                    if (j % 2 == 1) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 44; j < 53; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
 
             if (i == 39 || i == 43 || i == 50 || i == 54) {
-                for (int j = 44; j < 53; j++) {
-                    if (j % 2 == 0) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 45; j < 51; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
         }
-        for (int i = 37; i < 55; i++) {
+        for (int i = 37; i < 55; i++) {//63; j < 72;
             if (i == 37 || i == 41 || i == 48 || i == 52) {
-                for (int j = 63; j < 72; j++) {
-                    if (j % 2 == 1) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 63; j < 72; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
 
             if (i == 39 || i == 43 || i == 50 || i == 54) {
-                for (int j =  63; j < 72; j++) {
-                    if (j % 2 == 0) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 64; j < 70; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
         }
-        for (int i = 37; i < 55; i++) {
+        for (int i = 37; i < 55; i++) {//82; j < 91
             if (i == 37 || i == 41 || i == 48 || i == 52) {
-                for (int j = 82; j < 91; j++) {
-                    if (j % 2 == 1) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 82; j < 91; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
 
             if (i == 39 || i == 43 || i == 50 || i == 54) {
-                for (int j = 82; j < 91; j++) {
-                    if (j % 2 == 0) {
-                        chairPatches.add(university.getPatch(i, j));
-                    }
+                for (int j = 83; j < 89 ; j+=3) {
+                    chairPatches.add(university.getPatch(i, j));
                 }
             }
         }
