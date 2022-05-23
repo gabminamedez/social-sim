@@ -964,7 +964,7 @@ public class UniversityAgentMovement extends AgentMovement {
                         double distanceToOtherAgent = Coordinates.distance(this.position, universityAgent.getAgentMovement().getPosition());
 
                         if (distanceToOtherAgent <= slowdownStartDistance) {
-                            final int maximumAgentCountTolerated = 5;
+                            final int maximumAgentCountTolerated = 2;
                             final int minimumAgentCount = 1;
                             final double maximumDistance = 2.0;
                             final int maximumAgentCount = 5;
@@ -1192,7 +1192,7 @@ public class UniversityAgentMovement extends AgentMovement {
 
     private Vector computeSocialForceFromAgent(UniversityAgent agent, final double distanceToOtherAgent, final double maximumDistance, final double minimumDistance, final double maximumMagnitude) {
         final double maximumRepulsionFactor = 1.0;
-        final double minimumRepulsionFactor = 0.0;
+        final double minimumRepulsionFactor = 0.2;
 
         Coordinates agentPosition = agent.getAgentMovement().getPosition();
 
