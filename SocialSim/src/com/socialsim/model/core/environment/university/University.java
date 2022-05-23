@@ -24,7 +24,7 @@ public class University extends Environment {
     private final SortedSet<Patch> amenityPatchSet;
     private final SortedSet<Patch> agentPatchSet;
 
-    private int[][] CLASSROOM_SIZES_STUDENT = new int[][]{{20 ,24, 20, 20, 20, 20},{20 ,24, 20, 20, 20, 20}, {20 ,24, 20, 20, 20, 20}, {20 ,24, 20, 20, 20, 20}, {20 ,24, 20, 20, 20, 20}, {20 ,24, 20, 20, 20, 20}};
+    private int[][] CLASSROOM_SIZES_STUDENT = new int[][]{{20 ,28, 20, 20, 20, 20},{20 ,28, 20, 20, 20, 20}, {20 ,28, 20, 20, 20, 20}, {20 ,28, 20, 20, 20, 20}, {20 ,28, 20, 20, 20, 20}, {20 ,28, 20, 20, 20, 20}};
     private int[][] CLASSROOM_SIZES_PROF = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
 
     private UniversityAgent[][] PROFS_PER_SCHEDULE = new UniversityAgent[6][6];
@@ -135,7 +135,7 @@ public class University extends Environment {
     }
 
     public void resetClassroomSizes() {
-        CLASSROOM_SIZES_STUDENT = new int[][]{{20 ,24, 20, 20, 20, 20},{20 ,24, 20, 20, 20, 20}, {20 ,24, 20, 20, 20, 20}, {20 ,24, 20, 20, 20, 20}, {20 ,24, 20, 20, 20, 20}, {20 ,24, 20, 20, 20, 20}};
+        CLASSROOM_SIZES_STUDENT = new int[][]{{20 ,28, 20, 20, 20, 20},{20 ,28, 20, 20, 20, 20}, {20 ,28, 20, 20, 20, 20}, {20 ,28, 20, 20, 20, 20}, {20 ,28, 20, 20, 20, 20}, {20 ,28, 20, 20, 20, 20}};
         CLASSROOM_SIZES_PROF = new int[][]{{1, 1, 1, 1, 1, 1},{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}};
         PROFS_PER_SCHEDULE = new UniversityAgent[6][6];
     }
