@@ -293,6 +293,12 @@ public class UniversityAgentGraphic extends Graphic {
         double agentHeading = agent.getAgentMovement().getHeading();
         double agentHeadingDegrees = Math.toDegrees(agentHeading);
 
+        if (agentHeadingDegrees > 360){
+            agentHeadingDegrees -= 360;
+        } else if (agentHeadingDegrees < 0) {
+            agentHeadingDegrees += 360;
+        }
+
         if (agentHeadingDegrees >= 315 && agentHeadingDegrees < 360 || agentHeadingDegrees >= 0 && agentHeadingDegrees < 45) {
             if (this.agent.getAgentMovement().isInteracting()) {
                 this.graphicIndex = 5;

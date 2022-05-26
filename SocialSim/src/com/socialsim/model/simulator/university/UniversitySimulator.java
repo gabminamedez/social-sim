@@ -315,9 +315,20 @@ public class UniversitySimulator extends Simulator {
                                 case 720 -> 0; case 1980 -> 1; case 3240 -> 2; case 4500 -> 3; case 5760 -> 4; default -> 5;
                             };
                             int classroomIndex = agent.getAgentMovement().getCurrentState().getClassroomID();
-                            if (classroomSchedule > 0 && university.getProfsPerSchedule()[classroomSchedule - 1][classroomIndex].getAgentMovement().getCurrentState().getName() != UniversityState.Name.IN_CLASS_PROFESSOR){
+                            if (classroomSchedule > 0 && university.getProfsPerSchedule()[classroomSchedule][classroomIndex] != null && university.getProfsPerSchedule()[classroomSchedule][classroomIndex].getAgentMovement().getCurrentState().getName() == UniversityState.Name.IN_CLASS_PROFESSOR){
                                 agent.getAgentMovement().setNextState(agent.getAgentMovement().getStateIndex());
                                 agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 1);
+                                agent.getAgentMovement().setActionIndex(0);
+                                agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(agent.getAgentMovement().getActionIndex()));
+                                if (agent.getAgentMovement().getGoalAttractor() != null) {
+                                    agent.getAgentMovement().getGoalAttractor().setIsReserved(false);
+                                }
+                                agent.getAgentMovement().resetGoal();
+                            }
+                            // If current class is over 30 mins and still waiting
+                            else if (currentTick - tickStart >= 360){
+                                agent.getAgentMovement().setNextState(agent.getAgentMovement().getStateIndex());
+                                agent.getAgentMovement().setStateIndex(agent.getAgentMovement().getStateIndex() + 3);
                                 agent.getAgentMovement().setActionIndex(0);
                                 agent.getAgentMovement().setCurrentAction(agent.getAgentMovement().getCurrentState().getActions().get(agent.getAgentMovement().getActionIndex()));
                                 if (agent.getAgentMovement().getGoalAttractor() != null) {
