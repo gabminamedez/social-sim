@@ -923,18 +923,18 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.getGoalAttractor().setIsReserved(false);
                                 }
                                 agentMovement.resetGoal();
-//                                isFull = true;
-//                                agentMovement.setNextState(agentMovement.getStateIndex());
-//                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-//                                agentMovement.setActionIndex(0);
-//                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                agentMovement.resetGoal();
-//                                if (agentMovement.getRoutePlan().isFromBathAM()) {
-//                                    agentMovement.getRoutePlan().setFromBathAM(false);
-//                                }
-//                                else if (agentMovement.getRoutePlan().isFromBathPM()) {
-//                                    agentMovement.getRoutePlan().setFromBathPM(false);
-//                                }
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                                if (agentMovement.getRoutePlan().isFromBathAM()) {
+                                    agentMovement.getRoutePlan().setFromBathAM(false);
+                                }
+                                else if (agentMovement.getRoutePlan().isFromBathPM()) {
+                                    agentMovement.getRoutePlan().setFromBathPM(false);
+                                }
                             }
                             else {
                                 agentMovement.getRoutePlan().setAtDesk(false);
@@ -1764,18 +1764,18 @@ public class OfficeSimulator extends Simulator {
                                     agentMovement.getGoalAttractor().setIsReserved(false);
                                 }
                                 agentMovement.resetGoal();
-//                                isFull = true;
-//                                agentMovement.setNextState(agentMovement.getStateIndex());
-//                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
-//                                agentMovement.setActionIndex(0);
-//                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
-//                                agentMovement.resetGoal();
-//                                if (agentMovement.getRoutePlan().isFromBathAM()) {
-//                                    agentMovement.getRoutePlan().setFromBathAM(false);
-//                                }
-//                                else if (agentMovement.getRoutePlan().isFromBathPM()) {
-//                                    agentMovement.getRoutePlan().setFromBathPM(false);
-//                                }
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                                if (agentMovement.getRoutePlan().isFromBathAM()) {
+                                    agentMovement.getRoutePlan().setFromBathAM(false);
+                                }
+                                else if (agentMovement.getRoutePlan().isFromBathPM()) {
+                                    agentMovement.getRoutePlan().setFromBathPM(false);
+                                }
                             }
                             else {
                                 agentMovement.getRoutePlan().setAtDesk(false);
@@ -1819,7 +1819,11 @@ public class OfficeSimulator extends Simulator {
                             agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
                             agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
                             agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
-                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            try{
+                                agentMovement.getGoalAttractor().setIsReserved(false);
+                            }catch (NullPointerException e){
+                                System.out.print("");
+                            }
                             agentMovement.resetGoal();
                         }
                     }
@@ -2082,9 +2086,8 @@ public class OfficeSimulator extends Simulator {
                                 agentMovement.setGoalAmenity(Main.officeSimulator.getOffice().getOfficeGates().get(0));
                                 agentMovement.setGoalAttractor(agentMovement.getGoalAmenity().getAttractors().get(0));
                             }
-                        }
-
-                        if (agentMovement.chooseNextPatchInPath()) {
+                        }else if (agentMovement.getGoalAmenity() == Main.officeSimulator.getOffice().getOfficeGates().get(0)
+                        && agentMovement.chooseNextPatchInPath()) {
                             agentMovement.faceNextPosition();
                             agentMovement.moveSocialForce();
                             if (agentMovement.hasReachedNextPatchInPath()) {
@@ -2351,6 +2354,110 @@ public class OfficeSimulator extends Simulator {
                                 agentMovement.resetGoal();
                                 agentMovement.getRoutePlan().setLastDuration(agentMovement.getDuration());
                             }
+                        }
+                    }
+                }
+                else if(state.getName() == OfficeState.Name.DISPENSER){
+                    if(action.getName() == OfficeAction.Name.GOING_DISPENSER){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
+                        if(agentMovement.getGoalAmenity() == null){
+                            if(!agentMovement.chooseGoal(WaterDispenser.class)){
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }else{
+                                agentMovement.getRoutePlan().setAtDesk(false);
+                                if(currentTick < 4320){
+                                    agentMovement.getRoutePlan().setDISPENSER_LUNCH(0);
+                                }else{
+                                    agentMovement.getRoutePlan().setDISPENSER_PM(0);
+                                }
+                            }
+                        }
+                        if (isFull) {
+                            isFull = false;
+                        }
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == OfficeAction.Name.GETTING_WATER) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
+                        }
+                    }
+                }
+                else if(state.getName() == OfficeState.Name.REFRIGERATOR){
+                    if(action.getName() == OfficeAction.Name.GOING_FRIDGE){
+                        agentMovement.setSimultaneousInteractionAllowed(false);
+                        if(agentMovement.getGoalAmenity() == null){
+                            if(!agentMovement.chooseGoal(Fridge.class)){
+                                isFull = true;
+                                agentMovement.setNextState(agentMovement.getStateIndex());
+                                agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                                agentMovement.setActionIndex(0);
+                                agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                agentMovement.resetGoal();
+                            }else{
+                                agentMovement.getRoutePlan().setAtDesk(false);
+                                if(currentTick < 4320){
+                                    agentMovement.getRoutePlan().setREFRIGERATOR_LUNCH(0);
+                                }else{
+                                    agentMovement.getRoutePlan().setREFRIGERATOR_PM(0);
+                                }
+                            }
+                        }
+                        if (isFull) {
+                            isFull = false;
+                        }
+                        else {
+                            if (agentMovement.chooseNextPatchInPath()) {
+                                agentMovement.faceNextPosition();
+                                agentMovement.moveSocialForce();
+                                if (agentMovement.hasReachedNextPatchInPath()) {
+                                    agentMovement.reachPatchInPath();
+                                    if (agentMovement.hasAgentReachedFinalPatchInPath()) {
+                                        agentMovement.setActionIndex(agentMovement.getActionIndex() + 1);
+                                        agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                                        agentMovement.setDuration(agentMovement.getCurrentAction().getDuration());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (action.getName() == OfficeAction.Name.GETTING_FOOD) {
+                        agentMovement.setSimultaneousInteractionAllowed(false);
+                        agentMovement.setCurrentAmenity(agentMovement.getGoalAmenity());
+                        agentMovement.setDuration(agentMovement.getDuration() - 1);
+                        if (agentMovement.getDuration() <= 0) {
+                            agentMovement.setNextState(agentMovement.getStateIndex());
+                            agentMovement.setStateIndex(agentMovement.getStateIndex() + 1);
+                            agentMovement.setActionIndex(0);
+                            agentMovement.setCurrentAction(agentMovement.getCurrentState().getActions().get(agentMovement.getActionIndex()));
+                            agentMovement.getGoalAttractor().setIsReserved(false);
+                            agentMovement.resetGoal();
                         }
                     }
                 }

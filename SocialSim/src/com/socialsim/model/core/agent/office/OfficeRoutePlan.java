@@ -246,6 +246,7 @@ public class OfficeRoutePlan {
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.LEAVE_OFFICE, office.getOfficeGates().get(0).getAmenityBlocks().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, assignedCubicle.getAttractors().get(0).getPatch(),120,360));
             routePlan.add(new OfficeState(OfficeState.Name.GOING_HOME, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.INT_TECHNICAL || agent.getPersona() == OfficeAgent.Persona.EXT_TECHNICAL) {
@@ -277,6 +278,7 @@ public class OfficeRoutePlan {
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.LEAVE_OFFICE, office.getOfficeGates().get(0).getAmenityBlocks().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, assignedCubicle.getAttractors().get(0).getPatch(),120,360));
             routePlan.add(new OfficeState(OfficeState.Name.GOING_HOME, this, agent, actions));
         }
         else if (agent.getPersona() == OfficeAgent.Persona.MANAGER) {
@@ -308,6 +310,7 @@ public class OfficeRoutePlan {
 
             actions = new ArrayList<>();
             actions.add(new OfficeAction(OfficeAction.Name.LEAVE_OFFICE, office.getOfficeGates().get(0).getAmenityBlocks().get(0).getPatch()));
+            actions.add(new OfficeAction(OfficeAction.Name.GO_TO_STATION, assignedCubicle.getAttractors().get(0).getPatch(),120,360));
             routePlan.add(new OfficeState(OfficeState.Name.GOING_HOME, this, agent, actions));
         }
 
