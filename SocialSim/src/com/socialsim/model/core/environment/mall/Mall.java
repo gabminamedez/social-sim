@@ -38,6 +38,11 @@ public class Mall extends Environment {
     private int MAX_COUPLE;
     private int MAX_ALONE;
 
+    private int MAX_CURRENT_FAMILY;
+    private int MAX_CURRENT_FRIENDS;
+    private int MAX_CURRENT_COUPLE;
+    private int MAX_CURRENT_ALONE;
+
     private final List<MallGate> mallGates;
     private final List<Bench> benches;
     private final List<Digital> digitals;
@@ -343,6 +348,38 @@ public class Mall extends Environment {
 
     public void setMAX_ALONE(int MAX_ALONE) {
         this.MAX_ALONE = MAX_ALONE;
+    }
+
+    public int getMAX_CURRENT_FAMILY() {
+        return MAX_CURRENT_FAMILY;
+    }
+
+    public void setMAX_CURRENT_FAMILY(int MAX_CURRENT_FAMILY) {
+        this.MAX_CURRENT_FAMILY = MAX_CURRENT_FAMILY;
+    }
+
+    public int getMAX_CURRENT_FRIENDS() {
+        return MAX_CURRENT_FRIENDS;
+    }
+
+    public void setMAX_CURRENT_FRIENDS(int MAX_CURRENT_FRIENDS) {
+        this.MAX_CURRENT_FRIENDS = MAX_CURRENT_FRIENDS;
+    }
+
+    public int getMAX_CURRENT_COUPLE() {
+        return MAX_CURRENT_COUPLE;
+    }
+
+    public void setMAX_CURRENT_COUPLE(int MAX_CURRENT_COUPLE) {
+        this.MAX_CURRENT_COUPLE = MAX_CURRENT_COUPLE;
+    }
+
+    public int getMAX_CURRENT_ALONE() {
+        return MAX_CURRENT_ALONE;
+    }
+
+    public void setMAX_CURRENT_ALONE(int MAX_CURRENT_ALONE) {
+        this.MAX_CURRENT_ALONE = MAX_CURRENT_ALONE;
     }
 
     public List<? extends Amenity> getAmenityList(Class<? extends Amenity> amenityClass) {
@@ -1457,6 +1494,17 @@ public class Mall extends Environment {
                 }
             }
         }
+    }
+
+    public int numBathroomsFree(){
+        List<? extends Amenity> amenityListInFloor = this.getAmenityList(Toilet.class);
+        int ctr = 0;
+        for (Amenity amenity : amenityListInFloor)
+            if (!amenity.getAmenityBlocks().get(0).getIsReserved()) {
+                ctr++;
+                break;
+            }
+        return ctr;
     }
 
     public static class MallFactory extends BaseObject.ObjectFactory {

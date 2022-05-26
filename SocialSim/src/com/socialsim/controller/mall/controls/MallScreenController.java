@@ -50,10 +50,22 @@ public class MallScreenController extends ScreenController {
     @FXML private TextField maxFriend;
     @FXML private TextField maxCouple;
     @FXML private TextField maxAlone;
+
+    @FXML private TextField maxCurrentFamily;
+    @FXML private TextField maxCurrentFriends;
+    @FXML private TextField maxCurrentCouple;
+    @FXML private TextField maxCurrentAlone;
+
     @FXML private TextField fieldOfView;
     @FXML private Button configureIOSButton;
     @FXML private Button editInteractionButton;
     @FXML private Label currentPatronCount;
+
+    @FXML private Label currentFamilyCount;
+    @FXML private Label currentFriendsCount;
+    @FXML private Label currentCoupleCount;
+    @FXML private Label currentAloneCount;
+
     @FXML private Label currentNonverbalCount;
     @FXML private Label currentCooperativeCount;
     @FXML private Label currentExchangeCount;
@@ -629,6 +641,12 @@ public class MallScreenController extends ScreenController {
 
     public void updateStatistics() {
         currentPatronCount.setText(String.valueOf(MallSimulator.currentPatronCount));
+
+        currentFamilyCount.setText(String.valueOf(MallSimulator.currentFamilyCount));
+        currentFriendsCount.setText(String.valueOf(MallSimulator.currentFriendsCount));
+        currentCoupleCount.setText(String.valueOf(MallSimulator.currentCoupleCount));
+        currentAloneCount.setText(String.valueOf(MallSimulator.currentAloneCount));
+
         currentNonverbalCount.setText(String.valueOf(MallSimulator.currentNonverbalCount));
         currentCooperativeCount.setText(String.valueOf(MallSimulator.currentCooperativeCount));
         currentExchangeCount.setText(String.valueOf(MallSimulator.currentExchangeCount));
@@ -701,6 +719,11 @@ public class MallScreenController extends ScreenController {
         maxCouple.setDisable(true);
         maxAlone.setDisable(true);
 
+        maxCurrentFamily.setDisable(true);
+        maxCurrentFriends.setDisable(true);
+        maxCurrentCouple.setDisable(true);
+        maxCurrentAlone.setDisable(true);
+
         resetToDefaultButton.setDisable(true);
         configureIOSButton.setDisable(true);
         editInteractionButton.setDisable(true);
@@ -722,6 +745,11 @@ public class MallScreenController extends ScreenController {
         maxFriend.setText(Integer.toString(MallSimulator.defaultMaxFriends));
         maxCouple.setText(Integer.toString(MallSimulator.defaultMaxCouple));
         maxAlone.setText(Integer.toString(MallSimulator.defaultMaxAlone));
+
+        maxCurrentFamily.setText(Integer.toString(MallSimulator.defaultMaxCurrentFamily));
+        maxCurrentFriends.setText(Integer.toString(MallSimulator.defaultMaxCurrentFriends));
+        maxCurrentCouple.setText(Integer.toString(MallSimulator.defaultMaxCurrentCouple));
+        maxCurrentAlone.setText(Integer.toString(MallSimulator.defaultMaxCurrentAlone));
     }
 
     public void openIOSLevels() {
@@ -774,6 +802,11 @@ public class MallScreenController extends ScreenController {
         mall.setMAX_FRIENDS(Integer.parseInt(maxFriend.getText()));
         mall.setMAX_COUPLE(Integer.parseInt(maxCouple.getText()));
         mall.setMAX_ALONE(Integer.parseInt(maxAlone.getText()));
+
+        mall.setMAX_CURRENT_FAMILY(Integer.parseInt(maxCurrentFamily.getText()));
+        mall.setMAX_CURRENT_FRIENDS(Integer.parseInt(maxCurrentFriends.getText()));
+        mall.setMAX_CURRENT_COUPLE(Integer.parseInt(maxCurrentCouple.getText()));
+        mall.setMAX_CURRENT_ALONE(Integer.parseInt(maxCurrentAlone.getText()));
     }
 
     public boolean validateParameters() {
@@ -782,7 +815,9 @@ public class MallScreenController extends ScreenController {
                 && Integer.parseInt(exchangeMean.getText()) >= 0 && Integer.parseInt(exchangeStdDev.getText()) >= 0
                 && Integer.parseInt(fieldOfView.getText()) >= 0 && Integer.parseInt(fieldOfView.getText()) <= 360
                 && Integer.parseInt(maxFamily.getText()) >= 0 && Integer.parseInt(maxFriend.getText()) >= 0
-                && Integer.parseInt(maxCouple.getText()) >= 0 && Integer.parseInt(maxAlone.getText()) >= 0;
+                && Integer.parseInt(maxCouple.getText()) >= 0 && Integer.parseInt(maxAlone.getText()) >= 0
+                && Integer.parseInt(maxCurrentFamily.getText()) >= 0 && Integer.parseInt(maxCurrentFriends.getText()) >= 0
+                && Integer.parseInt(maxCurrentCouple.getText()) >= 0 && Integer.parseInt(maxCurrentAlone.getText()) >= 0;
 
         if (!validParameters) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
