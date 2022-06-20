@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="705.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.socialsim.controller.office.controls.OfficeScreenController">
+    <center>
+        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <ScrollPane fx:id="scrollPane" focusTraversable="false" prefHeight="705.0" prefWidth="1230.0">
+                <VBox.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </VBox.margin>
+
+                <Group fx:id="canvasGroup">
+                    <StackPane fx:id="stackPane" prefHeight="1000.0" prefWidth="2200.0">
+                        <Canvas fx:id="backgroundCanvas" height="2000.0" width="4400.0" />
+                        <Canvas fx:id="foregroundCanvas" height="2000.0" mouseTransparent="true" width="4400.0" />
+                        <Canvas fx:id="markingsCanvas" height="2000.0" mouseTransparent="true" width="4400.0" />
+                    </StackPane>
+                </Group>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <right>
+        <TabPane fx:id="sidebar" prefHeight="642.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <Tab fx:id="parameters" text="Parameters">
+                <content>
+                    <VBox alignment="TOP_CENTER" prefHeight="794.0" prefWidth="286.0">
+                        <children>
+                            <Button fx:id="resetToDefaultButton" mnemonicParsing="false" onAction="#resetToDefault" text="Reset to Default">
+                                <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                </VBox.margin>
+                            </Button>
+                            <TitledPane animated="false" prefHeight="70.0" prefWidth="100.0" text="Parameters">
+                                <content>
+                                    <VBox alignment="CENTER" prefHeight="70.0" prefWidth="100.0" spacing="10.0">
+                                        <children>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Nonverbal Mean" />
+                                                    <TextField fx:id="nonverbalMean" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Nonverbal Std. Deviation" />
+                                                    <TextField fx:id="nonverbalStdDev" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Cooperative Mean" />
+                                                    <TextField fx:id="cooperativeMean" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Cooperative Std. Deviation" />
+                                                    <TextField fx:id="cooperativeStdDev" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Exchange Mean" />
+                                                    <TextField fx:id="exchangeMean" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Exchange Std. Deviation" />
+                                                    <TextField fx:id="exchangeStdDev" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Clients Spawned" />
+                                                    <TextField fx:id="maxClients" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Drivers Spawned" />
+                                                    <TextField fx:id="maxDrivers" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Visitors Spawned" />
+                                                    <TextField fx:id="maxVisitors" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Clients in Area" />
+                                                    <TextField fx:id="maxCurrentClients" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Drivers in Area" />
+                                                    <TextField fx:id="maxCurrentDrivers" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Max Visitors in Area" />
+                                                    <TextField fx:id="maxCurrentVisitors" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                <children>
+                                                    <Label prefHeight="26.0" prefWidth="150.0" text="Agent Field of View" />
+                                                    <TextField fx:id="fieldOfView" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                                </children>
+                                            </AnchorPane>
+                                        </children>
+                                    </VBox>
+                                </content>
+                            </TitledPane>
+                            <Button fx:id="configureIOSButton" mnemonicParsing="false" onAction="#openIOSLevels" text="Configure IOS Levels">
+                                <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                </VBox.margin>
+                            </Button>
+                            <Button fx:id="editInteractionButton" mnemonicParsing="false" onAction="#openEditInteractions" text="Edit Interaction Type Chances" />
+                        </children>
+                    </VBox>
+                </content>
+            </Tab>
+
+            <Tab text="Simulate">
+                <VBox prefHeight="794.0" prefWidth="286.0">
+                    <TitledPane animated="false" collapsible="false" prefHeight="70.0" prefWidth="100.0" text="Simulation">
+                        <VBox alignment="CENTER" prefHeight="70.0" prefWidth="100.0" spacing="10.0">
+                            <Button id="initializeButton" mnemonicParsing="false" onAction="#initializeAction" text="Initialize" />
+                            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                <Text fx:id="elapsedTimeText" strokeType="OUTSIDE" strokeWidth="0.0" text="Current time: 00:00:00 (0 ticks)" textAlignment="CENTER" />
+                            </HBox>
+
+                            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="230.0" spacing="10.0">
+                                <ToggleButton fx:id="playButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="230.0" text="Play" onAction="#playAction" />
+                                <Button fx:id="resetButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Reset" onAction="#initializeAction" />
+                            </HBox>
+
+                            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                <Label prefHeight="17.0" prefWidth="248.0" text="Simulation speed:" />
+                                <Slider fx:id="speedSlider" max="300.0" min="1.0" prefWidth="273.0" snapToTicks="true" value="1.0" />
+                                <Button fx:id="exportToCSVButton" mnemonicParsing="false" text="Export to CSV" onAction="#exportToCSV"/>
+                                <Button fx:id="exportHeatMapButton" mnemonicParsing="false" onAction="#exportHeatMap" text="Generate Heat Map" />
+                            </VBox>
+                        </VBox>
+                    </TitledPane>
+
+                    <Label prefHeight="34.0" prefWidth="150.0" text="Statistics" />
+                    <ScrollPane prefHeight="400.0" prefWidth="100.0" >
+                        <content>
+                            <VBox alignment="CENTER" prefHeight="70.0" prefWidth="100.0" spacing="10.0">
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Managers" />
+                                        <Label fx:id="currentManagerCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Businesses" />
+                                        <Label fx:id="currentBusinessCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Researchers" />
+                                        <Label fx:id="currentResearchCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Technicals" />
+                                        <Label fx:id="currentTechnicalCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Secretaries" />
+                                        <Label fx:id="currentSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Clients" />
+                                        <Label fx:id="currentClientCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Drivers" />
+                                        <Label fx:id="currentDriverCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Visitors" />
+                                        <Label fx:id="currentVisitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Nonverbal Interactions" />
+                                        <Label fx:id="currentNonverbalCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Cooperative Interactions" />
+                                        <Label fx:id="currentCooperativeCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Exchange Interactions" />
+                                        <Label fx:id="currentExchangeCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Average Nonverbal Duration" />
+                                        <Label fx:id="averageNonverbalDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Average Cooperative Duration" />
+                                        <Label fx:id="averageCooperativeDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Average Exchange Count" />
+                                        <Label fx:id="averageExchangeDuration" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Team 1" />
+                                        <Label fx:id="currentTeam1Count" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Team 2" />
+                                        <Label fx:id="currentTeam2Count" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Team 3" />
+                                        <Label fx:id="currentTeam3Count" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Current Team 4" />
+                                        <Label fx:id="currentTeam4Count" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Manager Interactions" />
+                                        <Label fx:id="currentBossManagerCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Business Interactions" />
+                                        <Label fx:id="currentBossBusinessCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Researcher Interactions" />
+                                        <Label fx:id="currentBossResearcherCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Technical Interactions" />
+                                        <Label fx:id="currentBossTechnicalCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Janitor Interactions" />
+                                        <Label fx:id="currentBossJanitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Client Interactions" />
+                                        <Label fx:id="currentBossClientCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Driver Interactions" />
+                                        <Label fx:id="currentBossDriverCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Visitor Interactions" />
+                                        <Label fx:id="currentBossVisitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Guard Interactions" />
+                                        <Label fx:id="currentBossGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Reception Interactions" />
+                                        <Label fx:id="currentBossReceptionistCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Boss to Secretary Interactions" />
+                                        <Label fx:id="currentBossSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Manager Interactions" />
+                                        <Label fx:id="currentManagerManagerCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Business Interactions" />
+                                        <Label fx:id="currentManagerBusinessCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Researcher Interactions" />
+                                        <Label fx:id="currentManagerResearcherCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Technical Interactions" />
+                                        <Label fx:id="currentManagerTechnicalCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Janitor Interactions" />
+                                        <Label fx:id="currentManagerJanitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Client Interactions" />
+                                        <Label fx:id="currentManagerClientCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Driver Interactions" />
+                                        <Label fx:id="currentManagerDriverCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Visitor Interactions" />
+                                        <Label fx:id="currentManagerVisitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Guard Interactions" />
+                                        <Label fx:id="currentManagerGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Receptionist Interactions" />
+                                        <Label fx:id="currentManagerReceptionistCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Manager to Secretary Interactions" />
+                                        <Label fx:id="currentManagerSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Business to Business Interactions" />
+                                        <Label fx:id="currentBusinessBusinessCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Business to Researcher Interactions" />
+                                        <Label fx:id="currentBusinessResearcherCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Business to Technical Interactions" />
+                                        <Label fx:id="currentBusinessTechnicalCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Business to Janitor Interactions" />
+                                        <Label fx:id="currentBusinessJanitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Business to Client Interactions" />
+                                        <Label fx:id="currentBusinessClientCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Business to Driver Interactions" />
+                                        <Label fx:id="currentBusinessDriverCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Business to Visitor Interactions" />
+                                        <Label fx:id="currentBusinessVisitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Business to Guard Interactions" />
+                                        <Label fx:id="currentBusinessGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Business to Receptionist Interactions" />
+                                        <Label fx:id="currentBusinessReceptionistCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Business to Secretary Interactions" />
+                                        <Label fx:id="currentBusinessSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Researcher to Researcher Interactions" />
+                                        <Label fx:id="currentResearcherResearcherCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Researcher to Technical Interactions" />
+                                        <Label fx:id="currentResearcherTechnicalCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Researcher to Janitor Interactions" />
+                                        <Label fx:id="currentResearcherJanitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Researcher to Client Interactions" />
+                                        <Label fx:id="currentResearcherClientCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Researcher to Driver Interactions" />
+                                        <Label fx:id="currentResearcherDriverCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Researcher to Visitor Interactions" />
+                                        <Label fx:id="currentResearcherVisitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Researcher to Guard Interactions" />
+                                        <Label fx:id="currentResearcherGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Researcher to Receptionist Interactions" />
+                                        <Label fx:id="currentResearcherReceptionistCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Researcher to Secretary Interactions" />
+                                        <Label fx:id="currentResearcherSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Technical to Technical Interactions" />
+                                        <Label fx:id="currentTechnicalTechnicalCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Technical to Janitor Interactions" />
+                                        <Label fx:id="currentTechnicalJanitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Technical to Client Interactions" />
+                                        <Label fx:id="currentTechnicalClientCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Technical to Driver Interactions" />
+                                        <Label fx:id="currentTechnicalDriverCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Technical to Visitor Interactions" />
+                                        <Label fx:id="currentTechnicalVisitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Technical to Guard Interactions" />
+                                        <Label fx:id="currentTechnicalGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Technical to Receptionist Interactions" />
+                                        <Label fx:id="currentTechnicalReceptionistCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Technical to Secretary Interactions" />
+                                        <Label fx:id="currentTechnicalSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Janitor to Janitor Interactions" />
+                                        <Label fx:id="currentJanitorJanitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Janitor to Client Interactions" />
+                                        <Label fx:id="currentJanitorClientCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Janitor to Driver Interactions" />
+                                        <Label fx:id="currentJanitorDriverCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Janitor to Visitor Interactions" />
+                                        <Label fx:id="currentJanitorVisitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Janitor to Secretary Interactions" />
+                                        <Label fx:id="currentJanitorSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Client to Client Interactions" />
+                                        <Label fx:id="currentClientClientCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Client to Driver Interactions" />
+                                        <Label fx:id="currentClientDriverCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Client to Visitor Interactions" />
+                                        <Label fx:id="currentClientVisitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Client to Guard Interactions" />
+                                        <Label fx:id="currentClientGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Client to Receptionist Interactions" />
+                                        <Label fx:id="currentClientReceptionistCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Client to Secretary Interactions" />
+                                        <Label fx:id="currentClientSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Driver to Driver Interactions" />
+                                        <Label fx:id="currentDriverDriverCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Driver to Visitor Interactions" />
+                                        <Label fx:id="currentDriverVisitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Driver to Guard Interactions" />
+                                        <Label fx:id="currentDriverGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Driver to Receptionist Interactions" />
+                                        <Label fx:id="currentDriverReceptionistCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Driver to Secretary Interactions" />
+                                        <Label fx:id="currentDriverSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Visitor to Visitor Interactions" />
+                                        <Label fx:id="currentVisitorVisitorCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Visitor to Guard Interactions" />
+                                        <Label fx:id="currentVisitorGuardCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Visitor to Receptionist Interactions" />
+                                        <Label fx:id="currentVisitorReceptionistCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Visitor to Secretary Interactions" />
+                                        <Label fx:id="currentVisitorSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Guard to Secretary Interactions" />
+                                        <Label fx:id="currentGuardSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Receptionist to Secretary Interactions" />
+                                        <Label fx:id="currentReceptionistSecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label prefHeight="26.0" prefWidth="150.0" text="Secretary to Secretary Interactions" />
+                                        <Label fx:id="currentSecretarySecretaryCount" alignment="CENTER_RIGHT" layoutX="167.0" prefWidth="50.0" />
+                                    </children>
+                                </AnchorPane>
+
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </right>
+</BorderPane>
