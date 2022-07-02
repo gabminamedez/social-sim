@@ -43,6 +43,7 @@ public abstract class ScreenController extends Controller {
             scene.setRoot(loadedRoot);
         }
 
+        scene.getRoot().setStyle("-fx-font-family: 'serif'");
         Stage stage = new Stage();
         stage.setTitle(title);
         stage.setResizable(false);
